@@ -4,7 +4,8 @@
 	* This application can change the value of wood, food, gold, stone, population    *
 	* hack and unit resources capacity hack.                                          *
 	*                Programmed by Compeador(https://github.com/ken1882)              *
-	*---------------------------------------------------------------------------------*	*                                 > User Guide  <                                 *
+	*---------------------------------------------------------------------------------*
+	*                                 > User Guide  <                                 *
 	*---------------------------------------------------------------------------------*
 	* After you start/load a game in AOE2 HD, open up this window then press key that *
 	* shows in the window, each accorded to a feature, enjoy!                         *
@@ -17,6 +18,7 @@
 
 	Change log:
 	Version		Information
-
-	1.0.0		First  release
+	
+	1.1.1		Add castle range hack.
 	1.1.0		Add resources capacity hack, population hack modify
+	1.0.0		First  release

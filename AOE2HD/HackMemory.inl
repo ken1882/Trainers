@@ -1,6 +1,7 @@
-#include "main.h"
+#ifndef HACKMEMORY
+#define HACKMEMORY
 
-HANDLE procHandle;
+#include "Trainer.h"
 
 /**================================================================================*
  *  > HackMemory
@@ -14,8 +15,9 @@ template <typename T>
 HackMemory<T>::HackMemory(){init_base();}
 
 template <typename T>
-HackMemory<T>::HackMemory(DWORD base, initializer_list<DWORD> _offsets, T _value){
+HackMemory<T>::HackMemory(HANDLE hand, DWORD base, initializer_list<DWORD> _offsets, T _value){
     init_base();
+    procHandle = hand;
     base_address = base;
     value = _value;
     offsets.clear();
@@ -39,7 +41,8 @@ void HackMemory<T>::init_base(){
  *  > Rescan memory
  *-----------------------------------------------------------------------*/
 template <typename T>
-void HackMemory<T>::realloc_memory(DWORD base, bool forced){
+void HackMemory<T>::realloc_memory(HANDLE hand, DWORD base, bool forced){
+    procHandle = hand;
     if(base_address == base && !forced)return ;
     base_address = base;
     FindMemory();
@@ -53,19 +56,24 @@ void HackMemory<T>::FindMemory(){
     target_address = base_address;
     ReadProcessMemory(procHandle, (LPCVOID) target_address, &temp,
                         sizeof(temp), NULL);
-    if(debugmode){
+
+    bool show_info = (debugmode && (!initialized || show_debug_info_list));
+    if(show_info){
+        cout << message << endl;
         printf("Track final address from %x -> %x\n", base_address, temp);
     }
+
     int _size = offsets.size();
     for(int i=0;i<_size;i++){
         target_address = temp + offsets[i];
-        if(debugmode){
+        if(show_info){
             printf("%x + %x => %x\n", temp, offsets[i], target_address);
         }
         ReadProcessMemory(procHandle, (LPCVOID)target_address, &temp,
                             sizeof(temp), NULL);
     }
-    utility::debug_pause();
+
+    if(show_info)utility::debug_pause();
 }
 /*-----------------------------------------------------------------------*
  *  > Get current value
@@ -88,20 +96,22 @@ void HackMemory<T>::modify(T _value){
 
     auto target_value = GetCurrentValue();
     if(target_value == value)return ;
-    if(debugmode){
+    if(debugmode && (!initialized || show_debug_info_list)){
+        cout << message << endl;
         printf("Base/Target Address: %x/%x\n", base_address, target_address);
         cout << "Base/Target Value: " << target_value << " / " << value << endl;
         utility::debug_pause();
     }
     WriteProcessMemory(procHandle,(BYTE*)target_address, &value,
                         sizeof(value), NULL);
+    refresh_needed = true;
 }
 /*-----------------------------------------------------------------------*
  *  > Frame update
  *-----------------------------------------------------------------------*/
 template <typename T>
 void HackMemory<T>::update(){
-    if(freeze){modify(value);}
+    if(freeze){modify(value_frozen);}
 }
 /*-----------------------------------------------------------------------*
  *  > Switch activity
@@ -116,6 +126,7 @@ void HackMemory<T>::toggle_active(){
  *-----------------------------------------------------------------------*/
 template <typename T>
 void HackMemory<T>::activate(){
+    value_frozen = GetCurrentValue();
     active = freeze = true;
 }
 /*-----------------------------------------------------------------------*
@@ -132,3 +143,19 @@ template <typename T>
 bool HackMemory<T>::is_active(){
     return active;
 }
+/*-----------------------------------------------------------------------*
+ *  > Show status
+ *-----------------------------------------------------------------------*/
+template <typename T>
+void HackMemory<T>::show_status(string message){
+    T n = GetCurrentValue();
+    cout << message;
+    if(is_numeric_legal(n)){
+        cout << fixed << n;
+    }
+    else{
+        cout << "Not detected";
+    }
+    cout << (active ? " (forzen)" : "") << endl;
+}
+#endif
