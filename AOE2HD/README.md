@@ -1,5 +1,5 @@
 	AOE2 HD Trainer	
-	Version: 1.0.0
+	Version: 1.2.0
 	*---------------------------------> Information <---------------------------------*
 	* This application can change the value of wood, food, gold, stone, population    *
 	* hack and unit resources capacity hack.                                          *
@@ -19,6 +19,7 @@
 	Change log:
 	Version		Information
 	
+	1.2.0		Improved range hack and add attack/armor hack
 	1.1.1		Add castle range hack.
 	1.1.0		Add resources capacity hack, population hack modify
 	1.0.0		First  release

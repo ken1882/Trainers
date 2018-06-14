@@ -10,6 +10,7 @@
 #include <time.h>
 #include <tlhelp32.h>
 #include <conio.h>
+#include <functional>
 
 using namespace std;
 
@@ -30,7 +31,7 @@ private:
     DWORD base_address;
     DWORD target_address;
     vector<DWORD> offsets;
-    bool freeze, active;
+    bool freeze, active, detected;
 public:
     HackMemory();
     HackMemory(HANDLE, DWORD, initializer_list<DWORD>, T _value = -1);
@@ -40,6 +41,7 @@ public:
     void activate();
     void deactivate();
     bool is_active();
+    bool is_valid();
     void realloc_memory(HANDLE, DWORD, bool forced = false);
     T GetCurrentValue();
     void show_status(string);
@@ -49,7 +51,7 @@ private:
 };
 
 // Global variables
-const string Version = "1.0.0";
+const string Version = "1.2.0";
 const string Title = "AoK HD Trainer";
 const string SplitLine = "*---------------------------------------------------------------------------------*\n";
 const LPSTR LGameWindow = "Age of Empires II: HD Edition";
@@ -79,11 +81,14 @@ extern DWORD procID, modBaseAddress;
 extern HANDLE procHandle;
 
 extern vector< HackMemory<float> > ResourcesStorage;
-extern vector< HackMemory<float> > Range;
 extern HackMemory<float> CurPopulation;
 extern HackMemory<float> MaxPopulation;
 extern HackMemory<float> RssCapacityPointer;
 extern HackMemory<float> HPPointer;
+extern HackMemory<float> RangePointer;
+
+extern vector< HackMemory<WORD> > AttackPointer;
+extern vector< HackMemory<WORD> > ArmorPointer;
 
 extern map<DWORD, DWORD> hotkey_id_table;
 

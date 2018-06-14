@@ -15,8 +15,24 @@ void print_value_info(){
 
     CurPopulation.show_status("Current Population: ");
     MaxPopulation.show_status("Max Population: ");
-    RssCapacityPointer.show_status("Resource carried by current select unit: ");
-    HPPointer.show_status("Current unit HP: ");
+
+    cout << "*======|Current Status of selected unit|======*\n";
+    HPPointer.show_status("HP: ");
+    cout << "*** Below stats not applied to enemy ***\n";
+    RangePointer.show_status("Range: ");
+    cout << "Attack: [";
+    for(int i=0;i<4;i++){
+        cout << AttackPointer[i].GetCurrentValue();
+        if(i<3)cout << ',';
+    }
+    cout << "]\n";
+    cout << "Armor: [";
+    for(int i=0;i<4;i++){
+        cout << ArmorPointer[i].GetCurrentValue();
+        if(i<3)cout << ',';
+    }
+    cout << "]\n";
+    RssCapacityPointer.show_status("Resource carried: ");
     cout << SplitLine << endl;
 }
 
@@ -53,7 +69,10 @@ void print_info(){
         cout << "[F3] Hack max population\n";
         cout << "[1]  Hack resource capacity of current selected unit\n";
         cout << "[2]  Hack HP of selected unit\n";
-        cout << "[3]  Hack attack range\n";
+        cout << "[3]  Hack attack range of selected unit\n";
+        cout << "[4]  Hack attack damage of selected unit\n";
+        cout << "[5]  Hack armor of selected unit\n";
+
     }
 }
 
