@@ -71,7 +71,7 @@ int main(){
         graph.push_back(create_node(in&1, i));
         fs << (in&1) << ' ';
     }
-    fs << ": ";
+    fs << "=> ";
     std::vector<std::vector<int>> adjcents;
     adjcents.push_back(std::vector<int>({1,3,4}));
     adjcents.push_back(std::vector<int>({0,2,4,5}));
@@ -99,7 +99,8 @@ int main(){
                 std::cout << i << ' ';
                 fs << i << ' ';
             }
-            std::cout << "----------------\n" << "Final:\n";
+            fs << '\n';
+            std::cout << "\n----------------\n" << "Final:\n";
                 for(auto &n:pa -> graph){
                     std::cout << n->stat << ' ';
                 }
