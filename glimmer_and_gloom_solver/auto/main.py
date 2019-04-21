@@ -5,7 +5,10 @@ import os, time
 PWD      = os.path.dirname(os.path.realpath(__file__))
 Filename = PWD + '\\easy.json'
 
-# position of tiles
+# position of tiles, index:
+#...0...1...2
+#.3...4...5...6
+#...7...8...9
 grid_pos = [
   [ 385,  460],
   [ 525,  460],
