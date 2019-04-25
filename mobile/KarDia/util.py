@@ -1,6 +1,8 @@
 import win32api, win32con
-import PIL.ImageGrab, time
+import PIL.ImageGrab, time, random
 
+ScrollTime  = 0.03
+ScrollDelta = [3,8]
 def getPixel(x=None, y=None):
   if x and y:
     return PIL.ImageGrab.grab().load()[x, y]
@@ -27,10 +29,9 @@ def scroll_up(x, y, delta = 100):
   ty = y + delta
   wait(0.5)
   while y <= ty:
-    y += 5
+    y += random.randint(*ScrollDelta)
     win32api.SetCursorPos((x, y))
-    wait(0.05)
-  wait(1)
+    wait(ScrollTime)
   mouse_up(x, y)
 
 def scroll_down(x, y, delta = 100):
@@ -38,10 +39,9 @@ def scroll_down(x, y, delta = 100):
   ty = y - delta
   wait(0.5)
   while y >= ty:
-    y -= 5
+    y -= random.randint(*ScrollDelta)
     win32api.SetCursorPos((x, y))
-    wait(0.01)
-  wait(1)
+    wait(ScrollTime)
   mouse_up(x, y)
 
 def scroll_left(x, y, delta = 100):
@@ -49,10 +49,9 @@ def scroll_left(x, y, delta = 100):
   tx = x + delta
   wait(0.5)
   while x <= tx:
-    x += 5
+    x += random.randint(*ScrollDelta)
     win32api.SetCursorPos((x, y))
-    wait(0.01)
-  wait(1)
+    wait(ScrollTime)
   mouse_up(x, y)
 
 def scroll_right(x, y, delta = 100):
@@ -60,8 +59,7 @@ def scroll_right(x, y, delta = 100):
   tx = x - delta
   wait(0.5)
   while x >= tx:
-    x -= 5
+    x -= random.randint(*ScrollDelta)
     win32api.SetCursorPos((x, y))
-    wait(0.01)
-  wait(1)
+    wait(ScrollTime)
   mouse_up(x, y)

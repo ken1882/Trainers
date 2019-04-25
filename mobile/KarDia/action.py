@@ -17,16 +17,16 @@ def to_battle(difficulty=0):
   uwait(0.5)
   random_click(*const.ActionBattle[difficulty])
 
-def to_boss_battle():
-  random_click(*const.ActionBossBattle)
+def to_boss_battle(loc=0):
+  random_click(*const.ActionBossBattle[loc])
   util.wait(0.5)
-  random_click(*const.ActionBossBattle)
+  random_click(*const.ActionBossBattle[loc])
 
-def leave_level():
+def leave_level(loc=0):
   random_click(*const.LevelLeavePos)
 
-def to_level():
-  random_click(*const.LevelPos)
+def to_level(loc=0):
+  random_click(*const.LevelPos[loc])
 
 def purchase_item():
   x, y = const.ShopScrollPos[0] + random.randint(-8,8), const.ShopScrollPos[1] + random.randint(-8,8)
@@ -61,18 +61,20 @@ def use_recovery_item():
   while not stage.is_stage_loot():
     uwait(1)
   next()
-  uwait(0.8)
-  random_click(*const.ItemBreadPos)
-  uwait(0.3)
-  random_click(*const.ItemBreadUsePos)
-  uwait(0.5)
-  util.click(*const.UseAllItemPos)
-  uwait(0.8)
-  random_click(*const.UseItemOKPos)
-  uwait(0.8)
-  while not stage.is_stage_loot():
-    uwait(1)
-  next()
+  uwait(2)
+  if stage.is_pixel_match([const.ItemBreadPos], [const.ItemBreadColor]):
+    uwait(0.8)
+    random_click(*const.ItemBreadPos)
+    uwait(0.3)
+    random_click(*const.ItemBreadUsePos)
+    uwait(0.5)
+    util.click(*const.UseAllItemPos)
+    uwait(0.8)
+    random_click(*const.UseItemOKPos)
+    uwait(0.8)
+    while not stage.is_stage_loot():
+      uwait(1)
+    next()
   uwait(0.8)
   close_inventory()
   uwait(2)

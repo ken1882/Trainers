@@ -4,75 +4,63 @@ import os, time
 import const, util, action, stage, freeze
 from datetime import datetime
 
-PWD = os.path.dirname(os.path.realpath(__file__))
-running = True
-Hwnd    = win32gui.GetForegroundWindow()
-AppHwnd = 0
-FPS = (1 / 120)
+# assign constants
+const.PWD = os.path.dirname(os.path.realpath(__file__))
+const.Hwnd = win32gui.GetForegroundWindow()
+const.LastRecoveryTime   = datetime(1970,1,1)
 
-LastRecoveryTime   = datetime(1970,1,1)
-FlagRecoverStamina = False
-FlagDebug          = False
-OreLocation        = []
-
-# Map align: topest and left:2-F4 Flag
-Mode = 0
-# N   | Function
-# 0   | inf. grinding at 2-G4-1, if others will stop when no stamina
-# 1   | Mining Grind, press CTRL and memory ore location
-# other: will stop once no stamina
-
-# First/Advanced/Completely explore
-LevelDifficulty = 0
-
+# Find hwnd of bluestack
 def find_bs():
+  # Callback function for EnumWindows
   def callback(handle, data):
-    global AppHwnd
     if win32gui.GetWindowText(handle) != "BlueStacks":
       return 
     rect = win32gui.GetWindowRect(handle)
     if rect[0] + rect[1] < 20:
-      AppHwnd = handle
+      const.AppHwnd = handle
   win32gui.EnumWindows(callback, None)
 
 def uwait(sec):
   util.wait(sec)
 
 def update_keystate():
-  global running, OreLocation
+  # Stop program when press F9
   if win32api.GetAsyncKeyState(win32con.VK_F9):
-    running = False
-  if Mode == 1 and win32api.GetAsyncKeyState(win32con.VK_CONTROL) and len(OreLocation) < 2:
+    const.running = False
+  # Record mine ore mouse position
+  if const.Mode == 1 and win32api.GetAsyncKeyState(win32con.VK_CONTROL) and len(const.OreLocation) < 2:
     if win32api.GetAsyncKeyState(win32con.VK_LBUTTON):
       pos = win32api.GetCursorPos()
-      if len(OreLocation) == 1 and pos == OreLocation[0]:
+      # return if record yet completed
+      if len(const.OreLocation) == 1 and pos == const.OreLocation[0]:
         return 
-      OreLocation.append(pos)
-      print("Key recorded:", OreLocation)
+      const.OreLocation.append(pos)
+      print("Key recorded:", const.OreLocation)
 
 def main_update():
   update_keystate()
+  # Restart if game is frozen
   if freeze.is_frozen():
     restart_game()
     freeze.reset()
 
+# Stamina recovery process
 def process_recovery():
-  global FlagRecoverStamina, LastRecoveryTime, running
   print("Process Recovery")
-
-  if (datetime.now() - LastRecoveryTime).total_seconds() < 120:
+  # Stop if (probably) no stamina recover item left
+  if (datetime.now() - const.LastRecoveryTime).total_seconds() < 120:
     print("Recovery exhausted")
-    running = False
+    const.running = False
     return
-
+  # Leave current level
   if stage.is_stage_level() or stage.is_stage_boss():
     action.leave_level()
     uwait(1)
-
+  # Go to shop
   if stage.is_stage_map():
     action.random_click(*const.ShopPos)
     uwait(1)
-  
+  # Shop processing
   if stage.is_stage_shop():
     action.random_click(*const.ShopKeeperPos)
     while not stage.is_stage_shoplist():
@@ -84,78 +72,97 @@ def process_recovery():
     while not stage.is_stage_shop():
       uwait(1)
     action.leave_shop()
+    uwait(1)
     while not stage.is_stage_map():
       uwait(1)
-    action.random_click(*const.LevelPos)
+    action.to_level(const.LevelLocationID)
     while not stage.is_stage_level():
       uwait(1)
-
-  LastRecoveryTime = datetime.now()
-  FlagRecoverStamina = False
+  # Go to level and keep grinding
+  if const.LevelLocationID == 1:
+    const.LevelDifficulty = 0
+  const.LastRecoveryTime = datetime.now()
+  const.FlagRecoverStamina = False
 
 def process_update():
-  global running, FlagRecoverStamina, Mode, OreLocation
   freeze.detect_freeze()
-  if FlagRecoverStamina:
+  # Process stamina recovery if flag set
+  if const.FlagRecoverStamina:
     process_recovery()
-  if stage.is_no_stamina():
-    if Mode != 0:
-      running = False
+  elif stage.is_no_stamina():
+    if const.Mode != 0:
+      const.running = False
       return 
-    FlagRecoverStamina = True
+    const.FlagRecoverStamina = True
     uwait(1)
     action.no_stamina_ok()
-  elif stage.is_stage_mine() and Mode == 1 and len(OreLocation) == 2:
-    action.random_click(*OreLocation[0])
+  # Mining grind process
+  elif stage.is_stage_mine() and const.Mode == 1 and len(const.OreLocation) == 2:
+    action.random_click(*const.OreLocation[0])
     uwait(0.8)
-    action.random_click(*OreLocation[1])
+    action.random_click(*const.OreLocation[1])
     uwait(3)
     action.next()
+  # To battle
   elif stage.is_stage_level():
-    action.to_battle(LevelDifficulty)
+    action.to_battle(const.LevelDifficulty)
+  # Handle the situation only need to click 'ok'
   elif stage.has_event() or stage.is_stage_loot() or stage.is_battle_end() or stage.is_stage_levelup():
     action.next()
+  # Boss challenge grind
   elif stage.is_stage_boss():
+    # Leave if no entry ticket left
     if stage.is_stage_no_ticket():
       print("No enough ticket")
-      if Mode != 0:
-        running = False
+      if const.Mode != 0:
+        const.running = False
       else:
         action.leave_level()
         while not stage.is_stage_map():
           uwait(1)
-        action.to_level()
+        action.to_level(const.LevelLocationID)
         uwait(1)
     else:
-      action.to_boss_battle()
+      action.to_boss_battle(const.BossDifficulty)
+  # Go to level if on map
   elif stage.is_stage_map():
-    action.to_level()
+    action.to_level(const.LevelLocationID)
+  # Skip battle waiting
+  elif stage.is_stage_battle() and stage.is_pixel_match(const.BattleReadyPixel, const.BattleReadyColor):
+    action.next()
 
-
+# Align window to left-top corner
 def align_window():
-  rect = win32gui.GetWindowRect(AppHwnd)
+  rect = win32gui.GetWindowRect(const.AppHwnd)
   x, y, w, h = rect
   w, h = w-x,h-y
-  win32gui.MoveWindow(AppHwnd, 0, 0, w, h, 1)
+  win32gui.MoveWindow(const.AppHwnd, 0, 0, w, h, 1)
 
+# Reset window position for restarting
 def reset_window():
-  rect = win32gui.GetWindowRect(AppHwnd)
+  rect = win32gui.GetWindowRect(const.AppHwnd)
   x, y, w, h = rect
   w, h = w-x,h-y
-  win32gui.MoveWindow(AppHwnd, 200, 0, w, h, 1)
+  win32gui.MoveWindow(const.AppHwnd, 200, 0, w, h, 1)
 
 def restart_game():
   print("Restart")
   util.click(*const.AppClosePos)
   uwait(3)
   reset_window()
-  uwait(1)
-  util.click(*const.AppIconPos)
+  uwait(3)
+  # Check the game icon position
+  if not stage.is_pixel_match(const.AppIconPixel, const.AppIconColor):
+    util.click(*const.AppIconPos[1])
+  else:
+    util.click(*const.AppIconPos[0])
   uwait(3)
   align_window()
+  # Game login process
   while not stage.is_stage_farm():
     action.random_click(*const.AppLoginPos)
     uwait(2)
+  uwait(1)
   action.random_click(*const.ToTownPos)
   uwait(2)
   action.random_click(*const.ToEventShopPos)
@@ -163,6 +170,7 @@ def restart_game():
     uwait(1)
   action.leave_shop()
   uwait(2)
+  # Auto scroll to adjust map screen location
   mx,my = const.EventMapScrollPos
   util.scroll_up(mx, my, const.EventMapScrolldY)
   uwait(1)
@@ -172,12 +180,11 @@ def restart_game():
 def start():
   find_bs()
   align_window()
-  global running
   inter_timer = 40
-  while(running):
-    uwait(FPS)
+  while(const.running):
+    uwait(const.FPS)
     main_update()
-    if win32gui.GetForegroundWindow() == Hwnd:
+    if win32gui.GetForegroundWindow() == const.Hwnd:
       continue
     inter_timer += 1
     if inter_timer > 40:

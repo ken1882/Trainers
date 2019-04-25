@@ -6,7 +6,8 @@ ColorRange = 20
 
 def is_color_ok(cur, target):
   for c1,c2 in zip(cur,target):
-    # print(c1, c2)
+    if const.FlagDebug:
+      print(c1, c2)
     if abs(c1 - c2) > ColorRange:
       return False
   return True
