@@ -1,6 +1,6 @@
 import PIL.ImageGrab
 import win32api, win32con, win32gui
-import os, time
+import os, time, random
 import const, util, action, stage, freeze
 from datetime import datetime
 
@@ -20,7 +20,11 @@ def find_bs():
       const.AppHwnd = handle
   win32gui.EnumWindows(callback, None)
 
-def uwait(sec):
+def uwait(sec, rand=True):
+  if rand:
+    sec += random.random()
+    if sec > 0.5:
+      sec -= (random.random() / 3)
   util.wait(sec)
 
 def update_keystate():
@@ -107,8 +111,10 @@ def process_update():
   elif stage.is_stage_level():
     action.to_battle(const.LevelDifficulty)
   # Handle the situation only need to click 'ok'
-  elif stage.has_event() or stage.is_stage_loot() or stage.is_battle_end() or stage.is_stage_levelup():
+  elif stage.has_event() or stage.is_stage_levelup():
     action.next()
+  elif stage.is_stage_loot() or stage.is_battle_end():
+    action.next(50)
   # Boss challenge grind
   elif stage.is_stage_boss():
     # Leave if no entry ticket left
@@ -129,7 +135,7 @@ def process_update():
     action.to_level(const.LevelLocationID)
   # Skip battle waiting
   elif stage.is_stage_battle() and stage.is_pixel_match(const.BattleReadyPixel, const.BattleReadyColor):
-    action.next()
+    action.next(100)
 
 # Align window to left-top corner
 def align_window():
@@ -182,7 +188,7 @@ def start():
   align_window()
   inter_timer = 40
   while(const.running):
-    uwait(const.FPS)
+    uwait(const.FPS, False)
     main_update()
     if win32gui.GetForegroundWindow() == const.Hwnd:
       continue

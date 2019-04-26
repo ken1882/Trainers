@@ -1,13 +1,19 @@
 import util, const, random, stage
 
 def uwait(sec):
+  sec += random.random()
+  if sec > 0.5:
+    sec -= (random.random() / 3)
   util.wait(sec)
 
-def random_click(x, y):
-  util.click(x + random.randint(-8,8), y + random.randint(-8,8))
+def random_click(x, y, rrange=const.DefaultRandRange):
+  if rrange is None:
+    rrange = const.DefaultRandRange
+  util.click(x + random.randint(-rrange,rrange), y + random.randint(-rrange,rrange))
 
-def next():
-  random_click(*const.ActionContinue)
+def next(rrange=const.DefaultRandRange):
+  mx, my = const.ActionContinue
+  random_click(mx, my, rrange)
 
 def no_stamina_ok():
   random_click(*const.ActionNoStaminaOK)
@@ -30,6 +36,8 @@ def to_level(loc=0):
 
 def purchase_item():
   x, y = const.ShopScrollPos[0] + random.randint(-8,8), const.ShopScrollPos[1] + random.randint(-8,8)
+  x += random.randint(-const.DefaultRandRange, const.DefaultRandRange)
+  y += random.randint(-const.DefaultRandRange, const.DefaultRandRange)
   util.scroll_down(x, y, const.ShopScrollDelta)
   uwait(2)
   random_click(*const.ItemBuyPos)

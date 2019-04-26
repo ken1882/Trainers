@@ -31,9 +31,12 @@ Mode = 0
 # other: will stop once no stamina
 
 # First/Advanced/Completely explore
-LevelDifficulty = 0
+LevelDifficulty = 1
 LevelLocationID = 1
 BossDifficulty  = 0
+
+# Random range for clicking to bypass detection
+DefaultRandRange = 12
 
 StageMapPixel   = [[290,60], [61,728]]
 StageMapColor   = [(96,84,41), (158,204,89)]
