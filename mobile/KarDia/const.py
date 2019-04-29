@@ -31,7 +31,7 @@ Mode = 0
 # other: will stop once no stamina
 
 # First/Advanced/Completely explore
-LevelDifficulty = 1
+LevelDifficulty = 0
 LevelLocationID = 1
 BossDifficulty  = 0
 
