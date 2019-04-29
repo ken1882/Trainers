@@ -1,12 +1,24 @@
 import win32api, win32con
-import PIL.ImageGrab, time, random
+import PIL.ImageGrab, time, random, math
+from datetime import datetime
 
 ScrollTime  = 0.03
 ScrollDelta = [3,8]
+ScreenTimeout  = 100
+
+def hash_timenow():
+  return datetime.now().second * 1000 + datetime.now().microsecond // 1000
+
+ScreenSnapShot = [hash_timenow(), PIL.ImageGrab.grab().load()]
+
 def getPixel(x=None, y=None):
+  stamp = hash_timenow()
+  if abs(ScreenSnapShot[0] - stamp) > ScreenTimeout:
+    ScreenSnapShot[0] = stamp
+    ScreenSnapShot[1] = PIL.ImageGrab.grab().load()
   if x and y:
-    return PIL.ImageGrab.grab().load()[x, y]
-  return PIL.ImageGrab.grab().load()
+    return ScreenSnapShot[1][x, y]
+  return ScreenSnapShot[1]
 
 def mouse_down(x,y):
   win32api.SetCursorPos((x,y))

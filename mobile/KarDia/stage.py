@@ -60,8 +60,8 @@ def is_stage_mine():
 def is_stage_farm():
   return is_pixel_match(const.StageFarmPixel, const.StageFarmColor)
 
-def is_stage_town():
-  pass
+def is_stage_loading():
+  return is_pixel_match(const.StageLoadingPixel, const.StageLoadingColor)
 
 def get_current_stage():
   if is_no_stamina():
@@ -88,4 +88,6 @@ def get_current_stage():
     return "Shop List"
   elif is_stage_mine():
     return "Mine"
+  elif is_stage_loading():
+    return "Loading"
   return None
