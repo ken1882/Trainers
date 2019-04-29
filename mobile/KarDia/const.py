@@ -10,6 +10,7 @@ Hwnd    = 0
 AppHwnd = 0
 
 FPS = (1 / 120)
+InternUpdateTime = 60
 
 # Last Stamina Recovery time, not a const actually
 LastRecoveryTime   = 0
@@ -85,6 +86,9 @@ StageShopListColor = [(254,237,177), (102,89,43), (203,186,137)]
 
 StageMinePixel = [[31,149], [151,155], [398,835], [278,817]]
 StageMineColor = [(254,235,175), (254,235,175), (251,232,173), (255,255,248)]
+
+StageLoadingPixel = [[23,79], [74, 417], [264,178], [191, 705], [427, 816], [284, 343]]
+StageLoadingColor = [(52,44,34), (49, 40, 28), (62,53,45), (65,61,55), (54,44,32), (46,36,24)]
 
 LevelLeavePos   = [60,822]
 LevelPos        = [[16,477], [406,497]]
