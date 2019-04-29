@@ -18,7 +18,7 @@ def detect_freeze():
     pixels.append(util.getPixel(*pos))
   if np.array_equal(LastPixels, np.array(pixels)):
     cnt_timeout += 1
-    if cnt_timeout > 40:
+    if cnt_timeout > 50:
       FlagFrozen = True
   else:
     FlagFrozen  = False

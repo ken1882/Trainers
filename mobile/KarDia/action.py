@@ -1,9 +1,10 @@
 import util, const, random, stage
 
-def uwait(sec):
-  sec += random.random()
-  if sec > 0.5:
-    sec -= (random.random() / 3)
+def uwait(sec, rand=True):
+  if rand:
+    sec += random.random()
+    if sec > 0.5:
+      sec -= (random.random() / 3)
   util.wait(sec)
 
 def random_click(x, y, rrange=const.DefaultRandRange):
@@ -19,13 +20,22 @@ def no_stamina_ok():
   random_click(*const.ActionNoStaminaOK)
 
 def to_battle(difficulty=0):
+  difficulty = difficulty % 3
   random_click(*const.ActionBattle[difficulty])
-  uwait(0.5)
+  uwait(0.42, False)
   random_click(*const.ActionBattle[difficulty])
 
 def to_boss_battle(loc=0):
+  if loc >= 3:
+    mx, my = const.ActionBattle[2]
+    rrange = 25
+    util.scroll_right(mx+random.randint(-rrange,rrange), my+random.randint(-rrange,rrange), 250)
+    uwait(0.3)
+    util.scroll_right(mx+random.randint(-rrange,rrange), my+random.randint(-rrange,rrange), 250)
+    uwait(0.3)
+  loc = loc % 3
   random_click(*const.ActionBossBattle[loc])
-  util.wait(0.5)
+  uwait(0.42, False)
   random_click(*const.ActionBossBattle[loc])
 
 def leave_level(loc=0):

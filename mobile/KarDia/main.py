@@ -1,6 +1,6 @@
 import PIL.ImageGrab
 import win32api, win32con, win32gui
-import os, time, random
+import os, time, random, sys
 import const, util, action, stage, freeze
 from datetime import datetime
 
@@ -136,6 +136,7 @@ def process_update():
   # Skip battle waiting
   elif stage.is_stage_battle() and stage.is_pixel_match(const.BattleReadyPixel, const.BattleReadyColor):
     action.next(100)
+    uwait(0.7)
 
 # Align window to left-top corner
 def align_window():
@@ -164,9 +165,15 @@ def restart_game():
     util.click(*const.AppIconPos[0])
   uwait(3)
   align_window()
+  uwait(3)
   # Game login process
-  while not stage.is_stage_farm():
+  while not stage.is_stage_loading():
+    if stage.is_stage_farm():
+      break
     action.random_click(*const.AppLoginPos)
+    uwait(2)
+  
+  while not stage.is_stage_farm():
     uwait(2)
   uwait(1)
   action.random_click(*const.ToTownPos)
@@ -186,17 +193,39 @@ def restart_game():
 def start():
   find_bs()
   align_window()
-  inter_timer = 40
+  inter_timer = const.InternUpdateTime
   while(const.running):
     uwait(const.FPS, False)
     main_update()
     if win32gui.GetForegroundWindow() == const.Hwnd:
       continue
     inter_timer += 1
-    if inter_timer > 40:
+    if inter_timer > const.InternUpdateTime:
       inter_timer = 0
       print("Scene: {}, freeze timer: {}".format(stage.get_current_stage(), freeze.get_freeze_timer()))
       freeze.detect_freeze()
       process_update()
 
+if len(sys.argv) > 1:
+  for i in range(1, len(sys.argv)):
+    arg = sys.argv[i]
+    arg = arg.split('=')
+    if arg[0] == '-d':
+      i += 1
+      const.LevelDifficulty = const.BossDifficulty = int(sys.argv[i])
+      print("Level/Boss Difficulty set to " + sys.argv[i])
+    elif arg[0] == '-m':
+      i += 1
+      const.Mode = int(sys.argv[i])
+      print("Mode:", const.Mode)
+    elif arg[0] == '--debug':
+      const.FlagDebug = True
+    
 start()
+
+def test_func():
+  find_bs()
+  align_window()
+
+# test_func()
+# restart_game()
