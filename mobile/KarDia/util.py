@@ -1,5 +1,6 @@
 import win32api, win32con
 import PIL.ImageGrab, time, random, math
+import const
 from datetime import datetime
 
 ScrollTime  = 0.03
@@ -20,6 +21,9 @@ def getPixel(x=None, y=None):
     return ScreenSnapShot[1][x, y]
   return ScreenSnapShot[1]
 
+def flush_screen_cache():
+  ScreenSnapShot[0] = 0
+
 def mouse_down(x,y):
   win32api.SetCursorPos((x,y))
   win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,x,y,0,0)
@@ -28,7 +32,10 @@ def mouse_up(x,y):
   win32api.SetCursorPos((x,y))
   win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,x,y,0,0)
 
-def click(x, y):
+def click(x, y, app_offset=True):
+  if app_offset:
+    x += const.AppRect[0]
+    y += const.AppRect[1]
   win32api.SetCursorPos((x,y))
   mouse_down(x,y)
   mouse_up(x,y)
@@ -36,7 +43,10 @@ def click(x, y):
 def wait(sec):
   time.sleep(sec)
 
-def scroll_up(x, y, delta = 100):
+def scroll_up(x, y, delta = 100, app_offset=True):
+  if app_offset:
+    x += const.AppRect[0]
+    y += const.AppRect[1]
   mouse_down(x, y)
   ty = y + delta
   wait(0.5)
@@ -46,7 +56,10 @@ def scroll_up(x, y, delta = 100):
     wait(ScrollTime)
   mouse_up(x, y)
 
-def scroll_down(x, y, delta = 100):
+def scroll_down(x, y, delta = 100, app_offset=True):
+  if app_offset:
+    x += const.AppRect[0]
+    y += const.AppRect[1]
   mouse_down(x, y)
   ty = y - delta
   wait(0.5)
@@ -56,7 +69,10 @@ def scroll_down(x, y, delta = 100):
     wait(ScrollTime)
   mouse_up(x, y)
 
-def scroll_left(x, y, delta = 100):
+def scroll_left(x, y, delta = 100, app_offset=True):
+  if app_offset:
+    x += const.AppRect[0]
+    y += const.AppRect[1]
   mouse_down(x, y)
   tx = x + delta
   wait(0.5)
@@ -66,7 +82,10 @@ def scroll_left(x, y, delta = 100):
     wait(ScrollTime)
   mouse_up(x, y)
 
-def scroll_right(x, y, delta = 100):
+def scroll_right(x, y, delta = 100, app_offset=True):
+  if app_offset:
+    x += const.AppRect[0]
+    y += const.AppRect[1]
   mouse_down(x, y)
   tx = x - delta
   wait(0.5)

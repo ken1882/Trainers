@@ -2,6 +2,7 @@ import PIL.ImageGrab
 import win32api, win32con, win32gui
 import os, time, random, sys
 import const, util, action, stage, freeze
+import numpy as np
 from datetime import datetime
 
 # assign constants
@@ -15,10 +16,16 @@ def find_bs():
   def callback(handle, data):
     if win32gui.GetWindowText(handle) != "BlueStacks":
       return 
-    rect = win32gui.GetWindowRect(handle)
-    if rect[0] + rect[1] < 20:
+    try:
+      rect = win32gui.GetWindowRect(handle)
+      x, y, w, h = rect
+      w, h = w-x,h-y
+      win32gui.MoveWindow(handle, x, y, w, h, 1)
       const.AppHwnd = handle
+    except Exception:
+      pass
   win32gui.EnumWindows(callback, None)
+  getAppRect()
 
 def uwait(sec, rand=True):
   if rand:
@@ -27,20 +34,42 @@ def uwait(sec, rand=True):
       sec -= (random.random() / 3)
   util.wait(sec)
 
+
+LastAppRect = np.array([0,0,0,0])
 def getAppRect():
+  global LastAppRect
   rect = win32gui.GetWindowRect(const.AppHwnd)
   x, y, w, h = rect
-  w, h = w-x,h-y
+  # x = max([x, 0])
+  # y = max([y, 0])
+  w, h = w-x, h-y
+  if not np.array_equal(LastAppRect, np.array([x,y,w,h])):
+    print("App changed: {}".format([x,y,w,h]))
+    LastAppRect = np.array([x,y,w,h])
+  const.AppRect = [x,y,w,h]
   return [x, y, w, h]
 
+key_cooldown = 0
+
 def update_keystate():
+  global key_cooldown
+  if key_cooldown > 0:
+    key_cooldown -= 1
+    return
   # Stop program when press F9
   if win32api.GetAsyncKeyState(win32con.VK_F9):
     const.running = False
+    key_cooldown = 10
+  elif win32api.GetAsyncKeyState(win32con.VK_F8):
+    const.paused ^= True
+    key_cooldown = 10
+    print("Paused: {}".format(const.paused))
+
   # Record mine ore mouse position
   if const.Mode == 1 and win32api.GetAsyncKeyState(win32con.VK_CONTROL) and len(const.OreLocation) < 2:
     if win32api.GetAsyncKeyState(win32con.VK_LBUTTON):
       pos = win32api.GetCursorPos()
+      key_cooldown = 10
       # return if record yet completed
       if len(const.OreLocation) == 1 and pos == const.OreLocation[0]:
         return 
@@ -72,6 +101,7 @@ def process_recovery():
     uwait(1)
   # Shop processing
   if stage.is_stage_shop():
+    uwait(1)
     action.random_click(*const.ShopKeeperPos)
     while not stage.is_stage_shoplist():
       uwait(1)
@@ -145,36 +175,44 @@ def process_update():
     uwait(0.7)
 
 # Align window to left-top corner
-def align_window():
+def align_window(wx=0,wy=0):
   rect = win32gui.GetWindowRect(const.AppHwnd)
   x, y, w, h = rect
   w, h = w-x,h-y
-  win32gui.MoveWindow(const.AppHwnd, 0, 0, w, h, 1)
+  win32gui.MoveWindow(const.AppHwnd, wx, wy, const.AppWidth, const.AppHeight, 1)
 
 # Reset window position for restarting
 def reset_window():
-  rect = win32gui.GetWindowRect(const.AppHwnd)
-  x, y, w, h = rect
-  w, h = w-x,h-y
-  win32gui.MoveWindow(const.AppHwnd, 200, 0, w, h, 1)
+  rect = getAppRect()
+  _, _, w, h = rect
+  win32gui.MoveWindow(const.AppHwnd, 0, 0, w, h, 1)
 
 def restart_game():
   print("Restart")
+  getAppRect()
+  appPos = [const.AppRect[0], const.AppRect[1]]
+  uwait(0.5)
   util.click(*const.AppClosePos)
   uwait(3)
   reset_window()
-  uwait(3)
+  uwait(1)
+  getAppRect()
+  uwait(1)
+  util.flush_screen_cache()
+  uwait(1)
+  print(stage.is_pixel_match(const.AppIconPixel, const.AppIconColor))
   # Check the game icon position
-  if not stage.is_pixel_match(const.AppIconPixel, const.AppIconColor):
-    util.click(*const.AppIconPos[1])
+  if stage.is_pixel_match(const.AppIconPixel, const.AppIconColor):
+    util.click(*const.AppIconPos[0], False)
   else:
-    util.click(*const.AppIconPos[0])
-  
+    util.click(*const.AppIconPos[1], False)
+
   while getAppRect()[2] > 1000:
     uwait(3)
-  
-  align_window()
+  uwait(2)
+  align_window(*appPos)
   uwait(3)
+  getAppRect()
   # Game login process
   while not stage.is_stage_loading():
     if stage.is_stage_farm():
@@ -211,10 +249,13 @@ def start():
     inter_timer += 1
     if inter_timer > const.InternUpdateTime:
       inter_timer = 0
-      print("Scene: {}, freeze timer: {}".format(stage.get_current_stage(), freeze.get_freeze_timer()))
-      freeze.detect_freeze()
-      process_update()
+      getAppRect()
+      if not const.paused:
+        print("Scene: {}, freeze timer: {}".format(stage.get_current_stage(), freeze.get_freeze_timer()))    
+        freeze.detect_freeze()
+        process_update()
 
+# Pre-process
 if len(sys.argv) > 1:
   for i in range(1, len(sys.argv)):
     arg = sys.argv[i]
@@ -235,6 +276,7 @@ start()
 def test_func():
   find_bs()
   align_window()
+  getAppRect()
 
 # test_func()
 # restart_game()

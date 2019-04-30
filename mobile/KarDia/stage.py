@@ -7,6 +7,7 @@ ColorRange = 20
 def is_color_ok(cur, target):
   for c1,c2 in zip(cur,target):
     if const.FlagDebug:
+      print('-'*10)
       print(c1, c2)
     if abs(c1 - c2) > ColorRange:
       return False
@@ -14,7 +15,10 @@ def is_color_ok(cur, target):
 
 def is_pixel_match(pix, col):
   for i, j in zip(pix, col):
-    if not is_color_ok(util.getPixel(*i), j):
+    tx, ty = i
+    tx += const.AppRect[0]
+    ty += const.AppRect[1]
+    if not is_color_ok(util.getPixel(tx, ty), j):
       return False
   return True
 

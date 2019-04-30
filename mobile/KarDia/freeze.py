@@ -15,7 +15,8 @@ def detect_freeze():
   global LastPixels, cnt_timeout, FlagFrozen
   pixels = []
   for pos in const.FrozenDetectorPixel:
-    pixels.append(util.getPixel(*pos))
+    px, py = pos
+    pixels.append(util.getPixel(px + const.AppRect[0],py + const.AppRect[1]))
   if np.array_equal(LastPixels, np.array(pixels)):
     cnt_timeout += 1
     if cnt_timeout > 50:

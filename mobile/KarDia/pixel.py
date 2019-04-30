@@ -11,6 +11,6 @@ mx, my = win32api.GetCursorPos()
 print("Mouse pos: ({}, {})".format(mx, my))
 r,g,b = getPixel(mx, my)
 print("Pixel Color: R:{} G:{} B:{}".format(r,g,b))
-if sys.argv[1] == '-g':
+if len(sys.argv) >= 2 and sys.argv[1] == '-g':
   print("[{}, {}],".format(mx, my))
   print("({}, {}, {}),".format(r,g,b))

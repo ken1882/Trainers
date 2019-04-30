@@ -1,7 +1,8 @@
 PWD = ""
 
-# Program running flag
+# Program running/pause flag
 running = True
+paused  = False
 
 # Hwnd of this program
 Hwnd    = 0
@@ -13,7 +14,10 @@ FPS = (1 / 120)
 InternUpdateTime = 60
 
 # Not a actually const, window rect
-WindowRect = []
+AppRect = [0,0,0,0]
+
+AppWidth  = 477
+AppHeight = 917
 
 # Last Stamina Recovery time, not a const actually
 LastRecoveryTime   = 0
@@ -98,7 +102,7 @@ LevelPos        = [[16,477], [406,497]]
 ShopPos         = [320,267]
 BossPosA        = [53,543]
 BossPosB        = [437,386]
-ShopKeeperPos   = [107,452]
+ShopKeeperPos   = [103,449]
 ItemBuyPos      = [400,549]
 GoodsAmountPos  = [300,443]
 ShopScrollPos   = [300,655]
@@ -121,10 +125,10 @@ UseItemOKPos     = [238,503]
 
 FrozenDetectorPixel = [[274,64], [267,66], [246,65], [125,776], [255,65]]
 AppClosePos  = [81,12]
-AppIconPos   = [[500,170], [600,170]]
-AppIconPixel = [[488,166], [254,178]]
-AppIconColor = [(255,240,208), (255,246,231)]
-AppLoginPos     = [239,639]
+AppIconPos   = [[302,178], [402,178]]
+AppIconPixel = [[323, 180], [286, 150]]
+AppIconColor = [(255, 244, 228), (84, 132, 195)]
+AppLoginPos  = [239,639]
 
 StageFarmPixel = [[285,64], [55,186], [244,815], [406,725]]
 StageFarmColor = [(103,90,44), (249,86,80), (176,161,115), (158,204,89)]
