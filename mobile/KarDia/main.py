@@ -27,6 +27,12 @@ def uwait(sec, rand=True):
       sec -= (random.random() / 3)
   util.wait(sec)
 
+def getAppRect():
+  rect = win32gui.GetWindowRect(const.AppHwnd)
+  x, y, w, h = rect
+  w, h = w-x,h-y
+  return [x, y, w, h]
+
 def update_keystate():
   # Stop program when press F9
   if win32api.GetAsyncKeyState(win32con.VK_F9):
@@ -163,7 +169,10 @@ def restart_game():
     util.click(*const.AppIconPos[1])
   else:
     util.click(*const.AppIconPos[0])
-  uwait(3)
+  
+  while getAppRect()[2] > 1000:
+    uwait(3)
+  
   align_window()
   uwait(3)
   # Game login process
