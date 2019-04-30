@@ -42,7 +42,7 @@ def scroll_up(x, y, delta = 100):
   wait(0.5)
   while y <= ty:
     y += random.randint(*ScrollDelta)
-    win32api.SetCursorPos((x, y))
+    win32api.SetCursorPos((x, min([y,ty])))
     wait(ScrollTime)
   mouse_up(x, y)
 
@@ -52,7 +52,7 @@ def scroll_down(x, y, delta = 100):
   wait(0.5)
   while y >= ty:
     y -= random.randint(*ScrollDelta)
-    win32api.SetCursorPos((x, y))
+    win32api.SetCursorPos((x, max([y,ty])))
     wait(ScrollTime)
   mouse_up(x, y)
 
@@ -62,7 +62,7 @@ def scroll_left(x, y, delta = 100):
   wait(0.5)
   while x <= tx:
     x += random.randint(*ScrollDelta)
-    win32api.SetCursorPos((x, y))
+    win32api.SetCursorPos((min([x,tx]), y))
     wait(ScrollTime)
   mouse_up(x, y)
 
@@ -72,6 +72,6 @@ def scroll_right(x, y, delta = 100):
   wait(0.5)
   while x >= tx:
     x -= random.randint(*ScrollDelta)
-    win32api.SetCursorPos((x, y))
+    win32api.SetCursorPos((max([x,tx]), y))
     wait(ScrollTime)
   mouse_up(x, y)

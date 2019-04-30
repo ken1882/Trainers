@@ -12,6 +12,9 @@ AppHwnd = 0
 FPS = (1 / 120)
 InternUpdateTime = 60
 
+# Not a actually const, window rect
+WindowRect = []
+
 # Last Stamina Recovery time, not a const actually
 LastRecoveryTime   = 0
 
@@ -112,7 +115,7 @@ ItemStickUsePos  = [404,530]
 ItemBreadPos     = [397,327]
 ItemBreadUsePos  = [405,534]
 ItemBreadColor   = (221,144,66)
-UseItemAmountPos = [250,445]
+UseItemAmountPos = [230,445]
 UseAllItemPos    = [318,444]
 UseItemOKPos     = [238,503]
 
