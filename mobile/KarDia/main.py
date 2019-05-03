@@ -92,16 +92,16 @@ def process_recovery():
     const.running = False
     return
   # Leave current level
-  if stage.is_stage_level() or stage.is_stage_boss():
+  while stage.is_stage_level() or stage.is_stage_boss() and not stage.is_stage_map():
     action.leave_level()
     uwait(1)
   # Go to shop
-  if stage.is_stage_map():
+  while stage.is_stage_map() and not stage.is_stage_shop():
     action.random_click(*const.ShopPos)
     uwait(1)
   # Shop processing
   if stage.is_stage_shop():
-    uwait(1)
+    uwait(2)
     action.random_click(*const.ShopKeeperPos)
     while not stage.is_stage_shoplist():
       uwait(1)
@@ -175,10 +175,14 @@ def process_update():
     uwait(0.7)
 
 # Align window to left-top corner
-def align_window(wx=0,wy=0):
+def align_window(wx=None,wy=None):
   rect = win32gui.GetWindowRect(const.AppHwnd)
   x, y, w, h = rect
   w, h = w-x,h-y
+  if wx is None:
+    wx = x
+  if wy is None:
+    wy = y
   win32gui.MoveWindow(const.AppHwnd, wx, wy, const.AppWidth, const.AppHeight, 1)
 
 # Reset window position for restarting

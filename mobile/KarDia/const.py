@@ -119,8 +119,8 @@ ItemStickUsePos  = [404,530]
 ItemBreadPos     = [397,327]
 ItemBreadUsePos  = [405,534]
 ItemBreadColor   = (221,144,66)
-UseItemAmountPos = [230,445]
-UseAllItemPos    = [318,444]
+UseItemAmountPos = [215,445]
+UseAllItemPos    = [300,444]
 UseItemOKPos     = [238,503]
 
 FrozenDetectorPixel = [[274,64], [267,66], [246,65], [125,776], [255,65]]
