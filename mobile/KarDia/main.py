@@ -184,6 +184,8 @@ def align_window(wx=None,wy=None):
   if wy is None:
     wy = y
   win32gui.MoveWindow(const.AppHwnd, wx, wy, const.AppWidth, const.AppHeight, 1)
+  uwait(1)
+  getAppRect()
 
 # Reset window position for restarting
 def reset_window():
@@ -221,6 +223,8 @@ def restart_game():
   while not stage.is_stage_loading():
     if stage.is_stage_farm():
       break
+    if stage.is_stage_disconnected():
+      action.random_click(*const.NoInternetOKPOS)
     action.random_click(*const.AppLoginPos)
     uwait(2)
   
@@ -275,12 +279,13 @@ if len(sys.argv) > 1:
     elif arg[0] == '--debug':
       const.FlagDebug = True
     
-start()
 
 def test_func():
   find_bs()
   align_window()
   getAppRect()
 
+start()
 # test_func()
+# align_window(0,0)
 # restart_game()

@@ -67,6 +67,9 @@ def is_stage_farm():
 def is_stage_loading():
   return is_pixel_match(const.StageLoadingPixel, const.StageLoadingColor)
 
+def is_stage_disconnected():
+  return is_pixel_match(const.StageNoInternetPixel, const.StageNoInternetColor)
+
 def get_current_stage():
   if is_no_stamina():
     return ("No Stamina!")
