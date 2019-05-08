@@ -12,7 +12,7 @@ def random_click(x, y, rrange=const.DefaultRandRange):
     rrange = const.DefaultRandRange
   util.click(x + random.randint(-rrange,rrange), y + random.randint(-rrange,rrange))
 
-def next(rrange=const.DefaultRandRange):
+def action_next(rrange=const.DefaultRandRange):
   mx, my = const.ActionContinue
   random_click(mx, my, rrange)
 
@@ -30,9 +30,9 @@ def to_boss_battle(loc=0):
     mx, my = const.ActionBattle[2]
     rrange = 25
     util.scroll_right(mx+random.randint(-rrange,rrange), my+random.randint(-rrange,rrange), 250)
-    uwait(0.3)
+    uwait(0.8)
     util.scroll_right(mx+random.randint(-rrange,rrange), my+random.randint(-rrange,rrange), 250)
-    uwait(0.3)
+    uwait(0.5)
   loc = loc % 3
   random_click(*const.ActionBossBattle[loc])
   uwait(0.42, False)
@@ -58,7 +58,8 @@ def purchase_item():
   uwait(0.8)
   while not stage.is_stage_loot():
     uwait(1)
-  next()
+    yield
+  action_next()
   uwait(0.5)
   random_click(*const.GoodsListLeavePos)
   uwait(0.4)
@@ -78,7 +79,8 @@ def use_recovery_item():
   uwait(0.8)
   while not stage.is_stage_loot():
     uwait(1)
-  next()
+    yield
+  action_next()
   uwait(2)
   if stage.is_pixel_match([const.ItemBreadPos], [const.ItemBreadColor]):
     uwait(0.8)
@@ -92,7 +94,8 @@ def use_recovery_item():
     uwait(0.8)
     while not stage.is_stage_loot():
       uwait(1)
-    next()
+      yield
+    action_next()
   uwait(0.8)
   close_inventory()
   uwait(2)

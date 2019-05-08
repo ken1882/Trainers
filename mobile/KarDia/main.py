@@ -95,29 +95,44 @@ def process_recovery():
   while stage.is_stage_level() or stage.is_stage_boss() and not stage.is_stage_map():
     action.leave_level()
     uwait(1)
+    yield
   # Go to shop
   while stage.is_stage_map() and not stage.is_stage_shop():
     action.random_click(*const.ShopPos)
     uwait(1)
+    yield
   # Shop processing
   if stage.is_stage_shop():
     uwait(2)
     action.random_click(*const.ShopKeeperPos)
     while not stage.is_stage_shoplist():
       uwait(1)
-    action.purchase_item()
+      yield
+
+    fiber = action.purchase_item()
+    while util.resume(fiber):
+      yield
+
     while not stage.is_stage_shop():
       uwait(1)
-    action.use_recovery_item()
+      yield
+
+    fiber = action.use_recovery_item()
+    while util.resume(fiber):
+      yield
+
     while not stage.is_stage_shop():
       uwait(1)
+      yield
     action.leave_shop()
     uwait(1)
     while not stage.is_stage_map():
       uwait(1)
+      yield
     action.to_level(const.LevelLocationID)
     while not stage.is_stage_level():
       uwait(1)
+      yield
   # Go to level and keep grinding
   if const.LevelLocationID == 1:
     const.LevelDifficulty = 0
@@ -128,7 +143,12 @@ def process_update():
   freeze.detect_freeze()
   # Process stamina recovery if flag set
   if const.FlagRecoverStamina:
-    process_recovery()
+    if const.ActionFiber:
+      alive = util.resume(const.ActionFiber)
+      if not alive:
+        const.ActionFiber = None
+    else:
+      const.ActionFiber = process_recovery()
   elif stage.is_no_stamina():
     if const.Mode != 0:
       const.running = False
@@ -142,15 +162,15 @@ def process_update():
     uwait(0.8)
     action.random_click(*const.OreLocation[1])
     uwait(3)
-    action.next()
+    action.action_next()
   # To battle
   elif stage.is_stage_level():
     action.to_battle(const.LevelDifficulty)
   # Handle the situation only need to click 'ok'
   elif stage.has_event() or stage.is_stage_levelup():
-    action.next()
+    action.action_next()
   elif stage.is_stage_loot() or stage.is_battle_end():
-    action.next(50)
+    action.action_next(50)
   # Boss challenge grind
   elif stage.is_stage_boss():
     # Leave if no entry ticket left
@@ -171,7 +191,7 @@ def process_update():
     action.to_level(const.LevelLocationID)
   # Skip battle waiting
   elif stage.is_stage_battle() and stage.is_pixel_match(const.BattleReadyPixel, const.BattleReadyColor):
-    action.next(100)
+    action.action_next(100)
     uwait(0.7)
 
 # Align window to left-top corner
@@ -244,6 +264,9 @@ def restart_game():
   uwait(1)
   util.scroll_right(mx, my, const.EventMapScrolldX)
   uwait(1.5)
+  # Set correct difficulty
+  if const.LevelLocationID == 1:
+    const.LevelDifficulty = 0
 
 def start():
   find_bs()
@@ -252,7 +275,7 @@ def start():
   while(const.running):
     uwait(const.FPS, False)
     main_update()
-    if win32gui.GetForegroundWindow() == const.Hwnd:
+    if win32gui.GetForegroundWindow() != const.AppHwnd:
       continue
     inter_timer += 1
     if inter_timer > const.InternUpdateTime:
@@ -287,5 +310,4 @@ def test_func():
 
 start()
 # test_func()
-# align_window(0,0)
 # restart_game()

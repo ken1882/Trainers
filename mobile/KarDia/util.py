@@ -94,3 +94,10 @@ def scroll_right(x, y, delta = 100, app_offset=True):
     win32api.SetCursorPos((max([x,tx]), y))
     wait(ScrollTime)
   mouse_up(x, y)
+
+def resume(fiber):
+  try:
+    next(fiber)
+  except StopIteration:
+    return False
+  return True
