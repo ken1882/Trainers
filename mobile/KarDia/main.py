@@ -9,6 +9,7 @@ from datetime import datetime
 const.PWD = os.path.dirname(os.path.realpath(__file__))
 const.Hwnd = win32gui.GetForegroundWindow()
 const.LastRecoveryTime   = datetime(1970,1,1)
+LastHwnd = None
 
 # Find hwnd of bluestack
 def find_bs():
@@ -89,8 +90,7 @@ def process_recovery():
   # Stop if (probably) no stamina recover item left
   if (datetime.now() - const.LastRecoveryTime).total_seconds() < 120:
     print("Recovery exhausted")
-    const.running = False
-    return
+    return restart_game()
   # Leave current level
   while stage.is_stage_level() or stage.is_stage_boss() and not stage.is_stage_map():
     action.leave_level()
@@ -215,6 +215,8 @@ def reset_window():
 
 def restart_game():
   print("Restart")
+  const.FlagRecoverStamina = False
+  const.ActionFiber = None
   getAppRect()
   appPos = [const.AppRect[0], const.AppRect[1]]
   uwait(0.5)
@@ -269,14 +271,22 @@ def restart_game():
     const.LevelDifficulty = 0
 
 def start():
+  global LastHwnd
   find_bs()
   align_window()
   inter_timer = const.InternUpdateTime
   while(const.running):
     uwait(const.FPS, False)
     main_update()
-    if win32gui.GetForegroundWindow() != const.AppHwnd:
+    cur_hwnd = win32gui.GetForegroundWindow()
+    if cur_hwnd != const.AppHwnd:
+      LastHwnd = cur_hwnd
       continue
+    elif LastHwnd != const.AppHwnd:
+      print("Switched to app, begin in 1.2 seconds")
+      LastHwnd = cur_hwnd
+      uwait(1.2)
+    
     inter_timer += 1
     if inter_timer > const.InternUpdateTime:
       inter_timer = 0
@@ -310,4 +320,5 @@ def test_func():
 
 start()
 # test_func()
+# align_window(0,0)
 # restart_game()

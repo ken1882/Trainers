@@ -71,6 +71,9 @@ StageBattleColor = [(59,234,255),(110,85,37), (212,45,18)]
 StageBattleEndPixel = [[49,321], [241,491], [440,352]]
 StageBattleEndColor = [(231,233,89), (93,61,16), (238,175,65)]
 
+StageBattleLostPixel = [[110, 503], [270, 443], [360, 528], [309, 301], [314, 276]]
+StageBattleLostColor = [(111, 105, 84), (235, 223, 198), (151, 145, 127), (192, 192, 192), (0, 0, 0)]
+
 StageLevelupPixel = [[236,392], [146,451]]
 StageLevelupColor = [(255,226,76), (243,51,64)]
 

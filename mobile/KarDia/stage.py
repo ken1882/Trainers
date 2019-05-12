@@ -32,7 +32,10 @@ def is_stage_loot():
   return is_pixel_match(const.StageLootPixel, const.StageLootColor)
 
 def is_battle_end():
-  return is_pixel_match(const.StageBattleEndPixel, const.StageBattleEndColor)
+  a = is_pixel_match(const.StageBattleLostPixel, const.StageBattleLostColor)
+  b = is_pixel_match(const.StageBattleEndPixel, const.StageBattleEndColor)
+  return a or b
+
 
 def is_stage_level():
   return is_pixel_match(const.StageLevelPixel, const.StageLevelColor)
