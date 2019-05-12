@@ -70,6 +70,7 @@ def update_keystate():
   if const.Mode == 1 and win32api.GetAsyncKeyState(win32con.VK_CONTROL) and len(const.OreLocation) < 2:
     if win32api.GetAsyncKeyState(win32con.VK_LBUTTON):
       pos = win32api.GetCursorPos()
+      pos = [pos[0] - const.AppRect[0], pos[1] - const.AppRect[1]]
       key_cooldown = 10
       # return if record yet completed
       if len(const.OreLocation) == 1 and pos == const.OreLocation[0]:
@@ -140,7 +141,8 @@ def process_recovery():
   const.FlagRecoverStamina = False
 
 def process_update():
-  freeze.detect_freeze()
+  if const.Mode != 1:
+    freeze.detect_freeze()
   # Process stamina recovery if flag set
   if const.FlagRecoverStamina:
     if const.ActionFiber:
@@ -318,7 +320,8 @@ def test_func():
   align_window()
   getAppRect()
 
-start()
-# test_func()
-# align_window(0,0)
+# start()
+test_func()
+align_window(0,0)
+print(stage.is_stage_mine())
 # restart_game()
