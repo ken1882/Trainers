@@ -1,2 +1,6 @@
 __pycache__/*
 /*/__pycache__/*
+*.exe
+*.o
+/*/*.exe
+/*/*.o
