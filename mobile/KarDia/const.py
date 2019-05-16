@@ -125,7 +125,7 @@ ItemStickUsePos  = [404,530]
 ItemBreadPos     = [397,327]
 ItemBreadUsePos  = [405,534]
 ItemBreadColor   = (221,144,66)
-UseItemAmountPos = [205,445]
+UseItemAmountPos = [202,445]
 UseAllItemPos    = [300,444]
 UseItemOKPos     = [235,503]
 

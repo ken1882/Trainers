@@ -30,7 +30,7 @@ def to_boss_battle(loc=0):
     mx, my = const.ActionBattle[2]
     rrange = 25
     util.scroll_right(mx+random.randint(-rrange,rrange), my+random.randint(-rrange,rrange), 250)
-    uwait(0.8)
+    uwait(1)
     util.scroll_right(mx+random.randint(-rrange,rrange), my+random.randint(-rrange,rrange), 250)
     uwait(0.5)
   loc = loc % 3

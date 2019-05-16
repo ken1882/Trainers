@@ -320,8 +320,8 @@ def test_func():
   align_window()
   getAppRect()
 
-# start()
-test_func()
-align_window(0,0)
-print(stage.is_stage_mine())
+start()
+# test_func()
+# align_window(0,0)
+# win32api.SetCursorPos(const.UseItemAmountPos)
 # restart_game()
