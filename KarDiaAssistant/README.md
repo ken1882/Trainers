@@ -1,6 +1,4 @@
 # KarDia(牧羊人之心) command line assistant
-
-## Introduction:
 Tool that coded and used myself during gameplay. Including auto-play mini game and grinding stuff.
 
 ## Usage:
@@ -27,3 +25,5 @@ Call `pyhton main.py` or `KarDiaAssistant.exe` in command line with following ar
   --unrestricted        Play the mini game until game over
   -r, --repeat          Repeat playing same mini game until out of token
   ```
+## Information:
+// TODO: add infos
