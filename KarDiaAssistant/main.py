@@ -11,6 +11,8 @@ import sysargv, slime, straw
 PWD = os.path.dirname(os.path.realpath(__file__))
 Hwnd = win32gui.GetForegroundWindow()
 LastHwnd = None
+os.environ['PATH'] += ';{}\\bin'.format(PWD)
+os.environ['TESSDATA_PREFIX'] = PWD + '\\bin'
 
 def start():
   global LastHwnd
@@ -50,15 +52,18 @@ def test_func():
   util.getPixel()
 
 try:
-  if G.FlagTest and G.Mode > 0:
+  if G.FlagTest:
     test_func()
     if G.FlagAlign:
       util.align_window(0,0)
     if G.Mode == 1:
       slime.identify(False)
+      print(slime.is_gameover())
+      print(slime.get_score())
+      util.save_screenshot("tmp/slime_score.png",)
     elif G.Mode == 2:
       print(straw.is_stage_prepare())
-  elif G.FlagStart and G.Mode > 0:
+  elif G.Mode > 0:
     start()
   else:
     sysargv.show_help()

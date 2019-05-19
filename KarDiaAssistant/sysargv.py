@@ -11,7 +11,6 @@ parser.add_argument("--debug", help="Output debug information, add `--verbose` t
 parser.add_argument("-m", "--mode", help="Set mode", type=int, default=0)
 parser.add_argument("-c", "--control", help="Manually control program update progress", action=Ptrue)
 parser.add_argument("-d", "--difficulty", help="Set level difficulty", type=int, default=0)
-parser.add_argument("-s", "--start", help="Start program, use `-m` to set functionality", action=Ptrue)
 parser.add_argument("-t", "--test", help="test program, using `-m` to set which mode to testing", action=Ptrue)
 parser.add_argument("-a", "--align", help="Align window to (0,0)", action=Ptrue)
 parser.add_argument("--slime", help="Set the mode to 0(auto-play slime minigame)", action=Ptrue)
@@ -21,9 +20,9 @@ parser.add_argument("-r", "--repeat", help="Repeat playing same mini game until 
 
 def load_mode(args):
   if args.slime:
-    G.Mode = 0
-  elif args.straw:
     G.Mode = 1
+  elif args.straw:
+    G.Mode = 2
 
 def load():
   args = parser.parse_args()
@@ -32,7 +31,6 @@ def load():
   G.FlagDebug  = args.debug
   G.FlagVerbose = args.verbose
   G.FlagManualControl = args.control
-  G.FlagStart = args.start
   G.FlagTest = args.test 
   G.FlagAlign = args.align
   G.FlagRestricted = args.unrestricted

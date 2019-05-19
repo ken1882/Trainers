@@ -6,6 +6,7 @@ from PIL import Image
 from PIL import ImageGrab
 from ctypes import windll
 from datetime import datetime
+import pytesseract as pyte
 
 ScrollTime  = 0.03
 ScrollDelta = [3,8]
@@ -27,6 +28,20 @@ def print_window():
     pass
   pixels = im.load()
   return pixels
+
+def save_screenshot(outname):
+  im = ImageGrab.grab(getAppRect(True))
+  ext = outname.split('.')[-1].upper()
+  try:
+    im.save(outname, ext)
+  except Exception as err:
+    print("Screenshot save failed", err, sep='\n')
+
+def save_png(img, filename):
+  try:
+    img.save(filename, "PNG")
+  except Exception as err:
+    print("Image save failed", err, sep='\n')
 
 def terminate():
   pass
@@ -174,3 +189,16 @@ def resume(fiber):
   except StopIteration:
     return False
   return True
+
+def read_app_text(x, y, x2, y2):
+  rect = getAppRect(True)
+  rect[2], rect[3] = rect[0] + x2, rect[1] + y2
+  rect[0], rect[1] = rect[0] + x,  rect[1] + y
+  im = ImageGrab.grab(rect)
+  filename = 'tmp/apptext.png'
+  save_png(im, filename)
+  uwait(0.5)
+  return img_to_str(filename)
+
+def img_to_str(filename):
+  return pyte.image_to_string(filename, config='-psm 13 -psm 12')

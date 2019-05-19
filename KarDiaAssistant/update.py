@@ -31,21 +31,32 @@ def update_freeze():
   # freeze.detect_freeze()
   pass
 
-def process_update():
-  # print("Scene: {}, freeze timer: {} ({})".format(stage.get_current_stage(), freeze.get_freeze_timer(), freeze.is_frozen()))    
-  update_freeze()
-  if stage.is_stage_slime():
-    G.Mode = 1
-    action.random_click(*const.SlimeOKPos)
-  elif G.Mode == 1 and not G.FlagManualControl:
-    slime.identify()
+def is_minigame_token_enough():
+  return int(util.read_app_text(*const.TokenNumberPos)) > 0
+
+def determine_continue():
+  if stage.is_stage_minigames():
+    return is_minigame_token_enough() 
+  return True
+
+def is_minigame():
+  return G.Mode == 1 or G.Mode == 2
+
+def update_minigame():
+  in_stage = True
+  if G.Mode == 1:
+    in_stage = slime.update()
   elif G.Mode == 2:
-    if straw.is_stage_prepare():
-      action.random_click(*const.StrawReadyPos)
-      uwait(2)
-    elif straw.is_game_over():
-      print("Game over")
-      action.random_click(*const.StrawOverOKPos)
-      G.FlagRunning = False
-    elif straw.is_stage_game():
-      straw.determine_jump()
+    in_stage = straw.update()
+  
+  G.FlagRunning = (in_stage or G.FlagRepeat)
+  if G.FlagRepeat and stage.is_stage_minigames():
+    G.FlagRunning = determine_continue()
+
+def process_update():
+  update_freeze()
+  if stage.is_stage_loot() or stage.has_event():
+    action.action_next()
+
+  if is_minigame():
+    update_minigame()

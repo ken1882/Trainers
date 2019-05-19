@@ -12,7 +12,6 @@ FlagRunning = True
 FlagPaused  = False
 FlagManualControl = False
 FlagVerbose = False
-FlagStart = False
 FlagTest  = False
 FlagAlign = False
 FlagRestricted = True
@@ -24,7 +23,6 @@ def Flags(name=None):
     'paused': FlagPaused,
     'control': FlagManualControl,
     'verbose': FlagVerbose,
-    'start': FlagStart,
     'test': FlagTest,
     'align': FlagAlign,
     'restricted': FlagRestricted,

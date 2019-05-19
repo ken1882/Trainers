@@ -21,7 +21,71 @@ def is_pixel_match(pix, col):
 def is_stage_slime():
   return is_pixel_match(const.StageSlimePixel, const.StageSlimeColor)
 
+def is_stage_minigames():
+  return is_pixel_match(const.StageMiniGameSelectionPixel, const.StageMiniGameSelectionColor)
+
+def has_event():
+  return is_pixel_match(const.EventPixel, const.EventColor)
+
+def is_stage_map():
+  return is_pixel_match(const.StageMapPixel, const.StageMapColor)
+
+def is_stage_loot():
+  return is_pixel_match(const.StageLootPixel, const.StageLootColor)
+
+def is_battle_end():
+  a = is_pixel_match(const.StageBattleLostPixel, const.StageBattleLostColor)
+  b = is_pixel_match(const.StageBattleEndPixel, const.StageBattleEndColor)
+  return a or b
+
+def is_stage_level():
+  return is_pixel_match(const.StageLevelPixel, const.StageLevelColor)
+
+def is_stage_battle():
+  return is_pixel_match(const.StageBattlePixel, const.StageBattleColor)
+
+def is_stage_levelup():
+  return is_pixel_match(const.StageLevelupPixel, const.StageLevelupColor)
+
+def is_no_stamina():
+  return is_pixel_match(const.StageNoStaminaPixel, const.StageNoStaminaColor)
+
+def is_stage_mine():
+  return is_pixel_match(const.StageMinePixel, const.StageMineColor)
+
+def is_stage_farm():
+  return is_pixel_match(const.StageFarmPixel, const.StageFarmColor)
+
+def is_stage_loading():
+  return is_pixel_match(const.StageLoadingPixel, const.StageLoadingColor)
+
+def is_stage_disconnected():
+  return is_pixel_match(const.StageNoInternetPixel, const.StageNoInternetColor)
+
+
 def get_current_stage():
-  if is_stage_slime():
+  if is_no_stamina():
+    return "No Stamina!"
+  elif has_event():
+    return "event"
+  if is_stage_map():
+    return "map"
+  elif is_stage_level():
+    return "level"
+  elif is_stage_loot():
+    return "loot"
+  elif is_stage_battle():
+    return "battle"
+  elif is_battle_end():
+    return "battle end"
+  elif is_stage_levelup():
+    return "Levelup"
+  elif is_stage_mine():
+    return "Mine"
+  elif is_stage_loading():
+    return "Loading"
+  elif is_stage_slime():
     return "Slime mini game"
+  elif is_stage_minigames():
+    return "Minigame selection"
   return None

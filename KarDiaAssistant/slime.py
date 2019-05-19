@@ -1,11 +1,18 @@
-import const, G, util, cv2, slimeai, slimegrid, copy, random
+import cv2, slimeai, slimegrid, copy, random
+import const, G, util, stage, action
 import numpy as np 
 import math
+from G import uwait
 
 GridPos = np.asarray(const.SlimeGridPos)
 Grid    = slimegrid.Grid()
 AI      = slimeai.AI()
 EmptyGrid = [0 for i in range(16)]
+CheckScoreTime  = 10
+CheckScoreTimer = CheckScoreTime
+
+def is_gameover():
+  return stage.is_pixel_match(const.StageSlimeOverPixel, const.StageSlimeOverColor)
 
 def move(mid):
   pos = const.SlimeScrollPos.copy()
@@ -25,6 +32,9 @@ def move(mid):
 def dir2str(_dir):
   return "↑↓←→"[_dir]
 
+def get_score():
+  return int(util.read_app_text(*const.SlimeScorePos))
+
 def determine_pos(pos):
   global GridPos
   deltas = GridPos - np.asarray(pos)
@@ -39,10 +49,10 @@ def update_grid(old_grid, new_grid):
   old_grid.setGridA(ga)
 
 def identify(mov=True):
-  global Grid
+  global Grid, CheckScoreTimer, CheckScoreTime
   util.getPixel()
   img_rgb = cv2.imread(G.ScreenImageFile)
-  threshold = .87
+  threshold = .89
   slimes = EmptyGrid.copy()
   first_scan = (sum(Grid) == 0)
   for i, img in enumerate(const.SlimeImages):
@@ -80,14 +90,52 @@ def identify(mov=True):
   print("updated:", Grid, sep='\n')
   _dir = AI.getMove(Grid)
   print(_dir, dir2str(_dir))
+  
+  over = (_dir < 0)
+  score = 0
+  if G.FlagRestricted and (2048 in Grid) and (512 in Grid) and (CheckScoreTimer >= CheckScoreTime):
+    score = get_score()
+    CheckScoreTimer = 0
+  CheckScoreTimer += 1
+
+  if over or score >= 0x2EE0:
+    over = True
+    if score < 0x2EE0:
+      _dir = 0
+      util.save_screenshot("tmp/slime_score.png")
+      print("Game Over")
+    else:
+      print("Enough score")
+      action.random_click(*const.LeaveGamePos)
+      uwait(1)
+      action.random_click(*const.LeaveGameConfirm)
+      uwait(5)
+      return True
 
   if mov:
-    if _dir < 0:
-      G.FlagRunning = False
-      print("Game Over")
-      _dir = 0
     Grid.move(_dir)
     move(_dir)
+
   print("moved", Grid, sep='\n')
   if G.FlagDebug:
     cv2.imwrite('result.png', img_rgb)
+
+  return over
+
+def update():
+  if stage.is_stage_slime():
+    action.random_click(*const.SlimeOKPos)
+  else:
+    over = False
+    if not G.FlagManualControl:
+      over = identify()
+    over = is_gameover() or over
+    if over:
+      print("Game over")
+      util.save_screenshot("tmp/slime_score.png")
+      uwait(1)
+      action.random_click(*const.SlimeOverOKPos)
+      G.FlagRunning = (False or G.FlagRepeat)
+      uwait(3)
+      return False
+  return True
