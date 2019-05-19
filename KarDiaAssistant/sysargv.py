@@ -13,8 +13,8 @@ parser.add_argument("-c", "--control", help="Manually control program update pro
 parser.add_argument("-d", "--difficulty", help="Set level difficulty", type=int, default=0)
 parser.add_argument("-t", "--test", help="test program, using `-m` to set which mode to testing", action=Ptrue)
 parser.add_argument("-a", "--align", help="Align window to (0,0)", action=Ptrue)
-parser.add_argument("--slime", help="Set the mode to 0(auto-play slime minigame)", action=Ptrue)
-parser.add_argument("--straw", help="Set the mode to 1(auto-play running away from scarecrow minigame)", action=Ptrue)
+parser.add_argument("--slime", help="Set the mode to 1(auto-play slime minigame)", action=Ptrue)
+parser.add_argument("--straw", help="Set the mode to 2(auto-play running away from scarecrow minigame)", action=Ptrue)
 parser.add_argument("--unrestricted", help="Play the mini game until game over", action=Pfalse, default=True)
 parser.add_argument("-r", "--repeat", help="Repeat playing same mini game until out of token", action=Ptrue, default=False)
 
