@@ -1,7 +1,7 @@
 import PIL.ImageGrab
 import win32api, win32con, win32gui
 import os, time, random, sys
-import G, util, action, stage, freeze, const, update
+import G, util, action, stage, freeze, const, update, Input
 import numpy as np
 from G import uwait, Mode
 from datetime import datetime
@@ -37,11 +37,12 @@ def start():
       uwait(1.2)
     
     inter_timer += 1
-    if inter_timer > G.InternUpdateTime:
+    if inter_timer >= G.InternUpdateTime:
       inter_timer = 0
       util.getAppRect()
       if not G.FlagPaused:
         update.process_update()
+        Input.clean_intern()
 
 sysargv.load()
 
@@ -58,8 +59,8 @@ try:
       util.align_window(0,0)
     if G.Mode == 1:
       slime.identify(False)
-      print(slime.is_gameover())
-      print(slime.get_score())
+      print("Gameover:", slime.is_gameover())
+      print("Score:", slime.get_score())
       util.save_screenshot("tmp/slime_score.png",)
     elif G.Mode == 2:
       print(straw.is_stage_prepare())

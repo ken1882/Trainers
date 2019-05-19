@@ -4,6 +4,11 @@ from threading import Thread
 
 CDT = 10
 ClickCD = [0, 0, 0]
+Ready = True
+
+def init():
+  global Ready
+  Ready = True
 
 def determine_jump():
   jp = [0,0,0]
@@ -31,15 +36,18 @@ def is_game_over():
   return stage.is_pixel_match(const.StageStrawOverPixel, const.StageStrawOverColor)
 
 def update():
+  global Ready
   if is_stage_prepare():
+    Ready = True
     action.random_click(*const.StrawReadyPos)
     uwait(2)
   elif is_game_over():
     print("Game over")
+    Ready = False
     action.random_click(*const.StrawOverOKPos)
     G.FlagRunning = (False or G.FlagRepeat)
     uwait(3)
     return False
-  elif is_stage_game():
+  elif Ready and is_stage_game():
     determine_jump()
   return True

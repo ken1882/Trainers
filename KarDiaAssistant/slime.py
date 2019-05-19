@@ -10,6 +10,11 @@ AI      = slimeai.AI()
 EmptyGrid = [0 for i in range(16)]
 CheckScoreTime  = 10
 CheckScoreTimer = CheckScoreTime
+Ready = True
+
+def init():
+  global Ready
+  Ready = True
 
 def is_gameover():
   return stage.is_pixel_match(const.StageSlimeOverPixel, const.StageSlimeOverColor)
@@ -48,6 +53,20 @@ def update_grid(old_grid, new_grid):
       ga[i] = v
   old_grid.setGridA(ga)
 
+def is_score_check_needed():
+  global CheckScoreTime, CheckScoreTimer, Grid
+  if CheckScoreTimer < CheckScoreTime:
+    return False
+  if 2048 not in Grid or 512 not in Grid:
+    return False
+  return True
+
+def is_score_enough(score):
+  global Grid
+  if G.FlagRestricted and (score >= 0x2EE0 or 4096 in Grid):
+    return True
+  return False
+
 def identify(mov=True):
   global Grid, CheckScoreTimer, CheckScoreTime
   util.getPixel()
@@ -76,7 +95,8 @@ def identify(mov=True):
   
   new_grid = slimegrid.Grid()
   new_grid.setGridA(slimes)
-  print(new_grid)
+  if G.FlagDebug:
+    print(new_grid)
   update_grid(Grid, new_grid)
   
   if G.FlagDebug:
@@ -93,14 +113,12 @@ def identify(mov=True):
   
   over = (_dir < 0)
   score = 0
-  if G.FlagRestricted and (2048 in Grid) and (512 in Grid) and (CheckScoreTimer >= CheckScoreTime):
+  if G.FlagRestricted and is_score_check_needed():
     score = get_score()
     CheckScoreTimer = 0
   CheckScoreTimer += 1
-
-  if over or score >= 0x2EE0:
-    over = True
-    if score < 0x2EE0:
+  if over or is_score_enough(score):
+    if over:
       _dir = 0
       util.save_screenshot("tmp/slime_score.png")
       print("Game Over")
@@ -123,14 +141,17 @@ def identify(mov=True):
   return over
 
 def update():
+  global Ready
   if stage.is_stage_slime():
+    Ready = True
     action.random_click(*const.SlimeOKPos)
   else:
     over = False
-    if not G.FlagManualControl:
+    if Ready and not G.FlagManualControl:
       over = identify()
     over = is_gameover() or over
     if over:
+      Ready = False
       print("Game over")
       util.save_screenshot("tmp/slime_score.png")
       uwait(1)

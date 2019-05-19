@@ -48,6 +48,8 @@ StrawOverOKPos = [232, 587]
 
 StageMiniGameSelectionPixel = [[47, 173], [70, 154], [293, 167], [316, 163], [224, 169], [429, 811], [393, 736]]
 StageMiniGameSelectionColor = [(82, 102, 198), (201, 68, 75), (83, 103, 199), (203, 66, 73), (240, 240, 142), (255, 255, 75), (238, 238, 228)]
+MiniGameEnterPos = [399, 525]
+
 
 TokenNumberPos = [334, 821, 377, 840]
 

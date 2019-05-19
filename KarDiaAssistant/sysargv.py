@@ -9,13 +9,14 @@ parser.add_argument("-v", "--version", help="Output current version", action='ve
 parser.add_argument("--verbose", help="Output all debug information", action=Ptrue)
 parser.add_argument("--debug", help="Output debug information, add `--verbose` to output all infos", action=Ptrue)
 parser.add_argument("-m", "--mode", help="Set mode", type=int, default=0)
+parser.add_argument("-na", "--no-autoplay", help="No auto play in slime minigame (aka show hint only)", action=Pfalse, default=True)
 parser.add_argument("-c", "--control", help="Manually control program update progress", action=Ptrue)
 parser.add_argument("-d", "--difficulty", help="Set level difficulty", type=int, default=0)
 parser.add_argument("-t", "--test", help="test program, using `-m` to set which mode to testing", action=Ptrue)
 parser.add_argument("-a", "--align", help="Align window to (0,0)", action=Ptrue)
 parser.add_argument("--slime", help="Set the mode to 1(auto-play slime minigame)", action=Ptrue)
 parser.add_argument("--straw", help="Set the mode to 2(auto-play running away from scarecrow minigame)", action=Ptrue)
-parser.add_argument("--unrestricted", help="Play the mini game until game over", action=Pfalse, default=True)
+parser.add_argument("--unrestricted", help=argparse.SUPPRESS, action=Pfalse, default=True)
 parser.add_argument("-r", "--repeat", help="Repeat playing same mini game until out of token", action=Ptrue, default=False)
 
 def load_mode(args):
@@ -24,7 +25,7 @@ def load_mode(args):
   elif args.straw:
     G.Mode = 2
 
-def load():
+def load():  
   args = parser.parse_args()
   G.Mode = args.mode
   G.Difficulty = args.difficulty
@@ -35,6 +36,7 @@ def load():
   G.FlagAlign = args.align
   G.FlagRestricted = args.unrestricted
   G.FlagRepeat = args.repeat
+  G.FlagAutoPlay = args.no_autoplay
   load_mode(args)
   setup()
 

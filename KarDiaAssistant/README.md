@@ -22,7 +22,6 @@ Call `pyhton main.py` or `KarDiaAssistant.exe` in command line with following ar
   --slime               Set the mode to 1(auto-play slime minigame)
   --straw               Set the mode to 2(auto-play running away from
                         scarecrow minigame)
-  --unrestricted        Play the mini game until game over
   -r, --repeat          Repeat playing same mini game until out of token
   ```
 ## Information:

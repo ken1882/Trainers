@@ -19,10 +19,10 @@ def initialize():
     raise Exception("Invalid Hwnd")
   Initialized  = True
 
-def print_window():
+def print_window(saveimg=False):
   im = ImageGrab.grab(getAppRect(True))
   try:
-    if G.Mode == 1:
+    if G.Mode == 1 or saveimg:
       im.save(G.ScreenImageFile)
   except Exception:
     pass
@@ -43,6 +43,7 @@ def save_png(img, filename):
   except Exception as err:
     print("Image save failed", err, sep='\n')
 
+# Program clean ups
 def terminate():
   pass
 

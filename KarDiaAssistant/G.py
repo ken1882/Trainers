@@ -16,6 +16,7 @@ FlagTest  = False
 FlagAlign = False
 FlagRestricted = True
 FlagRepeat = False
+FlagAutoPlay = True
 
 def Flags(name=None):
   flags = {
@@ -27,6 +28,7 @@ def Flags(name=None):
     'align': FlagAlign,
     'restricted': FlagRestricted,
     'repeat': FlagRepeat,
+    'autoplay': FlagAutoPlay,
   }
   if name:
     name = name.lower()
@@ -64,7 +66,7 @@ DefaultRandRange = 12
 ActionFiber = None
 
 # App screen image
-ScreenImageFile = "assets/app.png"
+ScreenImageFile = "tmp/app.png"
 
 SlimeAI = slimeai.AI()
 
