@@ -72,6 +72,10 @@ SlimeAI = slimeai.AI()
 
 ScreenTimeout = 500
 
+OreLocation = []
+
+Pool = None
+
 def wait(sec):
   time.sleep(sec)
 
@@ -81,3 +85,18 @@ def uwait(sec, rand=True):
     if sec > 0.5:
       sec -= (random.random() / 3)
   wait(sec)
+
+def is_mode_slime():
+  return Mode == 1
+
+def is_mode_straw():
+  return Mode == 2
+
+def is_mode_mine():
+  return Mode == 3
+
+def setup():
+  global InternUpdateTime, ScreenTimeout
+  if is_mode_straw():
+    InternUpdateTime = 1
+    ScreenTimeout = 50

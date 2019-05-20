@@ -1,5 +1,6 @@
-import G, util, win32api, win32con, freeze, stage, const, action
-import slime, straw, Input
+import G, const, util, win32api, win32con
+import freeze, stage, action, Input
+import slime, straw, mine
 from G import uwait
 
 minigame_pos = [0,0]
@@ -18,7 +19,7 @@ def update_keystate():
     G.FlagPaused ^= True
     key_cooldown = 10
     print("Paused: {}".format(G.FlagPaused))
-  elif G.Mode == 1 and G.FlagManualControl and Input.is_trigger(win32con.VK_CONTROL, False):
+  elif G.is_mode_slime() and G.FlagManualControl and Input.is_trigger(win32con.VK_CONTROL, False):
     slime.identify(G.FlagAutoPlay)
 
 def main_update():
@@ -34,7 +35,7 @@ def update_freeze():
   pass
 
 def is_minigame_token_enough():
-  return int(util.read_app_text(*const.TokenNumberPos)) > 0
+  return int(util.read_app_text(*const.TokenNumberPos, True)) > 0
 
 def determine_continue():
   if stage.is_stage_minigames():
@@ -42,39 +43,53 @@ def determine_continue():
   return True
 
 def is_minigame():
-  return G.Mode == 1 or G.Mode == 2
+  return G.is_mode_slime() or G.is_mode_straw()
 
 def update_minigame():
   global minigame_pos
   in_stage = True
   if stage.is_stage_minigames():
-    print("Press right mouse button to record minigame position")
-    if sum(minigame_pos) == 0 and Input.is_trigger(win32con.VK_RBUTTON):
-      minigame_pos = win32api.GetCursorPos()
-      print("Mini game position recored: ", minigame_pos)
-      uwait(1)
-    elif sum(minigame_pos) > 0:
-      print("Entering minigame")
-      action.random_click(*minigame_pos)
-      uwait(0.5)
-      action.random_click(*const.MiniGameEnterPos)
+    if G.FlagRepeat and sum(minigame_pos) == 0:
+      print("Press right mouse button to record minigame position")
+      if Input.is_trigger(win32con.VK_RBUTTON):
+        mx, my = win32api.GetCursorPos()
+        mx, my = mx - G.AppRect[0], my - G.AppRect[1]
+        minigame_pos = [mx, my]
+        print("Mini game position recored: ", minigame_pos)
+        uwait(1)
+    if sum(minigame_pos) > 0:
+      cont = determine_continue()
+      if cont:
+        print("Entering minigame")
+        action.random_click(*minigame_pos)
+        uwait(0.5)
+        action.random_click(*const.MiniGameEnterPos)
+      else:
+        G.FlagRunning = False
+        print("No token!")
   else:
-    if G.Mode == 1:
+    if G.is_mode_slime():
       in_stage = slime.update()
-    elif G.Mode == 2:
+    elif G.is_mode_straw():
       in_stage = straw.update()
   
   G.FlagRunning = (in_stage or G.FlagRepeat)
-  if G.FlagRepeat and stage.is_stage_minigames():
-    cont = determine_continue()
-    G.FlagRunning = cont
-    if cont:
-      pass
 
 def process_update():
   update_freeze()
-  if stage.is_stage_loot() or stage.has_event():
+  if stage.is_no_stamina():
+    print("No Stamina!")
+    G.FlagRunning = False
+    return False
+  elif stage.is_stage_loot() or stage.has_event() or stage.is_battle_end():
     action.action_next()
+  elif stage.is_battle_ready():
+    uwait(1)
+    action.action_next(100)
 
   if is_minigame():
     update_minigame()
+  else:
+    print("Stage: {}, freeze timer: {}".format(stage.get_current_stage(), freeze.get_freeze_timer()))
+    if G.is_mode_mine():
+      mine.update()

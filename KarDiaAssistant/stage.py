@@ -28,7 +28,8 @@ def has_event():
   return is_pixel_match(const.EventPixel, const.EventColor)
 
 def is_stage_map():
-  return is_pixel_match(const.StageMapPixel, const.StageMapColor)
+  # todo
+  return False
 
 def is_stage_loot():
   return is_pixel_match(const.StageLootPixel, const.StageLootColor)
@@ -39,7 +40,9 @@ def is_battle_end():
   return a or b
 
 def is_stage_level():
-  return is_pixel_match(const.StageLevelPixel, const.StageLevelColor)
+  # todo
+  return False
+  # return is_pixel_match(const.StageLevelPixel, const.StageLevelColor)
 
 def is_stage_battle():
   return is_pixel_match(const.StageBattlePixel, const.StageBattleColor)
@@ -62,6 +65,8 @@ def is_stage_loading():
 def is_stage_disconnected():
   return is_pixel_match(const.StageNoInternetPixel, const.StageNoInternetColor)
 
+def is_battle_ready():
+  return is_stage_battle() and is_pixel_match(const.BattleReadyPixel, const.BattleReadyColor)
 
 def get_current_stage():
   if is_no_stamina():

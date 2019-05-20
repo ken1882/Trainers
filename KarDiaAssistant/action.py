@@ -1,15 +1,21 @@
-import G, const, util
-import random
+import G, const, util, time
+import random, multiprocessing
 from G import uwait
+from multiprocessing import freeze_support
 
 def random_click(x, y, rrange=G.DefaultRandRange):
   if rrange is None:
     rrange = G.DefaultRandRange
   util.click(x + random.randint(-rrange,rrange), y + random.randint(-rrange,rrange))
 
-def delayed_click(x, y, delay, rrange=G.DefaultRandRange):
-  uwait(delay)
+def _dealyed_click(x, y, delay, rrange):
+  time.sleep(delay)
   random_click(x, y, rrange)
+  
+def delayed_click(x, y, delay, rrange=G.DefaultRandRange):
+  x += G.AppRect[0]
+  y += G.AppRect[1]
+  G.Pool.starmap(_dealyed_click, [(x, y, delay, rrange)])
 
 def action_next(rrange=G.DefaultRandRange):
   mx, my = const.ActionContinue

@@ -1,3 +1,4 @@
+from multiprocessing import set_start_method, freeze_support, Pool
 import PIL.ImageGrab
 import win32api, win32con, win32gui
 import os, time, random, sys
@@ -5,7 +6,7 @@ import G, util, action, stage, freeze, const, update, Input
 import numpy as np
 from G import uwait, Mode
 from datetime import datetime
-import sysargv, slime, straw
+import sysargv, slime, straw, mine
 
 # assign constants
 PWD = os.path.dirname(os.path.realpath(__file__))
@@ -13,6 +14,11 @@ Hwnd = win32gui.GetForegroundWindow()
 LastHwnd = None
 os.environ['PATH'] += ';{}\\bin'.format(PWD)
 os.environ['TESSDATA_PREFIX'] = PWD + '\\bin'
+
+if __name__ == '__main__':
+  set_start_method('spawn', force=True)
+  freeze_support()
+  G.Pool = Pool(2)
 
 def start():
   global LastHwnd
@@ -44,6 +50,8 @@ def start():
         update.process_update()
         Input.clean_intern()
 
+if not os.path.isdir("tmp"):
+  os.mkdir("tmp")
 sysargv.load()
 
 def test_func():
@@ -52,21 +60,24 @@ def test_func():
   util.getAppRect()
   util.getPixel()
 
-try:
-  if G.FlagTest:
-    test_func()
-    if G.FlagAlign:
-      util.align_window(0,0)
-    if G.Mode == 1:
-      slime.identify(False)
-      print("Gameover:", slime.is_gameover())
-      print("Score:", slime.get_score())
-      util.save_screenshot("tmp/slime_score.png",)
-    elif G.Mode == 2:
-      print(straw.is_stage_prepare())
-  elif G.Mode > 0:
-    start()
-  else:
-    sysargv.show_help()
-finally:
-  util.terminate()
+if __name__ == '__main__':
+  try:
+    if G.FlagTest:
+      test_func()
+      if G.FlagAlign:
+        util.align_window(0,0)
+      if G.is_mode_slime():
+        slime.identify(False)
+        print("Gameover:", slime.is_gameover())
+        print("Score:", slime.get_score())
+        util.save_screenshot("tmp/slime_score.png",)
+      elif G.is_mode_straw():
+        print(straw.is_stage_prepare())
+      elif G.is_mode_mine():
+        print(stage.is_stage_mine())
+    elif G.Mode > 0:
+      start()
+    else:
+      sysargv.show_help()
+  finally:
+    util.terminate()

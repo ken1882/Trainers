@@ -1,6 +1,5 @@
 import const, util, action, G, stage, random
 from G import uwait
-from threading import Thread
 
 CDT = 10
 ClickCD = [0, 0, 0]
@@ -18,11 +17,12 @@ def determine_jump():
     if not stage.is_color_ok(util.getPixel(*pos), const.StrawPathColor[i]):
       jp[i] = 1
     if ClickCD[i] == 0 and not stage.is_color_ok(util.getPixel(*pos), const.StrawPathColor[i]):
-      action.random_click(*pos, G.DefaultRandRange / 2)
-      # th = Thread(target=action.delayed_click(*pos, 0.1, G.DefaultRandRange / 2))
-      # th.start()
+      mx, my = pos.copy()
+      mx -= 20
+      action.random_click(mx, my, G.DefaultRandRange / 2)
+      action.delayed_click(mx, my, 0.05, G.DefaultRandRange / 2)
       ClickCD[i] = CDT
-      uwait(0.03)
+      
   if G.FlagDebug:
     print("Jump:", jp)
 

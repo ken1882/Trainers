@@ -22,7 +22,7 @@ def initialize():
 def print_window(saveimg=False):
   im = ImageGrab.grab(getAppRect(True))
   try:
-    if G.Mode == 1 or saveimg:
+    if G.is_mode_slime() or saveimg:
       im.save(G.ScreenImageFile)
   except Exception:
     pass
@@ -45,7 +45,9 @@ def save_png(img, filename):
 
 # Program clean ups
 def terminate():
-  pass
+  if G.Pool:
+    G.Pool.close()
+    G.Pool.terminate()
 
 def hash_timenow():
   return datetime.now().second * 1000 + datetime.now().microsecond // 1000
@@ -191,7 +193,7 @@ def resume(fiber):
     return False
   return True
 
-def read_app_text(x, y, x2, y2):
+def read_app_text(x, y, x2, y2, digit_only=False):
   rect = getAppRect(True)
   rect[2], rect[3] = rect[0] + x2, rect[1] + y2
   rect[0], rect[1] = rect[0] + x,  rect[1] + y
@@ -199,7 +201,22 @@ def read_app_text(x, y, x2, y2):
   filename = 'tmp/apptext.png'
   save_png(im, filename)
   uwait(0.5)
-  return img_to_str(filename)
+  return img_to_str(filename, digit_only)
 
-def img_to_str(filename):
-  return pyte.image_to_string(filename, config='-psm 13 -psm 12')
+def img_to_str(filename, digit_only=False):
+  _config = '-psm 12 -psm 13'
+  re = pyte.image_to_string(filename, config=_config)
+  if digit_only:
+    re = correct_digit_result(re)
+  return re
+
+def correct_digit_result(re):
+  trans = {
+    'D': '0',
+  }
+  return re.translate(str.maketrans(trans))
+
+def get_app_cursor_pos():
+  mx, my = win32api.GetCursorPos()
+  mx, my = mx - G.AppRect[0], my - G.AppRect[1]
+  return [mx, my]
