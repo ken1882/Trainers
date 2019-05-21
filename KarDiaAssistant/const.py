@@ -116,3 +116,6 @@ ToTownPos = [415,785]
 SlimeScorePos = [337, 178, 424, 200]
 LeaveGamePos = [56, 759]
 LeaveGameConfirm = [164, 549]
+
+StageLevelPixel = [[69, 439], [233, 322], [341, 411], [238, 760], [429, 766]]
+StageLevelColor = [(100, 160, 106), (101, 182, 136), (73, 130, 138), (59, 40, 19), (255, 255, 255)]

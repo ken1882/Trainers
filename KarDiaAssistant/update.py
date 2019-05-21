@@ -6,6 +6,23 @@ from G import uwait
 minigame_pos = [0,0]
 key_cooldown = 0
 
+def fiber_manual_action(func, *args, **kwargs):
+  while True:
+    if (not G.FlagManualControl or Input.is_trigger(Input.keymap.kCONTROL)):
+      func(*args, **kwargs)
+      break
+    yield
+
+def advance(func, *args, **kwargs):
+  if G.FlagManualControl:
+    if not G.ActionFiber:
+      print("Press CTRL to continue...")
+      G.ActionFiber = fiber_manual_action(func, *args, **kwargs)
+    if G.ActionFiber and not util.resume(G.ActionFiber):
+      G.ActionFiber = None
+  else:
+    func(*args, **kwargs)
+
 def update_keystate():
   global key_cooldown
   if key_cooldown > 0:
@@ -76,6 +93,12 @@ def update_minigame():
   
   G.FlagRunning = (in_stage or G.FlagRepeat)
 
+def update_level_process():
+  if stage.is_stage_level():
+    advance(action.to_battle, G.Difficulty)
+
+
+
 def process_update():
   update_freeze()
   if stage.is_no_stamina():
@@ -83,9 +106,9 @@ def process_update():
     G.FlagRunning = False
     return False
   elif stage.is_stage_loot() or stage.has_event() or stage.is_battle_end():
-    action.action_next()
+    advance(action.action_next)
   elif stage.is_battle_ready():
-    uwait(1)
+    uwait(1.2)
     action.action_next(100)
 
   if is_minigame():
@@ -94,3 +117,5 @@ def process_update():
     print("Stage: {}, freeze timer: {}".format(stage.get_current_stage(), freeze.get_freeze_timer()))
     if G.is_mode_mine():
       mine.update()
+    elif G.is_mode_level():
+      update_level_process()

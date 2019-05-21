@@ -189,6 +189,7 @@ def scroll_right(x, y, delta = 100, app_offset=True, haste=False):
     wait(0.01 if haste else ScrollTime)
   mouse_up(x, y)
 
+# Return Value: alive?
 def resume(fiber):
   try:
     next(fiber)

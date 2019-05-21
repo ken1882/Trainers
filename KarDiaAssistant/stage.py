@@ -50,9 +50,7 @@ def is_battle_end():
   return a or b
 
 def is_stage_level():
-  # todo
-  return False
-  # return is_pixel_match(const.StageLevelPixel, const.StageLevelColor)
+  return is_pixel_match(const.StageLevelPixel, const.StageLevelColor)
 
 def is_stage_battle():
   return is_pixel_match(const.StageBattlePixel, const.StageBattleColor)

@@ -19,6 +19,7 @@ parser.add_argument("-r", "--repeat", help="Repeat playing same mini game until 
 parser.add_argument("--slime", help="Set the mode to 1(auto-play slime minigame)", action=Ptrue)
 parser.add_argument("--straw", help="Set the mode to 2(auto-play running away from scarecrow minigame)", action=Ptrue)
 parser.add_argument("--mine", help="Set the mode to 3(auto-mining)", action=Ptrue)
+parser.add_argument("--level", help="Set the mode to 4(auto-grind level), using `-d X` to set difficulty", action=Ptrue)
 
 def load_mode(args):
   if args.slime:
@@ -27,6 +28,8 @@ def load_mode(args):
     G.Mode = 2
   elif args.mine:
     G.Mode = 3
+  elif args.level:
+    G.Mode = 4
 
 def load():  
   args = parser.parse_args()

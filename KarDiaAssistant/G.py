@@ -71,7 +71,7 @@ ScreenImageFile = "tmp/app.png"
 
 SlimeAI = slimeai.AI()
 
-ScreenTimeout = 500
+ScreenTimeout = 1000
 
 OreLocation = []
 
@@ -96,8 +96,13 @@ def is_mode_straw():
 def is_mode_mine():
   return Mode == 3
 
+def is_mode_level():
+  return Mode == 4
+
 def setup():
   global InternUpdateTime, ScreenTimeout
-  if is_mode_straw():
+  if is_mode_slime():
+    ScreenTimeout = 500
+  elif is_mode_straw():
     InternUpdateTime = 2
     ScreenTimeout = 50

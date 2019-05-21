@@ -34,13 +34,13 @@ def start():
     update.main_update()
     cur_hwnd = win32gui.GetForegroundWindow()
 
-    # if cur_hwnd != G.AppHwnd:
-    #   LastHwnd = cur_hwnd
-    #   continue
-    # elif LastHwnd != G.AppHwnd:
-    #   print("Switched to app, begin in 1.2 seconds")
-    #   LastHwnd = cur_hwnd
-    #   uwait(1.2)
+    if cur_hwnd != G.AppHwnd:
+      LastHwnd = cur_hwnd
+      continue
+    elif LastHwnd != G.AppHwnd:
+      print("Switched to app, begin in 1.2 seconds")
+      LastHwnd = cur_hwnd
+      uwait(1.2)
     
     G.CurInternCount += 1
     G.FrameCount += 1
@@ -62,8 +62,9 @@ def test_func():
   util.getPixel()
 
 def tmp_test_func():
-  print(util.read_app_text(*const.TokenNumberPos, 1))
+  # print(util.read_app_text(*const.TokenNumberPos, 1))
   # print(stage.any_pixel_match(const.StrawPathPosA, const.StrawPathColor[0], True))
+  print(stage.is_stage_level())
   # pass
 
 if __name__ == '__main__':
