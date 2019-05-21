@@ -25,7 +25,7 @@ def start():
   util.find_app()
   util.align_window()
   util.initialize()
-  inter_timer = G.InternUpdateTime
+  
   if G.FlagAlign:
     util.align_window(0,0)
   print("Start hwnd {}, max FPS: {}".format(hex(G.AppHwnd), 1/G.FPS))
@@ -34,17 +34,18 @@ def start():
     update.main_update()
     cur_hwnd = win32gui.GetForegroundWindow()
 
-    if cur_hwnd != G.AppHwnd:
-      LastHwnd = cur_hwnd
-      continue
-    elif LastHwnd != G.AppHwnd:
-      print("Switched to app, begin in 1.2 seconds")
-      LastHwnd = cur_hwnd
-      uwait(1.2)
+    # if cur_hwnd != G.AppHwnd:
+    #   LastHwnd = cur_hwnd
+    #   continue
+    # elif LastHwnd != G.AppHwnd:
+    #   print("Switched to app, begin in 1.2 seconds")
+    #   LastHwnd = cur_hwnd
+    #   uwait(1.2)
     
-    inter_timer += 1
-    if inter_timer >= G.InternUpdateTime:
-      inter_timer = 0
+    G.CurInternCount += 1
+    G.FrameCount += 1
+    if G.CurInternCount >= G.InternUpdateTime:
+      G.CurInternCount = 0
       util.getAppRect()
       if not G.FlagPaused:
         update.process_update()
@@ -60,10 +61,16 @@ def test_func():
   util.getAppRect()
   util.getPixel()
 
+def tmp_test_func():
+  print(util.read_app_text(*const.TokenNumberPos, 1))
+  # print(stage.any_pixel_match(const.StrawPathPosA, const.StrawPathColor[0], True))
+  # pass
+
 if __name__ == '__main__':
   try:
     if G.FlagTest:
       test_func()
+      tmp_test_func()
       if G.FlagAlign:
         util.align_window(0,0)
       if G.is_mode_slime():

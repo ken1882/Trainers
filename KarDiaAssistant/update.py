@@ -19,8 +19,9 @@ def update_keystate():
     G.FlagPaused ^= True
     key_cooldown = 10
     print("Paused: {}".format(G.FlagPaused))
-  elif G.is_mode_slime() and G.FlagManualControl and Input.is_trigger(win32con.VK_CONTROL, False):
-    slime.identify(G.FlagAutoPlay)
+  
+  if G.is_mode_slime():
+    slime.update_keystate()
 
 def main_update():
   Input.update()

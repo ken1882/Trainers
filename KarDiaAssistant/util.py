@@ -12,7 +12,7 @@ ScrollTime  = 0.03
 ScrollDelta = [3,8]
 Initialized = False
 LastAppRect = np.array([0,0,0,0])
-
+LastFrameCount = -1
 
 def initialize():
   if G.AppHwnd == 0:
@@ -55,10 +55,13 @@ def hash_timenow():
 ScreenSnapShot = [hash_timenow(), PIL.ImageGrab.grab().load()]
 
 def getPixel(x=None, y=None):
-  stamp = hash_timenow()
-  if abs(ScreenSnapShot[0] - stamp) > G.ScreenTimeout:
-    ScreenSnapShot[0] = stamp
-    ScreenSnapShot[1] = print_window()
+  global LastFrameCount
+  if LastFrameCount != G.FrameCount:
+    LastFrameCount = G.FrameCount
+    stamp = hash_timenow()
+    if abs(ScreenSnapShot[0] - stamp) > G.ScreenTimeout:
+      ScreenSnapShot[0] = stamp
+      ScreenSnapShot[1] = print_window()
   if x and y:
     return ScreenSnapShot[1][x, y]
   return ScreenSnapShot[1]
@@ -213,6 +216,9 @@ def img_to_str(filename, digit_only=False):
 def correct_digit_result(re):
   trans = {
     'D': '0',
+    'Z': '2',
+    'z': '2',
+    '/': '8',
   }
   return re.translate(str.maketrans(trans))
 

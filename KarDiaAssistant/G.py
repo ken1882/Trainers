@@ -45,7 +45,8 @@ AppHwnd = 0
 
 FPS = (1 / 120)
 InternUpdateTime = 60
-
+CurInternCount   = InternUpdateTime
+FrameCount       = 0
 
 Mode = 0
 Difficulty = 0
@@ -98,5 +99,5 @@ def is_mode_mine():
 def setup():
   global InternUpdateTime, ScreenTimeout
   if is_mode_straw():
-    InternUpdateTime = 1
+    InternUpdateTime = 2
     ScreenTimeout = 50

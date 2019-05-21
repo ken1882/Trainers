@@ -1,6 +1,8 @@
 # KarDia(牧羊人之心) command line assistant
 Tool that coded and used myself during gameplay. Including auto-play mini game and grinding stuff.
 
+## Disclaimer: I AM NOT RESPONSIBLE FOR YOUR BAN
+
 ## Usage:
 Call `pyhton main.py` or `KarDiaAssistant.exe` in command line with following arguments:
 

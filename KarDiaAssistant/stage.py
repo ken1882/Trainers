@@ -2,6 +2,16 @@ import G, util, const
 
 ColorRange = 25
 
+def any_pixel_match(pix, col, inverse=False):
+  for pos in pix:
+    tx, ty = pos
+    ok = is_color_ok(util.getPixel(tx, ty), col)
+    if G.FlagDebug:
+      print(ok, ok ^ inverse)
+    if ok ^ inverse:
+      return True
+  return False
+
 def is_color_ok(cur, target):
   for c1,c2 in zip(cur,target):
     if G.FlagDebug and G.FlagVerbose:

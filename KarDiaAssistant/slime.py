@@ -1,5 +1,5 @@
 import cv2, slimeai, slimegrid, copy, random
-import const, G, util, stage, action
+import const, G, util, stage, action, Input
 import numpy as np 
 import math
 from G import uwait
@@ -136,9 +136,13 @@ def identify(mov=True):
 
   print("moved", Grid, sep='\n')
   if G.FlagDebug:
-    cv2.imwrite('result.png', img_rgb)
+    cv2.imwrite('tmp/result.png', img_rgb)
 
   return over
+
+def update_keystate():
+  if G.FlagManualControl and Input.is_trigger(Input.keymap.kCTRL, False):
+    identify(G.FlagAutoPlay)
 
 def update():
   global Ready
