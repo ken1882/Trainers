@@ -20,6 +20,7 @@ parser.add_argument("--slime", help="Set the mode to 1(auto-play slime minigame)
 parser.add_argument("--straw", help="Set the mode to 2(auto-play running away from scarecrow minigame)", action=Ptrue)
 parser.add_argument("--mine", help="Set the mode to 3(auto-mining)", action=Ptrue)
 parser.add_argument("--level", help="Set the mode to 4(auto-grind level), using `-d X` to set difficulty", action=Ptrue)
+parser.add_argument("--counter", help="Enable counter to show how many times have entered the level, does not work with manual control", action=Ptrue)
 
 def load_mode(args):
   if args.slime:
@@ -43,6 +44,7 @@ def load():
   G.FlagRestricted = args.unrestricted
   G.FlagRepeat = args.repeat
   G.FlagAutoPlay = args.no_autoplay
+  G.FlagCounter = args.counter
   load_mode(args)
   G.setup()
 

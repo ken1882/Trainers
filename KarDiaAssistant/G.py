@@ -17,6 +17,7 @@ FlagAlign = False
 FlagRestricted = True
 FlagRepeat = False
 FlagAutoPlay = True
+FlagCounter = False
 
 def Flags(name=None):
   flags = {
@@ -29,6 +30,7 @@ def Flags(name=None):
     'restricted': FlagRestricted,
     'repeat': FlagRepeat,
     'autoplay': FlagAutoPlay,
+    'counter': FlagCounter,
   }
   if name:
     name = name.lower()
@@ -44,12 +46,13 @@ Hwnd    = 0
 AppHwnd = 0
 
 FPS = (1 / 120)
-InternUpdateTime = 60
+InternUpdateTime = 120
 CurInternCount   = InternUpdateTime
 FrameCount       = 0
 
 Mode = 0
 Difficulty = 0
+Counter = 0
 
 # Not a actually const, window rect
 AppRect = [0, 0, 0, 0]
@@ -102,6 +105,7 @@ def is_mode_level():
 def setup():
   global InternUpdateTime, ScreenTimeout
   if is_mode_slime():
+    InternUpdateTime = 60
     ScreenTimeout = 500
   elif is_mode_straw():
     InternUpdateTime = 2

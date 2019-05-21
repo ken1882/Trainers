@@ -88,4 +88,6 @@ if __name__ == '__main__':
     else:
       sysargv.show_help()
   finally:
+    if G.FlagCounter:
+      print("Final counter:", G.Counter)
     util.terminate()

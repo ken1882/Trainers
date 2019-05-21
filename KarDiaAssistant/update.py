@@ -6,6 +6,11 @@ from G import uwait
 minigame_pos = [0,0]
 key_cooldown = 0
 
+def counter_up():
+  if not G.FlagManualControl and G.FlagCounter:
+    G.Counter += 1
+    print("Counter:", G.Counter)
+
 def fiber_manual_action(func, *args, **kwargs):
   while True:
     if (not G.FlagManualControl or Input.is_trigger(Input.keymap.kCONTROL)):
@@ -36,6 +41,7 @@ def update_keystate():
     G.FlagPaused ^= True
     key_cooldown = 10
     print("Paused: {}".format(G.FlagPaused))
+    util.getPixel()
   
   if G.is_mode_slime():
     slime.update_keystate()
@@ -97,15 +103,16 @@ def update_level_process():
   if stage.is_stage_level():
     advance(action.to_battle, G.Difficulty)
 
-
-
 def process_update():
   update_freeze()
   if stage.is_no_stamina():
     print("No Stamina!")
     G.FlagRunning = False
     return False
-  elif stage.is_stage_loot() or stage.has_event() or stage.is_battle_end():
+  elif stage.is_stage_loot():
+    counter_up()
+    advance(action.action_next)
+  elif stage.has_event() or stage.is_battle_end():
     advance(action.action_next)
   elif stage.is_battle_ready():
     uwait(1.2)
