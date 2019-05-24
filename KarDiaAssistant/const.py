@@ -1,5 +1,5 @@
 # Defines the consts of pixels/color of app
-Version = "0.1.0"
+Version = "0.1.1"
 
 FrozenDetectorPixel = [[274,64], [267,66], [246,65], [125,776], [255,65]]
 
