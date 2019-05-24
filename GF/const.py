@@ -37,3 +37,5 @@ StageProfileColor = [(49, 49, 48), (178, 178, 178), (253, 179, 0), (150, 142, 14
 
 StageVisitLikePixel = [[1275, 781], [1296, 836], [1319, 797], [1406, 792]]
 StageVisitLikeColor = [(35, 35, 35), (21, 21, 21), (255, 255, 255), (255, 255, 255)]
+VisitLikePos = [1356, 810]
+NextFriendDelta = 300

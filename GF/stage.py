@@ -94,6 +94,11 @@ def autocombat_reward_ok():
     return True
   return False
 
+def is_stage_like():
+  if is_stage_ok(8):
+    return True
+  return is_pixel_match(const.StageVisitLikePixel, const.StageVisitLikeColor)
+
 def get_stage_cache(sid):
   if LastFrameCount != G.FrameCount:
     cache_stage(sid)
@@ -112,7 +117,9 @@ StageMap = {
   3: is_stage_autocombat_ok,
   4: is_stage_combat_selection,
   5: is_stage_profile,
-  6: is_stage_combat_setup
+  6: is_stage_combat_setup,
+  7: is_stage_autocombat_again,
+  8: is_stage_like,
 }
 
 def update():
@@ -140,4 +147,6 @@ def get_current_stage():
     return "Profile"
   elif is_stage_combat_setup():
     return "Combat Setup"
+  elif is_stage_like():
+    return "Visit friend like"
   return None

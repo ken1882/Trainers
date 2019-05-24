@@ -14,6 +14,8 @@ FlagTest  = False
 FlagAlign = False
 FlagDebug = False
 FlagAutoCombat = False
+FlagManualControl = False
+FlagCounter = False
 
 def Flags(name=None):
   flags = {
@@ -22,6 +24,8 @@ def Flags(name=None):
     'verbose': FlagVerbose,
     'test': FlagTest,
     'autocombat': FlagAutoCombat,
+    'manualcontrol': FlagManualControl,
+    'counter': FlagCounter,
   }
   if name:
     name = name.lower()
@@ -64,6 +68,9 @@ Pool = None
 def is_mode_backup():
   return Mode == 1
 
+def is_mode_like():
+  return Mode == 2
+
 def wait(sec):
   time.sleep(sec)
 
@@ -78,3 +85,5 @@ def setup():
   global InternUpdateTime, ScreenTimeout
   if is_mode_backup():
     InternUpdateTime = 300
+  elif is_mode_like():
+    InternUpdateTime = 60

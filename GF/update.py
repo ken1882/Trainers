@@ -59,15 +59,7 @@ def update_freeze():
     freeze_timer = 0
   print("Stage: {}, freeze timer: {}".format(st, freeze_timer))
 
-def process_update():
-  update_freeze()
-  stage.update()
-  if G.ActionFiber:
-    print("Resume Fiber")
-    if not util.resume(G.ActionFiber):
-      G.ActionFiber = None
-      print("Fiber finished")
-    return 
+def update_grind():
   if stage.is_stage_achievement():
     uwait(2)
     action.action_next()
@@ -83,3 +75,25 @@ def process_update():
     action.return_base()
   elif stage.is_stage_profile():
     action.action_next()
+
+def update_like():
+  mx, my = const.VisitLikePos
+  if stage.is_stage_like():
+    action.random_click(mx, my)
+    uwait(0.5)
+  util.scroll_right(mx-100, my-600, const.NextFriendDelta, True, True)
+  uwait(1.2)
+
+def process_update():
+  update_freeze()
+  stage.update()
+  if G.ActionFiber:
+    print("Resume Fiber")
+    if not util.resume(G.ActionFiber):
+      G.ActionFiber = None
+      print("Fiber finished")
+    return 
+  if G.is_mode_backup():
+    update_grind()
+  elif G.is_mode_like():
+    update_like()
