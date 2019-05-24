@@ -13,8 +13,10 @@ CheckScoreTimer = CheckScoreTime
 Ready = True
 
 def init():
-  global Ready
+  global Ready, Grid, AI
   Ready = True
+  Grid    = slimegrid.Grid()
+  AI      = slimeai.AI()
 
 def is_gameover():
   return stage.is_pixel_match(const.StageSlimeOverPixel, const.StageSlimeOverColor)
@@ -127,7 +129,7 @@ def identify(mov=True):
       action.random_click(*const.LeaveGamePos)
       uwait(1)
       action.random_click(*const.LeaveGameConfirm)
-      uwait(5)
+      uwait(7)
       return True
 
   if mov:
@@ -147,7 +149,7 @@ def update_keystate():
 def update():
   global Ready
   if stage.is_stage_slime():
-    Ready = True
+    init()
     action.random_click(*const.SlimeOKPos)
   else:
     over = False

@@ -3,7 +3,6 @@ import freeze, stage, action, Input
 import slime, straw, mine
 from G import uwait
 
-minigame_pos = [0,0]
 key_cooldown = 0
 
 def counter_up():
@@ -59,7 +58,9 @@ def update_freeze():
   pass
 
 def is_minigame_token_enough():
-  return int(util.read_app_text(*const.TokenNumberPos, True)) > 0
+  tk_n = int(util.read_app_text(*const.TokenNumberPos, True))
+  print("Token left:", tk_n)
+  return tk_n > 0
 
 def determine_continue():
   if stage.is_stage_minigames():
@@ -70,17 +71,15 @@ def is_minigame():
   return G.is_mode_slime() or G.is_mode_straw()
 
 def update_minigame():
-  global minigame_pos
   in_stage = True
   if stage.is_stage_minigames():
-    if G.FlagRepeat and sum(minigame_pos) > 0:
+    if G.FlagRepeat:
       cont = determine_continue()
       if cont:
         print("Entering minigame")
         uwait(0.5)
         action.random_click(*const.MiniGameEnterPos)
-        straw.init()
-        slime.init()
+        uwait(2)
       else:
         G.FlagRunning = False
         print("No token!")
@@ -105,8 +104,11 @@ def process_update():
     G.FlagRunning = False
     return False
   elif stage.is_stage_loot():
+    if is_minigame():
+      action.random_click(*const.MiniGameRewardOKPos)
+    else:
+      advance(action.action_next)
     counter_up()
-    advance(action.action_next)
     uwait(1)
   elif stage.has_event() or stage.is_battle_end():
     advance(action.action_next)

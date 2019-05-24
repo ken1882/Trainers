@@ -32,7 +32,9 @@ def is_stage_slime():
   return is_pixel_match(const.StageSlimePixel, const.StageSlimeColor)
 
 def is_stage_minigames():
-  return is_pixel_match(const.StageMiniGameSelectionPixel, const.StageMiniGameSelectionColor)
+  a = is_pixel_match(const.StageMiniGameSelectionPixel, const.StageMiniGameSelectionColor)
+  b = is_pixel_match(const.StageMiniGameSelectedPixel, const.StageMiniGameSelectedColor)
+  return a or b
 
 def has_event():
   return is_pixel_match(const.EventPixel, const.EventColor)

@@ -40,13 +40,13 @@ def is_game_over():
 def update():
   global Ready
   if not Ready and is_stage_prepare():
-    Ready = True
+    init()
     action.random_click(*const.StrawReadyPos)
     uwait(2)
   elif is_game_over():
     print("Game over")
     Ready = False
-    uwait(3)
+    uwait(7)
     action.random_click(*const.StrawOverOKPos)
     G.FlagRunning = (False or G.FlagRepeat)
     return False
