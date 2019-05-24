@@ -81,8 +81,9 @@ def update_minigame():
         action.random_click(*const.MiniGameEnterPos)
         uwait(2)
       else:
-        G.FlagRunning = False
         print("No token!")
+        G.FlagRunning = False
+        return
   elif stage.is_stage_loading():
     uwait(1)
   else:

@@ -62,7 +62,7 @@ def test_func():
   util.getPixel()
 
 def tmp_test_func():
-  print(stage.is_stage_autocombat_again())
+  print(stage.is_pixel_match(const.StageVisitLikePixel, const.StageVisitLikeColor))
   print(stage.get_current_stage())
   
 

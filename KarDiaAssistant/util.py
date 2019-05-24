@@ -219,7 +219,9 @@ def correct_digit_result(re):
     'D': '0',
     'Z': '2',
     'z': '2',
+    '.': '6',
     '/': '8',
+    'B': '8',
   }
   return re.translate(str.maketrans(trans))
 
