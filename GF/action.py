@@ -1,0 +1,55 @@
+import G, const, util, time, stage
+import random, multiprocessing
+from G import uwait
+from multiprocessing import freeze_support
+
+def random_click(x, y, rrange=G.DefaultRandRange):
+  if rrange is None:
+    rrange = G.DefaultRandRange
+  util.click(x + random.randint(-rrange,rrange), y + random.randint(-rrange,rrange))
+
+def _dealyed_click(x, y, delay, rrange):
+  time.sleep(delay)
+  random_click(x, y, rrange)
+  
+def delayed_click(x, y, delay, rrange=G.DefaultRandRange):
+  x += G.AppRect[0]
+  y += G.AppRect[1]
+  G.Pool.starmap(_dealyed_click, [(x, y, delay, rrange)])
+
+def action_next(rrange=G.DefaultRandRange):
+  mx, my = const.ActionContinue
+  random_click(mx, my, rrange)
+
+def process_backup():
+  uwait(1)
+  action_next(30)
+  uwait(1)
+  random_click(*const.BackupAgainPos)
+
+def return_base():
+  random_click(*const.ReturnBaseIconPos)
+
+def process_autocombat():
+  random_click(*const.AutoCombatAgainPos)
+  origst, oriudt = G.ScreenTimeout, G.InternUpdateTime
+  G.ScreenTimeout = 1000
+  G.InternUpdateTime = 30
+  uwait(1)
+  util.flush_screen_cache()
+  stage.flush()
+  uwait(2)
+  while not stage.autocombat_reward_ok():
+    random_click(*const.AutoCombatLootNextPos)
+    yield
+  uwait(0.5)
+  random_click(*const.AutoCombatLootNextPos)
+  uwait(0.5)
+  if G.FlagAutoCombat:
+    random_click(*const.AutoCombatAgainPos)
+  else:
+    random_click(*const.AutoCombatStopPos)
+  G.ScreenTimeout, G.InternUpdateTime = origst, oriudt
+
+def close_combat_setup():
+  random_click(*const.CloseCombatSetupPos)

@@ -64,7 +64,7 @@ def test_func():
 def tmp_test_func():
   # print(util.read_app_text(*const.TokenNumberPos, 1))
   # print(stage.any_pixel_match(const.StrawPathPosA, const.StrawPathColor[0], True))
-  print(stage.is_stage_level())
+  print(straw.is_stage_prepare())
   # pass
 
 if __name__ == '__main__':

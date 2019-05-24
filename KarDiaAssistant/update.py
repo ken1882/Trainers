@@ -73,24 +73,19 @@ def update_minigame():
   global minigame_pos
   in_stage = True
   if stage.is_stage_minigames():
-    if G.FlagRepeat and sum(minigame_pos) == 0:
-      print("Press right mouse button to record minigame position")
-      if Input.is_trigger(win32con.VK_RBUTTON):
-        mx, my = win32api.GetCursorPos()
-        mx, my = mx - G.AppRect[0], my - G.AppRect[1]
-        minigame_pos = [mx, my]
-        print("Mini game position recored: ", minigame_pos)
-        uwait(1)
-    if sum(minigame_pos) > 0:
+    if G.FlagRepeat and sum(minigame_pos) > 0:
       cont = determine_continue()
       if cont:
         print("Entering minigame")
-        action.random_click(*minigame_pos)
         uwait(0.5)
         action.random_click(*const.MiniGameEnterPos)
+        straw.init()
+        slime.init()
       else:
         G.FlagRunning = False
         print("No token!")
+  elif stage.is_stage_loading():
+    uwait(1)
   else:
     if G.is_mode_slime():
       in_stage = slime.update()
@@ -112,6 +107,7 @@ def process_update():
   elif stage.is_stage_loot():
     counter_up()
     advance(action.action_next)
+    uwait(1)
   elif stage.has_event() or stage.is_battle_end():
     advance(action.action_next)
   elif stage.is_battle_ready():

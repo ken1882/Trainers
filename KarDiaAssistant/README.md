@@ -19,7 +19,6 @@ Call `pyhton main.py` or `KarDiaAssistant.exe` in command line with following ar
   -c, --control         Manually control program update progress
   -d DIFFICULTY, --difficulty DIFFICULTY
                         Set level difficulty
-  -t, --test            test program, using `-m` to set which mode to testing
   -a, --align           Align window to (0,0)
   --slime               Set the mode to 1(auto-play slime minigame)
   --straw               Set the mode to 2(auto-play running away from
