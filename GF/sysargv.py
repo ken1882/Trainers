@@ -14,6 +14,7 @@ parser.add_argument("-a", "--align", help="Align window to (0,0)", action=Ptrue)
 parser.add_argument("-b", "--backup", help="Auto run backup(Logistic Support)", action=Ptrue)
 parser.add_argument("-l", "--like", help="Auto press like to friends", action=Ptrue)
 parser.add_argument("-ac", "--autocombat", help="Once auto-combat ends, send the team again (Note if max T-dolls is reached this program will terminate)", action=Ptrue)
+parser.add_argument("-acc", "--autocombat-count", help="Auto-combat count, if hit to zero won't send again.", default=-1, type=int)
 
 def load_mode(args):
   if args.backup:
@@ -29,6 +30,7 @@ def load():
   G.FlagTest = args.test 
   G.FlagAlign = args.align
   G.FlagAutoCombat = args.autocombat
+  G.AutoCombatCount = args.autocombat_count
   load_mode(args)
   G.setup()
 

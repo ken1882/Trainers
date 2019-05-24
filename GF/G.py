@@ -17,6 +17,9 @@ FlagAutoCombat = False
 FlagManualControl = False
 FlagCounter = False
 
+
+AutoCombatCount = -1
+
 def Flags(name=None):
   flags = {
     'running': FlagRunning,

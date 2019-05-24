@@ -45,8 +45,11 @@ def process_autocombat():
   uwait(0.5)
   random_click(*const.AutoCombatLootNextPos)
   uwait(0.5)
-  if G.FlagAutoCombat:
+  if G.FlagAutoCombat and G.AutoCombatCount != 0:
     random_click(*const.AutoCombatAgainPos)
+    if G.AutoCombatCount > 0:
+      G.AutoCombatCount -= 1
+      print("Auto-combat count left:", G.AutoCombatCount)
   else:
     random_click(*const.AutoCombatStopPos)
   G.ScreenTimeout, G.InternUpdateTime = origst, oriudt
