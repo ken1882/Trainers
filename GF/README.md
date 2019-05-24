@@ -4,6 +4,8 @@ Tool that coded and used myself during gameplay. Including auto-run logistic sup
 ## Disclaimer: I AM NOT RESPONSIBLE FOR YOUR BAN
 
 ## Usage:
+Run `GF.exe` without arguments at first time to cache the library correctly or it may stuck.
+
 Call `pyhton main.py` or `GF.exe` in command line with following arguments:
 
 ```

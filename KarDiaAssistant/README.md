@@ -4,6 +4,8 @@ Tool that coded and used myself during gameplay. Including auto-play mini game a
 ## Disclaimer: I AM NOT RESPONSIBLE FOR YOUR BAN
 
 ## Usage:
+Run `KarDiaAssistant.exe` without arguments at first time to cache the library correctly or it may stuck.
+
 Call `pyhton main.py` or `KarDiaAssistant.exe` in command line with following arguments:
 
 ```
