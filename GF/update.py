@@ -52,7 +52,7 @@ def update_freeze():
   st = stage.get_current_stage()
   if st is None:
     freeze_timer += 1
-    if freeze_timer >= G.FreezeTime:
+    if freeze_timer >= G.FreezeTimeOut:
       print("Game frozen, Abort")
       G.FlagRunning = False
   else:

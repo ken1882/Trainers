@@ -46,7 +46,7 @@ FPS = (1 / 120)
 InternUpdateTime = 120
 CurInternCount   = InternUpdateTime
 FrameCount       = 0
-FreezeTime       = 300
+FreezeTimeOut    = 120
 
 Mode = 0
 Difficulty = 0
