@@ -24,7 +24,7 @@ def action_next(rrange=G.DefaultRandRange):
 def process_backup():
   uwait(1)
   action_next(30)
-  uwait(1)
+  uwait(2)
   random_click(*const.BackupAgainPos)
 
 def return_base():
@@ -39,19 +39,32 @@ def process_autocombat():
   util.flush_screen_cache()
   stage.flush()
   uwait(2)
+  has_room = True
+
   while not stage.autocombat_reward_ok():
     random_click(*const.AutoCombatLootNextPos)
+    if stage.is_maxdoll_reached():
+      has_room = False
+      break
     yield
   uwait(0.5)
-  random_click(*const.AutoCombatLootNextPos)
-  uwait(0.5)
-  if G.FlagAutoCombat and G.AutoCombatCount != 0:
-    random_click(*const.AutoCombatAgainPos)
-    if G.AutoCombatCount > 0:
-      G.AutoCombatCount -= 1
-      print("Auto-combat count left:", G.AutoCombatCount)
+
+  if has_room:
+    random_click(*const.AutoCombatLootNextPos)
+    uwait(0.5)
+    if G.FlagAutoCombat and G.AutoCombatCount != 0:
+      random_click(*const.AutoCombatAgainPos)
+      if G.AutoCombatCount > 0:
+        G.AutoCombatCount -= 1
+        print("Auto-combat count left:", G.AutoCombatCount)
+    else:
+      random_click(*const.AutoCombatStopPos)
   else:
-    random_click(*const.AutoCombatStopPos)
+    print("No room left for auto-combat rewards")
+    random_click(*const.MaxDollToEnhancePos)
+    G.AutoCombatCount = -1
+    uwait(1)
+  
   G.ScreenTimeout, G.InternUpdateTime = origst, oriudt
 
 def close_combat_setup():

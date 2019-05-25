@@ -85,7 +85,11 @@ def uwait(sec, rand=True):
   wait(sec)
 
 def setup():
-  global InternUpdateTime, ScreenTimeout
+  global InternUpdateTime, ScreenTimeout, FlagAutoCombat, AutoCombatCount
+  if FlagAutoCombat and AutoCombatCount == -1:
+    print("Warning: Inf Auto-combat")
+    AutoCombatCount = 2147483647
+
   if is_mode_backup():
     InternUpdateTime = 300
   elif is_mode_like():

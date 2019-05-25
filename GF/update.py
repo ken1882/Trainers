@@ -71,7 +71,7 @@ def update_grind():
     action.close_combat_setup()
     uwait(0.5)
     action.return_base()
-  elif stage.is_stage_combat_selection():
+  elif stage.is_stage_combat_selection() or stage.is_stage_enhance():
     action.return_base()
   elif stage.is_stage_profile():
     action.action_next()

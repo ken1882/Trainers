@@ -99,6 +99,16 @@ def is_stage_like():
     return True
   return is_pixel_match(const.StageVisitLikePixel, const.StageVisitLikeColor)
 
+def is_maxdoll_reached():
+  if is_stage_ok(9):
+    return True
+  return is_pixel_match(const.StageMaxDollReachedPixel, const.StageMaxDollReachedColor)
+
+def is_stage_enhance():
+  if is_stage_ok(10):
+    return True
+  return is_pixel_match(const.StageDollEnhancePixel, const.StageDollEnhanceColor)
+
 def get_stage_cache(sid):
   if LastFrameCount != G.FrameCount:
     cache_stage(sid)
@@ -120,6 +130,8 @@ StageMap = {
   6: is_stage_combat_setup,
   7: is_stage_autocombat_again,
   8: is_stage_like,
+  9: is_maxdoll_reached,
+  10: is_stage_enhance,
 }
 
 def update():
@@ -149,4 +161,8 @@ def get_current_stage():
     return "Combat Setup"
   elif is_stage_like():
     return "Visit friend like"
+  elif is_maxdoll_reached():
+    return "Max doll reached"
+  elif is_stage_enhance():
+    return "Enhance"
   return None
