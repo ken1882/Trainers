@@ -111,13 +111,15 @@ def find_app():
       except Exception:
         pass
   win32gui.EnumWindows(callback, None)
-  print(target_cnt)
   target_app = max(target_cnt, key=(lambda k:target_cnt[k]))
-  print(possibles, target_app)
+  if G.FlagDebug:
+    print("Target App count:", target_cnt)
+    print(target_app, possibles)
   possibles.sort(key=lambda ss: len(ss[0])-len(target_app)+ss[0].index(target_app))
   if possibles:
     pid = choose_best_hwnd(possibles, target_app)
-    print(pid, possibles[pid][1])
+    if G.FlagDebug:
+      print("Final:", print(pid, possibles[pid][1]))
     if pid >= 0:
       const.AppName = target_app
       G.AppHwnd = possibles[pid][1]
@@ -163,6 +165,11 @@ def reset_window():
   _, _, w, h = rect
   win32gui.MoveWindow(G.AppHwnd, 0, 0, w, h, 1)
 
+def random_pos(x, y, rrange=G.DefaultRandRange):
+  x += random.randint(-rrange, rrange)
+  y += random.randint(-rrange, rrange)
+  return [x, y]
+
 def mouse_down(x, y, app_offset):
   if app_offset:
     offset = const.getAppOffset()
@@ -196,7 +203,7 @@ def scroll_up(x, y, delta = 100, app_offset=True, haste=False):
   ty = y + delta
   wait(0.01 if haste else 0.5)
   while y <= ty:
-    y += random.randint(*ScrollDelta)
+    y += (random.randint(*ScrollDelta) + haste * 2)
     set_cursor_pos(x, min([y,ty]), app_offset)
     wait(0.01 if haste else ScrollTime)
   mouse_up(x, y, app_offset)
@@ -206,7 +213,7 @@ def scroll_down(x, y, delta = 100, app_offset=True, haste=False):
   ty = y - delta
   wait(0.01 if haste else 0.5)
   while y >= ty:
-    y -= random.randint(*ScrollDelta)
+    y -= (random.randint(*ScrollDelta) + haste * 2)
     set_cursor_pos(x, max([y,ty]), app_offset)
     wait(0.01 if haste else ScrollTime)
   mouse_up(x, y, app_offset)
@@ -216,7 +223,7 @@ def scroll_left(x, y, delta = 100, app_offset=True, haste=False):
   tx = x + delta
   wait(0.01 if haste else 0.5)
   while x <= tx:
-    x += random.randint(*ScrollDelta)
+    x += (random.randint(*ScrollDelta) + haste * 2)
     set_cursor_pos(min([x,tx]), y, app_offset)
     wait(0.01 if haste else ScrollTime)
   mouse_up(x, y, app_offset)
@@ -226,7 +233,7 @@ def scroll_right(x, y, delta = 100, app_offset=True, haste=False):
   tx = x - delta
   wait(0.01 if haste else 0.5)
   while x >= tx:
-    x -= random.randint(*ScrollDelta)
+    x -= (random.randint(*ScrollDelta) + haste * 2)
     set_cursor_pos(max([x,tx]), y, app_offset)
     wait(0.01 if haste else ScrollTime)
   mouse_up(x, y, app_offset)

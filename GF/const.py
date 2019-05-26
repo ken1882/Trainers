@@ -7,6 +7,8 @@ TargetApps = {
   "夜神模擬器": [1, 32, 1433, 838]
 }
 
+NoxSideToolBar = "通過鍵盤調節GPS方位和移動速度"
+
 DefaultCanvasResoultion = [1446, 900]
 
 def getAppOffset():
@@ -56,7 +58,7 @@ StageVisitLikePixel = [[1268, 734], [1289, 789], [1312, 750], [1399, 745]]
 StageVisitLikeColor = [(35, 35, 35), (21, 21, 21), (255, 255, 255), (255, 255, 255)]
 
 VisitLikePos = [1349, 763]
-NextFriendDelta = 450
+NextFriendDelta = 600
 
 StageMaxDollReachedPixel = [[508, 332], [809, 317], [963, 389], [441, 532], [553, 541], [620, 579], [809, 530], [918, 568], [987, 548]]
 StageMaxDollReachedColor = [(255, 255, 255), (255, 255, 255), (255, 255, 255), (255, 224, 0), (49, 48, 49), (255, 178, 0), (255, 255, 255), (49, 49, 49), (255,255, 255)]

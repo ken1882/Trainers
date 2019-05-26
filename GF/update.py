@@ -82,8 +82,9 @@ def update_like():
   if stage.is_stage_like():
     action.random_click(mx, my)
     uwait(0.5)
-  util.scroll_right(mx-100, my-600, const.NextFriendDelta, True, True)
-  uwait(1.2)
+  mx, my = util.random_pos(mx-100, my-600, 50)
+  util.scroll_right(mx, my, const.NextFriendDelta, True, 5)
+  uwait(1.3)
 
 def process_update():
   update_freeze()
