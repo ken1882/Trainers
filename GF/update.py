@@ -54,6 +54,7 @@ def update_freeze():
     freeze_timer += 1
     if freeze_timer >= G.FreezeTimeOut:
       print("Game frozen, Abort")
+      util.print_window(True, "tmp/FreezeSnapshot.png")
       G.FlagRunning = False
   else:
     freeze_timer = 0

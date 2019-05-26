@@ -19,13 +19,13 @@ def initialize():
     raise Exception("Invalid Hwnd")
   Initialized  = True
 
-def print_window(saveimg=False):
+def print_window(saveimg=False, filename=G.ScreenImageFile):
   im = ImageGrab.grab(getAppRect(True))
   if G.FlagDebug:
     print("Print Window:", im.size)
   try:
     if saveimg:
-      im.save(G.ScreenImageFile)
+      im.save(filename)
   except Exception:
     pass
   pixels = im.load()
