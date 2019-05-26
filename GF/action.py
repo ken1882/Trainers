@@ -33,7 +33,7 @@ def return_base():
 def process_autocombat():
   random_click(*const.AutoCombatAgainPos)
   origst, oriudt = G.ScreenTimeout, G.InternUpdateTime
-  G.ScreenTimeout = 1000
+  G.ScreenTimeout = 100
   G.InternUpdateTime = 30
   uwait(1)
   util.flush_screen_cache()
@@ -44,6 +44,7 @@ def process_autocombat():
   while not stage.autocombat_reward_ok():
     random_click(*const.AutoCombatLootNextPos)
     if stage.is_maxdoll_reached():
+      print("Max doll reached")
       has_room = False
       break
     yield

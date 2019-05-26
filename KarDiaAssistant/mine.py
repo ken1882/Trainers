@@ -7,7 +7,7 @@ def update():
   if len(G.OreLocation) < 2:
     print("Press mouse-right button to record mine position and start position")
     if Input.is_trigger(VK_RBUTTON):
-      pos = util.get_app_cursor_pos()
+      pos = util.get_cursor_pos()
       G.OreLocation.append(pos)
       if len(G.OreLocation) == 1:
         print("Recorded Ore position:", pos)

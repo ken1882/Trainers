@@ -29,6 +29,7 @@ def start():
   if G.FlagAlign:
     util.align_window(0,0)
   print("Start hwnd {}, max FPS: {}".format(hex(G.AppHwnd), 1/G.FPS))
+  util.change_title(const.AppTitle)
   while G.FlagRunning:
     uwait(G.FPS, False)
     update.main_update()
@@ -64,7 +65,10 @@ def test_func():
 def tmp_test_func():
   # print(util.read_app_text(*const.TokenNumberPos, 1))
   # print(stage.any_pixel_match(const.StrawPathPosA, const.StrawPathColor[0], True))
-  print(straw.is_stage_prepare())
+  print(stage.get_current_stage())
+  if stage.is_stage_minigames():
+    update.is_minigame_token_enough()
+  # slime.identify(False)
   # pass
 
 if __name__ == '__main__':

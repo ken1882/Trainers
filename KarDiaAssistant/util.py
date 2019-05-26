@@ -6,6 +6,7 @@ from PIL import Image
 from PIL import ImageGrab
 from ctypes import windll
 from datetime import datetime
+from os import system
 import pytesseract as pyte
 
 ScrollTime  = 0.03
@@ -19,11 +20,14 @@ def initialize():
     raise Exception("Invalid Hwnd")
   Initialized  = True
 
-def print_window(saveimg=False):
+def change_title(nt):
+  system("title " + nt)
+
+def print_window(saveimg=False, filename=G.ScreenImageFile):
   im = ImageGrab.grab(getAppRect(True))
   try:
     if G.is_mode_slime() or saveimg:
-      im.save(G.ScreenImageFile)
+      im.save(filename)
   except Exception:
     pass
   pixels = im.load()
@@ -63,31 +67,68 @@ def getPixel(x=None, y=None):
       ScreenSnapShot[0] = stamp
       ScreenSnapShot[1] = print_window()
   if x and y:
+    offset = const.getAppOffset()
+    x += offset[0]
+    y += offset[1]
     return ScreenSnapShot[1][x, y]
   return ScreenSnapShot[1]
 
 def flush_screen_cache():
+  global ScreenSnapShot, LastFrameCount
   ScreenSnapShot[0] = 0
+  LastFrameCount = -1
 
+def choose_best_hwnd(names, target):
+  if not names:
+    return -1
+  if len(names) == 1:
+    return 0
+  else:
+    if names[0][0] == target and names[1][0] != target:
+      return 0
+    else:
+      print("Process List:")
+      for idx, info in enumerate(names):
+        print("[{}] ({}) {}".format(idx, info[1], info[0]))
+      return input("Please choose the id of target process(-1 for abort): ")
 def find_app():
+  possibles = []
+  target_cnt = {k:0 for k in const.TargetApps}
   # Callback function for EnumWindows
   def callback(handle, data):
-    if win32gui.GetWindowText(handle) != G.AppName:
-      return 
-    try:
-      rect = win32gui.GetWindowRect(handle)
-      x, y, w, h = rect
-      w, h = w-x,h-y
-      win32gui.MoveWindow(handle, x, y, w, h, 1)
-      G.AppHwnd = handle
-    except Exception:
-      pass
+    nonlocal possibles, target_cnt
+    for name in const.TargetApps:
+      title = win32gui.GetWindowText(handle)
+      if name not in title:
+        continue
+      try:
+        rect = win32gui.GetWindowRect(handle)
+        x, y, w, h = rect
+        w, h = w-x,h-y
+        win32gui.MoveWindow(handle, x, y, w, h, 1)
+        possibles.append([title, handle])
+        target_cnt[name] += 1
+      except Exception:
+        pass
   win32gui.EnumWindows(callback, None)
+  print(target_cnt)
+  target_app = max(target_cnt, key=(lambda k:target_cnt[k]))
+  print(possibles, target_app)
+  possibles.sort(key=lambda ss: len(ss[0])-len(target_app)+ss[0].index(target_app))
+  if possibles:
+    pid = choose_best_hwnd(possibles, target_app)
+    print(pid, possibles[pid][1])
+    if pid >= 0:
+      const.AppName = target_app
+      G.AppHwnd = possibles[pid][1]
+  
   if G.AppHwnd == 0:
     print("Unable to find app window, aborting")
     exit()
   else:
+    print("Current App:", const.AppName)
     getAppRect()
+  
 
 # ori: return original 4 pos of the window
 def getAppRect(ori=False):
@@ -111,7 +152,8 @@ def align_window(wx=None,wy=None):
     wx = x
   if wy is None:
     wy = y
-  win32gui.MoveWindow(G.AppHwnd, wx, wy, G.AppWidth, G.AppHeight, 1)
+  ww, wh = const.getAppResoultion()
+  win32gui.MoveWindow(G.AppHwnd, wx, wy, ww, wh, 1)
   uwait(1)
   getAppRect()
 
@@ -121,73 +163,73 @@ def reset_window():
   _, _, w, h = rect
   win32gui.MoveWindow(G.AppHwnd, 0, 0, w, h, 1)
 
-def mouse_down(x,y):
+def mouse_down(x, y, app_offset):
+  if app_offset:
+    offset = const.getAppOffset()
+    x += G.AppRect[0] + offset[0]
+    y += G.AppRect[1] + offset[1]
   win32api.SetCursorPos((x,y))
   win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,x,y,0,0)
 
-def mouse_up(x,y):
+def mouse_up(x, y, app_offset):
+  if app_offset:
+    offset = const.getAppOffset()
+    x += G.AppRect[0] + offset[0]
+    y += G.AppRect[1] + offset[1]
   win32api.SetCursorPos((x,y))
   win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,x,y,0,0)
 
-def click(x, y, app_offset=True):
+def set_cursor_pos(x, y, app_offset):
   if app_offset:
-    x += G.AppRect[0]
-    y += G.AppRect[1]
+    offset = const.getAppOffset()
+    x += G.AppRect[0] + offset[0]
+    y += G.AppRect[1] + offset[1]
   win32api.SetCursorPos((x,y))
-  mouse_down(x,y)
-  mouse_up(x,y)
+
+def click(x, y, app_offset=True):
+  set_cursor_pos(x, y, app_offset)
+  mouse_down(x, y, app_offset)
+  mouse_up(x, y, app_offset)
 
 def scroll_up(x, y, delta = 100, app_offset=True, haste=False):
-  if app_offset:
-    x += G.AppRect[0]
-    y += G.AppRect[1]
-  mouse_down(x, y)
+  mouse_down(x, y, app_offset)
   ty = y + delta
   wait(0.01 if haste else 0.5)
   while y <= ty:
     y += random.randint(*ScrollDelta)
-    win32api.SetCursorPos((x, min([y,ty])))
+    set_cursor_pos(x, min([y,ty]), app_offset)
     wait(0.01 if haste else ScrollTime)
-  mouse_up(x, y)
+  mouse_up(x, y, app_offset)
 
 def scroll_down(x, y, delta = 100, app_offset=True, haste=False):
-  if app_offset:
-    x += G.AppRect[0]
-    y += G.AppRect[1]
-  mouse_down(x, y)
+  mouse_down(x, y, app_offset)
   ty = y - delta
   wait(0.01 if haste else 0.5)
   while y >= ty:
     y -= random.randint(*ScrollDelta)
-    win32api.SetCursorPos((x, max([y,ty])))
+    set_cursor_pos(x, max([y,ty]), app_offset)
     wait(0.01 if haste else ScrollTime)
-  mouse_up(x, y)
+  mouse_up(x, y, app_offset)
 
 def scroll_left(x, y, delta = 100, app_offset=True, haste=False):
-  if app_offset:
-    x += G.AppRect[0]
-    y += G.AppRect[1]
-  mouse_down(x, y)
+  mouse_down(x, y, app_offset)
   tx = x + delta
   wait(0.01 if haste else 0.5)
   while x <= tx:
     x += random.randint(*ScrollDelta)
-    win32api.SetCursorPos((min([x,tx]), y))
+    set_cursor_pos(min([x,tx]), y, app_offset)
     wait(0.01 if haste else ScrollTime)
-  mouse_up(x, y)
+  mouse_up(x, y, app_offset)
 
 def scroll_right(x, y, delta = 100, app_offset=True, haste=False):
-  if app_offset:
-    x += G.AppRect[0]
-    y += G.AppRect[1]
-  mouse_down(x, y)
+  mouse_down(x, y, app_offset)
   tx = x - delta
   wait(0.01 if haste else 0.5)
   while x >= tx:
     x -= random.randint(*ScrollDelta)
-    win32api.SetCursorPos((max([x,tx]), y))
+    set_cursor_pos(max([x,tx]), y, app_offset)
     wait(0.01 if haste else ScrollTime)
-  mouse_up(x, y)
+  mouse_up(x, y, app_offset)
 
 # Return Value: alive?
 def resume(fiber):
@@ -199,6 +241,9 @@ def resume(fiber):
 
 def read_app_text(x, y, x2, y2, digit_only=False):
   rect = getAppRect(True)
+  offset = const.getAppOffset()
+  x, y = x + offset[0], y + offset[1]
+  x2, y2 = x2 + offset[0], y2 + offset[1]
   rect[2], rect[3] = rect[0] + x2, rect[1] + y2
   rect[0], rect[1] = rect[0] + x,  rect[1] + y
   im = ImageGrab.grab(rect)
@@ -216,6 +261,8 @@ def img_to_str(filename, digit_only=False):
 
 def correct_digit_result(re):
   trans = {
+    'O': '0',
+    'o': '0',
     'D': '0',
     'Z': '2',
     'z': '2',
@@ -225,7 +272,10 @@ def correct_digit_result(re):
   }
   return re.translate(str.maketrans(trans))
 
-def get_app_cursor_pos():
+def get_cursor_pos(app_offset=True):
   mx, my = win32api.GetCursorPos()
-  mx, my = mx - G.AppRect[0], my - G.AppRect[1]
+  if app_offset:
+    offset = const.getAppOffset()
+    mx = mx - G.AppRect[0] - offset[0]
+    my = my - G.AppRect[1] - offset[1]
   return [mx, my]

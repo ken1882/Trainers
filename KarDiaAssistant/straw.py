@@ -22,6 +22,9 @@ def determine_jump():
       mx, my = posar[0].copy()
       mx -= 70
       action.random_click(mx, my, G.DefaultRandRange / 2)
+      offset = const.getAppOffset()
+      mx += offset[0]
+      my += offset[1]
       action.delayed_click(mx, my, 0.042, G.DefaultRandRange / 2)
       ClickCD[i] = CDT
 

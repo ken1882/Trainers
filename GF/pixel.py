@@ -1,5 +1,5 @@
 import PIL.ImageGrab, argparse
-import win32api, win32con, sys, time
+import const, G, util, Input
 
 key_cooldown = 0
 running      = True
@@ -7,6 +7,7 @@ FPS          = (1 / 120)
 Mode         = 0
 out_cnt      = 0
 out_cache    = []
+
 parser = argparse.ArgumentParser()
 Ptrue  = "store_true"
 Pfalse = "store_false"
@@ -21,12 +22,12 @@ def update_keystate():
     key_cooldown -= 1
     return
   # Stop program when press F9
-  if win32api.GetAsyncKeyState(win32con.VK_F9):
+  if Input.is_trigger(Input.keymap.kF9):
     running = False
     print("\n")
     for s in out_cache:
       print(s, end=' ')
-  elif win32api.GetAsyncKeyState(win32con.VK_CONTROL) or win32api.GetAsyncKeyState(win32con.VK_RBUTTON):
+  elif Input.is_trigger(Input.keymap.kMOUSE2) or Input.is_trigger(Input.keymap.kCONTROL):
     if Mode == 0:
       process_mouse_pixel()
     elif Mode == 1:
@@ -56,24 +57,32 @@ def getPixel(x=None, y=None):
 
 def getMousePixel(mx=None, my=None):
   if not mx and not my:
-    mx, my = win32api.GetCursorPos()
+    mx, my = util.get_cursor_pos(False)
   r,g,b = getPixel(mx, my)
+  offset = const.getAppOffset()
+  mx = mx - G.AppRect[0] - offset[0]
+  my = my - G.AppRect[1] - offset[1]
   return ["[{}, {}],".format(mx, my), "({}, {}, {}),".format(r,g,b)]
 
 def start():
   global running, FPS
   while running:
+    Input.clean_intern()
+    Input.update()
     update_keystate()
     update_main()
-    time.sleep(FPS)
+    util.wait(FPS)
 
 args = parser.parse_args() 
+
 if args.picture:
   Mode = 1
 
+util.find_app()
+
+print("Offset:", const.getAppOffset())
 if args.start:
   start()
-
 else:
   x = args.x_pos if args.x_pos >= 0 else None
   y = args.y_pos if args.y_pos >= 0 else None

@@ -29,6 +29,7 @@ def start():
   if G.FlagAlign:
     util.align_window(0,0)
   print("Start hwnd {}, max FPS: {}".format(hex(G.AppHwnd), 1/G.FPS))
+  util.change_title(const.AppTitle)
   while G.FlagRunning:
     uwait(G.FPS, False)
     update.main_update()
@@ -62,9 +63,8 @@ def test_func():
   util.getPixel()
 
 def tmp_test_func():
-  print(stage.is_pixel_match(const.StageVisitLikePixel, const.StageVisitLikeColor))
-  print(stage.get_current_stage())
-  
+  print(stage.is_stage_main_menu())
+  # print(stage.get_current_stage())
 
 if __name__ == '__main__':
   try:

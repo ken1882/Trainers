@@ -4,8 +4,6 @@ import random, time, slimeai
 
 # Constants
 PWD = ""
-AppName = "BlueStacks"
-
 
 # Program flags
 FlagRunning = True
@@ -54,11 +52,8 @@ Mode = 0
 Difficulty = 0
 Counter = 0
 
-# Not a actually const, window rect
+# Window rect
 AppRect = [0, 0, 0, 0]
-
-AppWidth  = 477
-AppHeight = 917
 
 # Debug flag
 FlagDebug = False

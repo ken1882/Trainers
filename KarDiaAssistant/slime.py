@@ -44,6 +44,8 @@ def get_score():
 
 def determine_pos(pos):
   global GridPos
+  offset = const.getAppOffset()
+  pos = (pos[0] - offset[0], pos[1] - offset[1])
   deltas = GridPos - np.asarray(pos)
   dist   = np.einsum('ij,ij->i', deltas, deltas)
   return np.argmin(dist)
@@ -87,7 +89,7 @@ def identify(mov=True):
     w, h = template.shape[:-1]
     for pt in zip(*loc[::-1]):  # Switch collumns and rows
       if pt[1] < const.SlimeGridBoundY:
-        continue
+        continue      
       pos = determine_pos(pt)
       slimes[pos] = 2 ** (i+1)
       if G.FlagDebug:
