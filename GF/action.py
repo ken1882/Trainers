@@ -70,3 +70,9 @@ def process_autocombat():
 
 def close_combat_setup():
   random_click(*const.CloseCombatSetupPos)
+
+def like_friend():
+  random_click(*const.VisitLikePos)
+
+def next_friend():
+  random_click(*const.NextFriendPos)

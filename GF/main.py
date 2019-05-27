@@ -36,7 +36,9 @@ def start():
     cur_hwnd = win32gui.GetForegroundWindow()
 
     if cur_hwnd != G.AppHwnd:
-      LastHwnd = cur_hwnd
+      if LastHwnd == G.AppHwnd:
+        print("App unfocused auto-paused")
+        LastHwnd = cur_hwnd
       continue
     elif LastHwnd != G.AppHwnd:
       print("Switched to app, begin in 1.2 seconds")

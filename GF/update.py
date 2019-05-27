@@ -78,13 +78,11 @@ def update_grind():
     action.action_next()
 
 def update_like():
-  mx, my = const.VisitLikePos
   if stage.is_stage_like():
-    action.random_click(mx, my)
+    action.like_friend()
     uwait(0.5)
-  mx, my = util.random_pos(mx-100, my-600, 50)
-  util.scroll_right(mx, my, const.NextFriendDelta, True, 5)
-  uwait(1.3)
+  action.next_friend()
+  uwait(1.4)
 
 def process_update():
   update_freeze()
