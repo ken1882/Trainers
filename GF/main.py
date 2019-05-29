@@ -7,6 +7,7 @@ import numpy as np
 from G import uwait, Mode
 from datetime import datetime
 import sysargv
+import grind
 
 # assign constants
 PWD = os.path.dirname(os.path.realpath(__file__))
@@ -30,6 +31,7 @@ def start():
     util.align_window(0,0)
   print("Start hwnd {}, max FPS: {}".format(hex(G.AppHwnd), 1/G.FPS))
   util.change_title(const.AppTitle)
+  
   while G.FlagRunning:
     uwait(G.FPS, False)
     update.main_update()
@@ -65,8 +67,8 @@ def test_func():
   util.getPixel()
 
 def tmp_test_func():
-  print(stage.is_stage_main_menu())
-  # print(stage.get_current_stage())
+  print(stage.get_current_stage())
+  action.random_click(*const.BattleStartPos)
 
 if __name__ == '__main__':
   try:
@@ -77,7 +79,7 @@ if __name__ == '__main__':
         util.align_window(0,0)
     elif G.Mode > 0:
       start()
-    else:
+    elif G.Mode != -1:
       sysargv.show_help()
   finally:
     util.terminate()

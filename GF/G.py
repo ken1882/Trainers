@@ -16,9 +16,13 @@ FlagDebug = False
 FlagAutoCombat = False
 FlagManualControl = False
 FlagCounter = False
+FlagGrindLevel = False
 
+GrindLevel = ''
 
 AutoCombatCount = -1
+MaxRepair = 4
+WorsetRepairTime = 60 * 30 # 30 mins
 
 def Flags(name=None):
   flags = {
@@ -29,6 +33,7 @@ def Flags(name=None):
     'autocombat': FlagAutoCombat,
     'manualcontrol': FlagManualControl,
     'counter': FlagCounter,
+    'grindlevel': FlagGrindLevel,
   }
   if name:
     name = name.lower()
@@ -48,15 +53,17 @@ CurInternCount   = InternUpdateTime
 FrameCount       = 0
 FreezeTimeOut    = 120
 
+CurTime = 0
 Mode = 0
 Difficulty = 0
 Counter = 0
+RepairOKTimestamp = 0
 
 # Not a actually const, window rect
 AppRect = [0, 0, 0, 0]
 
 # Random range for clicking to bypass detection
-DefaultRandRange = 12
+DefaultRandRange = 20
 
 # generator that store current action
 ActionFiber = None
@@ -77,11 +84,11 @@ def is_mode_like():
 def wait(sec):
   time.sleep(sec)
 
-def uwait(sec, rand=True):
-  if rand:
-    sec += random.random()
+def uwait(sec, rand_scale = 0.3):
+  if rand_scale:
+    sec += random.uniform(rand_scale/2, rand_scale*1.5)
     if sec > 0.5:
-      sec -= (random.random() / 3)
+      sec -= random.uniform(rand_scale/4, rand_scale)
   wait(sec)
 
 def setup():
@@ -94,3 +101,18 @@ def setup():
     InternUpdateTime = 300
   elif is_mode_like():
     InternUpdateTime = 60
+
+def slow_update():
+  global InternUpdateTime, ScreenTimeout
+  InternUpdateTime = 120
+  ScreenTimeout = 1000
+
+def normal_update():
+  global InternUpdateTime, ScreenTimeout
+  InternUpdateTime = 60
+  ScreenTimeout = 500
+
+def fast_update():
+  global InternUpdateTime, ScreenTimeout
+  InternUpdateTime = 30
+  ScreenTimeout = 100

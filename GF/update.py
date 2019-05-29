@@ -1,5 +1,5 @@
 import G, const, util, win32api, win32con
-import stage, action, Input
+import stage, action, Input, grind
 from G import uwait
 
 minigame_pos = [0,0]
@@ -17,16 +17,6 @@ def fiber_manual_action(func, *args, **kwargs):
       func(*args, **kwargs)
       break
     yield
-
-def advance(func, *args, **kwargs):
-  if G.FlagManualControl:
-    if not G.ActionFiber:
-      print("Press CTRL to continue...")
-      G.ActionFiber = fiber_manual_action(func, *args, **kwargs)
-    if G.ActionFiber and not util.resume(G.ActionFiber):
-      G.ActionFiber = None
-  else:
-    func(*args, **kwargs)
 
 def update_keystate():
   global key_cooldown
@@ -46,6 +36,7 @@ def update_keystate():
 def main_update():
   Input.update()
   update_keystate()
+  G.CurTime = util.get_current_time_sec()
 
 def update_freeze():
   global freeze_timer
@@ -68,14 +59,29 @@ def update_grind():
     action.process_backup()
   elif stage.is_stage_autocombat_ok():
     G.ActionFiber = action.process_autocombat()
-  elif stage.is_stage_combat_setup():
-    action.close_combat_setup()
-    uwait(0.5)
-    action.return_base()
-  elif stage.is_stage_combat_selection() or stage.is_stage_enhance():
+  elif stage.is_stage_enhance():
     action.return_base()
   elif stage.is_stage_profile():
     action.action_next()
+  elif stage.is_stage_autocombat_again():
+    action.process_autocombat_again()
+  elif stage.is_maxdoll_reached():
+    action.maxdoll_to_enhance()
+  elif stage.is_stage_combat_setup():
+    if grind.is_battle_ready():
+      action.close_combat_setup()
+      uwait(0.5)
+      action.return_base()
+    else:
+      action.start_level()
+  elif stage.is_stage_combat_selection():
+    if grind.is_battle_ready():
+      action.enter_level()
+      grind.initialize()
+    else:
+      action.return_base()
+  else:
+    grind.update()
 
 def update_like():
   if stage.is_stage_like():

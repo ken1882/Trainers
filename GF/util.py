@@ -1,5 +1,5 @@
 import win32api, win32gui, win32ui, win32con, const
-import PIL.ImageGrab, time, random, math, G
+import time, random, math, G, Input
 import numpy as np
 from G import uwait, wait
 from PIL import Image
@@ -26,7 +26,7 @@ def change_title(nt):
 def print_window(saveimg=False, filename=G.ScreenImageFile):
   im = ImageGrab.grab(getAppRect(True))
   try:
-    if G.is_mode_slime() or saveimg:
+    if saveimg:
       im.save(filename)
   except Exception:
     pass
@@ -56,7 +56,10 @@ def terminate():
 def hash_timenow():
   return datetime.now().second * 1000 + datetime.now().microsecond // 1000
 
-ScreenSnapShot = [hash_timenow(), PIL.ImageGrab.grab().load()]
+def get_current_time_sec():
+  return int(time.time())
+
+ScreenSnapShot = [hash_timenow(), ImageGrab.grab().load()]
 
 def getPixel(x=None, y=None):
   global LastFrameCount
@@ -170,6 +173,21 @@ def random_pos(x, y, rrange=G.DefaultRandRange):
   y += random.randint(-rrange, rrange)
   return [x, y]
 
+def key_down(*args):
+  for kid in args:
+    win32api.keybd_event(kid, 0, 0, 0)
+
+def key_up(*args):
+  for kid in args:
+    win32api.keybd_event(kid, 0, win32con.KEYEVENTF_KEYUP, 0)
+
+def trigger_key(*args):
+  for kid in args:
+    key_down(kid)
+  uwait(0.03)
+  for kid in args:
+    key_up(kid)
+
 def mouse_down(x, y, app_offset):
   if app_offset:
     offset = const.getAppOffset()
@@ -246,7 +264,7 @@ def resume(fiber):
     return False
   return True
 
-def read_app_text(x, y, x2, y2, digit_only=False):
+def read_app_text(x, y, x2, y2, digit_only=False, lan='eng'):
   rect = getAppRect(True)
   offset = const.getAppOffset()
   x, y = x + offset[0], y + offset[1]
@@ -257,11 +275,11 @@ def read_app_text(x, y, x2, y2, digit_only=False):
   filename = 'tmp/apptext.png'
   save_png(im, filename)
   uwait(0.5)
-  return img_to_str(filename, digit_only)
+  return img_to_str(filename, digit_only, lan)
 
-def img_to_str(filename, digit_only=False):
+def img_to_str(filename, digit_only=False, lan='eng'):
   _config = '-psm 12 -psm 13'
-  re = pyte.image_to_string(filename, config=_config)
+  re = pyte.image_to_string(filename, config=_config, lang=lan)
   if digit_only:
     re = correct_digit_result(re)
   return re
@@ -286,3 +304,13 @@ def get_cursor_pos(app_offset=True):
     mx = mx - G.AppRect[0] - offset[0]
     my = my - G.AppRect[1] - offset[1]
   return [mx, my]
+
+def zoomout(rep=1):
+  for _ in range(rep):
+    trigger_key(Input.keymap.kMINUS)
+    uwait(0.05)
+
+def zoomin(rep=1):
+  for _ in range(rep):
+    trigger_key(Input.keymap.kEQUAL)
+    uwait(0.05)

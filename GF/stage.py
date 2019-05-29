@@ -109,6 +109,39 @@ def is_stage_enhance():
     return True
   return is_pixel_match(const.StageDollEnhancePixel, const.StageDollEnhanceColor)
 
+def is_stage_repair():
+  if is_stage_ok(11):
+    return True
+  return is_pixel_match(const.StageRepairPixel, const.StageRepairColor)
+
+def is_stage_combat_map():
+  if is_stage_ok(12):
+    return True
+  return is_pixel_match(const.StageCombatMapPixel, const.StageCombatMapColor)
+
+def is_stage_loading():
+  if is_stage_ok(13):
+    return True
+  return is_pixel_match(const.StageLoadingPixel, const.StageLoadingColor)
+
+def is_stage_victory():
+  if is_stage_ok(14):
+    return True
+  return is_pixel_match(const.StageVictoryPixel, const.StageVictoryColor)
+
+def is_stage_engaging():
+  if is_stage_ok(15):
+    return True
+  a = is_pixel_match(const.StageEngagingPixel, const.StageEngagingColor)
+  b = is_pixel_match(const.StageEngagingPixelB, const.StageEngagingColorB)
+  return a or b
+
+def is_stage_neutralized():
+  if is_stage_ok(16):
+    return True
+  return is_pixel_match(const.StageNeutralizedPixel, const.StageNeutralizedColor)
+
+
 def get_stage_cache(sid):
   if LastFrameCount != G.FrameCount:
     cache_stage(sid)
@@ -132,6 +165,12 @@ StageMap = {
   8: is_stage_like,
   9: is_maxdoll_reached,
   10: is_stage_enhance,
+  11: is_stage_repair,
+  12: is_stage_combat_map,
+  13: is_stage_loading,
+  14: is_stage_victory,
+  15: is_stage_engaging,
+  16: is_stage_neutralized
 }
 
 def update():
@@ -165,4 +204,18 @@ def get_current_stage():
     return "Max doll reached"
   elif is_stage_enhance():
     return "Enhance"
+  elif is_stage_autocombat_again():
+    return "Auto-combat again"
+  elif is_stage_repair():
+    return "Repair"
+  elif is_stage_combat_map():
+    return "Combat Map"
+  elif is_stage_loading():
+    return "Loading"
+  elif is_stage_victory():
+    return "Victory"
+  elif is_stage_engaging():
+    return "Engaging"
+  elif is_stage_neutralized():
+    return "Enemy Neutralized"
   return None

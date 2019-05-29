@@ -13,6 +13,7 @@ Ptrue  = "store_true"
 Pfalse = "store_false"
 parser.add_argument("-s", "--start", action=Ptrue)
 parser.add_argument("-p", "--picture", action=Ptrue)
+parser.add_argument("-g", "--global-screen", action=Ptrue)
 parser.add_argument("-x", "--x-pos", type=int, default=-1)
 parser.add_argument("-y", "--y-pos", type=int, default=-1)
 
@@ -78,7 +79,8 @@ args = parser.parse_args()
 if args.picture:
   Mode = 1
 
-util.find_app()
+if not args.global_screen:
+  util.find_app()
 
 print("Offset:", const.getAppOffset())
 if args.start:

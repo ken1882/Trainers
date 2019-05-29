@@ -15,6 +15,8 @@ parser.add_argument("-b", "--backup", help="Auto run backup(Logistic Support)", 
 parser.add_argument("-l", "--like", help="Auto press like to friends", action=Ptrue)
 parser.add_argument("-ac", "--autocombat", help="Once auto-combat ends, send the team again (Note if max T-dolls is reached this program will terminate)", action=Ptrue)
 parser.add_argument("-acc", "--autocombat-count", help="Auto-combat count, if hit to zero won't send again.", default=-1, type=int)
+parser.add_argument("-ls", "--list-grind-levels", help="List available grindable levels", action=Ptrue)
+parser.add_argument("-gl", "--grind-level", help="Grind level, notice that you should have pre-setup before excute this command", type=str, default='')
 
 def load_mode(args):
   if args.backup:
@@ -22,8 +24,18 @@ def load_mode(args):
   elif args.like:
     G.Mode = 2
 
+  G.GrindLevel = G.GrindLevel.upper()
+  try:
+    if not const.EnterLevelPos[G.GrindLevel]:
+      G.FlagGrindLevel = False
+  except Exception:
+    G.FlagGrindLevel = False
+
 def load():  
   args = parser.parse_args()
+  if args.list_grind_levels:
+    G.Mode = -1
+    return list_grind_levels()
   G.Mode = args.mode
   G.FlagDebug  = args.debug
   G.FlagVerbose = args.verbose
@@ -31,8 +43,14 @@ def load():
   G.FlagAlign = args.align
   G.FlagAutoCombat = args.autocombat
   G.AutoCombatCount = args.autocombat_count
+  G.GrindLevel = args.grind_level
   load_mode(args)
   G.setup()
 
 def show_help():
   parser.print_help()
+
+def list_grind_levels():
+  print("Available levels for grinding:")
+  for k in const.TeamDeployPos:
+    print(k.upper())
