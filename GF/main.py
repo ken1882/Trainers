@@ -58,7 +58,9 @@ def start():
 
 if not os.path.isdir("tmp"):
   os.mkdir("tmp")
-sysargv.load()
+
+if __name__ == "__main__":
+  sysargv.load()
 
 def test_func():
   util.find_app()
@@ -67,8 +69,8 @@ def test_func():
   util.getPixel()
 
 def tmp_test_func():
+  # print(stage.is_stage_engaging())
   print(stage.get_current_stage())
-  action.random_click(*const.BattleStartPos)
 
 if __name__ == '__main__':
   try:

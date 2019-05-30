@@ -28,6 +28,8 @@ def load_mode(args):
   try:
     if not const.EnterLevelPos[G.GrindLevel]:
       G.FlagGrindLevel = False
+    else:
+      G.FlagGrindLevel = True
   except Exception:
     G.FlagGrindLevel = False
 
@@ -45,6 +47,7 @@ def load():
   G.AutoCombatCount = args.autocombat_count
   G.GrindLevel = args.grind_level
   load_mode(args)
+  print("Grind Level: ", G.FlagGrindLevel, G.GrindLevel)
   G.setup()
 
 def show_help():
