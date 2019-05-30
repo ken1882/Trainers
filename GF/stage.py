@@ -115,7 +115,7 @@ def is_stage_repair():
   return is_pixel_match(const.StageRepairPixel, const.StageRepairColor)
 
 def is_stage_combat_map():
-  if is_stage_ok(12):
+  if is_stage_ok(17):
     return True
   return is_pixel_match(const.StageCombatMapPixel, const.StageCombatMapColor)
 
@@ -132,9 +132,10 @@ def is_stage_victory():
 def is_stage_engaging():
   if is_stage_ok(15):
     return True
-  a = is_pixel_match(const.StageEngagingPixel, const.StageEngagingColor)
-  b = is_pixel_match(const.StageEngagingPixelB, const.StageEngagingColorB)
-  return a or b
+  for pixs, clrs in zip(const.StageEngagingPixels, const.StageEngagingColors):
+    if is_pixel_match(pixs, clrs):
+      return True
+  return False
 
 def is_stage_neutralized():
   if is_stage_ok(16):
@@ -142,14 +143,16 @@ def is_stage_neutralized():
   return is_pixel_match(const.StageNeutralizedPixel, const.StageNeutralizedColor)
 
 def is_stage_enemy_turn():
-  if is_stage_ok(17):
-    return True
-  # todo: determine enemy turn
-
-def is_stage_combat_event():
   if is_stage_ok(18):
     return True
-  # todo: determine event during combat
+  return is_pixel_match(const.StageEnemyTurnPixel, const.StageEnemyTurnColor)
+
+def is_stage_combat_event():
+  if is_stage_ok(12):
+    return True
+  a = is_pixel_match(const.StageCombatEventPixel, const.StageCombatEventColor)
+  b = is_pixel_match(const.StageCombatEventPixelB, const.StageCombatEventColorB)
+  return a or b
 
 def get_stage_cache(sid):
   if LastFrameCount != G.FrameCount:
@@ -161,6 +164,16 @@ def cache_stage(sid):
   if LastFrameCount != G.FrameCount:
     LastFrameCount = G.FrameCount
     CurStage = sid
+
+def is_in_battle():
+  methods = [
+    is_stage_combat_event, is_stage_engaging, is_stage_victory, 
+    is_stage_neutralized, is_stage_combat_map, is_stage_enemy_turn,
+  ]
+  for method in methods:
+    if method():
+      return True
+  return False
 
 StageMap = {
   0: is_stage_main_menu,
@@ -175,13 +188,14 @@ StageMap = {
   9: is_maxdoll_reached,
   10: is_stage_enhance,
   11: is_stage_repair,
-  12: is_stage_combat_map,
   13: is_stage_loading,
   14: is_stage_victory,
   15: is_stage_engaging,
   16: is_stage_neutralized,
-  17: is_stage_enemy_turn,
-  18: is_stage_combat_event
+
+  12: is_stage_combat_event,
+  17: is_stage_combat_map,
+  18: is_stage_enemy_turn,
 }
 
 def update():
@@ -219,8 +233,12 @@ def get_current_stage():
     return "Auto-combat again"
   elif is_stage_repair():
     return "Repair"
+  elif is_stage_combat_event():
+    return "Combat Event"
   elif is_stage_combat_map():
     return "Combat Map"
+  elif is_stage_enemy_turn():
+    return "Enemy turn"
   elif is_stage_loading():
     return "Loading"
   elif is_stage_victory():
@@ -229,8 +247,4 @@ def get_current_stage():
     return "Engaging"
   elif is_stage_neutralized():
     return "Enemy Neutralized"
-  elif is_stage_enemy_turn():
-    return "Enemy turn"
-  elif is_stage_combat_event:
-    return "Combat Event"
   return None

@@ -52,7 +52,9 @@ def update_freeze():
   print("Stage: {}, freeze timer: {}".format(st, freeze_timer))
 
 def update_grind():
-  if stage.is_stage_achievement():
+  if stage.is_in_battle():
+    return grind.update()
+  elif stage.is_stage_achievement():
     uwait(2)
     action.action_next()
   elif stage.is_stage_backup_ok():
@@ -69,15 +71,13 @@ def update_grind():
     action.maxdoll_to_enhance()
   elif stage.is_stage_combat_setup():
     if grind.is_battle_ready():
-      action.close_combat_setup()
-      uwait(0.5)
-      action.return_base()
-    else:
+      grind.initialize()
       action.start_level()
+    else:
+      action.close_combat_setup()
   elif stage.is_stage_combat_selection():
     if grind.is_battle_ready():
       action.enter_level()
-      grind.initialize()
     else:
       action.return_base()
   else:
