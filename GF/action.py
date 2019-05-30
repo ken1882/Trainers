@@ -51,9 +51,10 @@ def process_autocombat():
   uwait(1)
   util.flush_screen_cache()
   stage.flush()
-  uwait(2)
+  uwait(1)
+  yield
   has_room = True
-
+  uwait(1)
   while not stage.autocombat_reward_ok():
     random_click(*const.AutoCombatLootNextPos)
     if stage.is_maxdoll_reached():
