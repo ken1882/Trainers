@@ -256,6 +256,18 @@ def scroll_right(x, y, delta = 100, app_offset=True, haste=False):
     wait(0.01 if haste else ScrollTime)
   mouse_up(x, y, app_offset)
 
+def scroll_to(x, y, x2, y2, app_offset=True, haste=False):
+  mouse_down(x, y, app_offset)
+  wait(0.01 if haste else ScrollTime)
+  while x != x2 and y != y2:
+    dx = random.randint(*ScrollDelta) + haste * 2
+    dy = random.randint(*ScrollDelta) + haste * 2
+    x = min([x2, x+dx]) if x2 > x else max([x2, x-dx])
+    y = min([y2, y+dy]) if y2 > y else max([y2, y-dy])
+    set_cursor_pos(x, y, app_offset)
+    wait(0.01 if haste else ScrollTime)
+  mouse_up(x, y, app_offset)
+
 # Return Value: alive?
 def resume(fiber):
   try:

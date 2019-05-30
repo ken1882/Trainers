@@ -141,6 +141,15 @@ def is_stage_neutralized():
     return True
   return is_pixel_match(const.StageNeutralizedPixel, const.StageNeutralizedColor)
 
+def is_stage_enemy_turn():
+  if is_stage_ok(17):
+    return True
+  # todo: determine enemy turn
+
+def is_stage_combat_event():
+  if is_stage_ok(18):
+    return True
+  # todo: determine event during combat
 
 def get_stage_cache(sid):
   if LastFrameCount != G.FrameCount:
@@ -170,7 +179,9 @@ StageMap = {
   13: is_stage_loading,
   14: is_stage_victory,
   15: is_stage_engaging,
-  16: is_stage_neutralized
+  16: is_stage_neutralized,
+  17: is_stage_enemy_turn,
+  18: is_stage_combat_event
 }
 
 def update():
@@ -218,4 +229,8 @@ def get_current_stage():
     return "Engaging"
   elif is_stage_neutralized():
     return "Enemy Neutralized"
+  elif is_stage_enemy_turn():
+    return "Enemy turn"
+  elif is_stage_combat_event:
+    return "Combat Event"
   return None

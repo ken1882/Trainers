@@ -127,6 +127,12 @@ def start_level():
   random_click(*const.StartCombatPos)
   uwait(1)
 
+def start_battle():
+  random_click(*const.BattleStartPos)
+
+def end_turn():
+  start_battle()
+
 def deploy_troops():
   for pos in const.TeamDeployPos[G.GrindLevel]:
     random_click(*pos)
@@ -134,4 +140,38 @@ def deploy_troops():
     random_click(*const.DeployConfirmPos)
     uwait(0.5)
     yield
-  random_click(*const.BattleStartPos)
+
+def move_troop(level, turn):
+  if turn >= len(const.TeamMovementPos):
+    return
+  # For each team route points
+  for team_id, team_dest in enumerate(const.TeamMovementPos[turn]):
+    _len = len(team_dest)
+    st_loc = 1
+    # find start position
+    if len(team_dest[0]) == 4:
+      print("Turn initial scroll:", team_dest[0])
+      st_loc = 2
+      util.scroll_to(*team_dest[0], True, 1)
+      last_pos = team_dest[1].copy()
+    else:
+      last_pos = team_dest[0].copy()
+    # Iterate and click route points
+    for idx in range(st_loc, _len):
+      dest = team_dest[idx]
+      if len(dest) == 4:
+        print("Scroll:", dest)
+        util.scroll_to(*dest, True, 1)
+      else:
+        print("Move {} -> {}", last_pos, dest)
+        random_click(*last_pos)
+        uwait(0.5)
+        random_click(*dest)
+        last_pos = dest.copy()
+      uwait(1)
+      yield
+    print("Team {} move complete".format(team_id+1))
+    uwait(1)
+    yield
+  print("Move complete")
+

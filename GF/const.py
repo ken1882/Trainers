@@ -114,11 +114,11 @@ TeamDeployPos = {
   '3-3E': [[986, 536], [466, 403]]
 }
 
-PlanTargetPos = {
+TeamMovementPos = {
   '3-3E': [
     [
-      [], 
-      []
+      [], # team 1
+      []  # team 2
     ], # turn 1
   ]
 }
