@@ -80,6 +80,9 @@ def update_grind():
       action.enter_level()
     else:
       action.return_base()
+  elif G.FlagRepairNeeded and stage.is_stage_main_menu():
+    action.repair_dolls()
+    uwait(0.5)
   else:
     grind.update()
 

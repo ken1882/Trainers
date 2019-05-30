@@ -104,10 +104,12 @@ def get_repair_time():
 
 def repair_dolls():
   random_click(*const.SelectRepairPos)
+  G.FlagRepairNeeded = False
   for _ in range(2):
     uwait(0.5)
     yield
   if stage.is_stage_repair():
+    G.RepairOKTimestamp = G.CurTime
     return
   uwait(0.5)
   for i in range(G.MaxRepair):

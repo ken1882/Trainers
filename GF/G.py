@@ -17,6 +17,7 @@ FlagAutoCombat = False
 FlagManualControl = False
 FlagCounter = False
 FlagGrindLevel = False
+FlagRepairNeeded = False
 
 GrindLevel = ''
 
@@ -34,6 +35,7 @@ def Flags(name=None):
     'manualcontrol': FlagManualControl,
     'counter': FlagCounter,
     'grindlevel': FlagGrindLevel,
+    'repair': FlagRepairNeeded,
   }
   if name:
     name = name.lower()

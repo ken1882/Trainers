@@ -7,7 +7,7 @@ Fiber = None
 CurrentTurn = 0
 
 def initialize():
-  global FlagInit, CurrentTurn
+  global FlagInit, CurrentTurn, Ready
   FlagInit = True
   CurrentTurn = 0
 
@@ -32,6 +32,8 @@ def process_victory():
   MovementFiber = None
   yield from next_until_ok()
   print("Combat ends")
+  G.FlagRepairNeeded = True
+  G.RepairOKTimestamp = 9223372036854775807
 
 def process_movements():
   global CurrentTurn
@@ -81,8 +83,7 @@ def update_in_turn_actions():
   elif stage.is_stage_neutralized() or stage.is_stage_combat_event():
     Fiber = next_until_ok()
   elif stage.is_stage_combat_map():
-    if util.resume(MovementFiber):
-      print("Movement fiber resumed")
-    else:
+    print("Resume movement fiber")
+    if not util.resume(MovementFiber):
       print("Movement fiber finished")
       MovementFiber = None
