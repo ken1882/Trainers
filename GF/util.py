@@ -5,6 +5,7 @@ from G import uwait, wait
 from PIL import Image
 from PIL import ImageGrab
 from ctypes import windll
+from datetime import timedelta
 from datetime import datetime
 from os import system
 import pytesseract as pyte
@@ -295,6 +296,9 @@ def img_to_str(filename, digit_only=False, lan='eng'):
   if digit_only:
     re = correct_digit_result(re)
   return re
+
+def sec2readable(secs):
+  return str(timedelta(seconds=secs))
 
 def correct_digit_result(re):
   trans = {

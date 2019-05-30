@@ -49,10 +49,12 @@ def process_autocombat():
   random_click(*const.AutoCombatAgainPos)
   G.fast_update()
   uwait(1)
+  combat_next()
+  yield
+  combat_next()
+  uwait(1)
   util.flush_screen_cache()
   stage.flush()
-  uwait(1)
-  yield
   has_room = True
   uwait(1)
   while not stage.autocombat_reward_ok():
@@ -103,8 +105,10 @@ def get_repair_time():
   return re + random.randint(5,10)
 
 def repair_dolls():
-  random_click(*const.SelectRepairPos)
+  random_click(*const.RepairMenuPos)
   G.FlagRepairNeeded = False
+  uwait(1)
+  random_click(*const.SelectRepairPos)
   for _ in range(2):
     uwait(0.5)
     yield
@@ -118,8 +122,10 @@ def repair_dolls():
   yield
   random_click(*const.RepairStartPos)
   uwait(1)
-  G.RepairOKTimestamp = get_repair_time() + G.CurTime
+  sec_needed = get_repair_time()
+  G.RepairOKTimestamp = sec_needed + G.CurTime
   random_click(*const.RepairConfirmPos)
+  print("Repair will be done in", util.sec2readable(sec_needed))
   yield
   uwait(0.2)
   return_base()
@@ -138,7 +144,9 @@ def start_battle():
   uwait(2)
 
 def end_turn():
-  start_battle()
+  random_click(*const.BattleStartPos)
+  print("Turn ends")
+  uwait(2)
 
 def deploy_troops():
   for i, pos in enumerate(const.TeamDeployPos[G.GrindLevel]):
@@ -167,7 +175,7 @@ def move_troop(level, turn):
       uwait(3.5)
       yield
     print("Team {} move complete".format(team_id+1))
-    uwait(2)
+    uwait(1)
     yield
   print("Move complete")
-  uwait(5)
+  uwait(3)

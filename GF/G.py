@@ -104,6 +104,11 @@ def setup():
   elif is_mode_like():
     InternUpdateTime = 60
 
+def superslow_update():
+  global InternUpdateTime, ScreenTimeout
+  InternUpdateTime = 300
+  ScreenTimeout = 2000
+
 def slow_update():
   global InternUpdateTime, ScreenTimeout
   InternUpdateTime = 120

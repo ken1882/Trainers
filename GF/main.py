@@ -72,6 +72,7 @@ def tmp_test_func():
   # print(stage.is_stage_engaging())
   print(stage.get_current_stage())
 
+
 if __name__ == '__main__':
   try:
     if G.FlagTest:
