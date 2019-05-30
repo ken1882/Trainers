@@ -3,10 +3,12 @@ from G import uwait
 
 FlagInit = False
 Fiber = None
+CurrentTurn = 0
 
 def initialize():
-  global FlagInit
+  global FlagInit, CurrentTurn
   FlagInit = True
+  CurrentTurn = 0
 
 def is_battle_ready():
   return G.FlagGrindLevel and G.RepairOKTimestamp < G.CurTime
@@ -14,21 +16,41 @@ def is_battle_ready():
 def deploy_pos():
   return const.TeamDeployPos[G.GrindLevel]
 
+def process_battle_start():
+  yield from action.deploy_troops()
+  action.start_battle()
+
+def process_in_turn():
+  global CurrentTurn
+  yield from action.move_troop(G.GrindLevel, CurrentTurn)
+  end_turn()
+
+def end_turn():
+  global CurrentTurn
+  CurrentTurn += 1
+  action.end_turn()
+
 def update():
   global Fiber
+  if Fiber:
+    if util.resume(Fiber):
+      print("Resume grind fiber")
+      return
+    else:
+      print("Grind fiber finished")
+      Fiber = None
+
   if not is_battle_ready():
     return
   if stage.is_stage_combat_map():
     if FlagInit:
       G.normal_update()
-      G.ActionFiber = action.deploy_troops()
+      G.ActionFiber = process_battle_start()
       return
     else:
-      if Fiber:
-        alive = util.resume(Fiber)
-        if not alive:
-          Fiber = None
-          action.random_click(*const.BattleStartPos)
+      G.ActionFiber = process_in_turn()
+  elif stage.is_stage_enemy_turn():
+    pass
   elif stage.is_stage_victory():
     pass
   else:
