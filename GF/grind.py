@@ -2,7 +2,6 @@ import G, const, stage, action, util, Input
 from G import uwait
 
 FlagInit = False
-Fiber = None
 CurrentTurn = 0
 
 def initialize():
@@ -31,15 +30,6 @@ def end_turn():
   action.end_turn()
 
 def update():
-  global Fiber
-  if Fiber:
-    if util.resume(Fiber):
-      print("Resume grind fiber")
-      return
-    else:
-      print("Grind fiber finished")
-      Fiber = None
-
   if not is_battle_ready():
     return
   if stage.is_stage_combat_map():
