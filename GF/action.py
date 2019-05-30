@@ -21,6 +21,9 @@ def action_next(rrange=G.DefaultRandRange):
   mx, my = const.ActionContinue
   random_click(mx, my, rrange)
 
+def autocombat_next():
+  random_click(*const.AutoCombatLootNextPos)
+
 def process_backup():
   uwait(1)
   action_next(30)
@@ -58,7 +61,7 @@ def process_autocombat():
   has_room = True
   uwait(1)
   while not stage.autocombat_reward_ok():
-    random_click(*const.AutoCombatLootNextPos)
+    autocombat_next()
     if stage.is_maxdoll_reached():
       print("Max doll reached")
       has_room = False
@@ -175,7 +178,7 @@ def move_troop(level, turn):
       uwait(3.5)
       yield
     print("Team {} move complete".format(team_id+1))
-    uwait(1)
+    uwait(0.3)
     yield
   print("Move complete")
-  uwait(3)
+  uwait(0.5)

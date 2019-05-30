@@ -54,7 +54,9 @@ def is_stage_achievement():
 def is_stage_backup_ok():
   if is_stage_ok(2):
     return True
-  return is_pixel_match(const.StageBackupCompletePixel, const.StageBackupCompleteColor)
+  a = is_pixel_match(const.StageBackupCompletePixel, const.StageBackupCompleteColor)
+  b = is_pixel_match(const.StageBackupCompletePixelB, const.StageBackupCompleteColorB)
+  return a or b
 
 def is_stage_autocombat_ok():
   if is_stage_ok(3):

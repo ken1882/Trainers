@@ -88,6 +88,8 @@ def update_grind():
     elif grind.is_battle_ready():
       action.random_click(*const.CombatMenuPos)
       uwait(2)
+  elif not G.FlagGrindLevel and stage.get_current_stage() is None:
+    action.autocombat_next()
   else:
     grind.update()
 
