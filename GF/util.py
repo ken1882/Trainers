@@ -21,6 +21,15 @@ def initialize():
     raise Exception("Invalid Hwnd")
   Initialized  = True
 
+def bulk_get_kwargs(*args, **kwargs):
+  re = []
+  for info in args:
+    name, default = info
+    arg = kwargs.get(name)
+    arg = default if arg is None else arg
+    re.append(arg)
+  return re
+
 def change_title(nt):
   system("title " + nt)
 
@@ -257,16 +266,21 @@ def scroll_right(x, y, delta = 100, app_offset=True, haste=False):
     wait(0.01 if haste else ScrollTime)
   mouse_up(x, y, app_offset)
 
-def scroll_to(x, y, x2, y2, app_offset=True, haste=False):
+def scroll_to(x, y, x2, y2, **kwargs):
+  app_offset,haste,hold = bulk_get_kwargs(
+    ('app_offset', True), ('haste', False), ('hold', True),
+    **kwargs
+    )
+  
   mouse_down(x, y, app_offset)
   wait(0.01 if haste else ScrollTime)
   tdx, tdy = abs(x2 - x), abs(y2 - y)
   try:
     pcx, pcy = tdx // tdy, tdy // tdx
-    pcx, pcy = max([pcx, 0.4]), max([pcy, 0.4])
+    pcx, pcy = min([max([pcx, 0.4]), 2]), min([max([pcy, 0.4]), 2])
   except Exception:
     pcx, pcy = 1, 1
-    
+
   while x != x2 or y != y2:
     dx = int((random.randint(*ScrollDelta) + haste * 2) * pcx)
     dy = int((random.randint(*ScrollDelta) + haste * 2) * pcy)
@@ -274,6 +288,8 @@ def scroll_to(x, y, x2, y2, app_offset=True, haste=False):
     y = min([y2, y+dy]) if y2 > y else max([y2, y-dy])
     set_cursor_pos(x, y, app_offset)
     wait(0.01 if haste else ScrollTime)
+  if hold:
+    uwait(0.5)
   mouse_up(x, y, app_offset)
 
 # Return Value: alive?

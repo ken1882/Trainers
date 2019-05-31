@@ -144,9 +144,8 @@ FormationMenuPos = [1292, 522]
 MainGunnerSlotPos = [463, 380]
 EchelonMainPos = [56, 167]
 EchelonSecondPos = [78, 257]
-EditMainGunnerPosA = [308, 284]
-# EditMainGunnerPosB = [521, 283]
-EditMainGunnerPosB = [722, 268]
+EditMainGunnerIndexA = 1
+EditMainGunnerIndexB = 2
 
 FormationEditPos = [1340, 730]
 FormationOpenDefaultPos = [1394, 303]
@@ -158,6 +157,10 @@ FormationForceReplaceOKPos = [922, 554]
 
 ForceReplaceCheckedPixel = [[636, 448], [610, 468], [631, 490], [653, 469], [627, 463]]
 ForceReplaceCheckedColor = [(253, 179, 0), (253, 179, 0), (253, 179, 0), (253, 179, 0), (51, 51, 51)]
+
+SelectSlotStartPos = [100, 280]
+SlotNextColDeltaX = 200
+SlotNextRawDeltaY = 335
 
 TeamDeployPos = {
   '3-3E': [[986, 536], [466, 403]],

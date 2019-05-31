@@ -10,16 +10,12 @@ def random_click(x, y, rrange=G.DefaultRandRange):
 
 def random_scroll_to(x, y, x2, y2, **kwargs):
   rrange = kwargs.get('rrange')
-  app_offset = kwargs.get('app_offset')
-  haste = kwargs.get('haste')
   rrange = G.DefaultRandRange if rrange is None else rrange
-  app_offset = True if app_offset is None else app_offset
-  haste = False if haste is None else haste
   x += random.randint(-rrange, rrange)
   y += random.randint(-rrange, rrange)
   x2 += random.randint(-rrange, rrange)
   y2 += random.randint(-rrange, rrange)
-  util.scroll_to(x, y, x2, y2, app_offset, haste)
+  util.scroll_to(x, y, x2, y2, **kwargs)
 
 
 def _dealyed_click(x, y, delay, rrange):
@@ -242,10 +238,10 @@ def change_formation(ch_pos):
   uwait(1)
   random_click(*const.FormationOKPos)
 
-def change_main_gunner(ch_pos):
+def change_main_gunner(ch_idx):
   random_click(*const.MainGunnerSlotPos)
   uwait(1.5)
-  random_click(*ch_pos)
+  select_slot(ch_idx)
 
 def swap_team():
   while not stage.is_stage_formation():
@@ -256,11 +252,11 @@ def swap_team():
 
   if G.LastMainGunner == 0:
     formation_pos = const.FormationPosB
-    ch_pos = const.EditMainGunnerPosA
+    ch_idx = const.EditMainGunnerIndexA
     G.LastMainGunner = 1
   else:
     formation_pos = const.FormationPosA
-    ch_pos = const.EditMainGunnerPosB
+    ch_idx = const.EditMainGunnerIndexB
     G.LastMainGunner = 0
   change_formation(formation_pos)
   uwait(1)
@@ -268,10 +264,16 @@ def swap_team():
   random_click(*const.EchelonSecondPos)
   uwait(1)
   yield
-  change_main_gunner(ch_pos)
+  change_main_gunner(ch_idx)
   uwait(1)
   yield
   G.FlagSwapTeamNeeded = False
   return_base()
   uwait(1)
   util.flush_screen_cache()
+
+def select_slot(idx):
+  sx, sy = const.SelectSlotStartPos.copy()
+  sx += const.SlotNextColDeltaX * (idx % 6)
+  sy += const.SlotNextRawDeltaY * (idx // 6)
+  random_click(sx, sy)
