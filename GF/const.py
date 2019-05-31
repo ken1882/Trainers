@@ -1,5 +1,5 @@
 # Defines the consts of pixels/color of app
-Version = "0.2.0"
+Version = "0.3.0"
 AppName = ""
 AppTitle = "GF"
 TargetApps = {
