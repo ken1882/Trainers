@@ -156,6 +156,15 @@ def is_stage_combat_event():
   b = is_pixel_match(const.StageCombatEventPixelB, const.StageCombatEventColorB)
   return a or b
 
+def is_stage_formation():
+  if is_stage_ok(19):
+    return True
+  return is_pixel_match(const.StageFormationPixel, const.StageFormationColor)
+
+def is_force_replaced_checked():
+  util.flush_screen_cache()
+  return is_pixel_match(const.ForceReplaceCheckedPixel, const.ForceReplaceCheckedColor)
+
 def get_stage_cache(sid):
   if LastFrameCount != G.FrameCount:
     cache_stage(sid)
@@ -198,6 +207,8 @@ StageMap = {
   12: is_stage_combat_event,
   17: is_stage_combat_map,
   18: is_stage_enemy_turn,
+
+  19: is_stage_formation,
 }
 
 def update():
@@ -249,4 +260,6 @@ def get_current_stage():
     return "Engaging"
   elif is_stage_neutralized():
     return "Enemy Neutralized"
+  elif is_stage_formation():
+    return "Formation"
   return None

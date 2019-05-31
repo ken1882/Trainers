@@ -81,15 +81,24 @@ def update_grind():
     else:
       action.return_base()
   elif stage.is_stage_main_menu():
-    if G.FlagRepairNeeded:
+    if not G.LaterFiber and G.FlagRepairNeeded:
       print("Process Repair")
       G.slow_update()
       G.LaterFiber = action.repair_dolls()
+      uwait(1)
+    elif not G.LaterFiber and G.FlagSwapTeamNeeded:
+      print("Swap team")
+      G.LaterFiber = action.swap_team()
+      uwait(1)
     elif grind.is_battle_ready():
       action.random_click(*const.CombatMenuPos)
       uwait(2)
   elif not G.FlagGrindLevel and stage.get_current_stage() is None:
     action.autocombat_next()
+  elif stage.is_stage_repair() and not G.FlagRepairNeeded and not G.LaterFiber:
+    action.return_base()
+  elif stage.is_stage_formation() and not G.FlagSwapTeamNeeded and not G.LaterFiber:
+    action.return_base()
   else:
     grind.update()
 

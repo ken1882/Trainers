@@ -1,4 +1,4 @@
-import sys, const, G, argparse
+import sys, const, G, argparse, util
 
 Version_str = "Current version: {}".format(const.Version)
 
@@ -17,6 +17,9 @@ parser.add_argument("-ac", "--autocombat", help="Once auto-combat ends, send the
 parser.add_argument("-acc", "--autocombat-count", help="Auto-combat count, if hit to zero won't send again.", default=-1, type=int)
 parser.add_argument("-ls", "--list-grind-levels", help="List available grindable levels", action=Ptrue)
 parser.add_argument("-gl", "--grind-level", help="Grind level, notice that you should have pre-setup before excute this command", type=str, default='')
+parser.add_argument("-fr", "--fast-repair", help="Use fast repair when grinding", action=Ptrue)
+parser.add_argument("-swmg", "--swap-first-main-gunner", help="Swap first grinding main gunner", action=Ptrue)
+parser.add_argument("-lgdy", "--level-grind-delay", help="Delay time in seconds before start level grind", type=int)
 
 def load_mode(args):
   if args.backup:
@@ -44,11 +47,17 @@ def load():
   G.FlagTest = args.test 
   G.FlagAlign = args.align
   G.FlagAutoCombat = args.autocombat
+  G.FlagFastRepair = args.fast_repair
   G.AutoCombatCount = args.autocombat_count
   G.GrindLevel = args.grind_level
   load_mode(args)
   print("Grind Level: ", G.FlagGrindLevel, G.GrindLevel)
   G.setup()
+
+  if args.swap_first_main_gunner:
+    G.LastMainGunner = 1
+  if args.level_grind_delay:
+    G.RepairOKTimestamp = util.get_current_time_sec() + args.level_grind_delay + 10
 
 def show_help():
   parser.print_help()

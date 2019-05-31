@@ -8,6 +8,20 @@ def random_click(x, y, rrange=G.DefaultRandRange):
     rrange = G.DefaultRandRange
   util.click(x + random.randint(-rrange,rrange), y + random.randint(-rrange,rrange))
 
+def random_scroll_to(x, y, x2, y2, **kwargs):
+  rrange = kwargs.get('rrange')
+  app_offset = kwargs.get('app_offset')
+  haste = kwargs.get('haste')
+  rrange = G.DefaultRandRange if rrange is None else rrange
+  app_offset = True if app_offset is None else app_offset
+  haste = False if haste is None else haste
+  x += random.randint(-rrange, rrange)
+  y += random.randint(-rrange, rrange)
+  x2 += random.randint(-rrange, rrange)
+  y2 += random.randint(-rrange, rrange)
+  util.scroll_to(x, y, x2, y2, app_offset, haste)
+
+
 def _dealyed_click(x, y, delay, rrange):
   time.sleep(delay)
   random_click(x, y, rrange)
@@ -35,7 +49,7 @@ def return_base():
   uwait(1.5)
 
 def maxdoll_to_enhance():
-  G.FlagGrindLevel = False
+  stop_combat_grinds()
   random_click(*const.MaxDollToEnhancePos)
 
 def process_autocombat_again():
@@ -75,7 +89,6 @@ def process_autocombat():
   else:
     print("No room left for auto-combat rewards")
     maxdoll_to_enhance()
-    G.AutoCombatCount = -1
     uwait(1)
   
   G.slow_update()
@@ -106,14 +119,13 @@ def get_repair_time():
   except Exception as err:
     print("An error occurred during getting repair time:", err)
     re = G.WorsetRepairTime
-  return re + random.randint(5,10)
+  return re
 
 def repair_dolls():
   while not stage.is_stage_main_menu():
     yield
   random_click(*const.RepairMenuPos)
-  G.FlagRepairNeeded = False
-  uwait(1.5, False)
+  uwait(2.5)
   random_click(*const.SelectRepairPos)
   for _ in range(2):
     uwait(0.5)
@@ -128,13 +140,21 @@ def repair_dolls():
   yield
   random_click(*const.RepairStartPos)
   uwait(1)
-  sec_needed = get_repair_time()
+  sec_needed = random.randint(5,10)
+  if G.FlagFastRepair:
+    random_click(*const.FastRepairPos)
+    uwait(0.5)
+  else:
+    sec_needed += get_repair_time()
   G.RepairOKTimestamp = sec_needed + G.CurTime
   random_click(*const.RepairConfirmPos)
   print("Repair will be done in", util.sec2readable(sec_needed))
+  G.FlagRepairNeeded = False
   yield
   uwait(0.2)
   return_base()
+  uwait(1)
+  util.flush_screen_cache()
 
 def enter_level():
   random_click(*const.EnterLevelPos[G.GrindLevel])
@@ -147,7 +167,7 @@ def start_level():
 def start_battle():
   random_click(*const.BattleStartPos)
   print("Start combat, next in 3 seconds")
-  uwait(2)
+  uwait(3.5)
 
 def end_turn():
   random_click(*const.BattleStartPos)
@@ -168,20 +188,90 @@ def move_troop(level, turn):
     return
   # For each team route points
   for team_id, team_dest in enumerate(const.TeamMovementPos[level][turn]):
+    G.CurrentTeamID = team_id
     for pos in team_dest:
       if len(pos) == 1:
         print("Scroll:", pos)
-        util.scroll_to(*pos[0], True, 1)
+        random_scroll_to(*pos[0], haste=1)
       else:
         source, dest = pos
         print("Move {} -> {}".format(source, dest))
         random_click(*source)
         uwait(0.5)
         random_click(*dest)
-      uwait(3.5)
+      uwait(4.5)
       yield
     print("Team {} move complete".format(team_id+1))
     uwait(0.3)
     yield
   print("Move complete")
   uwait(0.5)
+
+def stop_combat_grinds():
+  G.FlagGrindLevel = None
+  G.FlagAutoCombat = False
+  G.AutoCombatCount = -1
+
+def process_doll_maxout():
+  pass
+
+def supply_team():
+  pos = const.TeamDeployPos[G.GrindLevel][1]
+  random_click(*pos)
+  uwait(0.3)
+  random_click(*pos)
+  yield
+  uwait(1)
+  random_click(*const.SupplyIconPos)
+  uwait(1)
+  yield
+
+def change_formation(ch_pos):
+  random_click(*const.FormationEditPos)
+  uwait(1)
+  random_click(*const.FormationOpenDefaultPos)
+  uwait(1)
+  random_click(*ch_pos)
+  uwait(0.5)
+  random_click(*const.FormationOKPos)
+  uwait(1.5)
+  if not stage.is_force_replaced_checked():
+    random_click(*const.FormationForceReplacePos)
+    uwait(0.5)
+  random_click(*const.FormationForceReplaceOKPos)
+  uwait(1)
+  random_click(*const.FormationOKPos)
+
+def change_main_gunner(ch_pos):
+  random_click(*const.MainGunnerSlotPos)
+  uwait(1.5)
+  random_click(*ch_pos)
+
+def swap_team():
+  while not stage.is_stage_formation():
+    if stage.is_stage_main_menu():
+      random_click(*const.FormationMenuPos)
+      uwait(1)
+    yield
+
+  if G.LastMainGunner == 0:
+    formation_pos = const.FormationPosB
+    ch_pos = const.EditMainGunnerPosA
+    G.LastMainGunner = 1
+  else:
+    formation_pos = const.FormationPosA
+    ch_pos = const.EditMainGunnerPosB
+    G.LastMainGunner = 0
+  change_formation(formation_pos)
+  uwait(1)
+  yield
+  random_click(*const.EchelonSecondPos)
+  uwait(1)
+  yield
+  change_main_gunner(ch_pos)
+  uwait(1)
+  yield
+  G.FlagSwapTeamNeeded = False
+  return_base()
+  uwait(1)
+  util.flush_screen_cache()

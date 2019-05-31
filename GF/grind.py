@@ -2,12 +2,15 @@ import G, const, stage, action, util, Input
 from G import uwait
 
 FlagInit = False
+FlagStartEngaging = False
 MovementFiber = None
 Fiber = None
 CurrentTurn = 0
+EngagingMovementFlags = []
+EngagingStartTime = 0
 
 def initialize():
-  global FlagInit, CurrentTurn, Ready
+  global FlagInit, CurrentTurn
   FlagInit = True
   CurrentTurn = 0
 
@@ -21,6 +24,7 @@ def process_battle_start():
   global FlagInit
   yield from action.deploy_troops()
   action.start_battle()
+  yield from action.supply_team()
 
 def next_until_ok():
   while stage.is_stage_combat_event() and not stage.is_stage_combat_map() or not stage.is_stage_loading() and not stage.is_stage_combat_selection():
@@ -33,6 +37,7 @@ def process_victory():
   yield from next_until_ok()
   print("Combat ends")
   G.FlagRepairNeeded = True
+  G.FlagSwapTeamNeeded = True
   G.RepairOKTimestamp = 9223372036854775807
 
 def process_movements():
@@ -73,15 +78,30 @@ def update():
     Fiber = process_victory()
   else:
     action.random_click(*const.BattleNextPos)
-  
+
+
 def update_in_turn_actions():
-  global Fiber, MovementFiber
-  if stage.is_stage_engaging() or stage.is_stage_loading():
+  global Fiber, MovementFiber, FlagStartEngaging, EngagingMovementFlags, EngagingStartTime
+  if stage.is_stage_engaging():
+    if not FlagStartEngaging:
+      FlagStartEngaging = True
+      EngagingStartTime = util.get_current_time_sec()
+      EngagingMovementFlags = []
+    else:
+      for i, move in enumerate(const.TeamEngagingMovement[G.GrindLevel][G.CurrentTeamID]):
+        if util.get_current_time_sec() + move[0] < EngagingStartTime:
+          continue
+        if i in EngagingMovementFlags:
+          continue
+        EngagingMovementFlags.append(i)
+        action.random_scroll_to(*move[1])
+  elif stage.is_stage_loading():
     return
   elif stage.is_stage_victory():
     Fiber = process_victory()
   elif stage.is_stage_neutralized() or stage.is_stage_combat_event():
     Fiber = next_until_ok()
+    FlagStartEngaging = False
   elif stage.is_stage_combat_map():
     print("Resume movement fiber")
     if not util.resume(MovementFiber):

@@ -68,10 +68,19 @@ def test_func():
   util.getAppRect()
   util.getPixel()
 
+def test_fiber_func():
+  fiber = action.swap_team()
+  while util.resume(fiber):
+    G.FrameCount += 1
+    Input.update()
+    uwait(G.FPS)    
+    if Input.is_trigger(Input.keymap.kF9, False):
+      break
+
 def tmp_test_func():
   # print(stage.is_stage_engaging())
   print(stage.get_current_stage())
-
+  # test_fiber_func()
 
 if __name__ == '__main__':
   try:

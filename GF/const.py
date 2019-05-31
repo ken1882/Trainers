@@ -23,7 +23,10 @@ def getAppResoultion():
   if AppName == "":
     return DefaultCanvasResoultion
   return [TargetApps[AppName][2], TargetApps[AppName][3]]
-  
+
+AppClosePos = [546, -33]
+AppIconPos  = [768, 132]
+
 StageMainMenuPixel = [[49, 31], [571, 26], [778, 28], [991, 49], [1417, 13], [391, 709], [29, 702], [10, 392], [1248, 762]]
 StageMainMenuColor = [(54, 54, 53), (255, 255, 255), (255, 255, 255), (255, 255, 255), (241, 170, 0),(255, 180, 0), (255, 180, 0), (255, 180, 0), (255, 255, 255)]
 
@@ -131,6 +134,31 @@ StageCombatEventColorB = [(255, 255, 255), (255, 255, 255), (253, 80, 0), (253, 
 StageEnemyTurnPixel = [[23, 22], [47, 33], [113, 40], [48, 786], [330, 36], [542, 12], [159, 670], [173, 680], [77, 763]]
 StageEnemyTurnColor = [(146, 146, 146), (146, 146, 146), (255, 255, 255), (240, 0, 77), (253, 80, 0), (31, 31, 31), (50, 50, 50), (255, 255, 255), (54, 46, 46)]
 
+StageFormationPixel = [[19, 16], [139, 93], [259, 28], [217, 80], [441, 55], [1108, 31], [1364, 140], [1212, 152], [1400, 740], [1249, 649]]
+StageFormationColor = [(253, 179, 0), (253, 179, 0), (227, 227, 227), (255, 255, 255), (165, 165, 165), (250, 250, 250), (14, 55, 72), (51, 51, 51), (207, 207, 207), (51, 51, 51)]
+
+SupplyIconPos = [1323, 626]
+FastRepairPos = [349, 564]
+
+FormationMenuPos = [1292, 522]
+MainGunnerSlotPos = [463, 380]
+EchelonMainPos = [56, 167]
+EchelonSecondPos = [78, 257]
+EditMainGunnerPosA = [308, 284]
+# EditMainGunnerPosB = [521, 283]
+EditMainGunnerPosB = [722, 268]
+
+FormationEditPos = [1340, 730]
+FormationOpenDefaultPos = [1394, 303]
+FormationPosA = [1126, 93]
+FormationPosB = [1119, 241]
+FormationOKPos = [1286, 720]
+FormationForceReplacePos = [631, 465]
+FormationForceReplaceOKPos = [922, 554]
+
+ForceReplaceCheckedPixel = [[636, 448], [610, 468], [631, 490], [653, 469], [627, 463]]
+ForceReplaceCheckedColor = [(253, 179, 0), (253, 179, 0), (253, 179, 0), (253, 179, 0), (51, 51, 51)]
+
 TeamDeployPos = {
   '3-3E': [[986, 536], [466, 403]],
   '4-3E': [[1193, 544], [255, 408]],
@@ -162,6 +190,18 @@ TeamMovementPos = {
       [] # team 2 idle
     ],
   ],
+}
+
+TeamEngagingMovement = {
+  '4-3E': [
+    [ # team 1
+      [2, (595, 437, 565, 600)] # sec, (x1, y1, x2, y2)
+    ],
+
+    [ # team 2
+
+    ]
+  ]
 }
 
 EnterLevelPos = {

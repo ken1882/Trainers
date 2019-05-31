@@ -18,12 +18,17 @@ FlagManualControl = False
 FlagCounter = False
 FlagGrindLevel = False
 FlagRepairNeeded = False
+FlagSwapTeamNeeded = False
+FlagEnhanceNeeded = False
+FlagFastRepair = False
 
 GrindLevel = ''
+CurrentTeamID = 0
 
 AutoCombatCount = -1
 MaxRepair = 4
 WorsetRepairTime = 60 * 30 # 30 mins
+LastMainGunner = 0
 
 def Flags(name=None):
   flags = {
@@ -36,6 +41,9 @@ def Flags(name=None):
     'counter': FlagCounter,
     'grindlevel': FlagGrindLevel,
     'repair': FlagRepairNeeded,
+    'enhance': FlagEnhanceNeeded,
+    'fast-repair': FlagFastRepair,
+    'team-swap': FlagSwapTeamNeeded,
   }
   if name:
     name = name.lower()

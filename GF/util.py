@@ -79,7 +79,7 @@ def getPixel(x=None, y=None):
 
 def flush_screen_cache():
   global ScreenSnapShot, LastFrameCount
-  ScreenSnapShot[0] = 0
+  ScreenSnapShot[0] = 2147483647
   LastFrameCount = -1
 
 def choose_best_hwnd(names, target):
@@ -260,9 +260,16 @@ def scroll_right(x, y, delta = 100, app_offset=True, haste=False):
 def scroll_to(x, y, x2, y2, app_offset=True, haste=False):
   mouse_down(x, y, app_offset)
   wait(0.01 if haste else ScrollTime)
-  while x != x2 and y != y2:
-    dx = random.randint(*ScrollDelta) + haste * 2
-    dy = random.randint(*ScrollDelta) + haste * 2
+  tdx, tdy = abs(x2 - x), abs(y2 - y)
+  try:
+    pcx, pcy = tdx // tdy, tdy // tdx
+    pcx, pcy = max([pcx, 0.4]), max([pcy, 0.4])
+  except Exception:
+    pcx, pcy = 1, 1
+    
+  while x != x2 or y != y2:
+    dx = int((random.randint(*ScrollDelta) + haste * 2) * pcx)
+    dy = int((random.randint(*ScrollDelta) + haste * 2) * pcy)
     x = min([x2, x+dx]) if x2 > x else max([x2, x-dx])
     y = min([y2, y+dy]) if y2 > y else max([y2, y-dy])
     set_cursor_pos(x, y, app_offset)
