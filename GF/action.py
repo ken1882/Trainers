@@ -163,7 +163,7 @@ def start_level():
 def start_battle():
   random_click(*const.BattleStartPos)
   print("Start combat, next in 3 seconds")
-  uwait(3.5)
+  uwait(3.8)
 
 def end_turn():
   random_click(*const.BattleStartPos)

@@ -77,6 +77,7 @@ def update_grind():
       action.close_combat_setup()
   elif stage.is_stage_combat_selection():
     if grind.is_battle_ready():
+      uwait(1)
       action.enter_level()
     else:
       action.return_base()
