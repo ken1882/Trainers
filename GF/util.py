@@ -1,4 +1,4 @@
-import win32api, win32gui, win32ui, win32con, const
+import win32api, win32gui, win32ui, win32con, const, os
 import time, random, math, G, Input
 import numpy as np
 from G import uwait, wait
@@ -315,7 +315,18 @@ def read_app_text(x, y, x2, y2, digit_only=False, lan='eng'):
 
 def img_to_str(filename, digit_only=False, lan='eng'):
   _config = '-psm 12 -psm 13'
-  re = pyte.image_to_string(filename, config=_config, lang=lan)
+  rescues = 2
+  re = None
+  for _ in range(rescues+1):
+    try:
+      re = pyte.image_to_string(filename, config=_config, lang=lan)
+      break
+    except Exception as err:
+      if "unknown command line argument '-psm'" in str(err):
+        _config = _config.replace('-psm', '--psm')
+      if "TESSDATA_PREFIX" in str(err):
+        os.environ['TESSDATA_PREFIX'] += '\\tessdata'
+      
   if digit_only:
     re = correct_digit_result(re)
   return re
