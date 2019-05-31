@@ -84,7 +84,7 @@ def update_grind():
     if G.FlagRepairNeeded:
       print("Process Repair")
       G.slow_update()
-      G.ActionFiber = action.repair_dolls()
+      G.LaterFiber = action.repair_dolls()
     elif grind.is_battle_ready():
       action.random_click(*const.CombatMenuPos)
       uwait(2)
@@ -100,16 +100,29 @@ def update_like():
   action.next_friend()
   uwait(1.4)
 
+def update_action_fiber():
+  print("Resume Action Fiber")
+  if not util.resume(G.ActionFiber):
+    G.ActionFiber = None
+    print("Action Fiber finished")
+
+def update_later_fiber():
+  print("Resume Later Fiber")
+  if not util.resume(G.LaterFiber):
+    G.LaterFiber = None
+    print("Later Fiber finished")
+
 def process_update():
   update_freeze()
   stage.update()
   if G.ActionFiber:
-    print("Resume Fiber")
-    if not util.resume(G.ActionFiber):
-      G.ActionFiber = None
-      print("Fiber finished")
-    return 
+    return update_action_fiber()
+
   if G.is_mode_backup():
     update_grind()
   elif G.is_mode_like():
     update_like()
+
+  if G.LaterFiber:
+    update_later_fiber()
+  

@@ -32,6 +32,7 @@ def process_backup():
 
 def return_base():
   random_click(*const.ReturnBaseIconPos)
+  uwait(1.5)
 
 def maxdoll_to_enhance():
   G.FlagGrindLevel = False
@@ -108,17 +109,19 @@ def get_repair_time():
   return re + random.randint(5,10)
 
 def repair_dolls():
+  while not stage.is_stage_main_menu():
+    yield
   random_click(*const.RepairMenuPos)
   G.FlagRepairNeeded = False
-  uwait(1)
+  uwait(1.5, False)
   random_click(*const.SelectRepairPos)
   for _ in range(2):
     uwait(0.5)
     yield
   if stage.is_stage_repair():
     G.RepairOKTimestamp = G.CurTime
+    uwait(0.5)
     return
-  uwait(0.5)
   for i in range(G.MaxRepair):
     random_click(*const.RepairSlotPos[i])
     uwait(0.1)

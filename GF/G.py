@@ -69,6 +69,7 @@ DefaultRandRange = 20
 
 # generator that store current action
 ActionFiber = None
+LaterFiber  = None
 
 # App screen image
 ScreenImageFile = "tmp/app.png"
