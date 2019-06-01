@@ -89,6 +89,7 @@ RepairSlotPos = [[109, 278], [310, 282], [499, 285], [728, 289], [897, 275], [11
 RepairStartPos = [1305, 615]
 RepairConfirmPos = [1033,563]
 RepairTimeRect = [934, 437, 1126, 477]
+FastRepairItemRect = [1343, 118, 1389, 142]
 
 StageCombatMapPixel = [[25, 21], [49, 31], [112, 35], [23, 81], [210, 35], [257, 36], [539, 27], [54, 782], [78, 784]]
 StageCombatMapColor = [(146, 146, 146), (146, 146, 146), (255, 255, 255), (146, 146, 146), (113, 113, 113), (255, 255, 255), (31, 31, 31), (240, 0, 77), (54, 46, 46)]
@@ -145,10 +146,10 @@ FastRepairPos = [349, 564]
 
 FormationMenuPos = [1292, 522]
 MainGunnerSlotPos = [463, 380]
-EchelonMainPos = [56, 167]
-EchelonSecondPos = [78, 257]
 EditMainGunnerIndexA = 1
 EditMainGunnerIndexB = 2
+
+EchelonSecondPos = [62, 266]
 
 FormationEditPos = [1340, 730]
 FormationOpenDefaultPos = [1394, 303]
@@ -165,49 +166,12 @@ SelectSlotStartPos = [100, 280]
 SlotNextColDeltaX = 200
 SlotNextRawDeltaY = 335
 
+TeamMovementPos = {}
+TeamEngagingMovement = {}
+
 TeamDeployPos = {
   '3-3E': [[986, 536], [466, 403]],
   '4-3E': [[1193, 544], [255, 408]],
-}
-
-TeamMovementPos = {
-  '3-3E': [
-    [ # turn 1
-      [ # team 1
-        ([986, 536], [884, 432]), 
-        ([884, 432], [1157, 289]), 
-        ([1152, 375], [995, 222])
-      ], 
-      
-      [ # team 2
-        ([463, 463], [288, 350])
-      ] 
-    ],
-  ],
-
-  '4-3E': [
-    [
-      [ # team 1
-        ([1195, 543], [1181, 376]),
-        ([1184, 401], [1244, 233]),
-        ([1246, 402], [1142, 231]),
-        ([1141, 405], [1160, 169])
-      ],     
-      [] # team 2 idle
-    ],
-  ],
-}
-
-TeamEngagingMovement = {
-  '4-3E': [
-    [ # team 1
-      [4, (595, 437, 565, 600)] # sec, (x1, y1, x2, y2)
-    ],
-
-    [ # team 2
-
-    ]
-  ]
 }
 
 EnterLevelPos = {

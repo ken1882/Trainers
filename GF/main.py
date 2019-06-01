@@ -61,6 +61,23 @@ if not os.path.isdir("tmp"):
 
 if __name__ == "__main__":
   sysargv.load()
+  # load config
+  Config = {}
+  with open('config.py') as file:
+    exec(file.read())
+  G.MaxRepair = Config['MaxRepair']
+  G.WorstRepairTime = Config['WorstRepairTime']
+  G.FastRepairThreshold = Config['FastRepairThreshold']
+  G.StopFastRepairItemThreshold = Config['StopFastRepairItemThreshold']
+  const.EditMainGunnerIndexA = Config['MainGunnerIndexA']
+  const.EditMainGunnerIndexB = Config['MainGunnerIndexB']
+  const.TeamEngagingMovement = Config['TeamEngagingMovement']
+  const.TeamMovementPos = Config['TeamMovementPos']
+  print("Config Loaded:")
+  for k, v in Config.items():
+    print(k, v)
+  print('-'*15)
+
 
 def test_func():
   util.find_app()
@@ -81,7 +98,7 @@ def tmp_test_func():
   # print(stage.is_stage_engaging())
   print(stage.get_current_stage())
   # test_fiber_func()
-  
+
 if __name__ == '__main__':
   try:
     if G.FlagTest:

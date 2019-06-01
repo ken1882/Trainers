@@ -28,8 +28,10 @@ CurrentTeamID = 0
 
 AutoCombatCount = -1
 MaxRepair = 4
-WorsetRepairTime = 60 * 30 # 30 mins
+WorstRepairTime = 60 * 30 # 30 mins
 LastMainGunner = 0
+FastRepairThreshold = 2147483647
+StopFastRepairItemThreshold = 30
 
 def Flags(name=None):
   flags = {

@@ -107,6 +107,15 @@ def to_repair_menu():
 def combat_next():
   random_click(*const.BattleNextPos)
 
+def get_fast_repair_item_count():
+  try:
+    re = int(util.read_app_text(*const.FastRepairItemRect, True))
+  except Exception as err:
+    print("An error occurred during getting repair time:", err)
+    re = 0
+  print("Fast repair item left:", re)
+  return re
+
 def get_repair_time():
   try:
     raw = util.read_app_text(*const.RepairTimeRect, True)
@@ -114,7 +123,7 @@ def get_repair_time():
     re = raw[0] * 3600 + raw[1] * 60 + raw[2]
   except Exception as err:
     print("An error occurred during getting repair time:", err)
-    re = G.WorsetRepairTime
+    re = G.WorstRepairTime
   return re
 
 def repair_dolls():
@@ -122,6 +131,8 @@ def repair_dolls():
     yield
   random_click(*const.RepairMenuPos)
   uwait(2.5)
+  item_count = get_fast_repair_item_count()
+  uwait(1)
   random_click(*const.SelectRepairPos)
   for _ in range(2):
     uwait(0.5)
@@ -136,13 +147,14 @@ def repair_dolls():
   yield
   random_click(*const.RepairStartPos)
   uwait(1)
-  sec_needed = random.randint(5,10)
-  if G.FlagFastRepair:
+  sec_needed = get_repair_time()
+  uwait(1)
+  if item_count > G.StopFastRepairItemThreshold and (G.FlagFastRepair or sec_needed >= G.FastRepairThreshold):
+    print("Using Fast Repair")
     random_click(*const.FastRepairPos)
+    sec_needed = 0
     uwait(0.5)
-  else:
-    sec_needed += get_repair_time()
-  G.RepairOKTimestamp = sec_needed + G.CurTime
+  G.RepairOKTimestamp = sec_needed + G.CurTime + random.randint(5,10)
   random_click(*const.RepairConfirmPos)
   print("Repair will be done in", util.sec2readable(sec_needed))
   G.FlagRepairNeeded = False

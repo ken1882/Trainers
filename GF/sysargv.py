@@ -22,6 +22,7 @@ parser.add_argument("-swmg", "--swap-first-main-gunner", help="Swap first grindi
 parser.add_argument("-lgdy", "--level-grind-delay", help="Delay time in seconds before start level grind", type=int)
 parser.add_argument("-mgia", "--main-gunner-index-a", help="Index of main gunner A", type=int)
 parser.add_argument("-mgib", "--main-gunner-index-b", help="Index of main gunner B", type=int)
+parser.add_argument("-frth", "--fast-repair-threshold", help="Use fast repair if repair time needs more than X seconds", type=int)
 
 def load_mode(args):
   if args.backup:
@@ -64,7 +65,9 @@ def load():
     const.EditMainGunnerIndexA = args.main_gunner_index_a
   if args.main_gunner_index_b:
     const.EditMainGunnerIndexB = args.main_gunner_index_b
-    
+  if args.fast_repair_threshold:
+    G.FastRepairThreshold = args.fast_repair_threshold
+
 def show_help():
   parser.print_help()
 
