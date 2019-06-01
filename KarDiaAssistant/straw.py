@@ -52,6 +52,7 @@ def update():
     uwait(7)
     action.random_click(*const.StrawOverOKPos)
     G.FlagRunning = (False or G.FlagRepeat)
+    uwait(1)
     return False
   elif Ready:
     if not G.FlagManualControl or Input.is_trigger(win32con.VK_CONTROL):
