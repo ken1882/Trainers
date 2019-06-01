@@ -21,6 +21,7 @@ FlagRepairNeeded = False
 FlagSwapTeamNeeded = False
 FlagEnhanceNeeded = False
 FlagFastRepair = False
+FlagPlayerTurn = False
 
 GrindLevel = ''
 CurrentTeamID = 0
@@ -44,6 +45,7 @@ def Flags(name=None):
     'enhance': FlagEnhanceNeeded,
     'fast-repair': FlagFastRepair,
     'team-swap': FlagSwapTeamNeeded,
+    'player-turn': FlagPlayerTurn,
   }
   if name:
     name = name.lower()

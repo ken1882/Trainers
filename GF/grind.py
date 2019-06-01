@@ -36,6 +36,7 @@ def process_victory():
   MovementFiber = None
   yield from next_until_ok()
   print("Combat ends")
+  G.FlagPlayerTurn = True
   G.FlagRepairNeeded = True
   G.FlagSwapTeamNeeded = True
   G.RepairOKTimestamp = 9223372036854775807
@@ -49,6 +50,7 @@ def end_turn():
   global CurrentTurn
   CurrentTurn += 1
   action.end_turn()
+  G.FlagPlayerTurn = False
 
 def update():
   global MovementFiber, FlagInit, Fiber
@@ -60,8 +62,12 @@ def update():
       print("Grind normal fiber finished")
   if MovementFiber:
     return update_in_turn_actions()
-  
-  if not is_battle_ready():
+  if stage.is_stage_victory():
+    Fiber = process_victory()
+  elif stage.is_stage_player_turn():
+    G.FlagPlayerTurn = True
+    uwait(2)
+  elif not is_battle_ready() or not G.FlagPlayerTurn:
     return
   elif stage.is_stage_combat_map():
     if FlagInit:
@@ -72,10 +78,6 @@ def update():
       return
     else:
       MovementFiber = process_movements()
-  elif stage.is_stage_enemy_turn():
-    pass
-  elif stage.is_stage_victory():
-    Fiber = process_victory()
   else:
     action.random_click(*const.BattleNextPos)
 

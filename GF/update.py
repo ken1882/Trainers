@@ -100,7 +100,7 @@ def update_grind():
     action.return_base()
   elif stage.is_stage_formation() and not G.FlagSwapTeamNeeded and not G.LaterFiber:
     action.return_base()
-  else:
+  elif G.FlagGrindLevel:
     grind.update()
 
 def update_like():
