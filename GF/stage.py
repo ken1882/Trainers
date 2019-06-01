@@ -166,6 +166,10 @@ def is_stage_formation_edit():
     return True
   return is_pixel_match(const.StageFormationEditPixel, const.StageFormationEditColor)
 
+def is_stage_annoucement():
+  if is_stage_ok(21):
+    return True
+  return is_pixel_match(const.StageAnnoucementPixel, const.StageAnnoucementColor)
 
 def is_force_replaced_checked():
   util.flush_screen_cache()
@@ -192,6 +196,7 @@ def is_in_battle():
       return True
   return False
 
+
 StageMap = {
   0: is_stage_main_menu,
   1: is_stage_achievement,
@@ -216,6 +221,8 @@ StageMap = {
 
   19: is_stage_formation,
   20: is_stage_formation_edit,
+
+  21: is_stage_annoucement,
 }
 
 def update():
@@ -271,4 +278,6 @@ def get_current_stage():
     return "Formation"
   elif is_stage_formation_edit():
     return "Formation Edit"
+  elif is_stage_annoucement():
+    return "Annoucement"
   return None

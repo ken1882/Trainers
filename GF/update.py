@@ -128,7 +128,15 @@ def process_update():
   if G.ActionFiber:
     return update_action_fiber()
 
-  if G.is_mode_backup():
+  if stage.is_stage_annoucement():
+    uwait(1)
+    action.random_click(*const.AnnoucementOKPos[0])
+    uwait(1.5)
+    action.random_click(*const.AnnoucementOKPos[1])
+    uwait(1.5)
+    action.random_click(*const.AnnoucementOKPos[1])
+    uwait(1)
+  elif G.is_mode_backup():
     update_grind()
   elif G.is_mode_like():
     update_like()
