@@ -161,6 +161,12 @@ def is_stage_formation():
     return True
   return is_pixel_match(const.StageFormationPixel, const.StageFormationColor)
 
+def is_stage_formation_edit():
+  if is_stage_ok(20):
+    return True
+  return is_pixel_match(const.StageFormationEditPixel, const.StageFormationEditColor)
+
+
 def is_force_replaced_checked():
   util.flush_screen_cache()
   return is_pixel_match(const.ForceReplaceCheckedPixel, const.ForceReplaceCheckedColor)
@@ -209,6 +215,7 @@ StageMap = {
   18: is_stage_enemy_turn,
 
   19: is_stage_formation,
+  20: is_stage_formation_edit,
 }
 
 def update():
@@ -262,4 +269,6 @@ def get_current_stage():
     return "Enemy Neutralized"
   elif is_stage_formation():
     return "Formation"
+  elif is_stage_formation_edit():
+    return "Formation Edit"
   return None

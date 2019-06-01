@@ -224,18 +224,26 @@ def supply_team():
 
 def change_formation(ch_pos):
   random_click(*const.FormationEditPos)
-  uwait(1)
+  while not stage.is_stage_formation_edit():
+    uwait(1)
+    yield
   random_click(*const.FormationOpenDefaultPos)
   uwait(1)
+  yield
   random_click(*ch_pos)
   uwait(0.5)
+  yield
   random_click(*const.FormationOKPos)
   uwait(1.5)
+  yield
   if not stage.is_force_replaced_checked():
     random_click(*const.FormationForceReplacePos)
     uwait(0.5)
   random_click(*const.FormationForceReplaceOKPos)
-  uwait(1)
+  yield
+  while not stage.is_stage_formation_edit():
+    uwait(1)
+    yield
   random_click(*const.FormationOKPos)
 
 def change_main_gunner(ch_idx):
@@ -258,7 +266,7 @@ def swap_team():
     formation_pos = const.FormationPosA
     ch_idx = const.EditMainGunnerIndexB
     G.LastMainGunner = 0
-  change_formation(formation_pos)
+  yield from change_formation(formation_pos)
   uwait(1)
   yield
   random_click(*const.EchelonSecondPos)

@@ -79,7 +79,6 @@ def update():
   else:
     action.random_click(*const.BattleNextPos)
 
-
 def update_in_turn_actions():
   global Fiber, MovementFiber, FlagStartEngaging, EngagingMovementFlags, EngagingStartTime
   if stage.is_stage_engaging():
