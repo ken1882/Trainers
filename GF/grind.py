@@ -62,6 +62,7 @@ def update():
       print("Grind normal fiber finished")
   if MovementFiber:
     return update_in_turn_actions()
+  
   if stage.is_stage_victory():
     Fiber = process_victory()
   elif stage.is_stage_player_turn():

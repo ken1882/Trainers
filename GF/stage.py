@@ -183,8 +183,6 @@ def cache_stage(sid):
     CurStage = sid
 
 def is_in_battle():
-  if not G.FlagPlayerTurn:
-    return True
   methods = [
     is_stage_combat_event, is_stage_engaging, is_stage_victory, 
     is_stage_neutralized, is_stage_combat_map

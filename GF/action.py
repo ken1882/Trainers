@@ -157,6 +157,7 @@ def enter_level():
   uwait(1)
 
 def start_level():
+  G.FlagPlayerTurn = True
   random_click(*const.StartCombatPos)
   uwait(1)
 

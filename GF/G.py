@@ -21,7 +21,7 @@ FlagRepairNeeded = False
 FlagSwapTeamNeeded = False
 FlagEnhanceNeeded = False
 FlagFastRepair = False
-FlagPlayerTurn = False
+FlagPlayerTurn = True
 
 GrindLevel = ''
 CurrentTeamID = 0
