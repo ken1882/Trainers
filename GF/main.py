@@ -60,7 +60,6 @@ if not os.path.isdir("tmp"):
   os.mkdir("tmp")
 
 if __name__ == "__main__":
-  sysargv.load()
   # load config
   Config = {}
   with open('config.py') as file:
@@ -77,6 +76,8 @@ if __name__ == "__main__":
   for k, v in Config.items():
     print(k, v)
   print('-'*15)
+  
+  sysargv.load()
 
 
 def test_func():
