@@ -138,7 +138,9 @@ def repair_dolls():
     uwait(0.5)
     yield
   if stage.is_stage_repair():
+    print("Repair needn't")
     G.RepairOKTimestamp = G.CurTime
+    G.FlagRepairNeeded = False
     uwait(0.5)
     return
   for i in range(G.MaxRepair):
