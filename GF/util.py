@@ -1,5 +1,5 @@
 import win32api, win32gui, win32ui, win32con, const, os
-import time, random, math, G, Input
+import cv2, time, random, math, G, Input
 import numpy as np
 from G import uwait, wait
 from PIL import Image
@@ -33,10 +33,13 @@ def bulk_get_kwargs(*args, **kwargs):
 def change_title(nt):
   system("title " + nt)
 
+LastOutputFrame = -1
 def print_window(saveimg=False, filename=G.ScreenImageFile):
+  global LastOutputFrame
   im = ImageGrab.grab(getAppRect(True))
   try:
-    if saveimg:
+    if LastOutputFrame != G.FrameCount and saveimg:
+      LastOutputFrame = G.FrameCount
       im.save(filename)
   except Exception:
     pass
@@ -364,3 +367,18 @@ def zoomin(rep=1):
   for _ in range(rep):
     trigger_key(Input.keymap.kEQUAL)
     uwait(0.05)
+
+def get_image_locations(img, threshold=.89):
+  print_window(True)
+  img_rgb  = cv2.imread(G.ScreenImageFile)
+  template = cv2.imread(img)
+  res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+  loc = np.where(res >= threshold)
+  h, w = template.shape[:-1]
+  re = []
+  for pt in zip(*loc[::-1]):  # Switch collumns and rows
+    re.append(pt)
+    cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0,0,255), 2)
+  if G.FlagDebug:
+    cv2.imwrite('tmp/result.png', img_rgb)
+  return re

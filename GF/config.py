@@ -4,8 +4,8 @@ Config = {
   'FastRepairThreshold': 1200, # -frth X
   'StopFastRepairItemThreshold': 30,
 
-  'MainGunnerIndexA': 1, # -mgia X
-  'MainGunnerIndexB': 2, # -mgib X
+  'MainGunnerIndexA': "assets/FAL.png", # -mgia X
+  'MainGunnerIndexB': "assets/M14.png", # -mgib X
 
   'TeamEngagingMovement':{
     '4-3E': [

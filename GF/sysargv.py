@@ -20,8 +20,8 @@ parser.add_argument("-gl", "--grind-level", help="Grind level, notice that you s
 parser.add_argument("-fr", "--fast-repair", help="Use fast repair when grinding", action=Ptrue)
 parser.add_argument("-swmg", "--swap-first-main-gunner", help="Swap first grinding main gunner", action=Ptrue)
 parser.add_argument("-lgdy", "--level-grind-delay", help="Delay time in seconds before start level grind", type=int)
-parser.add_argument("-mgia", "--main-gunner-index-a", help="Index of main gunner A", type=int)
-parser.add_argument("-mgib", "--main-gunner-index-b", help="Index of main gunner B", type=int)
+parser.add_argument("-mgia", "--main-gunner-index-a", help="Index of main gunner A, if path to an image is given, click the position of found image in app", type=str)
+parser.add_argument("-mgib", "--main-gunner-index-b", help="Index of main gunner B, if path to an image is given, click the position of found image in app", type=str)
 parser.add_argument("-frth", "--fast-repair-threshold", help="Use fast repair if repair time needs more than X seconds", type=int)
 
 def load_mode(args):

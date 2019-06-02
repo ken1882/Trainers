@@ -131,6 +131,9 @@ def repair_dolls():
     yield
   random_click(*const.RepairMenuPos)
   uwait(2.5)
+  while not stage.is_stage_repair():
+    yield
+  uwait(1)
   item_count = get_fast_repair_item_count()
   uwait(1)
   random_click(*const.SelectRepairPos)
@@ -264,7 +267,12 @@ def change_formation(ch_pos):
 def change_main_gunner(ch_idx):
   random_click(*const.MainGunnerSlotPos)
   uwait(1.5)
-  select_slot(ch_idx)
+  try:
+    select_slot(int(ch_idx))
+  except ValueError:
+    pos = util.get_image_locations(ch_idx)[0]
+    print("{} found at {}".format(ch_idx, pos))
+    random_click(*pos)
 
 def swap_team():
   while not stage.is_stage_formation():
