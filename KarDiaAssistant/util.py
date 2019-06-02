@@ -1,10 +1,11 @@
-import win32api, win32gui, win32ui, win32con, const
-import PIL.ImageGrab, time, random, math, G
+import win32api, win32gui, win32ui, win32con, const, os
+import time, random, math, G, Input
 import numpy as np
 from G import uwait, wait
 from PIL import Image
 from PIL import ImageGrab
 from ctypes import windll
+from datetime import timedelta
 from datetime import datetime
 from os import system
 import pytesseract as pyte
@@ -20,13 +21,22 @@ def initialize():
     raise Exception("Invalid Hwnd")
   Initialized  = True
 
+def bulk_get_kwargs(*args, **kwargs):
+  re = []
+  for info in args:
+    name, default = info
+    arg = kwargs.get(name)
+    arg = default if arg is None else arg
+    re.append(arg)
+  return re
+
 def change_title(nt):
   system("title " + nt)
 
 def print_window(saveimg=False, filename=G.ScreenImageFile):
   im = ImageGrab.grab(getAppRect(True))
   try:
-    if G.is_mode_slime() or saveimg:
+    if saveimg:
       im.save(filename)
   except Exception:
     pass
@@ -56,7 +66,10 @@ def terminate():
 def hash_timenow():
   return datetime.now().second * 1000 + datetime.now().microsecond // 1000
 
-ScreenSnapShot = [hash_timenow(), PIL.ImageGrab.grab().load()]
+def get_current_time_sec():
+  return int(time.time())
+
+ScreenSnapShot = [hash_timenow(), ImageGrab.grab().load()]
 
 def getPixel(x=None, y=None):
   global LastFrameCount
@@ -75,7 +88,7 @@ def getPixel(x=None, y=None):
 
 def flush_screen_cache():
   global ScreenSnapShot, LastFrameCount
-  ScreenSnapShot[0] = 0
+  ScreenSnapShot[0] = 2147483647
   LastFrameCount = -1
 
 def choose_best_hwnd(names, target):
@@ -170,6 +183,21 @@ def random_pos(x, y, rrange=G.DefaultRandRange):
   y += random.randint(-rrange, rrange)
   return [x, y]
 
+def key_down(*args):
+  for kid in args:
+    win32api.keybd_event(kid, 0, 0, 0)
+
+def key_up(*args):
+  for kid in args:
+    win32api.keybd_event(kid, 0, win32con.KEYEVENTF_KEYUP, 0)
+
+def trigger_key(*args):
+  for kid in args:
+    key_down(kid)
+  uwait(0.03)
+  for kid in args:
+    key_up(kid)
+
 def mouse_down(x, y, app_offset):
   if app_offset:
     offset = const.getAppOffset()
@@ -238,6 +266,32 @@ def scroll_right(x, y, delta = 100, app_offset=True, haste=False):
     wait(0.01 if haste else ScrollTime)
   mouse_up(x, y, app_offset)
 
+def scroll_to(x, y, x2, y2, **kwargs):
+  app_offset,haste,hold = bulk_get_kwargs(
+    ('app_offset', True), ('haste', False), ('hold', True),
+    **kwargs
+    )
+  
+  mouse_down(x, y, app_offset)
+  wait(0.01 if haste else ScrollTime)
+  tdx, tdy = abs(x2 - x), abs(y2 - y)
+  try:
+    pcx, pcy = tdx // tdy, tdy // tdx
+    pcx, pcy = min([max([pcx, 0.4]), 2]), min([max([pcy, 0.4]), 2])
+  except Exception:
+    pcx, pcy = 1, 1
+
+  while x != x2 or y != y2:
+    dx = int((random.randint(*ScrollDelta) + haste * 2) * pcx)
+    dy = int((random.randint(*ScrollDelta) + haste * 2) * pcy)
+    x = min([x2, x+dx]) if x2 > x else max([x2, x-dx])
+    y = min([y2, y+dy]) if y2 > y else max([y2, y-dy])
+    set_cursor_pos(x, y, app_offset)
+    wait(0.01 if haste else ScrollTime)
+  if hold:
+    uwait(0.5)
+  mouse_up(x, y, app_offset)
+
 # Return Value: alive?
 def resume(fiber):
   try:
@@ -246,7 +300,7 @@ def resume(fiber):
     return False
   return True
 
-def read_app_text(x, y, x2, y2, digit_only=False):
+def read_app_text(x, y, x2, y2, digit_only=False, lan='eng'):
   rect = getAppRect(True)
   offset = const.getAppOffset()
   x, y = x + offset[0], y + offset[1]
@@ -257,14 +311,28 @@ def read_app_text(x, y, x2, y2, digit_only=False):
   filename = 'tmp/apptext.png'
   save_png(im, filename)
   uwait(0.5)
-  return img_to_str(filename, digit_only)
+  return img_to_str(filename, digit_only, lan)
 
-def img_to_str(filename, digit_only=False):
+def img_to_str(filename, digit_only=False, lan='eng'):
   _config = '-psm 12 -psm 13'
-  re = pyte.image_to_string(filename, config=_config)
+  rescues = 2
+  re = None
+  for _ in range(rescues+1):
+    try:
+      re = pyte.image_to_string(filename, config=_config, lang=lan)
+      break
+    except Exception as err:
+      if "unknown command line argument '-psm'" in str(err):
+        _config = _config.replace('-psm', '--psm')
+      if "TESSDATA_PREFIX" in str(err):
+        os.environ['TESSDATA_PREFIX'] += '\\tessdata'
+      
   if digit_only:
     re = correct_digit_result(re)
   return re
+
+def sec2readable(secs):
+  return str(timedelta(seconds=secs))
 
 def correct_digit_result(re):
   trans = {
@@ -286,3 +354,13 @@ def get_cursor_pos(app_offset=True):
     mx = mx - G.AppRect[0] - offset[0]
     my = my - G.AppRect[1] - offset[1]
   return [mx, my]
+
+def zoomout(rep=1):
+  for _ in range(rep):
+    trigger_key(Input.keymap.kMINUS)
+    uwait(0.05)
+
+def zoomin(rep=1):
+  for _ in range(rep):
+    trigger_key(Input.keymap.kEQUAL)
+    uwait(0.05)
