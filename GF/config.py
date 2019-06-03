@@ -10,7 +10,9 @@ Config = {
   'TeamEngagingMovement':{
     '4-3E': [
       [ # team 1
-        [2, (595, 437, 565, 600)] # seconds to wait after battle start, (x1, y1, x2, y2)
+        [1, (6, 3)], # seconds to wait after battle start, pos 6 to 3
+        [4, (3, 2)],
+        [5, (9, 6)]
       ],
       [ # team 2 (needn't to move)
 

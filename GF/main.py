@@ -111,7 +111,6 @@ def test_func():
   util.getAppRect()
   util.getPixel()
   
-
 def test_fiber_func():
   fiber = action.from_enhance_to_retire()
   while util.resume(fiber):
@@ -125,9 +124,7 @@ def tmp_test_func():
   # print(stage.is_stage_desktop())
   print(stage.get_current_stage())
   # test_fiber_func()
-  # util.find_tweaker()
-  # util.activeWindow(G.BSTHwnd)
-  # win32gui.MoveWindow(G.BSTHwnd, 0,0,G.BSTRect[2],G.BSTRect[3], 1)
+  print(action.get_repair_time())
 
 if __name__ == '__main__':
   try:

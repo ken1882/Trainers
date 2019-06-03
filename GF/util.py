@@ -316,7 +316,7 @@ def resume(fiber):
     return False
   return True
 
-def read_app_text(x, y, x2, y2, digit_only=False, lan='eng'):
+def read_app_text(x, y, x2, y2, **kwargs):
   rect = getAppRect(True)
   offset = const.getAppOffset()
   x, y = x + offset[0], y + offset[1]
@@ -327,9 +327,14 @@ def read_app_text(x, y, x2, y2, digit_only=False, lan='eng'):
   filename = 'tmp/apptext.png'
   save_png(im, filename)
   uwait(0.5)
-  return img_to_str(filename, digit_only, lan)
+  return img_to_str(filename, **kwargs)
 
-def img_to_str(filename, digit_only=False, lan='eng'):
+def img_to_str(filename, **kwargs):
+  dtype, lan = bulk_get_kwargs(
+    ('dtype', None), ('lan', 'eng'),
+    **kwargs
+  )
+  print("----------\nOCR Processing")
   _config = '-psm 12 -psm 13'
   rescues = 2
   result = None
@@ -343,27 +348,26 @@ def img_to_str(filename, digit_only=False, lan='eng'):
       if "TESSDATA_PREFIX" in str(err):
         os.environ['TESSDATA_PREFIX'] += '\\tessdata'
       
-  if digit_only:
+  if dtype == 'digit':
     result = correct_digit_result(result)
+  elif dtype == 'time':
+    result = correct_time_result(result)
+    
+  print("OCR Result:\n{}\n".format(result))
   return result
 
 def sec2readable(secs):
   return str(timedelta(seconds=secs))
 
 def correct_digit_result(result):
-  trans = {
-    'O': '0',
-    'o': '0',
-    'D': '0',
-    'Z': '2',
-    'z': '2',
-    '.': '6',
-    '/': '8',
-    'B': '8',
-    'J': '1',
-    'j': '1'
-  }
-  return result.translate(str.maketrans(trans))
+  print("Before digit tr:", result)
+  result = result.translate(str.maketrans(const.OCRDigitTrans))
+  return ''.join(ch for ch in result if ch.isdigit())
+
+def correct_time_result(result):
+  print("Before time tr:", result)
+  result = result.translate(str.maketrans(const.OCRDigitTrans))
+  return ''.join(ch for ch in result if ch.isdigit() or ch == ':')
 
 def get_cursor_pos(app_offset=True):
   mx, my = win32api.GetCursorPos()
@@ -432,3 +436,10 @@ def activeWindow(hwnd):
   win32gui.SetActiveWindow(hwnd)
   windll.user32.SwitchToThisWindow(hwnd, 1)
   win32gui.SetForegroundWindow(hwnd)
+
+def wait_cont(sec):
+  times = int(sec // 0.5)
+  for _ in range(times):
+    sec = max([0.01, 0.5 - G.FPS * G.InternUpdateTime])
+    uwait(sec)
+    yield

@@ -1,5 +1,6 @@
-import win32api, win32gui, win32ui, win32con, const, os
-import time, random, math, G, Input
+import os, win32api, win32gui, win32ui, win32con, win32process, win32com.client
+import const, re
+import cv2, time, random, math, G, Input
 import numpy as np
 from G import uwait, wait
 from PIL import Image
@@ -15,33 +16,43 @@ ScrollDelta = [3,8]
 Initialized = False
 LastAppRect = np.array([0,0,0,0])
 LastFrameCount = -1
+Shell = None
 
 def initialize():
-  if G.AppHwnd == 0:
-    raise Exception("Invalid Hwnd")
-  Initialized  = True
+  global Shell, Initialized
+  Initialized = True
+  Shell = win32com.client.Dispatch("WScript.Shell")
+  const.ScreenResoultion[0] = win32api.GetSystemMetrics(0)
+  const.ScreenResoultion[1] = win32api.GetSystemMetrics(1)
 
 def bulk_get_kwargs(*args, **kwargs):
-  re = []
+  result = []
   for info in args:
     name, default = info
     arg = kwargs.get(name)
     arg = default if arg is None else arg
-    re.append(arg)
-  return re
+    result.append(arg)
+  return result
 
 def change_title(nt):
   system("title " + nt)
 
-def print_window(saveimg=False, filename=G.ScreenImageFile):
-  im = ImageGrab.grab(getAppRect(True))
+def getWindowPixels(rect, saveimg=False, filename=None):
+  im = ImageGrab.grab(rect)
   try:
-    if saveimg:
+    if saveimg and filename:
       im.save(filename)
-  except Exception:
-    pass
+  except Exception as err:
+    print("Failed to save image:", err)
   pixels = im.load()
   return pixels
+
+LastOutputFrame = -1
+def print_window(saveimg=False, filename=G.ScreenImageFile):
+  global LastOutputFrame
+  if LastOutputFrame == G.FrameCount:
+    saveimg = False
+  return getWindowPixels(getAppRect(True), saveimg, filename)
 
 def save_screenshot(outname):
   im = ImageGrab.grab(getAppRect(True))
@@ -87,9 +98,10 @@ def getPixel(x=None, y=None):
   return ScreenSnapShot[1]
 
 def flush_screen_cache():
-  global ScreenSnapShot, LastFrameCount
+  global ScreenSnapShot, LastFrameCount, LastOutputFrame
   ScreenSnapShot[0] = 2147483647
   LastFrameCount = -1
+  LastOutputFrame = -1
 
 def choose_best_hwnd(names, target):
   if not names:
@@ -104,6 +116,7 @@ def choose_best_hwnd(names, target):
       for idx, info in enumerate(names):
         print("[{}] ({}) {}".format(idx, info[1], info[0]))
       return input("Please choose the id of target process(-1 for abort): ")
+
 def find_app():
   possibles = []
   target_cnt = {k:0 for k in const.TargetApps}
@@ -112,7 +125,8 @@ def find_app():
     nonlocal possibles, target_cnt
     for name in const.TargetApps:
       title = win32gui.GetWindowText(handle)
-      if name not in title:
+      regex = const.TargetAppRegex[name]
+      if not re.search(regex, title):
         continue
       try:
         rect = win32gui.GetWindowRect(handle)
@@ -138,8 +152,7 @@ def find_app():
       G.AppHwnd = possibles[pid][1]
   
   if G.AppHwnd == 0:
-    print("Unable to find app window, aborting")
-    exit()
+    print("Unable to find app window")
   else:
     print("Current App:", const.AppName)
     getAppRect()
@@ -148,6 +161,9 @@ def find_app():
 # ori: return original 4 pos of the window
 def getAppRect(ori=False):
   global LastAppRect
+  if G.AppHwnd == 0:
+    print("App not ready")
+    return [0, 0, const.ScreenResoultion[0], const.ScreenResoultion[1]]
   rect = win32gui.GetWindowRect(G.AppHwnd)
   x, y, w, h = rect
   if not ori:
@@ -300,7 +316,7 @@ def resume(fiber):
     return False
   return True
 
-def read_app_text(x, y, x2, y2, digit_only=False, lan='eng'):
+def read_app_text(x, y, x2, y2, **kwargs):
   rect = getAppRect(True)
   offset = const.getAppOffset()
   x, y = x + offset[0], y + offset[1]
@@ -311,15 +327,20 @@ def read_app_text(x, y, x2, y2, digit_only=False, lan='eng'):
   filename = 'tmp/apptext.png'
   save_png(im, filename)
   uwait(0.5)
-  return img_to_str(filename, digit_only, lan)
+  return img_to_str(filename, **kwargs)
 
-def img_to_str(filename, digit_only=False, lan='eng'):
+def img_to_str(filename, **kwargs):
+  dtype, lan = bulk_get_kwargs(
+    ('dtype', None), ('lan', 'eng'),
+    **kwargs
+  )
+  print("----------\nOCR Processing")
   _config = '-psm 12 -psm 13'
   rescues = 2
-  re = None
+  result = None
   for _ in range(rescues+1):
     try:
-      re = pyte.image_to_string(filename, config=_config, lang=lan)
+      result = pyte.image_to_string(filename, config=_config, lang=lan)
       break
     except Exception as err:
       if "unknown command line argument '-psm'" in str(err):
@@ -327,25 +348,26 @@ def img_to_str(filename, digit_only=False, lan='eng'):
       if "TESSDATA_PREFIX" in str(err):
         os.environ['TESSDATA_PREFIX'] += '\\tessdata'
       
-  if digit_only:
-    re = correct_digit_result(re)
-  return re
+  if dtype == 'digit':
+    result = correct_digit_result(result)
+  elif dtype == 'time':
+    result = correct_time_result(result)
+    
+  print("OCR Result:\n{}\n".format(result))
+  return result
 
 def sec2readable(secs):
   return str(timedelta(seconds=secs))
 
-def correct_digit_result(re):
-  trans = {
-    'O': '0',
-    'o': '0',
-    'D': '0',
-    'Z': '2',
-    'z': '2',
-    '.': '6',
-    '/': '8',
-    'B': '8',
-  }
-  return re.translate(str.maketrans(trans))
+def correct_digit_result(result):
+  print("Before digit tr:", result)
+  result = result.translate(str.maketrans(const.OCRDigitTrans))
+  return ''.join(ch for ch in result if ch.isdigit())
+
+def correct_time_result(result):
+  print("Before time tr:", result)
+  result = result.translate(str.maketrans(const.OCRDigitTrans))
+  return ''.join(ch for ch in result if ch.isdigit() or ch == ':')
 
 def get_cursor_pos(app_offset=True):
   mx, my = win32api.GetCursorPos()
@@ -364,3 +386,60 @@ def zoomin(rep=1):
   for _ in range(rep):
     trigger_key(Input.keymap.kEQUAL)
     uwait(0.05)
+
+def get_image_locations(img, threshold=.89):
+  print_window(True)
+  img_rgb  = cv2.imread(G.ScreenImageFile)
+  template = cv2.imread(img)
+  res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
+  loc = np.where(res >= threshold)
+  h, w = template.shape[:-1]
+  result = []
+  for pt in zip(*loc[::-1]):  # Switch collumns and rows
+    result.append(pt)
+    cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0,0,255), 2)
+  if G.FlagDebug:
+    cv2.imwrite('tmp/result.png', img_rgb)
+  return result
+
+def find_tweaker():
+  wx, wy, ww, wh = 0, 0, const.BSTResoultion[0], const.BSTResoultion[1]
+  def callback(handle, data):
+    nonlocal wx, wy
+    title = win32gui.GetWindowText(handle)
+    if const.BSTTitle not in title:
+      return
+    try:
+      rect = win32gui.GetWindowRect(handle)
+      x, y, w, h = rect
+      w, h = w-x,h-y
+      win32gui.MoveWindow(handle, x, y, w, h, 1)
+      wx, wy = x, y
+      G.BSTHwnd = int(handle)
+      G.BSTRect = [wx, wy, ww, wh]
+    except Exception:
+      pass
+  win32gui.EnumWindows(callback, None)
+  if G.BSTHwnd > 0:
+    win32gui.MoveWindow(G.BSTHwnd, wx, wy, ww, wh, 1)
+    print("BST found:", hex(G.BSTHwnd))
+    # returns original winrect
+    return [wx, wy, wx+ww, wy+wh]
+
+def activeWindow(hwnd):
+  global Shell
+  Shell.SendKeys('%')
+  pid = win32process.GetWindowThreadProcessId(hwnd)[1]
+  windll.user32.AllowSetForegroundWindow(pid)
+  win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
+  win32gui.BringWindowToTop(hwnd)
+  win32gui.SetActiveWindow(hwnd)
+  windll.user32.SwitchToThisWindow(hwnd, 1)
+  win32gui.SetForegroundWindow(hwnd)
+
+def wait_cont(sec):
+  times = int(sec // 0.5)
+  for _ in range(times):
+    sec = max([0.01, 0.5 - G.FPS * G.InternUpdateTime])
+    uwait(sec)
+    yield

@@ -63,7 +63,7 @@ def test_func():
   util.getPixel()
 
 def tmp_test_func():
-  # print(util.read_app_text(*const.TokenNumberPos, 1))
+  # print(util.read_app_text(*const.TokenNumberPos, dtype='digit'))
   # print(stage.any_pixel_match(const.StrawPathPosA, const.StrawPathColor[0], True))
   print(stage.get_current_stage())
   if stage.is_stage_minigames():

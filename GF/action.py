@@ -1,5 +1,6 @@
 import G, const, util, time, stage
 import random, multiprocessing
+import numpy as np
 from G import uwait
 from multiprocessing import freeze_support
 
@@ -16,7 +17,6 @@ def random_scroll_to(x, y, x2, y2, **kwargs):
   x2 += random.randint(-rrange, rrange)
   y2 += random.randint(-rrange, rrange)
   util.scroll_to(x, y, x2, y2, **kwargs)
-
 
 def _dealyed_click(x, y, delay, rrange):
   time.sleep(delay)
@@ -109,7 +109,7 @@ def combat_next():
 
 def get_fast_repair_item_count():
   try:
-    re = int(util.read_app_text(*const.FastRepairItemRect, True))
+    re = int(util.read_app_text(*const.FastRepairItemRect, dtype='digit'))
   except Exception as err:
     print("An error occurred during getting repair time:", err)
     re = 0
@@ -118,7 +118,7 @@ def get_fast_repair_item_count():
 
 def get_repair_time():
   try:
-    raw = util.read_app_text(*const.RepairTimeRect, True)
+    raw = util.read_app_text(*const.RepairTimeRect, dtype='time')
     raw = [int(i) for i in raw.split(':')]
     re = raw[0] * 3600 + raw[1] * 60 + raw[2]
   except Exception as err:
@@ -127,19 +127,14 @@ def get_repair_time():
   return re
 
 def repair_dolls():
-  while not stage.is_stage_main_menu():
-    yield
-  random_click(*const.RepairMenuPos)
-  uwait(2.5)
   while not stage.is_stage_repair():
+    if stage.is_stage_main_menu():
+      to_repair_menu()
+      uwait(1)
     yield
-  uwait(1)
   item_count = get_fast_repair_item_count()
-  uwait(1)
   random_click(*const.SelectRepairPos)
-  for _ in range(2):
-    uwait(0.5)
-    yield
+  yield from util.wait_cont(1)
   if stage.is_stage_repair():
     print("Repair needn't")
     G.RepairOKTimestamp = G.CurTime
@@ -151,9 +146,9 @@ def repair_dolls():
     uwait(0.1)
   yield
   random_click(*const.RepairStartPos)
-  uwait(1)
+  yield from util.wait_cont(0.5)
   sec_needed = get_repair_time()
-  uwait(1)
+  yield from util.wait_cont(1)
   if item_count > G.StopFastRepairItemThreshold and (G.FlagFastRepair or sec_needed >= G.FastRepairThreshold):
     print("Using Fast Repair")
     random_click(*const.FastRepairPos)
@@ -197,9 +192,16 @@ def deploy_troops():
     uwait(0.5)
     yield
 
+def get_ap_colors():
+  ar = []
+  for pos in const.ActionPointPixels:
+    ar.append(util.getPixel(*pos))
+  return np.array(ar)
+
 def move_troop(level, turn):
   if turn >= len(const.TeamMovementPos):
     return
+
   # For each team route points
   for team_id, team_dest in enumerate(const.TeamMovementPos[level][turn]):
     G.CurrentTeamID = team_id
@@ -208,12 +210,22 @@ def move_troop(level, turn):
         print("Scroll:", pos)
         random_scroll_to(*pos[0], haste=1)
       else:
-        source, dest = pos
-        print("Move {} -> {}".format(source, dest))
-        random_click(*source)
-        uwait(0.5)
-        random_click(*dest)
-      uwait(4.5)
+        last_ap_status = get_ap_colors()
+        cur_ap_status = np.array([])
+        move_succ = False
+        while not move_succ:
+          source, dest = pos
+          print("Move {} -> {}".format(source, dest))
+          random_click(*source)
+          uwait(0.5)
+          random_click(*dest)
+          yield from util.wait_cont(2)
+          while not stage.is_stage_combat_map():
+            uwait(1)
+            yield
+          cur_ap_status = get_ap_colors()
+          move_succ = not np.array_equal(last_ap_status, cur_ap_status)
+          print("Move result: {}".format("succeed" if move_succ else "failed"))
       yield
     print("Team {} move complete".format(team_id+1))
     uwait(0.3)
@@ -230,6 +242,7 @@ def process_doll_maxout():
   pass
 
 def supply_team():
+  print("Supply team")
   pos = const.TeamDeployPos[G.GrindLevel][1]
   random_click(*pos)
   uwait(0.3)

@@ -91,12 +91,21 @@ def update_in_turn_actions():
       EngagingMovementFlags = []
     else:
       for i, move in enumerate(const.TeamEngagingMovement[G.GrindLevel][G.CurrentTeamID]):
-        if util.get_current_time_sec() + move[0] < EngagingStartTime:
+        if util.get_current_time_sec() < EngagingStartTime + move[0]:
           continue
         if i in EngagingMovementFlags:
           continue
         EngagingMovementFlags.append(i)
-        action.random_scroll_to(*move[1])
+        _from, _to = move[1]
+        if _to == 0:
+          action.random_click(*const.CombatFormationPos[_from])
+          uwait(0.5)
+          action.random_click(*const.CombatFormationPos[0])
+          uwait(1)
+        else:
+          xy1, xy2 = const.CombatFormationPos[_from], const.CombatFormationPos[_to]
+          action.random_scroll_to(*xy1, *xy2, hold=False)
+          uwait(1)
   elif stage.is_stage_loading():
     return
   elif stage.is_stage_victory():

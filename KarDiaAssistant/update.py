@@ -58,7 +58,7 @@ def update_freeze():
   pass
 
 def is_minigame_token_enough():
-  tk_n = int(util.read_app_text(*const.TokenNumberPos, True))
+  tk_n = int(util.read_app_text(*const.TokenNumberPos, dtype='digit'))
   print("Token left:", tk_n)
   return tk_n > 0
 

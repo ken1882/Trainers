@@ -20,6 +20,21 @@ TessLanguage = {
 }
 NoxSideToolBar = "通過鍵盤調節GPS方位和移動速度"
 
+OCRDigitTrans = {
+  'O': '0',
+  'o': '0',
+  'D': '0',
+  'Z': '2',
+  'z': '2',
+  '.': '6',
+  '/': '8',
+  'B': '8',
+  'J': '1',
+  'j': '1',
+  'I': '1',
+  'i': '1'
+}
+
 DefaultCanvasResoultion = [1446, 900]
 BSTResoultion = [700, 400]
 ScreenResoultion = [1,1]
@@ -116,6 +131,7 @@ PlanModePos = [79, 661]
 StartPlanPos = [1336, 734]
 
 ActionPointRect = [1109, 726, 1221, 778]
+ActionPointPixels = [[1139, 729], [1139, 772], [1197, 761], [1173, 760], [1197, 773], [1188, 752], [1187, 750], [1173, 749], [1190, 739], [1190, 762], [1197, 740]]
 BattleNextPos = [498, 50]
 
 StageEngagingPixels = [
@@ -209,6 +225,14 @@ StageDesktopColor = [(255, 0, 63), (241, 237, 241), (241, 241, 241), (0, 246, 10
 
 StageEngineStartingPixel = [[41, 759], [59, 762], [70, 759], [218, 751], [1415, 822], [173, 759], [23, 824], [35, 784]]
 StageEngineStartingColor = [(248, 248, 238), (248, 248, 238), (184, 229, 238), (2, 2, 9), (0, 0, 1), (209, 229, 238), (1, 1, 7), (3, 140, 239)]
+
+CombatFormationPos = [
+  [123, 182], # withdraw
+  # numpad alike 1~9 pos
+  [81, 602], [323, 605], [567, 603], 
+  [232, 435], [416, 438], [602, 437], 
+  [325, 333], [470, 334], [625, 331],
+]
 
 EngineClosedPixel = [547, 42]
 EngineClosedColor = (194, 0, 0)
