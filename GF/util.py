@@ -26,13 +26,13 @@ def initialize():
   const.ScreenResoultion[1] = win32api.GetSystemMetrics(1)
 
 def bulk_get_kwargs(*args, **kwargs):
-  re = []
+  result = []
   for info in args:
     name, default = info
     arg = kwargs.get(name)
     arg = default if arg is None else arg
-    re.append(arg)
-  return re
+    result.append(arg)
+  return result
 
 def change_title(nt):
   system("title " + nt)
@@ -332,10 +332,10 @@ def read_app_text(x, y, x2, y2, digit_only=False, lan='eng'):
 def img_to_str(filename, digit_only=False, lan='eng'):
   _config = '-psm 12 -psm 13'
   rescues = 2
-  re = None
+  result = None
   for _ in range(rescues+1):
     try:
-      re = pyte.image_to_string(filename, config=_config, lang=lan)
+      result = pyte.image_to_string(filename, config=_config, lang=lan)
       break
     except Exception as err:
       if "unknown command line argument '-psm'" in str(err):
@@ -344,13 +344,13 @@ def img_to_str(filename, digit_only=False, lan='eng'):
         os.environ['TESSDATA_PREFIX'] += '\\tessdata'
       
   if digit_only:
-    re = correct_digit_result(re)
-  return re
+    result = correct_digit_result(result)
+  return result
 
 def sec2readable(secs):
   return str(timedelta(seconds=secs))
 
-def correct_digit_result(re):
+def correct_digit_result(result):
   trans = {
     'O': '0',
     'o': '0',
@@ -360,8 +360,10 @@ def correct_digit_result(re):
     '.': '6',
     '/': '8',
     'B': '8',
+    'J': '1',
+    'j': '1'
   }
-  return re.translate(str.maketrans(trans))
+  return result.translate(str.maketrans(trans))
 
 def get_cursor_pos(app_offset=True):
   mx, my = win32api.GetCursorPos()
@@ -388,13 +390,13 @@ def get_image_locations(img, threshold=.89):
   res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
   loc = np.where(res >= threshold)
   h, w = template.shape[:-1]
-  re = []
+  result = []
   for pt in zip(*loc[::-1]):  # Switch collumns and rows
-    re.append(pt)
+    result.append(pt)
     cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0,0,255), 2)
   if G.FlagDebug:
     cv2.imwrite('tmp/result.png', img_rgb)
-  return re
+  return result
 
 def find_tweaker():
   wx, wy, ww, wh = 0, 0, const.BSTResoultion[0], const.BSTResoultion[1]
