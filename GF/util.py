@@ -1,4 +1,5 @@
-import win32api, win32gui, win32ui, win32con, const, os
+import os, win32api, win32gui, win32ui, win32con, win32process, win32com.client
+import const, re
 import cv2, time, random, math, G, Input
 import numpy as np
 from G import uwait, wait
@@ -15,11 +16,14 @@ ScrollDelta = [3,8]
 Initialized = False
 LastAppRect = np.array([0,0,0,0])
 LastFrameCount = -1
+Shell = None
 
 def initialize():
-  if G.AppHwnd == 0:
-    raise Exception("Invalid Hwnd")
-  Initialized  = True
+  global Shell, Initialized
+  Initialized = True
+  Shell = win32com.client.Dispatch("WScript.Shell")
+  const.ScreenResoultion[0] = win32api.GetSystemMetrics(0)
+  const.ScreenResoultion[1] = win32api.GetSystemMetrics(1)
 
 def bulk_get_kwargs(*args, **kwargs):
   re = []
@@ -33,18 +37,22 @@ def bulk_get_kwargs(*args, **kwargs):
 def change_title(nt):
   system("title " + nt)
 
+def getWindowPixels(rect, saveimg=False, filename=None):
+  im = ImageGrab.grab(rect)
+  try:
+    if saveimg and filename:
+      im.save(filename)
+  except Exception as err:
+    print("Failed to save image:", err)
+  pixels = im.load()
+  return pixels
+
 LastOutputFrame = -1
 def print_window(saveimg=False, filename=G.ScreenImageFile):
   global LastOutputFrame
-  im = ImageGrab.grab(getAppRect(True))
-  try:
-    if LastOutputFrame != G.FrameCount and saveimg:
-      LastOutputFrame = G.FrameCount
-      im.save(filename)
-  except Exception:
-    pass
-  pixels = im.load()
-  return pixels
+  if LastOutputFrame == G.FrameCount:
+    saveimg = False
+  return getWindowPixels(getAppRect(True), saveimg, filename)
 
 def save_screenshot(outname):
   im = ImageGrab.grab(getAppRect(True))
@@ -90,9 +98,10 @@ def getPixel(x=None, y=None):
   return ScreenSnapShot[1]
 
 def flush_screen_cache():
-  global ScreenSnapShot, LastFrameCount
+  global ScreenSnapShot, LastFrameCount, LastOutputFrame
   ScreenSnapShot[0] = 2147483647
   LastFrameCount = -1
+  LastOutputFrame = -1
 
 def choose_best_hwnd(names, target):
   if not names:
@@ -107,6 +116,7 @@ def choose_best_hwnd(names, target):
       for idx, info in enumerate(names):
         print("[{}] ({}) {}".format(idx, info[1], info[0]))
       return input("Please choose the id of target process(-1 for abort): ")
+
 def find_app():
   possibles = []
   target_cnt = {k:0 for k in const.TargetApps}
@@ -115,7 +125,8 @@ def find_app():
     nonlocal possibles, target_cnt
     for name in const.TargetApps:
       title = win32gui.GetWindowText(handle)
-      if name not in title:
+      regex = const.TargetAppRegex[name]
+      if not re.search(regex, title):
         continue
       try:
         rect = win32gui.GetWindowRect(handle)
@@ -141,8 +152,7 @@ def find_app():
       G.AppHwnd = possibles[pid][1]
   
   if G.AppHwnd == 0:
-    print("Unable to find app window, aborting")
-    exit()
+    print("Unable to find app window")
   else:
     print("Current App:", const.AppName)
     getAppRect()
@@ -151,6 +161,9 @@ def find_app():
 # ori: return original 4 pos of the window
 def getAppRect(ori=False):
   global LastAppRect
+  if G.AppHwnd == 0:
+    print("App not ready")
+    return [0, 0, const.ScreenResoultion[0], const.ScreenResoultion[1]]
   rect = win32gui.GetWindowRect(G.AppHwnd)
   x, y, w, h = rect
   if not ori:
@@ -382,3 +395,38 @@ def get_image_locations(img, threshold=.89):
   if G.FlagDebug:
     cv2.imwrite('tmp/result.png', img_rgb)
   return re
+
+def find_tweaker():
+  wx, wy, ww, wh = 0, 0, const.BSTResoultion[0], const.BSTResoultion[1]
+  def callback(handle, data):
+    nonlocal wx, wy
+    title = win32gui.GetWindowText(handle)
+    if const.BSTTitle not in title:
+      return
+    try:
+      rect = win32gui.GetWindowRect(handle)
+      x, y, w, h = rect
+      w, h = w-x,h-y
+      win32gui.MoveWindow(handle, x, y, w, h, 1)
+      wx, wy = x, y
+      G.BSTHwnd = int(handle)
+      G.BSTRect = [wx, wy, ww, wh]
+    except Exception:
+      pass
+  win32gui.EnumWindows(callback, None)
+  if G.BSTHwnd > 0:
+    win32gui.MoveWindow(G.BSTHwnd, wx, wy, ww, wh, 1)
+    print("BST found:", hex(G.BSTHwnd))
+    # returns original winrect
+    return [wx, wy, wx+ww, wy+wh]
+
+def activeWindow(hwnd):
+  global Shell
+  Shell.SendKeys('%')
+  pid = win32process.GetWindowThreadProcessId(hwnd)[1]
+  windll.user32.AllowSetForegroundWindow(pid)
+  win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
+  win32gui.BringWindowToTop(hwnd)
+  win32gui.SetActiveWindow(hwnd)
+  windll.user32.SwitchToThisWindow(hwnd, 1)
+  win32gui.SetForegroundWindow(hwnd)

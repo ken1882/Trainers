@@ -2,10 +2,18 @@
 Version = "0.3.1"
 AppName = ""
 AppTitle = "GF"
+BSTTitle = "BlueStacks Tweaker"
+
 TargetApps = {
   "BlueStacks": [7, 47, 1446, 900],
   "夜神模擬器": [1, 32, 1433, 838]
 }
+
+TargetAppRegex = {
+  "BlueStacks": r"^BlueStacks(?! Tweaker)",
+  "夜神模擬器": r"夜神模擬器"
+}
+
 TessLanguage = {
   'en_us': 'eng',
   'zh_tw': 'chi_tra',
@@ -13,6 +21,8 @@ TessLanguage = {
 NoxSideToolBar = "通過鍵盤調節GPS方位和移動速度"
 
 DefaultCanvasResoultion = [1446, 900]
+BSTResoultion = [700, 400]
+ScreenResoultion = [1,1]
 
 def getAppOffset():
   if AppName == "":
@@ -182,3 +192,23 @@ EnterLevelPos = {
   '3-3E': CombatLevelPos[2],
   '4-3E': CombatLevelPos[2],
 }
+
+RetirePos = [104, 489]
+RetireDollPos = [357, 218]
+RetireOKPos = [1316, 725]
+RetireConfirmPos = [1306, 694]
+
+StageRewardPixel = [[1227, 629], [1223, 753], [1202, 326], [1125, 424], [56, 208], [141, 225], [140, 209], [137, 32]]
+StageRewardColor = [(254, 202, 81), (255, 254, 254), (255, 255, 255), (255, 255, 255), (37, 38, 37), (40, 41, 41), (40, 41, 40), (253, 179, 0)]
+
+BSTForceStopPos = [627, 109]
+BSTStartBSPos = [499, 107]
+
+StageDesktopPixel = [[65, 138], [87, 150], [37, 127], [63, 125], [1217, 42], [17, 829], [1415, 831], [1376, 43]]
+StageDesktopColor = [(255, 0, 63), (241, 237, 241), (241, 241, 241), (0, 246, 105), (34, 35, 64), (3, 15, 44), (9, 17, 49), (16, 149, 245)]
+
+StageEngineStartingPixel = [[41, 759], [59, 762], [70, 759], [218, 751], [1415, 822], [173, 759], [23, 824], [35, 784]]
+StageEngineStartingColor = [(248, 248, 238), (248, 248, 238), (184, 229, 238), (2, 2, 9), (0, 0, 1), (209, 229, 238), (1, 1, 7), (3, 140, 239)]
+
+EngineClosedPixel = [547, 42]
+EngineClosedColor = (194, 0, 0)

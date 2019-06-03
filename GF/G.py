@@ -22,6 +22,8 @@ FlagSwapTeamNeeded = False
 FlagEnhanceNeeded = False
 FlagFastRepair = False
 FlagPlayerTurn = True
+FlagMaxDollReached = False
+FlagRebooting = False
 
 GrindLevel = ''
 CurrentTeamID = 0
@@ -32,6 +34,7 @@ WorstRepairTime = 60 * 30 # 30 mins
 LastMainGunner = 0
 FastRepairThreshold = 2147483647
 StopFastRepairItemThreshold = 30
+RetireDollNumber = 6
 
 def Flags(name=None):
   flags = {
@@ -48,6 +51,8 @@ def Flags(name=None):
     'fast-repair': FlagFastRepair,
     'team-swap': FlagSwapTeamNeeded,
     'player-turn': FlagPlayerTurn,
+    'doll-maxout': FlagMaxDollReached,
+    'rebooting': FlagRebooting,
   }
   if name:
     name = name.lower()
@@ -60,6 +65,10 @@ Hwnd    = 0
 
 # Hwnd of target window
 AppHwnd = 0
+
+# Hwnd of BS Tweaker to re-launch app
+BSTHwnd = 0
+BSTRect = [0,0,0,0]
 
 FPS = (1 / 120)
 InternUpdateTime = 120

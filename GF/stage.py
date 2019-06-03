@@ -171,6 +171,21 @@ def is_stage_annoucement():
     return True
   return is_pixel_match(const.StageAnnoucementPixel, const.StageAnnoucementColor)
 
+def is_stage_reward():
+  if is_stage_ok(22):
+    return True
+  return is_pixel_match(const.StageRewardPixel, const.StageRewardColor)
+
+def is_stage_desktop():
+  if is_stage_ok(23):
+    return True
+  return is_pixel_match(const.StageDesktopPixel, const.StageDesktopColor)
+
+def is_engine_starting():
+  if is_stage_ok(24):
+    return True
+  return is_pixel_match(const.StageEngineStartingPixel, const.StageEngineStartingColor)
+
 def is_force_replaced_checked():
   util.flush_screen_cache()
   return is_pixel_match(const.ForceReplaceCheckedPixel, const.ForceReplaceCheckedColor)
@@ -223,10 +238,18 @@ StageMap = {
   20: is_stage_formation_edit,
 
   21: is_stage_annoucement,
+  22: is_stage_reward,
+
+  23: is_stage_desktop,
+  24: is_engine_starting,
 }
 
 def update():
   global CurStage, LastFrameCount
+  if G.AppHwnd == 0:
+    print("App not yet ready")
+    LastFrameCount = -1
+    return
   LastFrameCount = G.FrameCount
   CurStage = -1
   for sid, func in StageMap.items():
@@ -280,4 +303,10 @@ def get_current_stage():
     return "Formation Edit"
   elif is_stage_annoucement():
     return "Annoucement"
+  elif is_stage_reward():
+    return "Reward"
+  elif is_stage_desktop():
+    return "Desktop"
+  elif is_engine_starting():
+    return "Engine Starting"
   return None

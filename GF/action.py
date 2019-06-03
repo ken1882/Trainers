@@ -45,8 +45,8 @@ def return_base():
   uwait(1.5)
 
 def maxdoll_to_enhance():
-  stop_combat_grinds()
   random_click(*const.MaxDollToEnhancePos)
+  G.ActionFiber = from_enhance_to_retire()
 
 def process_autocombat_again():
   random_click(*const.AutoCombatLootNextPos)
@@ -308,3 +308,73 @@ def select_slot(idx):
   sx += const.SlotNextColDeltaX * (idx % 6)
   sy += const.SlotNextRawDeltaY * (idx // 6)
   random_click(sx, sy)
+
+def from_enhance_to_retire():
+  while not stage.is_stage_enhance():
+    yield
+  uwait(1)
+  random_click(*const.RetirePos)
+  yield
+  uwait(1)
+  random_click(*const.RetireDollPos)
+  yield
+  uwait(2)
+  for i in range(G.RetireDollNumber):
+    select_slot(i)
+    uwait(0.5)
+    yield
+  random_click(*const.RetireOKPos)
+  yield
+  uwait(1.5)
+  random_click(*const.RetireConfirmPos)
+  yield
+  uwait(1)
+  return_base()
+  yield
+  uwait(1.5)
+
+def close_app():
+  util.click(*const.AppClosePos)
+
+def launch_app():
+  pos = util.get_image_locations("assets/title.png")[0]
+  util.click(pos[0]+20, pos[1]-80)
+
+def process_reboot():
+  print("Game frozen, Reboot")
+  util.print_window(True, "tmp/FreezeSnapshot.png")
+  G.LaterFiber = None
+  G.ActionFiber = _reboot()
+  # todo: auto adjust combat init zooms
+  stop_combat_grinds()
+
+def _reboot():
+  if "BlueStacks" not in const.AppName:
+    G.FlagRunning = False
+    print("Unsupported engine for rebooting")
+    return
+  print("Reboot Engine")
+  G.FlagRebooting = True
+  G.AppHwnd = 0
+  yield
+  ori_bst_rect = util.find_tweaker()
+  util.activeWindow(G.BSTHwnd)
+  mx, my = const.BSTForceStopPos
+  uwait(1)
+  util.click(mx + G.BSTRect[0], my + G.BSTRect[1], False)
+  print("Stop BS")
+  G.superslow_update()
+  cx, cy = const.EngineClosedPixel
+  while not stage.is_color_ok(util.getWindowPixels(ori_bst_rect)[cx, cy], const.EngineClosedColor):
+    yield
+  mx, my = const.BSTStartBSPos
+  util.click(mx + G.BSTRect[0], my + G.BSTRect[1], False)
+  print("Start BS")
+  while not stage.is_stage_desktop():
+    if G.AppHwnd == 0:
+      util.find_app()
+      if G.AppHwnd > 0:
+        util.align_window()
+    yield
+  uwait(1)
+  yield

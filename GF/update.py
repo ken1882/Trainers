@@ -41,12 +41,15 @@ def main_update():
 def update_freeze():
   global freeze_timer
   st = stage.get_current_stage()
-  if st is None:
+  if st is None or st == "Loading":
     freeze_timer += 1
     if freeze_timer >= G.FreezeTimeOut:
-      print("Game frozen, Abort")
-      util.print_window(True, "tmp/FreezeSnapshot.png")
-      G.FlagRunning = False
+      if G.FlagRebooting:
+        print("Totally frozen, abort")
+        G.FlagRunning = False
+        exit()
+      else:
+        action.process_reboot()
   else:
     freeze_timer = 0
   print("Stage: {}, freeze timer: {}".format(st, freeze_timer))
@@ -100,6 +103,8 @@ def update_grind():
     action.return_base()
   elif stage.is_stage_formation() and not G.FlagSwapTeamNeeded and not G.LaterFiber:
     action.return_base()
+  elif stage.is_stage_reward():
+    action.combat_next()
   elif G.FlagGrindLevel:
     grind.update()
 
@@ -125,6 +130,9 @@ def update_later_fiber():
 def process_update():
   update_freeze()
   stage.update()
+  
+  if G.FlagRebooting:
+    return update_reboot_process()
   if G.ActionFiber:
     return update_action_fiber()
 
@@ -144,3 +152,18 @@ def process_update():
   if G.LaterFiber:
     update_later_fiber()
   
+def update_reboot_process():
+  if G.ActionFiber:
+    return update_action_fiber()
+
+  if stage.is_stage_desktop():
+    uwait(1)
+    action.launch_app()
+  elif stage.is_engine_starting():
+    pass
+  else:
+    if stage.is_stage_main_menu():
+      G.FlagRebooting = False
+      return
+    uwait(1)
+    action.autocombat_next()
