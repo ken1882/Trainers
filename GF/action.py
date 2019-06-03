@@ -315,6 +315,7 @@ def swap_team():
   return_base()
   uwait(1)
   util.flush_screen_cache()
+  G.superslow_update()
 
 def select_slot(idx):
   sx, sy = const.SelectSlotStartPos.copy()
