@@ -34,7 +34,7 @@ WorstRepairTime = 60 * 30 # 30 mins
 LastMainGunner = 0
 FastRepairThreshold = 2147483647
 StopFastRepairItemThreshold = 30
-RetireDollNumber = 6
+RetireDollNumber = 12
 
 def Flags(name=None):
   flags = {
