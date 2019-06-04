@@ -310,3 +310,11 @@ def get_current_stage():
   elif is_engine_starting():
     return "Engine Starting"
   return None
+
+def is_correct_level_selected():
+  try:
+    pix, col = const.LevelSelectedPixel[G.GrindLevel], const.LevelSelectedColor[G.GrindLevel]
+  except KeyError:
+    print("Warning: {} has no level selection check!".format(G.GrindLevel))
+    return
+  return is_pixel_match(pix, col)

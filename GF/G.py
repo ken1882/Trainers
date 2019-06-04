@@ -35,6 +35,8 @@ LastMainGunner = 0
 FastRepairThreshold = 2147483647
 StopFastRepairItemThreshold = 30
 RetireDollNumber = 12
+LastFreezeTime = 0
+FronzenStopThershold = 60 * 10
 
 def Flags(name=None):
   flags = {
@@ -125,6 +127,19 @@ def setup():
     InternUpdateTime = 300
   elif is_mode_like():
     InternUpdateTime = 60
+
+_LastInternUT = 0
+_LastST = 0
+def save_update_frequency():
+  global _LastInternUT, _LastST, InternUpdateTime, ScreenTimeout
+  _LastInternUT, _LastST = InternUpdateTime, ScreenTimeout
+
+def restore_update_frequency():
+  global _LastInternUT, _LastST, InternUpdateTime, ScreenTimeout
+  if _LastInternUT == 0 or _LastST == 0:
+    return
+  InternUpdateTime, ScreenTimeout = _LastInternUT, _LastST
+  _LastInternUT, _LastST = 0, 0
 
 def superslow_update():
   global InternUpdateTime, ScreenTimeout

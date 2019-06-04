@@ -326,6 +326,8 @@ def select_slot(idx):
 def from_enhance_to_retire():
   while not stage.is_stage_enhance():
     yield
+  G.save_update_frequency()
+  G.normal_update()
   uwait(1)
   random_click(*const.RetirePos)
   yield
@@ -345,6 +347,7 @@ def from_enhance_to_retire():
   uwait(1)
   return_base()
   yield
+  G.restore_update_frequency()
   uwait(1.5)
 
 def close_app():
@@ -356,11 +359,11 @@ def launch_app():
 
 def process_reboot():
   print("Game frozen, Reboot")
+  # todo: auto adjust combat init zooms
+  stop_combat_grinds()
   util.print_window(True, "tmp/FreezeSnapshot.png")
   G.LaterFiber = None
   G.ActionFiber = _reboot()
-  # todo: auto adjust combat init zooms
-  stop_combat_grinds()
 
 def _reboot():
   if "BlueStacks" not in const.AppName:
@@ -392,3 +395,13 @@ def _reboot():
     yield
   uwait(1)
   yield
+
+def select_correct_level():
+  print("Process to {} moves".format(G.GrindLevel))
+  moves = const.ToLevelActions[G.GrindLevel]
+  for pos in moves:
+    if len(pos) == 4:
+      random_scroll_to(*pos)
+    else:
+      random_click(*pos)
+    yield

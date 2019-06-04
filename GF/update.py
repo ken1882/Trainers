@@ -44,11 +44,14 @@ def update_freeze():
   if st is None or st == "Loading":
     freeze_timer += 1
     if freeze_timer >= G.FreezeTimeOut:
-      if G.FlagRebooting:
+      curtime = util.get_current_time_sec()
+      if G.FlagRebooting or curtime < G.LastFreezeTime + G.FronzenStopThershold:
         print("Totally frozen, abort")
         G.FlagRunning = False
         exit()
       else:
+        print("Game frozen, process reboot")
+        G.LastFreezeTime = curtime
         action.process_reboot()
   else:
     freeze_timer = 0
@@ -79,9 +82,16 @@ def update_grind():
     else:
       action.close_combat_setup()
   elif stage.is_stage_combat_selection():
+    if G.LaterFiber:
+      return
+    uwait(1)
     if grind.is_battle_ready():
-      uwait(1)
-      action.enter_level()
+      if stage.is_correct_level_selected():
+        uwait(1)
+        action.enter_level()
+      else:
+        print("Incorrect level selcted!")
+        G.LaterFiber = action.select_correct_level()
     else:
       action.return_base()
   elif stage.is_stage_main_menu():
