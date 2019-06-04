@@ -160,3 +160,8 @@ def fast_update():
   global InternUpdateTime, ScreenTimeout
   InternUpdateTime = 30
   ScreenTimeout = 100
+
+def ultrafast_update():
+  global InternUpdateTime, ScreenTimeout
+  InternUpdateTime = 15
+  ScreenTimeout = 80

@@ -326,8 +326,6 @@ def select_slot(idx):
 def from_enhance_to_retire():
   while not stage.is_stage_enhance():
     yield
-  G.save_update_frequency()
-  G.normal_update()
   uwait(1)
   random_click(*const.RetirePos)
   yield
@@ -335,6 +333,8 @@ def from_enhance_to_retire():
   random_click(*const.RetireDollPos)
   yield
   uwait(2)
+  G.save_update_frequency()
+  G.fast_update()
   for i in range(G.RetireDollNumber):
     select_slot(i)
     uwait(0.5)

@@ -99,12 +99,12 @@ def update_in_turn_actions():
         _from, _to = move[1]
         if _to == 0:
           action.random_click(*const.CombatFormationPos[_from])
-          uwait(0.5)
+          uwait(0.3)
           action.random_click(*const.CombatFormationPos[0])
           uwait(1)
         else:
           xy1, xy2 = const.CombatFormationPos[_from], const.CombatFormationPos[_to]
-          action.random_scroll_to(*xy1, *xy2, hold=False)
+          action.random_scroll_to(*xy1, *xy2, hold=False, haste=1)
           uwait(1)
   elif stage.is_stage_loading():
     return

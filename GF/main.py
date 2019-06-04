@@ -71,12 +71,12 @@ if __name__ == "__main__":
     exec(file.read())
   G.MaxRepair = Config['MaxRepair']
   G.WorstRepairTime = Config['WorstRepairTime']
-  G.FastRepairThreshold = Config['FastRepairThreshold']
   G.StopFastRepairItemThreshold = Config['StopFastRepairItemThreshold']
   const.EditMainGunnerIndexA = Config['MainGunnerIndexA']
   const.EditMainGunnerIndexB = Config['MainGunnerIndexB']
   const.TeamEngagingMovement = Config['TeamEngagingMovement']
   const.TeamMovementPos = Config['TeamMovementPos']
+  
   print("Config Loaded:")
   for k, v in Config.items():
     if k == 'TeamEngagingMovement':
@@ -100,9 +100,16 @@ if __name__ == "__main__":
     else:
       print(k, v)
   print('-'*15)
-  
   sysargv.load()
-
+  try:
+    G.FastRepairThreshold = Config['LevelFastRepairThreshold'][G.GrindLevel]
+    G.WorstRepairTime = Config['LevelWorstRepairTime'][G.GrindLevel]
+  except KeyError:
+    G.FastRepairThreshold = Config['FastRepairThreshold']
+    G.WorstRepairTime = Config['WorstRepairTime']
+  print("Repair time threshold for {}: {}".format(G.GrindLevel, G.FastRepairThreshold))
+  print("Worst repait time:", G.WorstRepairTime)
+  print('-'*15)
 
 def test_func():
   util.initialize()
