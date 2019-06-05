@@ -53,6 +53,7 @@ def update_freeze():
         print("Game frozen, process reboot")
         G.LastFreezeTime = curtime
         action.process_reboot()
+        freeze_timer = 0
   else:
     freeze_timer = 0
   print("Stage: {}, freeze timer: {}".format(st, freeze_timer))

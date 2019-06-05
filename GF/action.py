@@ -370,9 +370,9 @@ def launch_app():
 
 def process_reboot():
   print("Game frozen, Reboot")
-  # todo: auto adjust combat init zooms
   stop_combat_grinds()
   util.print_window(True, "tmp/FreezeSnapshot.png")
+  G.superslow_update()
   G.LaterFiber = None
   G.ActionFiber = _reboot()
 
