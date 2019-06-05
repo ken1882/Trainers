@@ -186,6 +186,16 @@ def is_engine_starting():
     return True
   return is_pixel_match(const.StageEngineStartingPixel, const.StageEngineStartingColor)
 
+def is_connection_timeout():
+  if is_stage_ok(25):
+    return True
+  return is_pixel_match(const.StageConnectionTimeoutPixel, const.StageConnectionTimeoutColor)
+
+def is_stage_team_selected():
+  if is_stage_ok(26):
+    return True
+  return is_pixel_match(const.StageTeamSelectedPixel, const.StageTeamSelectedColor)
+
 def is_force_replaced_checked():
   util.flush_screen_cache()
   return is_pixel_match(const.ForceReplaceCheckedPixel, const.ForceReplaceCheckedColor)
@@ -242,6 +252,9 @@ StageMap = {
 
   23: is_stage_desktop,
   24: is_engine_starting,
+  25: is_connection_timeout,
+
+  26: is_stage_team_selected,
 }
 
 def update():
@@ -309,6 +322,10 @@ def get_current_stage():
     return "Desktop"
   elif is_engine_starting():
     return "Engine Starting"
+  elif is_connection_timeout():
+    return "Connection Timeout"
+  elif is_stage_team_selected():
+    return "Team selected"
   return None
 
 def is_correct_level_selected():
@@ -318,3 +335,6 @@ def is_correct_level_selected():
     print("Warning: {} has no level selection check!".format(G.GrindLevel))
     return
   return is_pixel_match(pix, col)
+
+def is_ammo_enough():
+  return is_color_ok(util.getPixel(*const.MainGunnerAmmoPixel), const.MainGunnerAmmoColor)

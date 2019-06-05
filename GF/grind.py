@@ -24,7 +24,10 @@ def process_battle_start():
   global FlagInit
   yield from action.deploy_troops()
   action.start_battle()
-  yield from action.supply_team()
+  if G.FlagSupplyNeeded:
+    G.FlagSupplyNeeded = False
+    yield from action.supply_team(0)
+  yield from action.supply_team(1)
 
 def next_until_ok():
   while stage.is_stage_combat_event() and not stage.is_stage_combat_map() or not stage.is_stage_loading() and not stage.is_stage_combat_selection():
@@ -90,22 +93,7 @@ def update_in_turn_actions():
       EngagingStartTime = util.get_current_time_sec()
       EngagingMovementFlags = []
     else:
-      for i, move in enumerate(const.TeamEngagingMovement[G.GrindLevel][G.CurrentTeamID]):
-        if util.get_current_time_sec() < EngagingStartTime + move[0]:
-          continue
-        if i in EngagingMovementFlags:
-          continue
-        EngagingMovementFlags.append(i)
-        _from, _to = move[1]
-        if _to == 0:
-          action.random_click(*const.CombatFormationPos[_from])
-          uwait(0.3)
-          action.random_click(*const.CombatFormationPos[0])
-          uwait(1)
-        else:
-          xy1, xy2 = const.CombatFormationPos[_from], const.CombatFormationPos[_to]
-          action.random_scroll_to(*xy1, *xy2, hold=False, haste=1)
-          uwait(1)
+      update_engaging_movements()
   elif stage.is_stage_loading():
     return
   elif stage.is_stage_victory():
@@ -118,3 +106,22 @@ def update_in_turn_actions():
     if not util.resume(MovementFiber):
       print("Movement fiber finished")
       MovementFiber = None
+
+def update_engaging_movements():
+  global EngagingMovementFlags, EngagingStartTime
+  for i, move in enumerate(const.TeamEngagingMovement[G.GrindLevel][G.CurrentTeamID]):
+    if util.get_current_time_sec() < EngagingStartTime + move[0]:
+      continue
+    if i in EngagingMovementFlags:
+      continue
+    EngagingMovementFlags.append(i)
+    _from, _to = move[1]
+    if _to == 0:
+      action.random_click(*const.CombatFormationPos[_from])
+      uwait(0.3)
+      action.random_click(*const.CombatFormationPos[0])
+      return
+    else:
+      xy1, xy2 = const.CombatFormationPos[_from], const.CombatFormationPos[_to]
+      action.random_scroll_to(*xy1, *xy2, hold=False, haste=1)
+      return

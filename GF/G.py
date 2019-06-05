@@ -24,6 +24,7 @@ FlagFastRepair = False
 FlagPlayerTurn = True
 FlagMaxDollReached = False
 FlagRebooting = False
+FlagSupplyNeeded = False
 
 GrindLevel = ''
 CurrentTeamID = 0
@@ -55,6 +56,7 @@ def Flags(name=None):
     'player-turn': FlagPlayerTurn,
     'doll-maxout': FlagMaxDollReached,
     'rebooting': FlagRebooting,
+    'needsupply': FlagSupplyNeeded,
   }
   if name:
     name = name.lower()

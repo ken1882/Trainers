@@ -141,6 +141,9 @@ def process_update():
   update_freeze()
   stage.update()
   
+  if stage.is_connection_timeout():
+    pass # todo
+
   if G.FlagRebooting:
     return update_reboot_process()
   if G.ActionFiber:

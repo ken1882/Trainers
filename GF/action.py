@@ -186,8 +186,15 @@ def end_turn():
 def deploy_troops():
   for i, pos in enumerate(const.TeamDeployPos[G.GrindLevel]):
     print("Deploy Team", i)
+    while not stage.is_stage_combat_map():
+      yield
     random_click(*pos)
-    uwait(1)
+    while not stage.is_stage_team_selected():
+      yield      
+    uwait(0.5)
+    if i == 0 and not stage.is_ammo_enough():
+      G.FlagSupplyNeeded = True
+      print("Main team has no enough ammo!")
     random_click(*const.DeployConfirmPos)
     uwait(0.5)
     yield
@@ -241,9 +248,12 @@ def stop_combat_grinds():
 def process_doll_maxout():
   pass
 
-def supply_team():
-  print("Supply team")
-  pos = const.TeamDeployPos[G.GrindLevel][1]
+def supply_team(tid):
+  print("Supply team", tid)
+  while not stage.is_stage_combat_map():
+    uwait(1)
+    yield
+  pos = const.TeamDeployPos[G.GrindLevel][tid]
   random_click(*pos)
   uwait(0.3)
   random_click(*pos)
@@ -285,7 +295,8 @@ def change_main_gunner(ch_idx):
   except ValueError:
     pos = util.get_image_locations(ch_idx)[0]
     print("{} found at {}".format(ch_idx, pos))
-    random_click(*pos)
+    mx, my = pos
+    random_click(mx, my - 80)
 
 def swap_team():
   while not stage.is_stage_formation():
