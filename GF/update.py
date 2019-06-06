@@ -47,10 +47,12 @@ def update_freeze():
       curtime = util.get_current_time_sec()
       if G.FlagRebooting or curtime < G.LastFreezeTime + G.FronzenStopThershold:
         print("Totally frozen, abort")
+        util.save_screenshot("tmp/TotallyFronzenSnapshot.png")
         G.FlagRunning = False
         exit()
       else:
         print("Game frozen, process reboot")
+        util.save_screenshot("tmp/FirstFronzenSnapshot.png")
         G.LastFreezeTime = curtime
         action.process_reboot()
         freeze_timer = 0

@@ -3,6 +3,7 @@ Config = {
   'WorstRepairTime': 7200, # 2 hours
   'FastRepairThreshold': 1200, # -frth X
   'StopFastRepairItemThreshold': 30,
+  'RetireDollNumber': 24,
 
   'MainGunnerIndexA': "assets/FAL.png", # -mgia X
   'MainGunnerIndexB': "assets/M14.png", # -mgib X
@@ -20,7 +21,7 @@ Config = {
   'TeamEngagingMovement':{
     '4-3E': [
       [ # team 1
-        [0, (6, 3)], # seconds to wait after battle start, pos 6 to 3
+        [1, (6, 3)], # seconds to wait after battle start, pos 6 to 3
         [3, (2, 1)],
         [6, (3, 2)],
       ],

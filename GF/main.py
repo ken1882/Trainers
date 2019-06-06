@@ -72,6 +72,7 @@ if __name__ == "__main__":
   G.MaxRepair = Config['MaxRepair']
   G.WorstRepairTime = Config['WorstRepairTime']
   G.StopFastRepairItemThreshold = Config['StopFastRepairItemThreshold']
+  G.RetireDollNumber = Config['RetireDollNumber']
   const.EditMainGunnerIndexA = Config['MainGunnerIndexA']
   const.EditMainGunnerIndexB = Config['MainGunnerIndexB']
   const.TeamEngagingMovement = Config['TeamEngagingMovement']

@@ -315,7 +315,8 @@ def swap_team():
     G.LastMainGunner = 0
   yield from change_formation(formation_pos)
   uwait(1)
-  yield
+  while not stage.is_stage_formation():
+    yield
   random_click(*const.EchelonSecondPos)
   uwait(1)
   yield
@@ -346,16 +347,20 @@ def from_enhance_to_retire():
   uwait(2)
   G.save_update_frequency()
   G.fast_update()
-  for i in range(G.RetireDollNumber):
-    select_slot(i)
-    uwait(0.5)
+  num_left = G.RetireDollNumber
+  while num_left > 0:
+    sub = min([num_left, 12])
+    for i in range(sub):
+      select_slot(i)
+      uwait(0.5)
+      yield
+    num_left -= sub
+    random_click(*const.RetireOKPos)
     yield
-  random_click(*const.RetireOKPos)
-  yield
-  uwait(1.5)
-  random_click(*const.RetireConfirmPos)
-  yield
-  uwait(1)
+    uwait(1.5)
+    random_click(*const.RetireConfirmPos)
+    yield
+    uwait(1)
   return_base()
   yield
   G.restore_update_frequency()
