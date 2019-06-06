@@ -196,6 +196,12 @@ def is_stage_team_selected():
     return True
   return is_pixel_match(const.StageTeamSelectedPixel, const.StageTeamSelectedColor)
 
+def is_stage_retire():
+  if is_stage_ok(27):
+    return True
+  return is_pixel_match(const.StageRetirePixel, const.StageRetireColor)
+
+
 def is_force_replaced_checked():
   util.flush_screen_cache()
   return is_pixel_match(const.ForceReplaceCheckedPixel, const.ForceReplaceCheckedColor)
@@ -255,6 +261,7 @@ StageMap = {
   25: is_connection_timeout,
 
   26: is_stage_team_selected,
+  27: is_stage_retire,
 }
 
 def update():
@@ -326,6 +333,8 @@ def get_current_stage():
     return "Connection Timeout"
   elif is_stage_team_selected():
     return "Team selected"
+  elif is_stage_retire():
+    return "Retire"
   return None
 
 def is_correct_level_selected():

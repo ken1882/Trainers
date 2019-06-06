@@ -167,3 +167,8 @@ def ultrafast_update():
   global InternUpdateTime, ScreenTimeout
   InternUpdateTime = 15
   ScreenTimeout = 80
+
+def change_update_frequency(intern, screen):
+  global InternUpdateTime, ScreenTimeout
+  InternUpdateTime = intern
+  ScreenTimeout = screen

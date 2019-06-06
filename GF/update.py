@@ -164,6 +164,10 @@ def process_update():
     update_grind()
   elif G.is_mode_like():
     update_like()
+  elif stage.is_stage_desktop():
+    G.FlagRebooting = True
+    G.ActionFiber = None
+    G.LaterFiber = None
 
   if G.LaterFiber:
     update_later_fiber()

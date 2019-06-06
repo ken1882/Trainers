@@ -342,13 +342,13 @@ def from_enhance_to_retire():
   random_click(*const.RetirePos)
   yield
   uwait(1)
-  random_click(*const.RetireDollPos)
-  yield
-  uwait(2)
   G.save_update_frequency()
-  G.fast_update()
+  G.change_update_frequency(15, 200)
   num_left = G.RetireDollNumber
   while num_left > 0:
+    random_click(*const.RetireDollPos)
+    yield
+    uwait(2)
     sub = min([num_left, 12])
     for i in range(sub):
       select_slot(i)
