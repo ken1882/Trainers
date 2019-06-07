@@ -44,7 +44,9 @@ def is_stage_ok(sid=-1):
 def is_stage_main_menu():
   if is_stage_ok(0):
     return True
-  return is_pixel_match(const.StageMainMenuPixel, const.StageMainMenuColor)
+  a = is_pixel_match(const.StageMainMenuPixel, const.StageMainMenuColor)
+  b = is_pixel_match(const.StageMainMenuPixelB, const.StageMainMenuColorB)
+  return a or b
 
 def is_stage_achievement():
   if is_stage_ok(1):
