@@ -58,6 +58,7 @@ def process_autocombat_again():
       print("Auto-combat count left:", G.AutoCombatCount)
   else:
     random_click(*const.AutoCombatStopPos)
+  G.CurrentResources = [-1, -1, -1, -1]
 
 def process_autocombat():
   random_click(*const.AutoCombatAgainPos)
@@ -421,3 +422,21 @@ def select_correct_level():
     else:
       random_click(*pos)
     yield
+
+def get_resources():
+  return [int(util.read_app_text(*rect, dtype='digit')) or 0 for rect in const.ResourceRects]
+
+def is_resources_enough():
+  G.CurrentResources = get_resources()
+  print("Resources:", G.CurrentResources)
+  for cur, req in zip(G.CurrentResources, G.MinCombatResources):
+    if cur < req:
+      return False
+  return True
+
+def check_resources():
+  if not is_resources_enough():
+    print("No enough resources for combat!")
+    stop_combat_grinds()
+  else:
+    print("Sufficient resources")

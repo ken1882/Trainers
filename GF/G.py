@@ -29,6 +29,8 @@ FlagSupplyNeeded = False
 GrindLevel = ''
 CurrentTeamID = 0
 
+MinCombatResources = [2500, 2500, 2500, 1500]
+CurrentResources = [-1, -1, -1, -1]
 AutoCombatCount = -1
 MaxRepair = 4
 WorstRepairTime = 60 * 30 # 30 mins

@@ -8,6 +8,8 @@ Config = {
   'MainGunnerIndexA': "assets/FAL.png", # -mgia X
   'MainGunnerIndexB': "assets/M14.png", # -mgib X
 
+  'MinCombatResources': [3000, 3000, 3000, 2500],
+
   'LevelFastRepairThreshold': {
     '4-3E': 1200, # 20 mins
     '0-2': 2400,  # 40 mins

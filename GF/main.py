@@ -73,6 +73,7 @@ if __name__ == "__main__":
   G.WorstRepairTime = Config['WorstRepairTime']
   G.StopFastRepairItemThreshold = Config['StopFastRepairItemThreshold']
   G.RetireDollNumber = Config['RetireDollNumber']
+  G.MinCombatResources = Config['MinCombatResources']
   const.EditMainGunnerIndexA = Config['MainGunnerIndexA']
   const.EditMainGunnerIndexB = Config['MainGunnerIndexB']
   const.TeamEngagingMovement = Config['TeamEngagingMovement']
@@ -132,6 +133,7 @@ def tmp_test_func():
   # print(stage.is_stage_desktop())
   print(stage.get_current_stage())
   # test_fiber_func()
+  print(action.get_resources())
 
 if __name__ == '__main__':
   try:

@@ -108,8 +108,12 @@ def update_grind():
       G.LaterFiber = action.swap_team()
       uwait(1)
     elif grind.is_battle_ready():
-      action.random_click(*const.CombatMenuPos)
-      uwait(2)
+      if action.is_resources_enough():
+        action.random_click(*const.CombatMenuPos)
+        uwait(2)
+      else:
+        print("No enough resources for combat!")
+        action.stop_combat_grinds()
   elif not G.FlagGrindLevel and stage.get_current_stage() is None:
     action.autocombat_next()
   elif stage.is_stage_repair() and not G.FlagRepairNeeded and not G.LaterFiber:
@@ -160,6 +164,8 @@ def process_update():
     uwait(1.5)
     action.random_click(*const.AnnoucementOKPos[1])
     uwait(1)
+  elif G.CurrentResources[0] == -1 and stage.is_stage_main_menu():
+    action.check_resources()
   elif G.is_mode_backup():
     update_grind()
   elif G.is_mode_like():

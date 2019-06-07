@@ -326,7 +326,7 @@ def read_app_text(x, y, x2, y2, **kwargs):
   im = ImageGrab.grab(rect)
   filename = 'tmp/apptext.png'
   save_png(im, filename)
-  uwait(0.5)
+  uwait(0.3)
   return img_to_str(filename, **kwargs)
 
 def img_to_str(filename, **kwargs):
