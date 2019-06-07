@@ -23,6 +23,11 @@ parser.add_argument("-lgdy", "--level-grind-delay", help="Delay time in seconds 
 parser.add_argument("-mgia", "--main-gunner-index-a", help="Index of main gunner A, if path to an image is given, click the position of found image in app", type=str)
 parser.add_argument("-mgib", "--main-gunner-index-b", help="Index of main gunner B, if path to an image is given, click the position of found image in app", type=str)
 parser.add_argument("-frth", "--fast-repair-threshold", help="Use fast repair if repair time needs more than X seconds", type=int)
+parser.add_argument("-glc", "--grind-level-count", help="Times to do level grind", type=int)
+parser.add_argument("-mwp", "--min-womanpower", help="Minimum (wo)manpower threshold to autocombat/grind level", type=int)
+parser.add_argument("-mmo", "--min-ammo", help="Minimum ammo threshold to autocombat/grind level", type=int)
+parser.add_argument("-mre", "--min-mre", help="Minimum MRE threshold to autocombat/grind level", type=int)
+parser.add_argument("-mmp", "--min-machineparts", help="Minimum machine parts threshold to autocombat/grind level", type=int)
 
 def load_mode(args):
   if args.backup:
@@ -67,6 +72,13 @@ def load():
     const.EditMainGunnerIndexB = args.main_gunner_index_b
   if args.fast_repair_threshold:
     G.FastRepairThreshold = args.fast_repair_threshold
+  if args.grind_level_count:
+    G.GrindLevelCount = args.grind_level_count
+
+  grss = [args.min_womanpower, args.min_ammo, args.min_mre, args.min_machineparts]
+  for i, rss in enumerate(grss):
+    if grss[i]:
+      G.MinCombatResources[i] = rss
 
 def show_help():
   parser.print_help()

@@ -15,7 +15,7 @@ def initialize():
   CurrentTurn = 0
 
 def is_battle_ready():
-  return G.FlagGrindLevel and G.RepairOKTimestamp < G.CurTime
+  return G.FlagGrindLevel and G.RepairOKTimestamp < G.CurTime and G.GrindLevelCount > 0
 
 def deploy_pos():
   return const.TeamDeployPos[G.GrindLevel]
@@ -38,7 +38,8 @@ def process_victory():
   global Fiber, MovementFiber
   MovementFiber = None
   yield from next_until_ok()
-  print("Combat ends")
+  G.GrindLevelCount -= 1
+  print("Combat ends, times left:", G.GrindLevelCount)
   G.FlagPlayerTurn = True
   G.FlagRepairNeeded = True
   G.FlagSwapTeamNeeded = True
@@ -75,7 +76,7 @@ def update():
     return
   elif stage.is_stage_combat_map():
     if FlagInit:
-      print("Battle start")
+      print("Battle start, times left:", G.GrindLevelCount)
       G.normal_update()
       G.ActionFiber = process_battle_start()
       FlagInit = False

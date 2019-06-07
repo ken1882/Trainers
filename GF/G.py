@@ -41,6 +41,7 @@ RetireDollNumber = 12
 LastFreezeTime = 0
 FronzenStopThershold = 60 * 10
 RepairOKTimestamp = 0
+GrindLevelCount = 2147483648
 
 def Flags(name=None):
   flags = {
