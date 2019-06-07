@@ -38,6 +38,7 @@ StopFastRepairItemThreshold = 30
 RetireDollNumber = 12
 LastFreezeTime = 0
 FronzenStopThershold = 60 * 10
+RepairOKTimestamp = 0
 
 def Flags(name=None):
   flags = {
@@ -84,7 +85,6 @@ CurTime = 0
 Mode = 0
 Difficulty = 0
 Counter = 0
-RepairOKTimestamp = 0
 
 # Not a actually const, window rect
 AppRect = [0, 0, 0, 0]

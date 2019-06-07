@@ -1,15 +1,43 @@
 # Defines the consts of pixels/color of app
-Version = "0.2.0"
+Version = "0.2.1"
 AppName = ""
-AppTitle = "KarDiaAssistant"
+AppTitle = "KarDiaAssassiant"
+BSTTitle = "BlueStacks Tweaker"
+
 TargetApps = {
   "BlueStacks": [7, 47, 477, 917],
   "夜神模擬器": [1, 32, 464, 855]
 }
 
+TargetAppRegex = {
+  "BlueStacks": r"^BlueStacks(?! Tweaker)",
+  "夜神模擬器": r"夜神模擬器"
+}
+
+TessLanguage = {
+  'en_us': 'eng',
+  'zh_tw': 'chi_tra',
+}
 NoxSideToolBar = "通過鍵盤調節GPS方位和移動速度"
 
+OCRDigitTrans = {
+  'O': '0',
+  'o': '0',
+  'D': '0',
+  'Z': '2',
+  'z': '2',
+  '.': '6',
+  '/': '8',
+  'B': '8',
+  'J': '1',
+  'j': '1',
+  'I': '1',
+  'i': '1'
+}
+
 DefaultCanvasResoultion = [477, 917]
+BSTResoultion = [700, 400]
+ScreenResoultion = [1,1]
 
 def getAppOffset():
   if AppName == "":
