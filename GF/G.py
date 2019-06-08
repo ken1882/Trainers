@@ -30,7 +30,7 @@ GrindLevel = ''
 CurrentTeamID = 0
 
 MinCombatResources = [2500, 2500, 2500, 1500]
-CurrentResources = [-1, -1, -1, -1]
+CurrentResources = [0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff]
 AutoCombatCount = -1
 MaxRepair = 4
 WorstRepairTime = 60 * 30 # 30 mins
@@ -42,6 +42,7 @@ LastFreezeTime = 0
 FronzenStopThershold = 60 * 10
 RepairOKTimestamp = 0
 GrindLevelCount = 2147483648
+FlagResourcesCheckNeeded = True
 
 def Flags(name=None):
   flags = {
@@ -61,6 +62,7 @@ def Flags(name=None):
     'doll-maxout': FlagMaxDollReached,
     'rebooting': FlagRebooting,
     'needsupply': FlagSupplyNeeded,
+    'rsscheck': FlagResourcesCheckNeeded,
   }
   if name:
     name = name.lower()

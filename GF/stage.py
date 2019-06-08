@@ -229,6 +229,13 @@ def is_in_battle():
       return True
   return False
 
+def is_resources_checking_stage():
+  if is_stage_repair():
+    return True
+  if is_stage_combat_selection():
+    return True
+  if is_stage_formation():
+    return True
 
 StageMap = {
   0: is_stage_main_menu,

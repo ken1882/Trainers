@@ -58,7 +58,7 @@ def process_autocombat_again():
       print("Auto-combat count left:", G.AutoCombatCount)
   else:
     random_click(*const.AutoCombatStopPos)
-  G.CurrentResources = [-1, -1, -1, -1]
+  G.FlagResourcesCheckNeeded = True
 
 def process_autocombat():
   random_click(*const.AutoCombatAgainPos)
@@ -133,6 +133,7 @@ def repair_dolls():
       to_repair_menu()
       uwait(1)
     yield
+  yield from check_resources(False)
   item_count = get_fast_repair_item_count()
   random_click(*const.SelectRepairPos)
   yield from util.wait_cont(1)
@@ -427,16 +428,21 @@ def get_resources():
   return [int(util.read_app_text(*rect, dtype='digit')) or 0 for rect in const.ResourceRects]
 
 def is_resources_enough():
-  G.CurrentResources = get_resources()
   print("Resources:", G.CurrentResources)
   for cur, req in zip(G.CurrentResources, G.MinCombatResources):
     if cur < req:
+      print("No enough resources for combat!")
       return False
+  print("Sufficient resources")
   return True
 
-def check_resources():
-  if not is_resources_enough():
-    print("No enough resources for combat!")
-    stop_combat_grinds()
-  else:
-    print("Sufficient resources")
+def check_resources(rebase=True):
+  while not stage.is_resources_checking_stage():
+    if stage.is_stage_main_menu():
+      to_repair_menu()
+    yield
+  G.CurrentResources = get_resources()
+  G.FlagResourcesCheckNeeded = False
+  if rebase:
+    return_base()
+    uwait(1)

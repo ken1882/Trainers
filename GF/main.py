@@ -122,7 +122,7 @@ def test_func():
   util.getPixel()
   
 def test_fiber_func():
-  fiber = action.from_enhance_to_retire()
+  fiber = action.check_resources()
   while util.resume(fiber):
     G.FrameCount += 1
     Input.update()
@@ -133,8 +133,8 @@ def test_fiber_func():
 def tmp_test_func():
   # print(stage.is_stage_desktop())
   print(stage.get_current_stage())
-  # test_fiber_func()
-  print(action.get_resources())
+  test_fiber_func()
+  
 
 if __name__ == '__main__':
   try:

@@ -69,7 +69,10 @@ def update_grind():
   elif stage.is_stage_backup_ok():
     action.process_backup()
   elif stage.is_stage_autocombat_ok():
-    G.ActionFiber = action.process_autocombat()
+    if action.is_resources_enough():
+      G.ActionFiber = action.process_autocombat()
+    else:
+      action.stop_combat_grinds()
   elif stage.is_stage_enhance():
     action.return_base()
   elif stage.is_stage_profile():
@@ -112,7 +115,6 @@ def update_grind():
         action.random_click(*const.CombatMenuPos)
         uwait(2)
       else:
-        print("No enough resources for combat!")
         action.stop_combat_grinds()
   elif not G.FlagGrindLevel and stage.get_current_stage() is None:
     action.autocombat_next()
@@ -164,8 +166,8 @@ def process_update():
     uwait(1.5)
     action.random_click(*const.AnnoucementOKPos[1])
     uwait(1)
-  elif G.CurrentResources[0] == -1 and stage.is_stage_main_menu():
-    action.check_resources()
+  elif G.FlagResourcesCheckNeeded and not G.LaterFiber and (stage.is_stage_main_menu() or stage.is_resources_checking_stage()):
+    G.LaterFiber = action.check_resources()
   elif G.is_mode_backup():
     update_grind()
   elif G.is_mode_like():
