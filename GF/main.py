@@ -110,7 +110,7 @@ if __name__ == "__main__":
     G.FastRepairThreshold = Config['FastRepairThreshold']
     G.WorstRepairTime = Config['WorstRepairTime']
   print("Repair time threshold for {}: {}".format(G.GrindLevel, G.FastRepairThreshold))
-  print("Worst repait time:", G.WorstRepairTime)
+  print("Worst repair time:", G.WorstRepairTime)
   print("Autocombat/Grind Level Resources threshold:", G.MinCombatResources)
   print('-'*15)
 
