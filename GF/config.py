@@ -11,16 +11,31 @@ Config = {
   'MinCombatResources': [3000, 3000, 3000, 2500],
 
   'LevelFastRepairThreshold': {
+    '3-3E': 1200, # 20 mins
+    '3-4E': 1800, # 30 mins
     '4-3E': 1200, # 20 mins
     '0-2': 2400,  # 40 mins
   },
 
   'LevelWorstRepairTime':{
+    '3-3E': 1800, # 60 mins
+    '3-4E': 1800, # 60 mins
     '4-3E': 1800, # 60 mins
     '0-2': 5400,  # 90 mins
   },
 
   'TeamEngagingMovement':{
+    '3-3E':[[], []],
+
+    '3-4E': [
+      [
+        [7, (6, 3)],
+        [9, (9, 0)],
+      ],
+
+      []
+    ],
+
     '4-3E': [
       [ # team 1
         [1, (6, 3)], # seconds to wait after battle start, pos 6 to 3
@@ -48,8 +63,21 @@ Config = {
       ],
     ], # 3-3E
 
+    '3-4E': [
+      [ # turn 1
+        [ # team 1
+          ([214, 362], [387, 434]),
+          ([393, 405], [462, 556]),
+          ([465, 405], [434, 605]),
+          ([430, 403], [584, 503]),
+        ],
+
+        [], # team 2
+      ]
+    ],
+
     '4-3E': [
-      [
+      [ # turn 1
         [ # team 1
           ([1195, 543], [1181, 376]),
           ([1184, 401], [1244, 233]),
@@ -60,5 +88,22 @@ Config = {
       ],
     ], # 4-3E
 
+    '0-2': [
+      [ # turn 1
+        [ # team 1
+
+        ],
+
+        [] # team 2
+      ],
+
+      [ # turn 2
+        [ # team 1
+
+        ],
+
+        [], # team 1
+      ]
+    ],
   } # team movement
 }
