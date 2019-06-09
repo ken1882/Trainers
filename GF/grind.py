@@ -118,9 +118,9 @@ def update_engaging_movements():
     EngagingMovementFlags.append(i)
     _from, _to = move[1]
     if _to == 0:
-      action.random_click(*const.CombatFormationPos[_from])
+      action.random_click(*const.CombatFormationPos[_from], 10)
       uwait(0.3)
-      action.random_click(*const.CombatFormationPos[0])
+      action.random_click(*const.CombatFormationPos[0], 10)
       return
     else:
       xy1, xy2 = const.CombatFormationPos[_from], const.CombatFormationPos[_to]

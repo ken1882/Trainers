@@ -42,7 +42,9 @@ LastFreezeTime = 0
 FronzenStopThershold = 60 * 10
 RepairOKTimestamp = 0
 GrindLevelCount = 2147483648
+FlagCheckCombatResources = True
 FlagResourcesCheckNeeded = True
+
 
 def Flags(name=None):
   flags = {
@@ -62,7 +64,8 @@ def Flags(name=None):
     'doll-maxout': FlagMaxDollReached,
     'rebooting': FlagRebooting,
     'needsupply': FlagSupplyNeeded,
-    'rsscheck': FlagResourcesCheckNeeded,
+    'rsscheck': FlagCheckCombatResources,
+    'needrsscheck': FlagResourcesCheckNeeded,
   }
   if name:
     name = name.lower()
@@ -125,7 +128,12 @@ def uwait(sec, rand_scale = 0.3):
   wait(sec)
 
 def setup():
-  global InternUpdateTime, ScreenTimeout, FlagAutoCombat, AutoCombatCount
+  global InternUpdateTime, ScreenTimeout, FlagAutoCombat, AutoCombatCount, FlagResourcesCheckNeeded
+
+  if not FlagCheckCombatResources:
+    print("Warning: Not checking resources enough for combat")
+    FlagResourcesCheckNeeded = False
+
   if FlagAutoCombat and AutoCombatCount == -1:
     print("Warning: Inf Auto-combat")
     AutoCombatCount = 2147483647

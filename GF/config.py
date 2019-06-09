@@ -39,8 +39,6 @@ Config = {
     '4-3E': [
       [ # team 1
         [1, (6, 3)], # seconds to wait after battle start, pos 6 to 3
-        [3, (2, 1)],
-        [6, (3, 2)],
       ],
       [ # team 2 (needn't to move)
 

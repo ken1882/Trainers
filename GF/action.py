@@ -58,7 +58,8 @@ def process_autocombat_again():
       print("Auto-combat count left:", G.AutoCombatCount)
   else:
     random_click(*const.AutoCombatStopPos)
-  G.FlagResourcesCheckNeeded = True
+  if G.FlagCheckCombatResources:
+    G.FlagResourcesCheckNeeded = True
 
 def process_autocombat():
   random_click(*const.AutoCombatAgainPos)
@@ -133,7 +134,9 @@ def repair_dolls():
       to_repair_menu()
       uwait(1)
     yield
-  yield from check_resources(False)
+  
+  if G.FlagCheckCombatResources:
+    yield from check_resources(False)
   item_count = get_fast_repair_item_count()
   random_click(*const.SelectRepairPos)
   yield from util.wait_cont(1)
@@ -372,8 +375,11 @@ def close_app():
   util.click(*const.AppClosePos)
 
 def launch_app():
-  pos = util.get_image_locations("assets/title.png")[0]
-  util.click(pos[0]+20, pos[1]-80)
+  try:
+    pos = util.get_image_locations("assets/title.png")[0]
+    util.click(pos[0]+20, pos[1]-80)
+  except IndexError:
+    print("Unable to find app")
 
 def process_reboot():
   print("Game frozen, Reboot")
