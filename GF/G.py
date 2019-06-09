@@ -128,8 +128,8 @@ def uwait(sec, rand_scale = 0.3):
   wait(sec)
 
 def setup():
-  global InternUpdateTime, ScreenTimeout, FlagAutoCombat, AutoCombatCount, FlagResourcesCheckNeeded
-
+  global InternUpdateTime, ScreenTimeout, FlagAutoCombat, AutoCombatCount, FlagResourcesCheckNeeded, FlagCheckCombatResources
+  
   if not FlagCheckCombatResources:
     print("Warning: Not checking resources enough for combat")
     FlagResourcesCheckNeeded = False
@@ -137,6 +137,10 @@ def setup():
   if FlagAutoCombat and AutoCombatCount == -1:
     print("Warning: Inf Auto-combat")
     AutoCombatCount = 2147483647
+
+  if not FlagGrindLevel and not FlagAutoCombat:
+    FlagCheckCombatResources = False
+    FlagResourcesCheckNeeded = False
 
   if is_mode_backup():
     InternUpdateTime = 300
