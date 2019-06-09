@@ -179,9 +179,9 @@ SupplyIconPos = [1323, 626]
 FastRepairPos = [349, 564]
 
 FormationMenuPos = [1292, 522]
-MainGunnerSlotPos = [463, 380]
-EditMainGunnerIndexA = 1
-EditMainGunnerIndexB = 2
+MainGunnerSlotPos = [[463, 380], [689, 368]]
+EditMainGunnerIndexA = [1]
+EditMainGunnerIndexB = [2]
 
 EchelonSecondPos = [62, 266]
 

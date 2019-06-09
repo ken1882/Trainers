@@ -20,8 +20,6 @@ parser.add_argument("-gl", "--grind-level", help="Grind level, notice that you s
 parser.add_argument("-fr", "--fast-repair", help="Use fast repair when grinding", action=Ptrue)
 parser.add_argument("-swmg", "--swap-first-main-gunner", help="Swap first grinding main gunner", action=Ptrue)
 parser.add_argument("-lgdy", "--level-grind-delay", help="Delay time in seconds before start level grind", type=int)
-parser.add_argument("-mgia", "--main-gunner-index-a", help="Index of main gunner A, if path to an image is given, click the position of found image in app", type=str)
-parser.add_argument("-mgib", "--main-gunner-index-b", help="Index of main gunner B, if path to an image is given, click the position of found image in app", type=str)
 parser.add_argument("-frth", "--fast-repair-threshold", help="Use fast repair if repair time needs more than X seconds", type=int)
 parser.add_argument("-glc", "--grind-level-count", help="Times to do level grind", type=int)
 parser.add_argument("-mwp", "--min-womanpower", help="Minimum (wo)manpower threshold to autocombat/grind level", type=int)
@@ -68,10 +66,6 @@ def load():
     G.LastMainGunner = 1
   if args.level_grind_delay:
     G.RepairOKTimestamp = util.get_current_time_sec() + args.level_grind_delay + 10
-  if args.main_gunner_index_a:
-    const.EditMainGunnerIndexA = args.main_gunner_index_a
-  if args.main_gunner_index_b:
-    const.EditMainGunnerIndexB = args.main_gunner_index_b
   if args.fast_repair_threshold:
     G.FastRepairThreshold = args.fast_repair_threshold
   if args.grind_level_count:

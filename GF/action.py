@@ -293,8 +293,6 @@ def change_formation(ch_pos):
   random_click(*const.FormationOKPos)
 
 def change_main_gunner(ch_idx):
-  random_click(*const.MainGunnerSlotPos)
-  uwait(1.5)
   try:
     select_slot(int(ch_idx))
   except ValueError:
@@ -325,7 +323,11 @@ def swap_team():
   random_click(*const.EchelonSecondPos)
   uwait(1)
   yield
-  change_main_gunner(ch_idx)
+  for i, gidx in enumerate(ch_idx):
+    random_click(*const.MainGunnerSlotPos[i])
+    uwait(1.5)
+    change_main_gunner(gidx)
+    yield
   uwait(1)
   yield
   G.FlagSwapTeamNeeded = False

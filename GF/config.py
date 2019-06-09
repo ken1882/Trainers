@@ -5,8 +5,8 @@ Config = {
   'StopFastRepairItemThreshold': 30,
   'RetireDollNumber': 24,
 
-  'MainGunnerIndexA': "assets/FAL.png", # -mgia X
-  'MainGunnerIndexB': "assets/M14.png", # -mgib X
+  'MainGunnerIndexA': ["assets/FAL.png"],
+  'MainGunnerIndexB': ["assets/M14.png"],
 
   'MinCombatResources': [3000, 3000, 3000, 2500],
 
