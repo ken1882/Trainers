@@ -56,6 +56,11 @@ def end_turn():
   action.end_turn()
   G.FlagPlayerTurn = False
 
+def start_player_turn():
+  print("Player turn start, next in 4 seconds")
+  G.FlagPlayerTurn = True
+  uwait(4)
+
 def update():
   global MovementFiber, FlagInit, Fiber
   if Fiber:
@@ -66,13 +71,14 @@ def update():
       print("Grind normal fiber finished")
   if MovementFiber:
     return update_in_turn_actions()
-  
+
   if stage.is_stage_victory():
     Fiber = process_victory()
   elif stage.is_stage_player_turn():
-    G.FlagPlayerTurn = True
-    uwait(2)
+    start_player_turn()
   elif not is_battle_ready() or not G.FlagPlayerTurn:
+    if not G.FlagPlayerTurn and stage.detect_player_turn():
+      start_player_turn()
     return
   elif stage.is_stage_combat_map():
     if FlagInit:

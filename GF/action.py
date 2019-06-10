@@ -227,10 +227,13 @@ def move_troop(level, turn):
         move_succ = False
         while not move_succ:
           source, dest = pos
+          if source[0] == -1:
+            source = None
           print("Move {} -> {}".format(source, dest))
-          random_click(*source)
-          uwait(0.5)
-          random_click(*dest)
+          if source:
+            random_click(*source, 6)
+            uwait(0.5)
+          random_click(*dest, 6)
           yield from util.wait_cont(2)
           while not stage.is_stage_combat_map():
             uwait(1)
@@ -301,6 +304,16 @@ def change_main_gunner(ch_idx):
     mx, my = pos
     random_click(mx, my - 80)
 
+def get_maingunner_index(tid):
+  if tid == 0:
+    idx_dict = const.EditMainGunnerIndexA  
+  elif tid == 1:
+    idx_dict = const.EditMainGunnerIndexB
+  try:
+    return idx_dict[G.GrindLevel]
+  except KeyError:
+    return idx_dict['default']
+
 def swap_team():
   while not stage.is_stage_formation():
     if stage.is_stage_main_menu():
@@ -310,11 +323,11 @@ def swap_team():
 
   if G.LastMainGunner == 0:
     formation_pos = const.FormationPosB
-    ch_idx = const.EditMainGunnerIndexA
+    ch_idx = get_maingunner_index(0)
     G.LastMainGunner = 1
   else:
     formation_pos = const.FormationPosA
-    ch_idx = const.EditMainGunnerIndexB
+    ch_idx = get_maingunner_index(1)
     G.LastMainGunner = 0
   yield from change_formation(formation_pos)
   uwait(1)

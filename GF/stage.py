@@ -237,6 +237,12 @@ def is_resources_checking_stage():
   if is_stage_formation():
     return True
 
+def detect_player_turn():
+  for pix, col in zip(const.StagePlayerTurnDetectorPixels, const.StagePlayerTurnDetectorColors):
+   if is_pixel_match(pix, col):
+     return True
+  return False 
+
 StageMap = {
   0: is_stage_main_menu,
   1: is_stage_achievement,

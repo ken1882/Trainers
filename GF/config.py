@@ -5,8 +5,15 @@ Config = {
   'StopFastRepairItemThreshold': 30,
   'RetireDollNumber': 24,
 
-  'MainGunnerIndexA': ["assets/FAL.png"],
-  'MainGunnerIndexB': ["assets/M14.png"],
+  'MainGunnerIndexA': {
+    "default": ["assets/FAL.png"],
+    "0-2": ["assets/FAL.png", "assets/M4A1.png"]
+  },
+
+  'MainGunnerIndexB': {
+    "default": ["assets/M14.png"],
+    "0-2": ["assets/M14.png", "assets/AR15.png"],
+  },
 
   'MinCombatResources': [3000, 3000, 3000, 2500],
 
@@ -40,10 +47,10 @@ Config = {
       [ # team 1
         [1, (6, 3)], # seconds to wait after battle start, pos 6 to 3
       ],
-      [ # team 2 (needn't to move)
+      []# team 2 (needn't to move)
+    ],
 
-      ]
-    ]
+    '0-2':[[], []],
   },
 
   'TeamMovementPos': {
@@ -89,7 +96,10 @@ Config = {
     '0-2': [
       [ # turn 1
         [ # team 1
-
+          ([739, 404], [553, 297]), 
+          ([564, 403], [604, 184]), 
+          ([604, 404], [747, 180]),
+          ([-1, -1], [592, 90]),    # -1: needn't select again
         ],
 
         [] # team 2
@@ -97,7 +107,8 @@ Config = {
 
       [ # turn 2
         [ # team 1
-
+          ([593, 294], [906, 293]), 
+          ([900, 293], [1102, 333])
         ],
 
         [], # team 1
