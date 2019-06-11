@@ -467,3 +467,7 @@ def check_resources(rebase=True):
   if rebase:
     return_base()
     uwait(1)
+
+def switch2app():
+  util.activeWindow(G.AppHwnd)
+  util.click(10, -10)

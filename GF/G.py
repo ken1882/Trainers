@@ -44,7 +44,7 @@ RepairOKTimestamp = 0
 GrindLevelCount = 2147483648
 FlagCheckCombatResources = True
 FlagResourcesCheckNeeded = True
-
+FlagForceFocus = False
 
 def Flags(name=None):
   flags = {
@@ -66,6 +66,7 @@ def Flags(name=None):
     'needsupply': FlagSupplyNeeded,
     'rsscheck': FlagCheckCombatResources,
     'needrsscheck': FlagResourcesCheckNeeded,
+    'forcefocus': FlagForceFocus,
   }
   if name:
     name = name.lower()

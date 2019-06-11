@@ -27,6 +27,7 @@ parser.add_argument("-mmo", "--min-ammo", help="Minimum ammo threshold to autoco
 parser.add_argument("-mre", "--min-mre", help="Minimum MRE threshold to autocombat/grind level", type=int)
 parser.add_argument("-mmp", "--min-machineparts", help="Minimum machine parts threshold to autocombat/grind level", type=int)
 parser.add_argument("-dcrs", "--dont-check-resources", help="Don't check whether enough resources for combar", action=Ptrue)
+parser.add_argument("-ff", "--force-focus", help="If app is unfocus, auto switch to app", action=Ptrue)
 
 def load_mode(args):
   if args.backup:
@@ -58,6 +59,7 @@ def load():
   G.AutoCombatCount = args.autocombat_count
   G.GrindLevel = args.grind_level
   G.FlagCheckCombatResources = not args.dont_check_resources
+  G.FlagForceFocus = args.force_focus
   load_mode(args)
   print("Grind Level: ", G.FlagGrindLevel, G.GrindLevel)
   G.setup()

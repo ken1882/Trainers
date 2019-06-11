@@ -46,6 +46,10 @@ def start():
       if LastHwnd == G.AppHwnd:
         print("App unfocused auto-paused")
         LastHwnd = cur_hwnd
+      elif G.FlagForceFocus and G.AppHwnd and not G.FlagPaused:
+        print("Force Focus Flag is set! Switch to app")
+        uwait(1.2)
+        action.switch2app()
       continue
     elif LastHwnd != G.AppHwnd and not G.FlagRebooting:
       print("Switched to app, begin in 1.2 seconds")
