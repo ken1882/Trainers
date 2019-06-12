@@ -203,6 +203,10 @@ def is_stage_retire():
     return True
   return is_pixel_match(const.StageRetirePixel, const.StageRetireColor)
 
+def is_stage_game_events():
+  if is_stage_ok(28):
+    return True
+  return is_pixel_match(const.StageGameEventsPixel, const.StageGameEventsColor)
 
 def is_force_replaced_checked():
   util.flush_screen_cache()
@@ -277,6 +281,8 @@ StageMap = {
 
   26: is_stage_team_selected,
   27: is_stage_retire,
+
+  28: is_stage_game_events,
 }
 
 def update():
@@ -338,6 +344,8 @@ def get_current_stage():
     return "Formation Edit"
   elif is_stage_annoucement():
     return "Annoucement"
+  elif is_stage_game_events():
+    return "Game Events Board"
   elif is_stage_reward():
     return "Reward"
   elif is_stage_desktop():

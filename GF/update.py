@@ -160,12 +160,10 @@ def process_update():
 
   if stage.is_stage_annoucement():
     uwait(1)
-    action.random_click(*const.AnnoucementOKPos[0])
-    uwait(1.5)
-    action.random_click(*const.AnnoucementOKPos[1])
-    uwait(1.5)
-    action.random_click(*const.AnnoucementOKPos[1])
+    action.random_click(*const.AnnoucementOKPos)
+  elif stage.is_stage_game_events():
     uwait(1)
+    action.random_click(*const.GameEventOKPos)
   elif G.FlagResourcesCheckNeeded and not G.LaterFiber and (stage.is_stage_main_menu() or stage.is_resources_checking_stage()):
     G.LaterFiber = action.check_resources()
   elif G.is_mode_backup():
