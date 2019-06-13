@@ -7,12 +7,12 @@ Config = {
 
   'MainGunnerIndexA': {
     "default": ["assets/FAL.png"],
-    "0-2": ["assets/FAL.png", "assets/M4A1.png"]
+    "0-2": ["assets/FAL.png"]
   },
 
   'MainGunnerIndexB': {
-    "default": ["assets/M14.png"],
-    "0-2": ["assets/M14.png", "assets/AR15.png"],
+    "default": ["assets/AR15.png"],
+    "0-2": ["assets/AR15.png"],
   },
 
   'MinCombatResources': [3000, 3000, 3000, 2500],
