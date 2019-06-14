@@ -28,7 +28,7 @@ parser.add_argument("-mre", "--min-mre", help="Minimum MRE threshold to autocomb
 parser.add_argument("-mmp", "--min-machineparts", help="Minimum machine parts threshold to autocombat/grind level", type=int)
 parser.add_argument("-dcrs", "--dont-check-resources", help="Don't check whether enough resources for combar", action=Ptrue)
 parser.add_argument("-ff", "--force-focus", help="If app is unfocus, auto switch to app", action=Ptrue)
-parser.add_argument("-ge", '--grind-event', help="Grind Event", type=str, default=False)
+parser.add_argument("-ge", '--grind-event', help="Grind Event, movements are differenyt form normal grinding", type=str, default=False)
 
 def load_mode(args):
   if args.backup:
@@ -88,6 +88,7 @@ def show_help():
   parser.print_help()
 
 def list_grind_levels():
-  print("Available levels for grinding:")
+  print("Available levels for grinding, use `-ge` for event levels:")
   for k in const.TeamDeployPos:
     print(k.upper())
+  print('')
