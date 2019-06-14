@@ -493,7 +493,7 @@ def from_selection_to_level():
 def enter_event_level():
   G.FlagPlayerTurn = True
   random_click(*const.EventLevelPos)
-  uwait(1.5)
+  uwait(2.5)
   random_click(*const.EventLevelEnterPos)
   uwait(1)
 
