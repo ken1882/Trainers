@@ -117,7 +117,7 @@ def update_grind():
         uwait(2)
       else:
         action.stop_combat_grinds()
-  elif not G.FlagGrindLevel and stage.get_current_stage() is None:
+  elif not G.FlagGrindLevel and not G.FlagGrindEvent and stage.get_current_stage() is None:
     action.autocombat_next()
   elif stage.is_stage_repair() and not G.FlagRepairNeeded and not G.LaterFiber:
     action.return_base()
@@ -125,7 +125,7 @@ def update_grind():
     action.return_base()
   elif stage.is_stage_reward():
     action.combat_next()
-  elif G.FlagGrindLevel:
+  elif G.FlagGrindLevel or G.FlagGrindEvent:
     grind.update()
 
 def update_like():
