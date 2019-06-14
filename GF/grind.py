@@ -69,7 +69,7 @@ def start_player_turn():
   uwait(4)
 
 def update():
-  global MovementFiber, FlagInit, Fiber
+  global MovementFiber, FlagInit, Fiber, FlagStartEngaging
   if G.FlagMissionAbort:
     return abort_mission()
 
@@ -79,8 +79,16 @@ def update():
     else:
       Fiber = None
       print("Grind normal fiber finished")
-  if MovementFiber:
-    return update_in_turn_actions()
+
+  update_combat_actions()  
+
+  if MovementFiber and stage.is_stage_combat_map():
+    FlagStartEngaging = False
+    print("Resume movement fiber")
+    if not util.resume(MovementFiber):
+      print("Movement fiber finished")
+      MovementFiber = None
+    return
 
   if stage.is_stage_victory():
     Fiber = process_victory()
@@ -102,7 +110,7 @@ def update():
   else:
     action.random_click(*const.BattleNextPos)
 
-def update_in_turn_actions():
+def update_combat_actions():
   global Fiber, MovementFiber, FlagStartEngaging, EngagingMovementFlags, EngagingStartTime
   if stage.is_stage_engaging():
     if not FlagStartEngaging:
@@ -118,12 +126,6 @@ def update_in_turn_actions():
   elif stage.is_stage_neutralized() or stage.is_stage_combat_event():
     Fiber = next_until_ok()
     FlagStartEngaging = False
-  elif stage.is_stage_combat_map():
-    FlagStartEngaging = False
-    print("Resume movement fiber")
-    if not util.resume(MovementFiber):
-      print("Movement fiber finished")
-      MovementFiber = None
 
 def get_engaging_movements():
   try:
