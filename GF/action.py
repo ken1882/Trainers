@@ -168,6 +168,8 @@ def repair_dolls():
   return_base()
   uwait(1)
   util.flush_screen_cache()
+  if not G.FlagSwapTeamNeeded:
+    G.superslow_update()
 
 def enter_level():
   random_click(*const.EnterLevelPos[G.GrindLevel])
@@ -197,9 +199,11 @@ def deploy_troops():
     while not stage.is_stage_team_selected():
       yield      
     uwait(0.5)
-    if i == 0 and not stage.is_ammo_enough():
-      G.FlagSupplyNeeded = True
-      print("Main team has no enough ammo!")
+    if not G.FlagGrindEvent:
+      if i == 0 and not stage.is_ammo_enough():
+        G.FlagSupplyNeeded = True
+        print("Main team has no enough ammo!")
+    
     random_click(*const.DeployConfirmPos)
     uwait(0.5)
     yield
@@ -211,7 +215,8 @@ def get_ap_colors():
   return np.array(ar)
 
 def move_troop(level, turn):
-  if turn >= len(const.TeamMovementPos):
+  if turn >= len(const.TeamMovementPos[level]):
+    G.FlagMissionAbort = True
     return
 
   # For each team route points
@@ -256,20 +261,22 @@ def stop_combat_grinds():
 def process_doll_maxout():
   pass
 
-def supply_team(tid):
-  print("Supply team", tid)
+
+def supply_at(x, y):
+  print("Supply at", [x, y])
   while not stage.is_stage_combat_map():
     uwait(1)
     yield
-  pos = const.TeamDeployPos[G.GrindLevel][tid]
-  random_click(*pos)
-  uwait(0.3)
-  random_click(*pos)
-  yield
-  uwait(1)
+  random_click(x, y)
+  uwait(0.5)
+  random_click(x, y)
+  uwait(2)
   random_click(*const.SupplyIconPos)
-  uwait(1)
   yield
+
+def supply_team(tid):
+  print("Supply team", tid)
+  yield from supply_at(*const.TeamDeployPos[G.GrindLevel][tid])
 
 def change_formation(ch_pos):
   random_click(*const.FormationEditPos)
@@ -471,3 +478,89 @@ def check_resources(rebase=True):
 def switch2app():
   util.activeWindow(G.AppHwnd)
   util.click(10, -10)
+
+def from_selection_to_level():
+  if G.FlagGrindEvent:
+    random_click(*const.EventPos)
+  else:
+    if stage.is_correct_level_selected():
+      uwait(1)
+      enter_level()
+    else:
+      print("Incorrect level selcted!")
+      G.LaterFiber = select_correct_level()
+
+def enter_event_level():
+  G.FlagPlayerTurn = True
+  random_click(*const.EventLevelPos)
+  uwait(1.5)
+  random_click(*const.EventLevelEnterPos)
+  uwait(1)
+
+def process_instructed_movement(level, turn):
+  if turn >= len(const.EventCombatMovement[level]):
+    G.FlagMissionAbort = True
+    return
+
+  # For each moves of turn
+  for _, movement in enumerate(const.EventCombatMovement[level][turn]):
+    tag  = movement[0]
+    args = movement[1:]
+    if tag == 'move':
+      last_ap_status = get_ap_colors()
+      cur_ap_status = np.array([])
+      move_succ = False
+      while not move_succ:
+        source, dest = args[0], args[1]
+        move_team(source, dest)
+        yield from util.wait_cont(2)
+        while not stage.is_stage_combat_map():
+          uwait(1)
+          yield
+        cur_ap_status = get_ap_colors()
+        move_succ = not np.array_equal(last_ap_status, cur_ap_status)
+        print("Move result: {}".format("succeed" if move_succ else "failed"))
+    elif tag == 'deploy':
+      print("Deply team")
+      yield from unselect()
+      random_click(*args[0])
+      uwait(2)
+      random_click(*const.DeployConfirmPos)
+      uwait(1)
+    elif tag == 'supply':
+      yield from supply_at(*args[0])
+    elif tag == 'scroll':
+      random_scroll_to(*args[0])
+    elif tag == 'retreat':
+      yield from retreat_at(*args[0])
+
+def move_team(source, dest):
+  if source[0] == -1:
+    source = None
+  print("Move {} -> {}".format(source, dest))
+  if source:
+    random_click(*source, 6)
+    uwait(0.5)
+  random_click(*dest, 6)
+
+def unselect():
+  while not stage.is_stage_combat_map():
+    uwait(1)
+    yield
+  random_click(*const.CancelTeamSelectPos)
+  uwait(0.8)
+  random_click(*const.CancelTeamSelectPos)
+  uwait(0.5)
+
+def retreat_at(x, y):
+  random_click(x, y)
+  uwait(0.5)
+  random_click(x, y)
+  while not stage.is_stage_team_selected():
+    uwait(1)
+    yield
+  random_click(*const.RetreatPos)
+  uwait(1)
+
+def abort_mission():
+  pass

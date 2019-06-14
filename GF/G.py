@@ -45,6 +45,8 @@ GrindLevelCount = 2147483648
 FlagCheckCombatResources = True
 FlagResourcesCheckNeeded = True
 FlagForceFocus = False
+FlagGrindEvent = False
+FlagMissionAbort = False
 
 def Flags(name=None):
   flags = {
@@ -68,6 +70,7 @@ def Flags(name=None):
     'needrsscheck': FlagResourcesCheckNeeded,
     'forcefocus': FlagForceFocus,
   }
+
   if name:
     name = name.lower()
     return flags[name]

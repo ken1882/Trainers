@@ -208,6 +208,11 @@ def is_stage_game_events():
     return True
   return is_pixel_match(const.StageGameEventsPixel, const.StageGameEventsColor)
 
+def is_stage_event_level_selection():
+  if is_stage_ok(29):
+    return True
+  return is_pixel_match(const.StageEventLevelPixel, const.StageEventLevelColor)
+
 def is_force_replaced_checked():
   util.flush_screen_cache()
   return is_pixel_match(const.ForceReplaceCheckedPixel, const.ForceReplaceCheckedColor)
@@ -283,6 +288,8 @@ StageMap = {
   27: is_stage_retire,
 
   28: is_stage_game_events,
+
+  29: is_stage_event_level_selection,
 }
 
 def update():
@@ -358,6 +365,8 @@ def get_current_stage():
     return "Team selected"
   elif is_stage_retire():
     return "Retire"
+  elif is_stage_event_level_selection():
+    return "Event Levels"
   return None
 
 def is_correct_level_selected():
@@ -365,7 +374,7 @@ def is_correct_level_selected():
     pix, col = const.LevelSelectedPixel[G.GrindLevel], const.LevelSelectedColor[G.GrindLevel]
   except KeyError:
     print("Warning: {} has no level selection check!".format(G.GrindLevel))
-    return
+    return True
   return is_pixel_match(pix, col)
 
 def is_ammo_enough():

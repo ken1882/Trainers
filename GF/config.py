@@ -1,7 +1,7 @@
 Config = {
   'MaxRepair': 4,
-  'WorstRepairTime': 7200, # 2 hours
-  'FastRepairThreshold': 1200, # -frth X
+  'WorstRepairTime': 3600, # 1 hour
+  'FastRepairThreshold': 1200, # -frth X (40 mins)
   'StopFastRepairItemThreshold': 30,
   'RetireDollNumber': 24,
 
@@ -25,10 +25,10 @@ Config = {
   },
 
   'LevelWorstRepairTime':{
-    '3-3E': 1800, # 60 mins
-    '3-4E': 1800, # 60 mins
-    '4-3E': 1800, # 60 mins
-    '0-2': 5400,  # 90 mins
+    '3-3E': 1800, # 30 mins
+    '3-4E': 1800, # 30 mins
+    '4-3E': 1800, # 30 mins
+    '0-2': 3600,  # 60 mins
   },
 
   'TeamEngagingMovement':{
@@ -114,5 +114,21 @@ Config = {
         [], # team 1
       ]
     ],
-  } # team movement
+  }, # team movement
+
+  'EventCombatMovement': {
+    'VAHA-3': [
+      [ # turn 1
+        ('supply', [601, 407]),
+        ('move', [-1, -1], [708, 527]),
+        ('move', [-1, -1], [928, 656])
+      ],
+
+      [ # turn 2
+        ('deploy', [595, 478]),
+        ('supply', [595, 478]),
+        ('move', [-1, -1], [486, 226])
+      ]
+    ]
+  }, # event combat movements
 }

@@ -61,7 +61,7 @@ def update_freeze():
   print("Stage: {}, freeze timer: {}".format(st, freeze_timer))
 
 def update_grind():
-  if stage.is_in_battle():
+  if stage.is_in_battle() or grind.Fiber or grind.MovementFiber:
     return grind.update()
   elif stage.is_stage_achievement():
     uwait(2)
@@ -87,17 +87,18 @@ def update_grind():
       action.start_level()
     else:
       action.close_combat_setup()
+  elif stage.is_stage_event_level_selection():
+    if grind.is_battle_ready():
+      grind.initialize()
+      action.enter_event_level()
+    else:
+      action.return_base()
   elif stage.is_stage_combat_selection():
     if G.LaterFiber:
       return
     uwait(1)
     if grind.is_battle_ready():
-      if stage.is_correct_level_selected():
-        uwait(1)
-        action.enter_level()
-      else:
-        print("Incorrect level selcted!")
-        G.LaterFiber = action.select_correct_level()
+      action.from_selection_to_level()
     else:
       action.return_base()
   elif stage.is_stage_main_menu():

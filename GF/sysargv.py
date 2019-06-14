@@ -28,6 +28,7 @@ parser.add_argument("-mre", "--min-mre", help="Minimum MRE threshold to autocomb
 parser.add_argument("-mmp", "--min-machineparts", help="Minimum machine parts threshold to autocombat/grind level", type=int)
 parser.add_argument("-dcrs", "--dont-check-resources", help="Don't check whether enough resources for combar", action=Ptrue)
 parser.add_argument("-ff", "--force-focus", help="If app is unfocus, auto switch to app", action=Ptrue)
+parser.add_argument("-ge", '--grind-event', help="Grind Event", type=str, default=False)
 
 def load_mode(args):
   if args.backup:
@@ -43,6 +44,10 @@ def load_mode(args):
       G.FlagGrindLevel = True
   except Exception:
     G.FlagGrindLevel = False
+
+  if args.grind_event:
+    G.FlagGrindEvent = True
+    G.GrindLevel = args.grind_event.upper()
 
 def load():  
   args = parser.parse_args()
@@ -60,6 +65,7 @@ def load():
   G.GrindLevel = args.grind_level
   G.FlagCheckCombatResources = not args.dont_check_resources
   G.FlagForceFocus = args.force_focus
+  
   load_mode(args)
   print("Grind Level: ", G.FlagGrindLevel, G.GrindLevel)
   G.setup()

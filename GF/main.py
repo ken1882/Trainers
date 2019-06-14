@@ -82,7 +82,8 @@ if __name__ == "__main__":
   const.EditMainGunnerIndexB = Config['MainGunnerIndexB']
   const.TeamEngagingMovement = Config['TeamEngagingMovement']
   const.TeamMovementPos = Config['TeamMovementPos']
-  
+  const.EventCombatMovement = Config['EventCombatMovement']
+
   print("Config Loaded:")
   for k, v in Config.items():
     if k == 'TeamEngagingMovement':
@@ -103,6 +104,14 @@ if __name__ == "__main__":
             print("    Team {}:".format(team_id))
             for move in moves:
               print("      {} => {}".format(move[0], move[1]))
+    elif k == 'EventCombatMovement':
+      print("\n{}:".format(k))
+      for level in v:
+        print("{}:".format(level))
+        for turn_id, turns in enumerate(v[level]):
+          print("  Turn {}:".format(turn_id))
+          for _i, move in enumerate(turns):
+            print("    {}, {}".format(move[0], move[1:]))
     else:
       print(k, v)
   print('-'*15)
@@ -126,7 +135,7 @@ def test_func():
   util.getPixel()
   
 def test_fiber_func():
-  fiber = action.check_resources()
+  fiber = action.supply_at(601, 407)
   while util.resume(fiber):
     G.FrameCount += 1
     Input.update()
@@ -137,7 +146,7 @@ def test_fiber_func():
 def tmp_test_func():
   # print(stage.is_stage_desktop())
   print(stage.get_current_stage())
-  # test_fiber_func()
+  test_fiber_func()
 
 if __name__ == '__main__':
   try:
