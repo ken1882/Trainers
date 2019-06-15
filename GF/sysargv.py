@@ -39,7 +39,7 @@ def load_mode(args):
 
   G.GrindLevel = G.GrindLevel.upper()
   try:
-    if not const.EnterLevelPos[G.GrindLevel]:
+    if not const.TeamDeployPos[G.GrindLevel]:
       G.FlagGrindLevel = False
     else:
       G.FlagGrindLevel = True
@@ -67,7 +67,7 @@ def load():
   G.FlagCheckCombatResources = not args.dont_check_resources
   G.FlagForceFocus = args.force_focus
   G.FlagRestartOnEnd = args.restart_on_end
-  
+
   load_mode(args)
   print("Grind Level: ", G.FlagGrindLevel, G.GrindLevel)
   G.setup()

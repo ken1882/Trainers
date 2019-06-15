@@ -83,7 +83,8 @@ if __name__ == "__main__":
   const.TeamEngagingMovement = Config['TeamEngagingMovement']
   const.TeamMovementPos = Config['TeamMovementPos']
   const.EventCombatMovement = Config['EventCombatMovement']
-
+  const.TeamDeployPos = Config['TeamDeployPos']
+  
   print("Config Loaded:")
   for k, v in Config.items():
     if k == 'TeamEngagingMovement':
@@ -94,6 +95,12 @@ if __name__ == "__main__":
           print("  Team {}:".format(i))
           for mv in moves:
             print("    Second {} => {}".format(mv[0], mv[1]))
+    elif k == 'TeamDeployPos':
+      print("\n{}:".format(k))
+      for level in v:
+        print("{}:".format(level))
+        for tid, pos in enumerate(v[level]):
+          print("  Team {}: {}".format(tid, pos))
     elif k == 'TeamMovementPos':
       print("\n{}:".format(k))
       for level in v:
