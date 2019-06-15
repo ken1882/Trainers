@@ -111,22 +111,22 @@ def combat_next():
 
 def get_fast_repair_item_count():
   try:
-    re = int(util.read_app_text(*const.FastRepairItemRect, dtype='digit'))
+    _re = int(util.read_app_text(*const.FastRepairItemRect, dtype='digit'))
   except Exception as err:
     print("An error occurred during getting repair time:", err)
-    re = 0
-  print("Fast repair item left:", re)
-  return re
+    _re = 0
+  print("Fast repair item left:", _re)
+  return _re
 
 def get_repair_time():
   try:
     raw = util.read_app_text(*const.RepairTimeRect, dtype='time')
     raw = [int(i) for i in raw.split(':')]
-    re = raw[0] * 3600 + raw[1] * 60 + raw[2]
+    _re = raw[0] * 3600 + raw[1] * 60 + raw[2]
   except Exception as err:
     print("An error occurred during getting repair time:", err)
-    re = G.WorstRepairTime
-  return re
+    _re = G.WorstRepairTime
+  return _re
 
 def repair_dolls():
   while not stage.is_stage_repair():

@@ -25,19 +25,19 @@ class Grid:
 
     def __next__(self):
         if self._iterX < self.size * self.size:
-            re = self.map[self._iterX // self.size][self._iterX % self.size]
+            _re = self.map[self._iterX // self.size][self._iterX % self.size]
             self._iterX += 1
-            return re
+            return _re
         else:
             raise StopIteration
 
     def __str__(self):
-        re = ""
+        _re = ""
         for i in range(self.size):
             for j in range(self.size):
-                re += "{:>6}".format(self.map[i][j])
-            re += '\n'
-        return re
+                _re += "{:>6}".format(self.map[i][j])
+            _re += '\n'
+        return _re
 
     def grids(self, flatten=False):
         if flatten:
