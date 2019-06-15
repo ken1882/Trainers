@@ -147,6 +147,7 @@ def tmp_test_func():
   # print(stage.is_stage_neutralized())
   print(stage.get_current_stage())
   # test_fiber_func()
+  action.random_click(*const.RetreatConfirmPos)
 
 if __name__ == '__main__':
   try:

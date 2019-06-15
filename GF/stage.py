@@ -228,6 +228,16 @@ def cache_stage(sid):
     LastFrameCount = G.FrameCount
     CurStage = sid
 
+def is_nextclick_needed():
+  Fmethods = [
+    is_stage_combat_event, is_stage_engaging, is_stage_neutralized,
+    is_stage_team_selected, is_stage_loading
+  ]
+  for method in Fmethods:
+    if method():
+      return False
+  return True
+
 def is_in_battle():
   methods = [
     is_stage_combat_event, is_stage_engaging, is_stage_victory, 

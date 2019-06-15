@@ -29,6 +29,7 @@ parser.add_argument("-mmp", "--min-machineparts", help="Minimum machine parts th
 parser.add_argument("-dcrs", "--dont-check-resources", help="Don't check whether enough resources for combar", action=Ptrue)
 parser.add_argument("-ff", "--force-focus", help="If app is unfocus, auto switch to app", action=Ptrue)
 parser.add_argument("-ge", '--grind-event', help="Grind Event, movements are differenyt form normal grinding", type=str, default=False)
+parser.add_argument("-roe", '--restart-on-end', help="When turn movments ends but no victory, restart battle instead of abort", action=Ptrue)
 
 def load_mode(args):
   if args.backup:
@@ -65,6 +66,7 @@ def load():
   G.GrindLevel = args.grind_level
   G.FlagCheckCombatResources = not args.dont_check_resources
   G.FlagForceFocus = args.force_focus
+  G.FlagRestartOnEnd = args.restart_on_end
   
   load_mode(args)
   print("Grind Level: ", G.FlagGrindLevel, G.GrindLevel)

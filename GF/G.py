@@ -25,6 +25,8 @@ FlagPlayerTurn = True
 FlagMaxDollReached = False
 FlagRebooting = False
 FlagSupplyNeeded = False
+FlagRestartOnEnd = False
+FlagMissionRestart = False
 
 GrindLevel = ''
 CurrentTeamID = 0

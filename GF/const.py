@@ -269,7 +269,10 @@ ResourceRects = [
 ]
 
 EventPos = [102, 590]
-EventLevelPos = [555, 353]
+EventLevelPos = {
+  'VAHA-3': [555, 353],
+  'VAHA-8': [637, 635],
+}
 EventLevelEnterPos = [1258, 491]
 CancelTeamSelectPos = [107, 165]
 
@@ -277,8 +280,10 @@ StageEventLevelPixel = [[37, 21], [134, 95], [133, 40], [247, 50], [373, 50], [2
 StageEventLevelColor = [(253, 179, 0), (253, 179, 0), (50, 50, 50), (255, 255, 255), (165, 165, 165), (13, 13, 13), (255, 255, 255), (116, 121, 147)]
 
 RetreatPos = [1125, 729]
+RetreatConfirmPos = [833, 551]
 AbortMissionPos = [352, 49]
-AbortConfirmPos = [880, 553]
+RestartConfirmPos = [548, 553]
+AbortConfirmPos = [894, 554]
 
 TeamDeployPos = {
   '3-3E': [[986, 536], [466, 403]],
@@ -286,6 +291,7 @@ TeamDeployPos = {
   '4-3E': [[1193, 544], [255, 408]],
   '0-2': [[738, 411], [300, 394]],
   'VAHA-3': [[598, 405]],
+  'VAHA-8': [[931, 112], [307, 113], [1204, 619]],
 }
 
 EnterLevelPos = {

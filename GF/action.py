@@ -216,6 +216,7 @@ def get_ap_colors():
 
 def move_troop(level, turn):
   if turn >= len(const.TeamMovementPos[level]):
+    print("Mission abort flag was set!")
     G.FlagMissionAbort = True
     return
 
@@ -267,9 +268,9 @@ def supply_at(x, y):
   while not stage.is_stage_combat_map():
     uwait(1)
     yield
-  random_click(x, y)
+  random_click(x, y, 6)
   uwait(0.5)
-  random_click(x, y)
+  random_click(x, y, 6)
   uwait(2)
   random_click(*const.SupplyIconPos)
   yield
@@ -492,20 +493,22 @@ def from_selection_to_level():
 
 def enter_event_level():
   G.FlagPlayerTurn = True
-  random_click(*const.EventLevelPos)
+  random_click(*const.EventLevelPos[G.GrindLevel])
   uwait(2.5)
   random_click(*const.EventLevelEnterPos)
   uwait(1)
 
 def process_instructed_movement(level, turn):
   if turn >= len(const.EventCombatMovement[level]):
+    print("Mission abort flag was set!")
     G.FlagMissionAbort = True
     return
 
   # For each moves of turn
   for _, movement in enumerate(const.EventCombatMovement[level][turn]):
-    tag  = movement[0]
-    args = movement[1:]
+    tag  = movement[0].lower()
+    args = movement[1:] if len(movement) > 1 else []
+
     if tag == 'move':
       last_ap_status = get_ap_colors()
       cur_ap_status = np.array([])
@@ -513,6 +516,8 @@ def process_instructed_movement(level, turn):
       while not move_succ:
         source, dest = args[0], args[1]
         move_team(source, dest)
+        if len(args) >= 3: # Confirm move to airport
+          random_click(*args[2])
         yield from util.wait_cont(2)
         while not stage.is_stage_combat_map():
           uwait(1)
@@ -523,7 +528,7 @@ def process_instructed_movement(level, turn):
     elif tag == 'deploy':
       print("Deply team")
       yield from unselect()
-      random_click(*args[0])
+      random_click(*args[0], 6)
       uwait(2)
       random_click(*const.DeployConfirmPos)
       uwait(1)
@@ -533,7 +538,17 @@ def process_instructed_movement(level, turn):
       random_scroll_to(*args[0])
     elif tag == 'retreat':
       yield from retreat_at(*args[0])
-
+    elif tag == 'restart':
+      print("Restart mission flag was set")
+      G.FlagMissionRestart = True
+      uwait(2)
+    elif tag == 'abort':
+      print("Abort mission flag was set")
+      G.FlagMissionAbort = True
+      uwait(2)
+    else:
+      print("Warning: unknown movement tag `{}`, args: {}".format(tag, args))
+      
 def move_team(source, dest):
   if source[0] == -1:
     source = None
@@ -542,6 +557,7 @@ def move_team(source, dest):
     random_click(*source, 6)
     uwait(0.5)
   random_click(*dest, 6)
+  uwait(0.5)
 
 def unselect():
   while not stage.is_stage_combat_map():
@@ -553,14 +569,26 @@ def unselect():
   uwait(0.5)
 
 def retreat_at(x, y):
+  print("Retreat", [x, y])
+  yield from unselect()
+  uwait(1)
   random_click(x, y)
   uwait(0.5)
   random_click(x, y)
-  while not stage.is_stage_team_selected():
-    uwait(1)
-    yield
+  uwait(2)
   random_click(*const.RetreatPos)
+  uwait(2)
+  random_click(*const.RetreatConfirmPos)
   uwait(1)
 
 def abort_mission():
-  pass
+  random_click(*const.AbortMissionPos)
+  uwait(1)
+  random_click(*const.AbortConfirmPos)
+  uwait(0.5)
+
+def restart_mission():
+  random_click(*const.AbortMissionPos)
+  uwait(1)
+  random_click(*const.RestartConfirmPos)
+  uwait(0.5)

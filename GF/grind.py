@@ -55,7 +55,11 @@ def process_movements():
     yield from action.process_instructed_movement(G.GrindLevel, CurrentTurn)
   else:
     yield from action.move_troop(G.GrindLevel, CurrentTurn)
-  end_turn()
+
+  if G.FlagMissionAbort or G.FlagMissionRestart:
+    abort_mission()
+  else:
+    end_turn()
 
 def end_turn():
   global CurrentTurn
@@ -80,8 +84,8 @@ def update():
       Fiber = None
       print("Grind normal fiber finished")
 
-  update_combat_actions()  
-
+  update_combat_actions()
+    
   if MovementFiber and stage.is_stage_combat_map():
     FlagStartEngaging = False
     print("Resume movement fiber")
@@ -107,8 +111,8 @@ def update():
       return
     else:
       MovementFiber = process_movements()
-  else:
-    action.random_click(*const.BattleNextPos)
+  elif stage.is_nextclick_needed():
+    action.combat_next()
 
 def update_combat_actions():
   global Fiber, MovementFiber, FlagStartEngaging, EngagingMovementFlags, EngagingStartTime
@@ -155,17 +159,21 @@ def update_engaging_movements():
 
 def abort_mission():
   global Fiber, MovementFiber
+  print("Process mission abort...")
   G.FlagMissionAbort = False
-  action.abort_mission()
+  G.GrindLevelCount -= 1
+  if G.FlagMissionRestart or G.FlagRestartOnEnd and is_battle_ready():
+    print("Mission restarted, times left:", G.GrindLevelCount)
+    action.restart_mission()
+    initialize()
+  else:
+    action.abort_mission()    
+    print("Mission aborted, times left:", G.GrindLevelCount)
+    G.FlagRepairNeeded = True
+    G.RepairOKTimestamp = 9223372036854775807
+    if not G.FlagGrindEvent:
+      G.FlagSwapTeamNeeded = True
   Fiber = None
   MovementFiber = None
-  G.GrindLevelCount -= 1
-  print("Mission aborted, times left:", G.GrindLevelCount)
-
   G.FlagPlayerTurn = True
-  G.FlagRepairNeeded = True
-  G.RepairOKTimestamp = 9223372036854775807
-  if not G.FlagGrindEvent:
-    G.FlagSwapTeamNeeded = True
-
   uwait(2)
