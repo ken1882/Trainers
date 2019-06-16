@@ -1,5 +1,5 @@
 # Defines the consts of pixels/color of app
-Version = "0.3.1"
+Version = "0.4.0"
 AppName = ""
 AppTitle = "GF"
 BSTTitle = "BlueStacks Tweaker"

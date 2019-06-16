@@ -1,5 +1,5 @@
 # Defines the consts of pixels/color of app
-Version = "0.2.1"
+Version = "0.3.0"
 AppName = ""
 AppTitle = "KarDiaAssassiant"
 BSTTitle = "BlueStacks Tweaker"
