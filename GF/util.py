@@ -37,8 +37,19 @@ def bulk_get_kwargs(*args, **kwargs):
 def change_title(nt):
   system("title " + nt)
 
-def getWindowPixels(rect, saveimg=False, filename=None):
-  im = ImageGrab.grab(rect)
+def getWindowPixels(rect, saveimg=False, filename=None, att_cnt=0):
+  att_cnt += 1
+  try:
+    im = ImageGrab.grab(rect)
+  except OSError as err:
+    if att_cnt > 3:
+      print("Unable to grab screen snapshot")
+      raise err
+    else:
+      print("Screen garb failed, retry in 3 seconds, attempt", att_cnt)
+      uwait(3)
+      return getWindowPixels(rect, saveimg, filename, att_cnt)
+
   try:
     if saveimg and filename:
       im.save(filename)
