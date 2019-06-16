@@ -195,7 +195,7 @@ def deploy_troops():
     print("Deploy Team", i)
     while not stage.is_stage_combat_map():
       yield
-    random_click(*pos)
+    random_click(*pos, 6)
     while not stage.is_stage_team_selected():
       yield      
     uwait(0.5)
@@ -517,6 +517,7 @@ def process_instructed_movement(level, turn):
         source, dest = args[0], args[1]
         move_team(source, dest)
         if len(args) >= 3: # Confirm move to airport
+          uwait(0.8)
           random_click(*args[2])
         yield from util.wait_cont(2)
         while not stage.is_stage_combat_map():
@@ -548,7 +549,8 @@ def process_instructed_movement(level, turn):
       uwait(2)
     else:
       print("Warning: unknown movement tag `{}`, args: {}".format(tag, args))
-      
+    yield
+
 def move_team(source, dest):
   if source[0] == -1:
     source = None

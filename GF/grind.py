@@ -55,7 +55,7 @@ def process_movements():
     yield from action.process_instructed_movement(G.GrindLevel, CurrentTurn)
   else:
     yield from action.move_troop(G.GrindLevel, CurrentTurn)
-
+  yield
   if G.FlagMissionAbort or G.FlagMissionRestart:
     abort_mission()
   else:

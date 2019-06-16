@@ -83,6 +83,7 @@ if __name__ == "__main__":
   const.TeamEngagingMovement = Config['TeamEngagingMovement']
   const.TeamMovementPos = Config['TeamMovementPos']
   const.EventCombatMovement = Config['EventCombatMovement']
+  const.EventLevelPos = Config['EventLevelPos']
   const.TeamDeployPos = Config['TeamDeployPos']
   
   print("Config Loaded:")
@@ -95,12 +96,18 @@ if __name__ == "__main__":
           print("  Team {}:".format(i))
           for mv in moves:
             print("    Second {} => {}".format(mv[0], mv[1]))
+        print('')
+    elif k in ('MainGunnerIndexB', 'MainGunnerIndexA', 'EventLevelPos', 'LevelFastRepairThreshold', 'LevelWorstRepairTime'):
+      print("\n{}:".format(k))
+      for level in v:
+        print("  {}: {}".format(level, v[level]))
     elif k == 'TeamDeployPos':
       print("\n{}:".format(k))
       for level in v:
         print("{}:".format(level))
         for tid, pos in enumerate(v[level]):
           print("  Team {}: {}".format(tid, pos))
+        print('')
     elif k == 'TeamMovementPos':
       print("\n{}:".format(k))
       for level in v:
@@ -111,6 +118,7 @@ if __name__ == "__main__":
             print("    Team {}:".format(team_id))
             for move in moves:
               print("      {} => {}".format(move[0], move[1]))
+        print('')
     elif k == 'EventCombatMovement':
       print("\n{}:".format(k))
       for level in v:
@@ -119,6 +127,7 @@ if __name__ == "__main__":
           print("  Turn {}:".format(turn_id))
           for _i, move in enumerate(turns):
             print("    {}, {}".format(move[0], move[1:]))
+        print('')
     else:
       print(k, v)
   print('-'*15)
