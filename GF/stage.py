@@ -106,7 +106,9 @@ def is_stage_like():
 def is_maxdoll_reached():
   if is_stage_ok(9):
     return True
-  return is_pixel_match(const.StageMaxDollReachedPixel, const.StageMaxDollReachedColor)
+  a = is_pixel_match(const.StageMaxDollReachedPixel, const.StageMaxDollReachedColor)
+  b = is_pixel_match(const.StageMaxDollReachedPixelB, const.StageMaxDollReachedColorB)
+  return a or b
 
 def is_stage_enhance():
   if is_stage_ok(10):
