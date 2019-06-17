@@ -191,7 +191,9 @@ def is_engine_starting():
 def is_connection_timeout():
   if is_stage_ok(25):
     return True
-  return is_pixel_match(const.StageConnectionTimeoutPixel, const.StageConnectionTimeoutColor)
+  a = is_pixel_match(const.StageConnectionTimeoutPixel, const.StageConnectionTimeoutColor)
+  b = is_pixel_match(const.StageConnectionTimeoutPixelB, const.StageConnectionTimeoutColorB)
+  return a or b
 
 def is_stage_team_selected():
   if is_stage_ok(26):

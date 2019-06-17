@@ -257,13 +257,10 @@ def move_troop(level, turn):
   uwait(0.5)
 
 def stop_combat_grinds():
+  G.FlagGrindEvent = False
   G.FlagGrindLevel = None
   G.FlagAutoCombat = False
   G.AutoCombatCount = -1
-
-def process_doll_maxout():
-  pass
-
 
 def supply_at(x, y):
   print("Supply at", [x, y])
@@ -511,7 +508,7 @@ def process_instructed_movement(level, turn):
     tag  = movement[0].lower()
     args = movement[1:] if len(movement) > 1 else []
 
-    if tag == 'move':
+    if tag == 'move' or tag == 'swap':
       last_ap_status = get_ap_colors()
       cur_ap_status = np.array([])
       move_succ = False
@@ -526,7 +523,7 @@ def process_instructed_movement(level, turn):
           uwait(1)
           yield
         cur_ap_status = get_ap_colors()
-        move_succ = not np.array_equal(last_ap_status, cur_ap_status)
+        move_succ = not np.array_equal(last_ap_status, cur_ap_status) or tag == 'swap'
         print("Move result: {}".format("succeed" if move_succ else "failed"))
     elif tag == 'deploy':
       print("Deply team")
@@ -596,3 +593,18 @@ def restart_mission():
   uwait(1)
   random_click(*const.RestartConfirmPos)
   uwait(0.5)
+
+def util_back():
+  util.click(*const.BackIconPos)
+
+def process_connection_timeout():
+  G.ActionFiber = None
+  G.LaterFiber = None
+  util.save_screenshot("ConnectionTimeoutSnapshot.png")
+  stop_combat_grinds()
+  util_back()
+  print("Pause for 5 mins...")
+  uwait(300)
+  random_click(*const.LoginOKPos)
+  print("Pause for 10 seconds...")
+  uwait(10)

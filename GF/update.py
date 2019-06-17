@@ -152,7 +152,8 @@ def process_update():
   stage.update()
   
   if stage.is_connection_timeout():
-    pass # todo
+    action.process_connection_timeout()
+    return
 
   if G.FlagRebooting:
     return update_reboot_process()
