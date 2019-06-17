@@ -598,6 +598,7 @@ def util_back():
   util.click(*const.BackIconPos)
 
 def process_connection_timeout():
+  print("Connection time out!")
   G.ActionFiber = None
   G.LaterFiber = None
   util.save_screenshot("ConnectionTimeoutSnapshot.png")
