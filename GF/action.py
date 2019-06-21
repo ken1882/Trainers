@@ -197,7 +197,9 @@ def deploy_troops():
     print("Deploy Team", i)
     while not stage.is_stage_combat_map():
       yield
-    random_click(*pos, 6)
+    px, py = pos[0], pos[1]
+    rrange = 0 if pos[-1] == 'unrand' else 6
+    random_click(px, py, rrange)
     while not stage.is_stage_team_selected():
       yield      
     uwait(0.5)
@@ -601,7 +603,7 @@ def process_connection_timeout():
   print("Connection time out!")
   G.ActionFiber = None
   G.LaterFiber = None
-  util.save_screenshot("ConnectionTimeoutSnapshot.png")
+  util.save_screenshot("tmp/ConnectionTimeoutSnapshot.png")
   stop_combat_grinds()
   util_back()
   print("Pause for 5 mins...")
