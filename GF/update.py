@@ -103,10 +103,18 @@ def update_grind():
       action.return_base()
   elif stage.is_stage_main_menu():
     if not G.LaterFiber and G.FlagRepairNeeded:
-      print("Process Repair")
-      G.slow_update()
-      G.LaterFiber = action.repair_dolls()
-      uwait(1)
+      G.CheckRepairTimer += 1
+      print("Repair cnt timer: {}/{}".format(G.CheckRepairTimer, G.CheckRepairCount))
+      if G.CheckRepairTimer >= G.CheckRepairCount:
+        print("Process Repair")
+        G.CheckRepairTimer = 0
+        G.slow_update()
+        G.LaterFiber = action.repair_dolls()
+        uwait(1)
+      else:
+        G.RepairOKTimestamp = G.CurTime
+        G.FlagRepairNeeded = False
+        uwait(0.5)
     elif not G.LaterFiber and G.FlagSwapTeamNeeded:
       print("Swap team")
       G.LaterFiber = action.swap_team()

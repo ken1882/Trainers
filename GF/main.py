@@ -135,12 +135,15 @@ if __name__ == "__main__":
   try:
     G.FastRepairThreshold = Config['LevelFastRepairThreshold'][G.GrindLevel]
     G.WorstRepairTime = Config['LevelWorstRepairTime'][G.GrindLevel]
+    G.CheckRepairCount = Config['CheckRepairCount'][G.GrindLevel]
   except KeyError:
     G.FastRepairThreshold = Config['FastRepairThreshold']
     G.WorstRepairTime = Config['WorstRepairTime']
+    G.CheckRepairCount = Config['CheckRepairCount']['default']
   print("Repair time threshold for {}: {}".format(G.GrindLevel, G.FastRepairThreshold))
   print("Worst repair time:", G.WorstRepairTime)
   print("Autocombat/Grind Level Resources threshold:", G.MinCombatResources)
+  print("Check repair count:", G.CheckRepairCount)
   print('-'*15)
 
 def test_func():

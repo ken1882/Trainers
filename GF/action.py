@@ -36,6 +36,7 @@ def autocombat_next():
 
 def process_backup():
   uwait(1)
+  print("Process backup")
   action_next(30)
   uwait(2)
   random_click(*const.BackupAgainPos)

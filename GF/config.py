@@ -5,6 +5,11 @@ Config = {
   'StopFastRepairItemThreshold': 30,
   'RetireDollNumber': 24,
 
+  'CheckRepairCount': {
+    'default': 1,
+    '0-2': 4,
+  },
+
   'MainGunnerIndexA': {
     "default": ["assets/FAL.png"],
     "0-2": ["assets/FAL.png"]
@@ -12,7 +17,7 @@ Config = {
 
   'MainGunnerIndexB': {
     "default": ["assets/AR15.png"],
-    "0-2": ["assets/AR15.png"],
+    "0-2": ["assets/AR15.png", "assets/M14.png"],
   },
 
   'MinCombatResources': [3000, 3000, 3000, 2500],
@@ -21,7 +26,7 @@ Config = {
     '3-3E': 1200, # 20 mins
     '3-4E': 1800, # 30 mins
     '4-3E': 1200, # 20 mins
-    '0-2': 2400,  # 40 mins
+    '0-2': 1200,  # 20 mins
     'VAHA-8': 300, # 5 mins
     'VAHA-6': 1200,
   },
