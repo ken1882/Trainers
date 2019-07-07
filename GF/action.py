@@ -298,6 +298,7 @@ def change_formation(ch_pos):
   if not stage.is_force_replaced_checked():
     random_click(*const.FormationForceReplacePos)
     uwait(0.5)
+    yield
   random_click(*const.FormationForceReplaceOKPos)
   yield
   while not stage.is_stage_formation_edit():

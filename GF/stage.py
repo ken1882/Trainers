@@ -233,6 +233,8 @@ def cache_stage(sid):
     CurStage = sid
 
 def is_nextclick_needed():
+  if G.ActionFiber or G.LaterFiber:
+    return False
   Fmethods = [
     is_stage_combat_event, is_stage_engaging, is_stage_neutralized,
     is_stage_team_selected, is_stage_loading
