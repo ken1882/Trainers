@@ -154,7 +154,7 @@ def test_func():
   util.getPixel()
   
 def test_fiber_func():
-  fiber = action.supply_at(601, 407)
+  fiber = action.swap_team()
   while util.resume(fiber):
     G.FrameCount += 1
     Input.update()
