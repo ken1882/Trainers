@@ -7,7 +7,7 @@ Config = {
 
   'CheckRepairCount': {
     'default': 1,
-    '0-2': 4,
+    '0-2': 5,
   },
 
   'MainGunnerIndexA': {
@@ -26,7 +26,7 @@ Config = {
     '3-3E': 1200, # 20 mins
     '3-4E': 1800, # 30 mins
     '4-3E': 1200, # 20 mins
-    '0-2': 1200,  # 30 mins
+    '0-2': 1800,  # 30 mins
     'VAHA-8': 300, # 5 mins
     'VAHA-6': 1200,
   },

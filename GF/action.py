@@ -523,6 +523,7 @@ def process_instructed_movement(level, turn):
           uwait(0.8)
           random_click(*args[2])
         yield from util.wait_cont(2)
+        util.flush_screen_cache()
         while not stage.is_stage_combat_map():
           uwait(1)
           yield
