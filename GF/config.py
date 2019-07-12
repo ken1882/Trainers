@@ -7,7 +7,7 @@ Config = {
 
   'CheckRepairCount': {
     'default': 1,
-    '0-2': 5,
+    '0-2': 4,
   },
 
   'MainGunnerIndexA': {
@@ -17,7 +17,7 @@ Config = {
 
   'MainGunnerIndexB': {
     "default": ["assets/AR15.png"],
-    "0-2": ["assets/AR15.png", "assets/M14.png"],
+    "0-2": ["assets/M4A1.png", "assets/M14.png"],
   },
 
   'MinCombatResources': [3000, 3000, 3000, 2500],
