@@ -74,6 +74,7 @@ def is_score_enough(score):
 def identify(mov=True):
   global Grid, CheckScoreTimer, CheckScoreTime
   util.getPixel()
+  util.print_window(True)
   img_rgb = cv2.imread(G.ScreenImageFile)
   threshold = .89
   slimes = EmptyGrid.copy()

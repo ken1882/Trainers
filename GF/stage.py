@@ -63,7 +63,10 @@ def is_stage_backup_ok():
 def is_stage_autocombat_ok():
   if is_stage_ok(3):
     return True
-  return is_pixel_match(const.StageAutoCombatCompletePixel, const.StageAutoCombatCompleteColor)
+  for pix, col in zip(const.StageAutoCombatCompletePixel, const.StageAutoCombatCompleteColor):
+    if is_pixel_match(pix, col):
+      return True
+  return False
 
 def is_stage_combat_selection():
   if is_stage_ok(4):

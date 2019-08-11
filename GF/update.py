@@ -62,6 +62,7 @@ def update_freeze():
 
 def update_grind():
   if stage.is_in_battle() or grind.Fiber or grind.MovementFiber:
+    print("Update grind")
     return grind.update()
   elif stage.is_stage_achievement():
     uwait(2)

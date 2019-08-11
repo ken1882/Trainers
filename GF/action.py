@@ -388,9 +388,10 @@ def from_enhance_to_retire():
     num_left -= sub
     random_click(*const.RetireOKPos)
     yield
-    uwait(1.5)
-    random_click(*const.RetireConfirmPos)
-    yield
+    uwait(2.5)
+    while not stage.is_stage_retire():
+      random_click(*const.RetireConfirmPos)
+      yield
     uwait(1)
   return_base()
   yield
