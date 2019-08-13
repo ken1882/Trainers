@@ -93,8 +93,14 @@ def get_current_time_sec():
 
 ScreenSnapShot = [hash_timenow(), ImageGrab.grab().load()]
 
+def getCorrectedPosition(x, y):
+  cx, cy = x, y
+
+  return [cx, cy]
+
 def getPixel(x=None, y=None):
   global LastFrameCount
+  x, y = getCorrectedPosition(x, y)
   if LastFrameCount != G.FrameCount:
     LastFrameCount = G.FrameCount
     stamp = hash_timenow()

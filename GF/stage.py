@@ -397,4 +397,10 @@ def is_correct_level_selected():
   return is_pixel_match(pix, col)
 
 def is_ammo_enough():
-  return is_color_ok(util.getPixel(*const.MainGunnerAmmoPixel), const.MainGunnerAmmoColor)
+  for pix, col in zip(const.MainGunnerAmmoPixel, const.MainGunnerAmmoColor):
+    print(pix)
+    a, b = util.getPixel(*pix), col
+    print(is_color_ok(a, b), a, b)
+    if is_color_ok(util.getPixel(*pix), col):
+      return True
+  return False

@@ -205,6 +205,7 @@ def deploy_troops():
       yield      
     uwait(0.5)
     if not G.FlagGrindEvent:
+      util.flush_screen_cache()
       if i == 0 and not stage.is_ammo_enough():
         G.FlagSupplyNeeded = True
         print("Main team has no enough ammo!")
