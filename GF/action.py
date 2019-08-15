@@ -264,6 +264,7 @@ def stop_combat_grinds():
   G.FlagGrindEvent = False
   G.FlagGrindLevel = None
   G.FlagAutoCombat = False
+  G.FlagStopCombat = True
   G.AutoCombatCount = -1
 
 def supply_at(x, y):
@@ -311,10 +312,21 @@ def change_main_gunner(ch_idx):
   try:
     select_slot(int(ch_idx))
   except ValueError:
-    pos = util.get_image_locations(ch_idx)[0]
-    print("{} found at {}".format(ch_idx, pos))
-    mx, my = pos
-    random_click(mx, my - 80)
+    depth = 0
+    pos = []
+    while depth < 5 and not pos:
+      pos = util.get_image_locations(ch_idx)
+      if pos:
+        pos = pos[0]
+        print("{} found at {}".format(ch_idx, pos))
+        mx, my = pos
+        random_click(mx, my - 80)
+        return True
+      else:
+        depth += 1
+        print("{} didn't found, retry (depth={})".format(ch_idx, depth))
+    return False
+  return True
 
 def get_maingunner_index(tid):
   if tid == 0:
@@ -350,8 +362,11 @@ def swap_team():
   yield
   for i, gidx in enumerate(ch_idx):
     random_click(*const.MainGunnerSlotPos[i])
-    uwait(1.5)
-    change_main_gunner(gidx)
+    uwait(2)
+    succ = change_main_gunner(gidx)
+    if not succ:
+      print("Change gunner failed! Stop grinding...")
+      stop_combat_grinds()
     yield
   uwait(1)
   yield
@@ -375,7 +390,7 @@ def from_enhance_to_retire():
   yield
   uwait(1)
   G.save_update_frequency()
-  G.change_update_frequency(15, 200)
+  G.change_update_frequency(5, 200)
   num_left = G.RetireDollNumber
   while num_left > 0:
     random_click(*const.RetireDollPos)

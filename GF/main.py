@@ -165,9 +165,7 @@ def test_fiber_func():
 def tmp_test_func():
   # print(stage.is_stage_neutralized())
   print(stage.get_current_stage())
-  # test_fiber_func()
-  util.set_cursor_pos(*const.MainGunnerAmmoPixel[0], 1)
-  print(util.getPixel(*const.MainGunnerAmmoPixel[0]))
+  test_fiber_func()
 
 if __name__ == '__main__':
   try:

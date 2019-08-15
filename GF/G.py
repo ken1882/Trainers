@@ -39,7 +39,7 @@ WorstRepairTime = 60 * 30 # 30 mins
 LastMainGunner = 0
 FastRepairThreshold = 2147483647
 StopFastRepairItemThreshold = 30
-RetireDollNumber = 12
+RetireDollNumber = 24
 LastFreezeTime = 0
 FronzenStopThershold = 60 * 10
 RepairOKTimestamp = 0
@@ -51,6 +51,7 @@ FlagResourcesCheckNeeded = True
 FlagForceFocus = False
 FlagGrindEvent = False
 FlagMissionAbort = False
+FlagStopCombat = False
 
 def Flags(name=None):
   flags = {

@@ -77,6 +77,12 @@ def update():
   if G.FlagMissionAbort:
     return abort_mission()
 
+  if G.FlagStopCombat:
+    print("Clear grind fibers")
+    Fiber = None
+    MovementFiber = None
+    return
+
   if Fiber:
     if util.resume(Fiber):
       print("Resume grind normal fiber")
