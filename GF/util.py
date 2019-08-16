@@ -322,7 +322,7 @@ def scroll_to(x, y, x2, y2, **kwargs):
     set_cursor_pos(x, y, app_offset)
     wait(0.01 if haste else ScrollTime)
   if hold:
-    uwait(0.5)
+    uwait(1)
   mouse_up(x, y, app_offset)
 
 # Return Value: alive?

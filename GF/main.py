@@ -37,6 +37,10 @@ def start():
   print("Start hwnd {}, max FPS: {}".format(hex(G.AppHwnd), 1/G.FPS))
   util.change_title(const.AppTitle)
   
+  if stage.is_stage_combat_map() and grind.is_battle_ready():
+    G.FlagPlayerTurn = True
+    grind.initialize()
+
   while G.FlagRunning:
     uwait(G.FPS, False)
     update.main_update()
@@ -154,7 +158,7 @@ def test_func():
   util.getPixel()
   
 def test_fiber_func():
-  fiber = action.swap_team()
+  fiber = action.unselect()
   while util.resume(fiber):
     G.FrameCount += 1
     Input.update()
@@ -166,7 +170,7 @@ def tmp_test_func():
   # print(stage.is_stage_neutralized())
   print(stage.get_current_stage())
   # test_fiber_func()
-  action.random_click(*const.EventPos)
+  print(stage.is_plan_phase_overed())
 
 if __name__ == '__main__':
   try:

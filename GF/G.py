@@ -52,6 +52,7 @@ FlagForceFocus = False
 FlagGrindEvent = False
 FlagMissionAbort = False
 FlagStopCombat = False
+FlagPlanning = False
 
 def Flags(name=None):
   flags = {

@@ -265,6 +265,9 @@ def is_resources_checking_stage():
   if is_stage_formation():
     return True
 
+def is_plan_phase_overed():
+  return is_pixel_match(const.StagePlanPhaseOveredPixel, const.StagePlanPhaseOveredColor)
+
 def detect_player_turn():
   for pix, col in zip(const.StagePlayerTurnDetectorPixels, const.StagePlayerTurnDetectorColors):
    if is_pixel_match(pix, col):

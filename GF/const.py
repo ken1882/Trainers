@@ -286,7 +286,7 @@ EventPos = [102, 590]
 EventLevelPos = {}
 
 EventLevelEnterPos = [1258, 491]
-CancelTeamSelectPos = [107, 165]
+CancelTeamSelectPos = [87, 660]
 
 StageEventLevelPixel = [[38, 15], [117, 94], [249, 51], [371, 45], [72, 201], [65, 259], [118, 523], [115, 711]]
 StageEventLevelColor = [(255, 178, 0), (255, 178, 0), (255, 255, 255), (165, 166, 165), (247, 73, 82), (247, 73, 82), (231, 227, 231), (90, 255, 231)]
@@ -296,6 +296,9 @@ RetreatConfirmPos = [833, 551]
 AbortMissionPos = [352, 49]
 RestartConfirmPos = [548, 553]
 AbortConfirmPos = [894, 554]
+
+StagePlanPhaseOveredPixel = [[46, 607], [37, 618], [6, 646], [169, 677], [156, 667], [22, 665], [19, 674], [4, 678], [110, 658]]
+StagePlanPhaseOveredColor = [(8, 12, 8), (206, 207, 206), (255, 255, 255), (255, 255, 255), (49, 48, 49), (140, 138, 140), (140, 138, 140), (255, 255, 255), (49, 48, 49)]
 
 TeamDeployPos = {
   '3-3E': [[986, 536], [466, 403]],

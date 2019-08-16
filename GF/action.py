@@ -232,7 +232,7 @@ def move_troop(level, turn):
     for pos in team_dest:
       if len(pos) == 1:
         print("Scroll:", pos)
-        random_scroll_to(*pos[0], haste=1)
+        random_scroll_to(*pos[0], haste=2)
       else:
         last_ap_status = get_ap_colors()
         cur_ap_status = np.array([])
@@ -548,7 +548,7 @@ def process_instructed_movement(level, turn):
         move_succ = not np.array_equal(last_ap_status, cur_ap_status) or tag == 'swap'
         print("Move result: {}".format("succeed" if move_succ else "failed"))
     elif tag == 'deploy':
-      print("Deply team")
+      print("Deploy team")
       yield from unselect()
       random_click(*args[0], 6)
       uwait(2.5)
@@ -557,20 +557,41 @@ def process_instructed_movement(level, turn):
     elif tag == 'supply':
       yield from supply_at(*args[0])
     elif tag == 'scroll':
-      random_scroll_to(*args[0])
+      random_scroll_to(*args[0], haste=2)
     elif tag == 'retreat':
       yield from retreat_at(*args[0])
     elif tag == 'restart':
       print("Restart mission flag was set")
       G.FlagMissionRestart = True
       uwait(2)
+    elif tag == 'unselect':
+      print("Unselect team")
+      yield from unselect()
+      uwait(1)
     elif tag == 'abort':
       print("Abort mission flag was set")
       G.FlagMissionAbort = True
       uwait(2)
+    elif tag == 'plan':
+      print("Enter plan phase")
+      G.FlagPlanning = True
+      yield from unselect()
+      random_click(*const.CancelTeamSelectPos)
+      yield
+      for pos in args:
+        random_click(*pos)
+        yield
+      random_click(*const.BattleStartPos)
+      uwait(1)
+      while not stage.is_plan_phase_overed():
+        print("Wait for plan over")
+        uwait(1)
+        yield
+      print("Plan overed")
     else:
       print("Warning: unknown movement tag `{}`, args: {}".format(tag, args))
     yield
+
 
 def move_team(source, dest):
   if not source or source[0] == -1:
@@ -587,9 +608,9 @@ def unselect():
     uwait(1)
     yield
   random_click(*const.CancelTeamSelectPos)
-  uwait(0.8)
+  uwait(1.5)
   random_click(*const.CancelTeamSelectPos)
-  uwait(0.5)
+  uwait(2.5)
 
 def retreat_at(x, y):
   print("Retreat", [x, y])

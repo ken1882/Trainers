@@ -8,6 +8,7 @@ Config = {
   'CheckRepairCount': {
     'default': 1,
     '0-2': 4,
+    'SC2-1': 3,
   },
 
   'MainGunnerIndexA': {
@@ -127,7 +128,8 @@ Config = {
   }, # team movement
 
   'EventLevelPos': {
-    'SC1-3': [932, 439]
+    'SC1-3': [1022, 526],
+    'SC2-1': [795, 456],
   },
 
   'TeamDeployPos': {
@@ -135,7 +137,8 @@ Config = {
     '3-4E': [[216, 361], [1170, 261]],
     '4-3E': [[1193, 544], [255, 408]],
     '0-2': [[738, 411], [300, 394]],
-    'SC1-3': [[718, 408], [389, 454]],
+    'SC1-3': [[815, 407], [659, 426]],
+    'SC2-1': [[717, 402]],
   },
 
   # arg0: command string, arg1~: args
@@ -149,20 +152,58 @@ Config = {
   # abort: Abort mission
   'EventCombatMovement': {
     'SC1-3': [
-      [ # turn1
-        ['supply', [718, 408]],
-        ['supply', [389, 454]],
-        ['move', [717, 402], [584, 267]],
-        ['move', None, [713, 146]],
-        ['move', [713, 402], [849, 279]],
-        ['move', [271, 785], [370, 731]],
+      [ # turn 1
+        ['supply', [815, 407]],
+        ['supply', [659, 426]],
+        ['move', [815, 404], [755, 338]],
+        ['move', None, [816, 280]],
+        ['move', [813, 403], [873, 341]],
+
+        ['move', [659, 606], [713, 563]],
       ],
       [ # turn 2
-        ['move', [377, 737], [204, 629]],
-        ['move', None, [70, 533]],
-        ['move', [716, 401], [546, 236]],
-        ['move', [547, 237], [406, 117]],
+        ['move', [878, 403], [795, 323]],
+        ['unselect'],
+        ['move', [796, 323], [724, 263]],
+
+        ['move', [713, 561], [636, 509]],
+        ['move', None, [570, 465]],
       ],
+    ],
+
+    'SC2-1':[
+      [ # turn 1 
+        ['supply', [693, 406]],
+        ['move', None, [656, 339]],
+
+        ['deploy', [693, 406]],
+        ['supply', [693, 406]]
+      ],
+      [ # Plan phase
+        ['plan',
+          [655, 335], [553, 354], # select team 1 and move
+          [690, 397], [784, 400], # select team 2 and confirm
+          [928, 528], [627, 710], # team 2 move
+          [655, 336], [751, 333], [636, 268] # select team 1 confirm and move
+        ]
+      ]
+      # [ # turn 2
+      #   ['move', [655, 339], [554, 354]],
+
+      #   ['move', [686, 403], [796, 516]],
+      #   ['move', None, [879, 435]],
+      #   ['unselect'], # possible enemy in next move
+      #   ['move', [879, 435], [926, 528]]
+      # ],
+      # [ # turn 3
+      #   ['move', [551, 352], [494, 251]],
+      #   ['unselect'], # possible enemy in next move
+      #   ['move', [494, 251], [630, 270]],
+
+      #   ['move', [924, 528], [731, 646]],
+      #   ['unselect'], # possible enemy in next move
+      #   ['move', [731, 646], [629, 713]],
+      # ],
     ]
   }, # event combat movements
 }
