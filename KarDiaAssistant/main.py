@@ -63,13 +63,14 @@ def test_func():
   util.getPixel()
 
 def tmp_test_func():
-  # print(util.read_app_text(*const.TokenNumberPos, dtype='digit'))
+  # print(util.read_app_text(*[290, 309, 349, 320], dtype='time'))
   # print(stage.any_pixel_match(const.StrawPathPosA, const.StrawPathColor[0], True))
   print(stage.get_current_stage())
   if stage.is_stage_minigames():
     update.is_minigame_token_enough()
-  # slime.identify(False)
-  # pass
+  elif stage.is_stage_pudding():
+    print(stage.is_pudding_token_enough())
+  action.random_scroll_to(*const.GiftScrollPos, const_y_axis=True, haste=2)
 
 if __name__ == '__main__':
   try:

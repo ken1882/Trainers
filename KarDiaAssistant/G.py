@@ -103,6 +103,12 @@ def is_mode_mine():
 def is_mode_level():
   return Mode == 4
 
+def is_mode_pudding():
+  return Mode == 5
+
+def is_mode_gift():
+  return Mode == 6
+
 def setup():
   global InternUpdateTime, ScreenTimeout
   if is_mode_slime():

@@ -21,6 +21,8 @@ parser.add_argument("--straw", help="Set the mode to 2(auto-play running away fr
 parser.add_argument("--mine", help="Set the mode to 3(auto-mining)", action=Ptrue)
 parser.add_argument("--level", help="Set the mode to 4(auto-grind level), using `-d X` to set difficulty", action=Ptrue)
 parser.add_argument("--counter", help="Enable counter to show how many times have entered the level, does not work with manual control", action=Ptrue)
+parser.add_argument("--pudding", help="Set the mode to grind puddin slime", action=Ptrue)
+parser.add_argument("--gift", help="Set the mode to gifting MGs", action=Ptrue)
 
 def load_mode(args):
   if args.slime:
@@ -31,6 +33,10 @@ def load_mode(args):
     G.Mode = 3
   elif args.level:
     G.Mode = 4
+  elif args.pudding:
+    G.Mode = 5
+  elif args.gift:
+    G.Mode = 6
 
 def load():  
   args = parser.parse_args()

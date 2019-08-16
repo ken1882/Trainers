@@ -78,6 +78,12 @@ def is_stage_disconnected():
 def is_battle_ready():
   return is_stage_battle() and is_pixel_match(const.BattleReadyPixel, const.BattleReadyColor)
 
+def is_stage_pudding():
+  return is_pixel_match(const.StagePuddingPixel, const.StagePuddingColor)
+
+def is_pudding_token_enough():
+  return is_color_ok(util.getPixel(*const.PuddingTokenPixel), const.PuddingTokenColor)
+
 def get_current_stage():
   if is_no_stamina():
     return "No Stamina!"
@@ -103,4 +109,6 @@ def get_current_stage():
     return "Slime mini game"
   elif is_stage_minigames():
     return "Minigame selection"
+  elif is_stage_pudding():
+    return "Pudding slime garden"
   return None

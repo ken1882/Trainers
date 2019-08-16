@@ -551,7 +551,7 @@ def process_instructed_movement(level, turn):
       print("Deply team")
       yield from unselect()
       random_click(*args[0], 6)
-      uwait(2)
+      uwait(2.5)
       random_click(*const.DeployConfirmPos)
       uwait(1)
     elif tag == 'supply':
@@ -573,7 +573,7 @@ def process_instructed_movement(level, turn):
     yield
 
 def move_team(source, dest):
-  if source[0] == -1:
+  if not source or source[0] == -1:
     source = None
   print("Move {} -> {}".format(source, dest))
   if source:

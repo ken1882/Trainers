@@ -17,6 +17,19 @@ def delayed_click(x, y, delay, rrange=G.DefaultRandRange):
   y += G.AppRect[1]
   G.Pool.starmap(_dealyed_click, [(x, y, delay, rrange)])
 
+def random_scroll_to(x, y, x2, y2, **kwargs):
+  rrange = kwargs.get('rrange')
+  rrange = G.DefaultRandRange if rrange is None else rrange
+  const_x_axis = kwargs.get('const_x_axis')
+  const_y_axis = kwargs.get('const_y_axis')
+  if not const_x_axis:
+    x += random.randint(-rrange, rrange)
+    x2 += random.randint(-rrange, rrange)
+  if not const_y_axis:
+    y += random.randint(-rrange, rrange)
+    y2 += random.randint(-rrange, rrange)
+  util.scroll_to(x, y, x2, y2, **kwargs)
+
 def action_next(rrange=G.DefaultRandRange):
   mx, my = const.ActionContinue
   random_click(mx, my, rrange)
@@ -35,3 +48,6 @@ def leave_level(loc=0):
 
 def close_inventory():
   random_click(*const.InventoryBackPos)
+
+def enter_level():
+  random_click(*const.LevelEnterPos)

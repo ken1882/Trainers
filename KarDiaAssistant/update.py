@@ -1,6 +1,6 @@
 import G, const, util, win32api, win32con
 import freeze, stage, action, Input
-import slime, straw, mine
+import slime, straw, mine, pudding
 from G import uwait
 
 key_cooldown = 0
@@ -123,5 +123,7 @@ def process_update():
     print("Stage: {}, freeze timer: {}".format(stage.get_current_stage(), freeze.get_freeze_timer()))
     if G.is_mode_mine():
       mine.update()
+    elif G.is_mode_pudding():
+      pudding.update()
     elif G.is_mode_level():
       update_level_process()
