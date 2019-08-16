@@ -130,6 +130,8 @@ Config = {
   'EventLevelPos': {
     'SC1-3': [1022, 526],
     'SC2-1': [795, 456],
+    'SC2-2': [846, 436],
+    'SC2-3': [734, 330],
   },
 
   'TeamDeployPos': {
@@ -139,6 +141,8 @@ Config = {
     '0-2': [[738, 411], [300, 394]],
     'SC1-3': [[815, 407], [659, 426]],
     'SC2-1': [[717, 402]],
+    'SC2-2': [[950, 424], [469, 433]],
+    'SC2-3': [[680, 384, 2]],
   },
 
   # arg0: command string, arg1~: args
@@ -171,7 +175,7 @@ Config = {
       ],
     ],
 
-    'SC2-1':[
+    'SC2-1': [
       [ # turn 1 
         ['supply', [693, 406]],
         ['move', None, [656, 339]],
@@ -187,23 +191,37 @@ Config = {
           [655, 336], [751, 333], [636, 268] # select team 1 confirm and move
         ]
       ]
-      # [ # turn 2
-      #   ['move', [655, 339], [554, 354]],
+    ],
 
-      #   ['move', [686, 403], [796, 516]],
-      #   ['move', None, [879, 435]],
-      #   ['unselect'], # possible enemy in next move
-      #   ['move', [879, 435], [926, 528]]
-      # ],
-      # [ # turn 3
-      #   ['move', [551, 352], [494, 251]],
-      #   ['unselect'], # possible enemy in next move
-      #   ['move', [494, 251], [630, 270]],
+    'SC2-2': [
+      [ # turn 1
+        ['supply', [950, 424]],
+        ['supply', [469, 433]],
+        ['plan', 
+          [953, 425], [839, 378], # team 1 move up
+          [474, 433], [586, 433], [621, 472] # team 2 to bomb
+        ],
+        # turn2
+        ['click', [620, 473], [120, 560]], # pick bomb
+        ['move', None, [648, 400]],
+        ['move', None, [608, 353]],
+        ['click', [129, 554]], # detonate rock
+        ['move', None, [527, 374]], # team 2 move backward
+        ['plan', [838, 377], [951, 183]] # team 1 to enemy HQ
+      ],
+    ],
 
-      #   ['move', [924, 528], [731, 646]],
-      #   ['unselect'], # possible enemy in next move
-      #   ['move', [731, 646], [629, 713]],
-      # ],
-    ]
+    'SC2-3': [
+      [ # turn 1
+        ['supply', [682, 384, 2]],
+        ['move', None, [802, 332]],
+        ['deploy', [682, 429, 2]],
+        ['supply', [682, 429, 2]]
+      ],
+      [], # turn 2
+      [], # turn 3
+      [], # turn 4
+      [], # turn 5
+    ],
   }, # event combat movements
 }

@@ -50,7 +50,7 @@ def process_victory():
   if G.CheckRepairTimer >= G.CheckRepairCount:
     print("Process Repair")
     G.CheckRepairTimer = 0
-    G.slow_update()
+    G.superslow_update()
     G.LaterFiber = action.repair_dolls()
     uwait(1)
     G.FlagRepairNeeded = True

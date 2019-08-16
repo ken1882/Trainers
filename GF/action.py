@@ -267,14 +267,14 @@ def stop_combat_grinds():
   G.FlagStopCombat = True
   G.AutoCombatCount = -1
 
-def supply_at(x, y):
+def supply_at(x, y, rrange=G.DefaultRandRange):
   print("Supply at", [x, y])
   while not stage.is_stage_combat_map():
     uwait(1)
     yield
-  random_click(x, y, 6)
+  random_click(x, y, rrange)
   uwait(0.5)
-  random_click(x, y, 6)
+  random_click(x, y, rrange)
   uwait(2)
   random_click(*const.SupplyIconPos)
   yield
@@ -550,7 +550,7 @@ def process_instructed_movement(level, turn):
     elif tag == 'deploy':
       print("Deploy team")
       yield from unselect()
-      random_click(*args[0], 6)
+      random_click(*args[0])
       uwait(2.5)
       random_click(*const.DeployConfirmPos)
       uwait(1)
@@ -588,6 +588,14 @@ def process_instructed_movement(level, turn):
         uwait(1)
         yield
       print("Plan overed")
+      uwait(1.5)
+    elif tag == 'click':
+      print("Click")
+      for pos in args:
+        random_click(*pos)
+        uwait(0.5)
+        yield
+      print("Click complete")
     else:
       print("Warning: unknown movement tag `{}`, args: {}".format(tag, args))
     yield
@@ -598,9 +606,9 @@ def move_team(source, dest):
     source = None
   print("Move {} -> {}".format(source, dest))
   if source:
-    random_click(*source, 6)
+    random_click(*source)
     uwait(0.5)
-  random_click(*dest, 6)
+  random_click(*dest)
   uwait(0.5)
 
 def unselect():

@@ -108,7 +108,7 @@ Counter = 0
 AppRect = [0, 0, 0, 0]
 
 # Random range for clicking to bypass detection
-DefaultRandRange = 12
+DefaultRandRange = 6
 
 # generator that store current action
 ActionFiber = None
