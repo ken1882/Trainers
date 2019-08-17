@@ -583,12 +583,16 @@ def process_instructed_movement(level, turn):
         yield
       random_click(*const.BattleStartPos)
       uwait(1)
-      while not stage.is_plan_phase_overed():
-        print("Wait for plan over")
+      plan_overed_cnt = 0
+      while plan_overed_cnt < 3:
+        if stage.is_plan_phase_overed():
+          plan_overed_cnt += 1
+        else:
+          plan_overed_cnt = 0
+        print("Wait for plan over...({})".format(plan_overed_cnt))
         uwait(1)
         yield
       print("Plan overed")
-      uwait(1.5)
     elif tag == 'click':
       print("Click")
       for pos in args:
@@ -596,6 +600,10 @@ def process_instructed_movement(level, turn):
         uwait(0.5)
         yield
       print("Click complete")
+    elif tag == 'wait':
+      print("Wait for {} seconds".format(args[0]))
+      uwait(args[0])
+      yield
     else:
       print("Warning: unknown movement tag `{}`, args: {}".format(tag, args))
     yield

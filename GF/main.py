@@ -69,10 +69,9 @@ def start():
         update.process_update()
         Input.clean_intern()
 
-if not os.path.isdir("tmp"):
-  os.mkdir("tmp")
-
 if __name__ == "__main__":
+  if not os.path.isdir("tmp"):
+    os.mkdir("tmp")
   # load config
   Config = {}
   with open('config.py') as file:
@@ -170,7 +169,7 @@ def tmp_test_func():
   # print(stage.is_stage_neutralized())
   print(stage.get_current_stage())
   # test_fiber_func()
-  print(stage.is_plan_phase_overed())
+  print(action.random_click(688, 466, 2))
 
 if __name__ == '__main__':
   try:
