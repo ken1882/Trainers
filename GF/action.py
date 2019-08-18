@@ -584,7 +584,7 @@ def process_instructed_movement(level, turn):
       random_click(*const.BattleStartPos)
       uwait(1)
       plan_overed_cnt = 0
-      while plan_overed_cnt < 3:
+      while plan_overed_cnt < 2:
         if stage.is_plan_phase_overed():
           plan_overed_cnt += 1
         else:

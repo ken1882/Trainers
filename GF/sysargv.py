@@ -69,7 +69,7 @@ def load():
   G.FlagRestartOnEnd = args.restart_on_end
 
   load_mode(args)
-  print("Grind Level: ", G.FlagGrindLevel, G.GrindLevel)
+  print("Grind Level/Event: ", G.FlagGrindLevel or G.FlagGrindEvent, G.GrindLevel)
   G.setup()
 
   if args.swap_first_main_gunner:

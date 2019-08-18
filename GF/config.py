@@ -9,6 +9,9 @@ Config = {
     'default': 1,
     '0-2': 4,
     'SC2-1': 3,
+    'SC2-2': 3,
+    'SC2-3': 3,
+    'SC2-4': 3,
   },
 
   'MainGunnerIndexA': {
