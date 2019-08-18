@@ -177,7 +177,6 @@ def tmp_test_func():
   # print(stage.is_stage_neutralized())
   print(stage.get_current_stage())
   # test_fiber_func()
-  print(action.random_click(688, 466, 2))
 
 if __name__ == '__main__':
   try:
