@@ -177,6 +177,7 @@ def tmp_test_func():
   # print(stage.is_stage_neutralized())
   print(stage.get_current_stage())
   # test_fiber_func()
+  print(stage.is_plan_phase_overed())
 
 if __name__ == '__main__':
   try:

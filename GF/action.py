@@ -596,9 +596,11 @@ def process_instructed_movement(level, turn):
     elif tag == 'click':
       print("Click")
       for pos in args:
+        while not stage.is_stage_combat_map():
+          uwait(1)
+          yield
         random_click(*pos)
-        uwait(0.5)
-        yield
+        uwait(1)
       print("Click complete")
     elif tag == 'wait':
       print("Wait for {} seconds".format(args[0]))
