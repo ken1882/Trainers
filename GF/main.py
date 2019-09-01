@@ -53,6 +53,7 @@ def start():
       elif G.FlagForceFocus and G.AppHwnd and not G.FlagPaused:
         print("Force Focus Flag is set! Switch to app")
         uwait(1.2)
+        util.trigger_key(win32con.VK_RETURN)
         action.switch2app()
       continue
     elif LastHwnd != G.AppHwnd and not G.FlagRebooting:

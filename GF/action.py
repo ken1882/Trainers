@@ -134,6 +134,9 @@ def repair_dolls():
     if stage.is_stage_main_menu():
       to_repair_menu()
       uwait(1)
+    elif stage.is_stage_combat_selection():
+      return_base()
+      uwait(1)
     yield
   
   if G.FlagCheckCombatResources:
