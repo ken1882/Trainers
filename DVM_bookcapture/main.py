@@ -70,9 +70,8 @@ def transform_ocr_result(text):
 def save_stage_images(filename):
   stage_name = ['baby', 'junior', 'adult']
   for i, sname in enumerate(stage_name):
-    for _ in range(3):
-      Input.random_click(*pos.DragonStagePos[i])
-      util.wait(0.1)
+    Input.random_click(*pos.DragonStagePos[i])
+    util.wait(0.1)
     img = util.print_window(imobj=True, canvas_only=True)
     util.save_image(img, f"{filename}{i}.png", "PNG")
     util.wait(0.5)
