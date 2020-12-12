@@ -214,6 +214,7 @@ def main_update
     end
   elsif Input.trigger?(Keymap[:vk_f7])
     $flag_paused ^= true
+    puts $flag_paused ? "Program paused" : "Program unpaused"
   elsif Input.trigger?(Keymap[:vk_f6])
     pos = [0, 0].pack("LL")
     GetCursorPos.call(pos)
