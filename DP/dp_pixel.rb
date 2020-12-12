@@ -34,6 +34,11 @@ module Graphics
   end
 
   def move_window(hwnd, x, y, w, h)
+    if hwnd.nil?
+      puts "[Warning]: Cannot move window of a NilClass"
+      return
+    end
+    puts "Moved window of #{hwnd.to_s(16)}"
     MoveWindow.call(hwnd, x, y, w, h, 1)
   end
 

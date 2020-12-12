@@ -258,5 +258,10 @@ rescue SystemExit, Interrupt
   exit
 ensure
   puts "Bye!"
-  Input.mouse_rup if $flag_pressed
+  if $flag_pressed
+    Input.mouse_rup(false,true)
+    Input.mouse_rup(false,false)
+    Input.mouse_rup(true,true)
+    Input.mouse_rup(false,false)
+  end
 end
