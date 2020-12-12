@@ -65,7 +65,7 @@ GroupCarePos = [682, 120]
 CharSelectionPos = [608, 387]
 
 def start_login_fiber
-  Graphics.move_window($APP_HWND, 0, 0, WindowWidth, WindowHeight)
+  Graphics.move_window($APP_Hwnd, 1, 1, WindowWidth, WindowHeight)
   
   Accounts.each_with_index do |acc, index|
     # Login details
