@@ -2,9 +2,12 @@ require 'win32/api'
 require 'win32con'
 require 'win32con/keymap'
 include Win32CON
+require 'windows/unicode'
+include Windows::Unicode
 
-require_relative 'dp_fiber'
 require_relative 'dp_pixel'
+require_relative 'dp_grind'
+require_relative 'dp_fiber'
 
 $APP_Hwnd = 0
 
@@ -50,10 +53,14 @@ module Input
   @mouse_pos = [0,0]
 
   module_function
+  def mouse_pos; @mouse_pos; end
+
   def update
     0xff.times do |i|
       @keystate[i] = (GetAsyncKeyState.call(i) & 0x8000) > 0 ? @keystate[i] + 1 : 0
     end
+    pos = [0, 0].pack("LL"); GetCursorPos.call(pos);
+    @mouse_pos = pos.unpack("LL")
   end
 
   def trigger?(kcode)
@@ -160,17 +167,66 @@ module Input
     MouseEvent.call(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, x, y, 0, 0)
   end
 
-  def moveto(x,y,speed=10)
-    pos = [0, 0].pack("LL")
-    GetCursorPos.call(pos)
-    cx,cy = pos.unpack("LL")
+  def moveto(x,y,speed=nil)
+    cx,cy = @mouse_pos
     dx = x - cx; dy = y - cy;
-    cnt = (Math.hypot(dx,dy) / speed).to_i
+    if speed.nil?
+      default_speed = 10
+      cnt = (Math.hypot(dx,dy) / default_speed).to_i
+      if cnt > 42
+        speed = (Math.hypot(dx,dy) / 42).to_i
+        cnt   = 42
+      else
+        speed = default_speed
+      end
+    else
+      cnt = (Math.hypot(dx,dy) / speed).to_i
+    end
     angle = Math.atan2(dy, dx)
     dx = speed * Math.cos(angle)
     dy = speed * Math.sin(angle)
-    cnt.times{ cx += dx; cy += dy; self.set_cursor(cx, cy, true); wait(0.01); }
+    cnt.times{ cx += dx; cy += dy; self.set_cursor(cx, cy, true); wait(0.01);}
     self.set_cursor(x, y, false); self.set_cursor(x, y, true);
+  end
+  
+  def zoomout(n)
+    MouseEvent.call(MOUSEEVENTF_WHEEL, 0, 0, -n, 0)
+  end
+
+  def zoomin(n)
+    MouseEvent.call(MOUSEEVENTF_WHEEL, 0, 0, n, 0)
+  end
+end
+
+module Util 
+  GMEM_MOVEABLE = 0x02
+
+  GlobalAlloc  = Win32::API.new('GlobalAlloc', 'LL', 'L', 'kernel32')
+  GlobalLock   = Win32::API.new('GlobalLock', 'L', 'L', 'kernel32')
+  GlobalUnlock = Win32::API.new('GlobalUnlock', 'L', 'L', 'kernel32')
+  CopyMemory   = Win32::API.new('RtlMoveMemory', 'LPL', 'V', 'ntdll')
+  GetLastError = Win32::API.new('GetLastError', 'V', 'L', 'kernel32')
+  OpenClipboard    = Win32::API.new('OpenClipboard', 'L', 'L', 'user32')
+  SetClipboardData = Win32::API.new('SetClipboardData', 'LL', 'L', 'user32')
+  CloseClipboard   = Win32::API.new('CloseClipboard', 'V', 'L', 'user32')
+  EmptyClipboard   = Win32::API.new('EmptyClipboard', 'V', 'L', 'user32')
+  MultiByteToWideChar = Win32::API.new('MultiByteToWideChar', 'ILSIPI', 'I', 'kernel32')
+  
+  module_function
+  def str2clipboard(ss)
+    wss   = multi_to_wide(ss)
+    wslen = wss.bytes.size
+    h_mem = GlobalAlloc.call(GMEM_MOVEABLE, wslen)
+    a_mem = GlobalLock.call(h_mem)
+    CopyMemory.call(a_mem, wss, wslen)
+    GlobalUnlock.call(h_mem)
+    OpenClipboard.call(0)
+    begin
+      EmptyClipboard.call()
+      SetClipboardData.call(CF_UNICODETEXT, h_mem)
+    ensure
+      CloseClipboard.call()
+    end
   end
 end
 
@@ -185,6 +241,10 @@ def wait(sec)
   end
 end
 
+def uwait(_t)
+  wait (_t+_t*0.5).floor(2)
+end
+
 $HwndStack = []
 
 def switch2foreground
@@ -197,6 +257,12 @@ def switch2foreground
   $APP_Hwnd = _hwnd
 end
 
+WorkerFibers = [
+  :start_pirate_fiber, :start_interact_fiber,
+  :start_sp_fiber, :start_eggdance_fiber, :start_dunar_temple
+]
+SelectedWorker = WorkerFibers.find{|f| f if f.match ARGV[0]} rescue nil
+puts "Worker selected: #{SelectedWorker}" if SelectedWorker
 def main_update
   Input.update
   if Input.trigger?(Keymap[:vk_f8])
@@ -204,10 +270,14 @@ def main_update
     $flag_paused = false
     puts "Working: #{$flag_working}"
     if $flag_working
-      # $fiber = Fiber.new{start_pirate_fiber}
-      # $fiber = Fiber.new{start_interact_fiber}
-      # $fiber = Fiber.new{start_sp_fiber 1}
-      switch2foreground; $fiber = Fiber.new{start_login_fiber};
+      if SelectedWorker
+        $fiber = Fiber.new{method(SelectedWorker).call(*ARGV[1..-1])}
+      else
+        $fiber = Fiber.new{start_pirate_fiber}
+        # $fiber = Fiber.new{start_interact_fiber}
+        # $fiber = Fiber.new{start_sp_fiber 3}
+        # $fiber = Fiber.new{start_dunar_temple}
+      end
     else
       puts "Worker terminated"
       $fiber = nil
@@ -258,10 +328,8 @@ rescue SystemExit, Interrupt
   exit
 ensure
   puts "Bye!"
-  if $flag_pressed
-    Input.mouse_rup(false,true)
-    Input.mouse_rup(false,false)
-    Input.mouse_rup(true,true)
-    Input.mouse_rup(false,false)
-  end
+  Input.mouse_rup false,true   if $flag_pressed
+  Input.mouse_rup false,false  if $flag_pressed
+  Input.mouse_rup true,true    if $flag_pressed
+  Input.mouse_rup true,false   if $flag_pressed
 end

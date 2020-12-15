@@ -1,3 +1,6 @@
+require_relative 'dp_combat'
+require_relative 'dunar_temple'
+
 PirateMissionPos = [[333,576], [416,825]]
 SpiritPowderPos = [[210,402], [277,403], [350,404], [213,464], [278,464], [361,466]]
 SpiritPowderOKPos = [281, 587]
@@ -64,8 +67,8 @@ SystemMenuPos = [722, 55]
 GroupCarePos = [682, 120]
 CharSelectionPos = [608, 387]
 
-def start_login_fiber
-  Graphics.move_window($APP_Hwnd, 1, 1, WindowWidth, WindowHeight)
+def start_eggdance_fiber
+  Graphics.move_window($APP_HWND, 1, 1, WindowWidth, WindowHeight)
   
   Accounts.each_with_index do |acc, index|
     # Login details
@@ -148,3 +151,5 @@ def start_login_fiber
     wait(1.5+rand.floor(2))
   end    
 end
+
+
