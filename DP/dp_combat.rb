@@ -193,6 +193,7 @@ module Combat
   def target_reachable?
     # return false unless $flag_hastarget
     use_skill Keymap[:vk_2]
+    roll
     wait(0.5)
     return !Graphics.screen_pixels_matched?(TargetTooFarPos,TargetTooFarColor)
   end

@@ -8,30 +8,41 @@ module DunarTemple
   
   module_function
   def start
+    # return combine_shards
+    # return discard_shards
     # return extract_loots
-    # return start_room3
     # return shop_sells
-    @timer_run += 1
-    puts "Running ##{@timer_run} time"
-    Input.zoomout 0x400+rand(0x300)
-    reset_dungeon; uwait(0.1);
-    enter_dungeon; uwait(0.3);
-    select_difficulty; wait(3);
-    wait_until_transition_ok; uwait(1.5);
-    
-    start_room1 
-    terminate if $flag_combat_dead
-    reposition
-    
-    start_room2
-    terminate if $flag_combat_dead
-    reposition
-    
-    start_room3
-    terminate if $flag_combat_dead
-    reposition
+    loop do 
+      @timer_run += 1
+      puts "Running ##{@timer_run} time"
+      Input.zoomout 0x400+rand(0x300)
+      reset_dungeon; uwait(0.1);
+      enter_dungeon; uwait(0.3);
+      select_difficulty; wait(3);
+      wait_until_transition_ok; uwait(1.5);
+      
+      start_room1 
+      if $flag_combat_dead
+        terminate; $flag_combat_dead = false;
+        next
+      end
+      reposition
+      
+      start_room2
+      if $flag_combat_dead
+        terminate; $flag_combat_dead = false;
+        next
+      end
+      reposition
+      
+      start_room3
+      if $flag_combat_dead
+        terminate; $flag_combat_dead = false;
+        next
+      end
 
-    terminate
+      terminate
+    end
   end
 
   def terminate
@@ -43,7 +54,6 @@ module DunarTemple
     end
     # Input.trigger_key Keymap[:vk_esc],false; uwait 1;
     rotateX(200+rand(30))
-    start
   end
 
   def reposition
@@ -59,7 +69,7 @@ module DunarTemple
   def start_room1 
     puts "Starting room#1"
     Combat.earth_shield; uwait(1);
-    move_left 1.5
+    move_left 1.6
     move_front 1.4,true,false
     rotateX(90)
     11.times{wait(0.1); Input.trigger_key Keymap[:vk_space],false}
@@ -71,6 +81,7 @@ module DunarTemple
     Input.trigger_key Keymap[:vk_f2]
     uwait(0.1)
     # Input.trigger_key Keymap[:vk_f1]
+    backjump
     Combat.engage
   end
 
@@ -87,6 +98,7 @@ module DunarTemple
     toggle_dragon; Combat.backjump;
     uwait(0.1)
     # Input.trigger_key Keymap[:vk_f1]
+    backjump
     Combat.engage
   end
 
@@ -103,11 +115,14 @@ module DunarTemple
 
   def leave
     puts "Leaving Dungeon"
-    unstuck(true); extract_loots;
-    wt = $timer_unstuck - Time.now.to_i
-    puts "#{wt} seconds before teleport"
-    wt.times{|i| wait(0.7);}; uwait(1.5);
-    Input.trigger_key Keymap[:vk_esc],false; uwait 1;
+    unless $flag_combat_dead
+      toggle_dragon; uwait 0.3;
+      unstuck(true); extract_loots;
+      wt = $timer_unstuck - Time.now.to_i
+      puts "#{wt} seconds before teleport"
+      wt.times{|i| wait(0.7);}; uwait(1.5);
+      Input.trigger_key Keymap[:vk_esc],false; uwait 1;
+    end
     Input.zoomout 0x350+rand(0x200)
     if @timer_run % TimesPerClearInventory == 0
       combine_shards; uwait 1;

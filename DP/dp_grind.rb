@@ -11,7 +11,7 @@ module Grinding
   HpBarColor = [210, 46, 4]
   MpBarColor = [10, 125, 160]
 
-  SystemMenuPos = [1138, 30]
+  SystemMenuPos = [1105, 30]
   UnstuckPos    = [976, 460]
   
   GearsPos = [1455, 491]
@@ -46,7 +46,7 @@ module Grinding
   ShardCombineOkPos = [910, 312]
   ShardTypeListScollPos = [[1573, 495],[1575, 531]]
   ShardScrolldownPos = [1573, 574]
-  
+
   TrashBinPos = [1847, 705]
   DeleteTrashPos = [1357, 639]
   DeleteTrashOkPos = [911, 312]
