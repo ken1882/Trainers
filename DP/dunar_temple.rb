@@ -16,10 +16,10 @@ module DunarTemple
       @timer_run += 1
       puts "Running ##{@timer_run} time"
       Input.zoomout 0x400+rand(0x300)
-      reset_dungeon; uwait(0.1);
-      enter_dungeon; uwait(0.3);
+      reset_dungeon; uwait(1.5);
+      enter_dungeon; uwait(1.5);
       select_difficulty; wait(3);
-      wait_until_transition_ok; uwait(1.5);
+      wait_until_transition_ok; uwait(2.5);
       
       start_room1 
       if $flag_combat_dead
@@ -61,7 +61,7 @@ module DunarTemple
     unstuck(true); extract_loots;
     wt = $timer_unstuck - Time.now.to_i
     puts "#{wt} seconds before teleport"
-    wt.times{|i| wait(0.75);}
+    wt.times{|i| wait(0.9);}
     wait_until_transition_ok; uwait 2;
     Input.zoomout 0x400+rand(0x200)
   end
@@ -69,8 +69,8 @@ module DunarTemple
   def start_room1 
     puts "Starting room#1"
     Combat.earth_shield; uwait(1);
-    move_left 1.6
-    move_front 1.4,true,false
+    move_left 1.8
+    move_front 1.5,true,false
     rotateX(90)
     11.times{wait(0.1); Input.trigger_key Keymap[:vk_space],false}
     rotateX(90)
@@ -81,34 +81,34 @@ module DunarTemple
     Input.trigger_key Keymap[:vk_f2]
     uwait(0.1)
     # Input.trigger_key Keymap[:vk_f1]
-    backjump
+    Combat.backjump
     Combat.engage
   end
 
   def start_room2 
     puts "Starting room#2"
     Combat.earth_shield; uwait 1;
-    move_front 1.5,true
+    move_front 2.5,true
     Input.key_down Keymap[:vk_W],false
     toggle_dragon; uwait(0.5)
-    Input.trigger_key Keymap[:vk_f2]; uwait(0.5);
+    Input.trigger_key Keymap[:vk_f2]; uwait(2);
     toggle_dragon; Combat.blink;
     Input.key_up Keymap[:vk_W],false; uwait(0.5);
-    move_front 1.5,true;
+    move_front 2,true;
     toggle_dragon; Combat.backjump;
     uwait(0.1)
     # Input.trigger_key Keymap[:vk_f1]
-    backjump
+    Combat.backjump
     Combat.engage
   end
 
   def start_room3
     puts "Start room#3"
     Combat.earth_shield; uwait 1;
-    move_front 8,true; uwait 0.5;
-    move_front 1.5,true
+    move_front 10,true; uwait 0.5;
+    move_front 3,true
     rotateX(90); uwait 0.5;
-    move_front 2.2,true
+    move_front 3,true
     toggle_dragon; Combat.backjump;
     Combat.engage
   end
@@ -120,7 +120,7 @@ module DunarTemple
       unstuck(true); extract_loots;
       wt = $timer_unstuck - Time.now.to_i
       puts "#{wt} seconds before teleport"
-      wt.times{|i| wait(0.7);}; uwait(1.5);
+      wt.times{|i| wait(0.9);}; uwait(1.5);
       Input.trigger_key Keymap[:vk_esc],false; uwait 1;
     end
     Input.zoomout 0x350+rand(0x200)

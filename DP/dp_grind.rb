@@ -11,7 +11,7 @@ module Grinding
   HpBarColor = [210, 46, 4]
   MpBarColor = [10, 125, 160]
 
-  SystemMenuPos = [1105, 30]
+  SystemMenuPos = [1139, 30]
   UnstuckPos    = [976, 460]
   
   GearsPos = [1455, 491]
@@ -64,7 +64,7 @@ module Grinding
     if !async 
       60.times do |i|
         puts "Teleport countdown: #{60-i}"
-        wait(0.7)
+        wait(0.9)
       end
       puts "Teleported"
     else 

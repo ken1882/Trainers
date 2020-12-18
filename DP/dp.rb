@@ -242,7 +242,7 @@ def wait(sec)
 end
 
 def uwait(_t)
-  wait (_t+_t*0.5).floor(2)
+  wait (_t+_t*0.6).floor(2)
 end
 
 $HwndStack = []

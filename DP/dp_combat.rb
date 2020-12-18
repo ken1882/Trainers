@@ -202,7 +202,7 @@ module Combat
     return if _cd && cd?(vk)
     hk(vk)
     cd(vk,_cd) if _cd
-    uwait 0.5
+    uwait 0.7
   end
 
   def roll
