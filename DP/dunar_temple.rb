@@ -8,6 +8,7 @@ module DunarTemple
   
   module_function
   def start
+    return p Combat.target_reachable?
     # return combine_shards
     # return discard_shards
     # return extract_loots
@@ -16,8 +17,8 @@ module DunarTemple
       @timer_run += 1
       puts "Running ##{@timer_run} time"
       Input.zoomout 0x400+rand(0x300)
-      reset_dungeon; uwait(0.1);
-      enter_dungeon; uwait(0.3);
+      reset_dungeon; uwait(0.3);
+      enter_dungeon; uwait(0.5);
       select_difficulty; wait(3);
       wait_until_transition_ok; uwait(1.5);
       
@@ -57,7 +58,7 @@ module DunarTemple
   end
 
   def reposition
-    toggle_dragon; uwait 1;
+    Combat.unsummon_dragon; uwait 1;
     unstuck(true); extract_loots;
     wt = $timer_unstuck - Time.now.to_i
     puts "#{wt} seconds before teleport"
@@ -69,54 +70,54 @@ module DunarTemple
   def start_room1 
     puts "Starting room#1"
     Combat.earth_shield; uwait(1);
-    move_left 1.6
-    move_front 1.4,true,false
+    move_left 1.4; uwait 0.1;
+    move_front 1.2,true,false
     rotateX(90)
-    11.times{wait(0.1); Input.trigger_key Keymap[:vk_space],false}
+    10.times{wait(0.1); Input.trigger_key Keymap[:vk_space],false}
     rotateX(90)
     6.times{wait(0.1); Input.trigger_key Keymap[:vk_space],false}
     Input.key_up(Keymap[:vk_W],false)
     rotateX(-180)
-    toggle_dragon; uwait(0.5)
+    Combat.summon_dragon; uwait(0.5)
     Input.trigger_key Keymap[:vk_f2]
     uwait(0.1)
+    Combat.forwardjump
     # Input.trigger_key Keymap[:vk_f1]
-    backjump
     Combat.engage
   end
 
   def start_room2 
     puts "Starting room#2"
     Combat.earth_shield; uwait 1;
-    move_front 1.5,true
+    move_front 1.4,true
     Input.key_down Keymap[:vk_W],false
-    toggle_dragon; uwait(0.5)
+    Combat.summon_dragon; uwait(0.5)
     Input.trigger_key Keymap[:vk_f2]; uwait(0.5);
-    toggle_dragon; Combat.blink;
+    Combat.unsummon_dragon; Combat.blink;
     Input.key_up Keymap[:vk_W],false; uwait(0.5);
-    move_front 1.5,true;
-    toggle_dragon; Combat.backjump;
+    move_front 1.25,true;
+    Combat.summon_dragon; Combat.backjump;
     uwait(0.1)
     # Input.trigger_key Keymap[:vk_f1]
-    backjump
+    Combat.backjump; Combat.netherbomb;
     Combat.engage
   end
 
   def start_room3
     puts "Start room#3"
     Combat.earth_shield; uwait 1;
-    move_front 8,true; uwait 0.5;
-    move_front 1.5,true
+    move_front 7,true; uwait 0.5;
+    move_front 1.2,true
     rotateX(90); uwait 0.5;
-    move_front 2.2,true
-    toggle_dragon; Combat.backjump;
+    move_front 2.1,true
+    Combat.summon_dragon; Combat.backjump;
     Combat.engage
   end
 
   def leave
     puts "Leaving Dungeon"
     unless $flag_combat_dead
-      toggle_dragon; uwait 0.3;
+      Combat.unsummon_dragon; uwait 0.3;
       unstuck(true); extract_loots;
       wt = $timer_unstuck - Time.now.to_i
       puts "#{wt} seconds before teleport"

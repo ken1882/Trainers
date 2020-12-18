@@ -11,7 +11,7 @@ module Grinding
   HpBarColor = [210, 46, 4]
   MpBarColor = [10, 125, 160]
 
-  SystemMenuPos = [1105, 30]
+  SystemMenuPos = [1132, 30]
   UnstuckPos    = [976, 460]
   
   GearsPos = [1455, 491]
@@ -72,7 +72,7 @@ module Grinding
       $timer_unstuck = Time.now.to_i+60
     end
   end
-  
+
   def extract_loots
     puts "Start extracing loots"
     Input.trigger_key Keymap[:vk_B]; uwait(0.3);
@@ -80,10 +80,13 @@ module Grinding
     Input.click_l false, true; uwait(0.3);
     Input.moveto *BatchExcPos; uwait(0.3);
     Input.click_l false, true; uwait(0.3);
-
+    
     return puts("Nothing to extract!") if 3.times.collect{
-      uwait(0.2); Graphics.screen_pixels_matched?(
-        FirstItemPos, FirstItemColor
+      uwait(0.1); 
+      px,py = FirstItemPos[0]
+      _pos = 9.times.collect{|i| [px+(i%3-1),py+(i/3)-1] }
+      Graphics.screen_pixels_matched?(
+        _pos, FirstItemColor*9
       )
     }.all?
     
@@ -159,12 +162,6 @@ module Grinding
     Input.moveto(*ResetDungPos); wait(0.1+(rand/5).floor(2));
     Input.moveto(*ResetFirstDungPos);  wait(0.1+(rand/5).floor(2));
     Input.click_l(false,true)
-  end
-
-  def toggle_dragon
-    Input.key_down(Keymap[:vk_Lalt],false); uwait(0.1);
-    Input.trigger_key(Keymap[:vk_f2],false); uwait(0.1);
-    Input.key_up(Keymap[:vk_Lalt],false)
   end
 
   def enter_dungeon
