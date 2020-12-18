@@ -8,6 +8,7 @@ module DunarTemple
   
   module_function
   def start
+    return p Combat.target_reachable?
     # return combine_shards
     # return discard_shards
     # return extract_loots
@@ -57,7 +58,7 @@ module DunarTemple
   end
 
   def reposition
-    toggle_dragon; uwait 1;
+    Combat.unsummon_dragon; uwait 1;
     unstuck(true); extract_loots;
     wt = $timer_unstuck - Time.now.to_i
     puts "#{wt} seconds before teleport"
@@ -72,33 +73,33 @@ module DunarTemple
     move_left 1.8
     move_front 1.5,true,false
     rotateX(90)
-    11.times{wait(0.1); Input.trigger_key Keymap[:vk_space],false}
+    10.times{wait(0.1); Input.trigger_key Keymap[:vk_space],false}
     rotateX(90)
     6.times{wait(0.1); Input.trigger_key Keymap[:vk_space],false}
     Input.key_up(Keymap[:vk_W],false)
     rotateX(-180)
-    toggle_dragon; uwait(0.5)
+    Combat.summon_dragon; uwait(0.5)
     Input.trigger_key Keymap[:vk_f2]
     uwait(0.1)
+    Combat.forwardjump
     # Input.trigger_key Keymap[:vk_f1]
-    Combat.backjump
     Combat.engage
   end
 
   def start_room2 
     puts "Starting room#2"
     Combat.earth_shield; uwait 1;
-    move_front 2.5,true
+    move_front 2,5,true
     Input.key_down Keymap[:vk_W],false
-    toggle_dragon; uwait(0.5)
-    Input.trigger_key Keymap[:vk_f2]; uwait(2);
-    toggle_dragon; Combat.blink;
+    Combat.summon_dragon; uwait(0.5)
+    Input.trigger_key Keymap[:vk_f2]; uwait(0.5);
+    Combat.unsummon_dragon; Combat.blink;
     Input.key_up Keymap[:vk_W],false; uwait(0.5);
     move_front 2,true;
-    toggle_dragon; Combat.backjump;
+    Combat.summon_dragon; Combat.backjump;
     uwait(0.1)
     # Input.trigger_key Keymap[:vk_f1]
-    Combat.backjump
+    Combat.backjump; Combat.netherbomb;
     Combat.engage
   end
 
@@ -109,14 +110,14 @@ module DunarTemple
     move_front 3,true
     rotateX(90); uwait 0.5;
     move_front 3,true
-    toggle_dragon; Combat.backjump;
+    Combat.summon_dragon; Combat.backjump;
     Combat.engage
   end
 
   def leave
     puts "Leaving Dungeon"
     unless $flag_combat_dead
-      toggle_dragon; uwait 0.3;
+      Combat.unsummon_dragon; uwait 0.3;
       unstuck(true); extract_loots;
       wt = $timer_unstuck - Time.now.to_i
       puts "#{wt} seconds before teleport"

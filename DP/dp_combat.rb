@@ -32,7 +32,7 @@ end
 def move_front(duration,dash,release=true)
   cnt = (duration / JumpDuration).to_i
   duration *= JumpDuration
-  (Input.trigger_key(Keymap[:vk_W],false); wait(0.1);) if dash
+  (Input.trigger_key(Keymap[:vk_W],false); wait(0.05);) if dash
   Input.key_down Keymap[:vk_W],false
   wait(0.3)
   cnt.times do 
@@ -73,16 +73,40 @@ module Combat
 
   EnemyBarPos   = [[1789, 63], [1715, 127], [1785, 81]]
   EnemyBarColor = [[190, 49, 1], [239, 239, 239], [7, 110, 142]]
-  CombatIndicatorPos = [[72, 66]]
-  CombatIndicatorColor = [[20, 18, 16]]
+  CombatIndicatorPos = [72, 74]
 
-  TargetTooFarPos = [[778, 306],[848, 305],[882, 304],[1034, 313],[1086, 306],[1140, 302]]
-  TargetTooFarColor = [[244, 154, 193],[244, 154, 193],[244, 154, 193],[244, 154, 193],[244, 154, 193],[244, 154, 193]]
-
+  TargetTooFarPos = [[778, 305],[848, 308],[1140, 301]]
+  TargetTooFarColor = [[244, 154, 193],[244, 154, 193],[244, 154, 193]]
+  NoTargetPos = [[989, 301],[666, 300],[1342, 302],[1296, 304],[1190, 310]]
+  NoTargetColor = [[242, 153, 191],[242, 153, 191],[242, 153, 191],[242, 153, 191],[242, 153, 191]]
   CharacterDeadPos   = [[1029, 484],[1040, 508],[886, 506],[884, 549],[1010, 552],[1137, 610],[758, 608],[852, 368],[1233, 392]]
   CharacterDeadColor = [[2, 106, 141],[27, 27, 26],[29, 29, 27],[27, 27, 25],[25, 25, 24],[12, 12, 12],[11, 13, 12],[254, 254, 254],[187, 181, 149]]
+  
+  PetPagePos = [1843, 406]
+  LootPetPos = [1743, 451]
+
+  RepairShopPos = [524, 786]
+  RepairGearsPos = [655, 522]
+  StartRepairPos = [877,517]
+
+  DragonHpPos   = [[103, 175]]
+  DragonHpColor = [[200, 38, 2]]
 
   module_function
+  def summon_dragon
+    return if Graphics.screen_pixels_matched? DragonHpPos,DragonHpColor
+    Input.key_down(Keymap[:vk_Lalt],false); uwait(0.1);
+    Input.trigger_key(Keymap[:vk_f2],false); uwait(0.1);
+    Input.key_up(Keymap[:vk_Lalt],false)
+  end
+
+  def unsummon_dragon
+    return unless Graphics.screen_pixels_matched? DragonHpPos,DragonHpColor
+    Input.key_down(Keymap[:vk_Lalt],false); uwait(0.1);
+    Input.trigger_key(Keymap[:vk_f2],false); uwait(0.1);
+    Input.key_up(Keymap[:vk_Lalt],false)
+  end
+
   def scan4enemy(method=0)
     if method == 0
       180.times do |i|
@@ -108,14 +132,17 @@ module Combat
 
   HotKeyCoolDowns = {}
   def clickL; Input.click_l(false,true); end;
-  def clickR; Input.click_l(false,true); end;
+  def clickR; Input.click_r(false,true); end;
   def cancel_skill; Input.click_r(false,true); end;
   def cd?(vk); return Time.now.to_i - (HotKeyCoolDowns[vk] || 0) < 0; end;
   def cd(vk,t); HotKeyCoolDowns[vk] = Time.now.to_i + t; end;
   def hk(vk); Input.trigger_key(vk); end;
 
   def in_combat?
-    return !(Graphics.screen_pixels_matched? CombatIndicatorPos, CombatIndicatorColor)
+    color = Graphics.get_pixel(*CombatIndicatorPos)
+    return false if color.r < 180
+    return false if color.g+color.b < 50
+    return true
   end
 
   def netherbomb
@@ -124,7 +151,7 @@ module Combat
     backjump
     Input.zoomout 0x7ff
     hk(vk)
-    rotateY 90; uwait(0.2);
+    rotateY 90; uwait(0.1);
     clickL; uwait(0.1);
     rotateY -90
     cd(vk, 15)
@@ -190,12 +217,27 @@ module Combat
     Input.key_up Keymap[:vk_S],false
   end
 
+  def sidejump
+    vk = rand(10) < 5 ? Keymap[:vk_A] : Keymap[:vk_D]
+    Input.key_down vk,false
+    uwait(0.1)
+    Input.trigger_key Keymap[:vk_space],false
+    uwait(0.1)
+    Input.trigger_key Keymap[:vk_space],false
+    uwait(0.4)
+    Input.key_up vk,false
+  end
+
   def target_reachable?
     # return false unless $flag_hastarget
-    use_skill Keymap[:vk_2]
-    roll
-    wait(0.5)
-    return !Graphics.screen_pixels_matched?(TargetTooFarPos,TargetTooFarColor)
+    hk Keymap[:vk_2]; wait 0.4;
+    return !(
+      Graphics.screen_pixels_matched?(
+      TargetTooFarPos,TargetTooFarColor) || 
+      Graphics.screen_pixels_matched?(
+        NoTargetPos,NoTargetColor
+      )
+    )
   end
 
   def use_skill(vk, _cd=nil)
@@ -234,7 +276,6 @@ module Combat
 
   def engage
     timer_neutralized = 0
-    camera_dx = 0
     $flag_hastarget = false
     skill_stage = 0
     loop do 
@@ -246,7 +287,12 @@ module Combat
           uwait 0.75
         end
         wait_until_transition_ok; uwait 2;
-        Input.trigger_key Keymap[:vk_9]
+        Input.trigger_key Keymap[:vk_9]; uwait 1.5;
+        Input.trigger_key Keymap[:vk_B]; uwait 1;
+        Input.moveto *PetPagePos; uwait 0.3;
+        clickL; uwait 0.3;
+        Input.moveto *LootPetPos; uwait 0.3;
+        clickR; uwait 0.3;
         $flag_combat_dead = true 
         break
       end
@@ -256,7 +302,6 @@ module Combat
       if !$flag_hastarget
         cam_dx = scan4enemy
         $flag_hastarget = !cam_dx.nil?
-        camera_dx += cam_dx if cam_dx
       end
       can_engage = $flag_hastarget ? target_reachable? : false
       if $flag_hastarget && !can_engage
@@ -276,13 +321,11 @@ module Combat
         when 0
           earth_shield; uwait(0.1); skill_stage=1;
         when 1
-          roll; netherbomb; roll; 
-          healbuff; skill_stage=2;
-        when 2
+          roll; netherbomb;
+          healbuff; roll; scan4enemy;
           use_skill Keymap[:vk_V]
           use_skill Keymap[:vk_E]
-          roll; skill_stage=3;
-        when 3
+          roll; scan4enemy;
           use_skill Keymap[:vk_R]
           use_skill Keymap[:vk_Q]
           use_skill Keymap[:vk_3],15
@@ -302,7 +345,6 @@ module Combat
       end
       Fiber.yield
     end
-    puts "Combat ends, camera rotateX: #{camera_dx}"
-    return camera_dx
+    puts "Combat ends"
   end
 end
