@@ -8,7 +8,8 @@ module DunarTemple
   
   module_function
   def start
-    return p Combat.target_reachable?
+    # return clear_inventory
+    # return p Combat.target_reachable?
     # return combine_shards
     # return discard_shards
     # return extract_loots
@@ -16,14 +17,15 @@ module DunarTemple
     loop do 
       @timer_run += 1
       puts "Running ##{@timer_run} time"
-      Input.zoomout 0x400+rand(0x300)
-      reset_dungeon; uwait(1.5);
-      enter_dungeon; uwait(1.5);
-      select_difficulty; wait(3);
+      Input.zoomout 0x600+rand(0x300)
+      reset_dungeon; uwait(2);
+      enter_dungeon; uwait(3);
+      select_difficulty; wait(5);
       wait_until_transition_ok; uwait(2.5);
       
       start_room1 
       if $flag_combat_dead
+        unstuck; uwait 3;
         terminate; $flag_combat_dead = false;
         next
       end
@@ -31,6 +33,7 @@ module DunarTemple
       
       start_room2
       if $flag_combat_dead
+        unstuck; uwait 3;
         terminate; $flag_combat_dead = false;
         next
       end
@@ -38,6 +41,7 @@ module DunarTemple
       
       start_room3
       if $flag_combat_dead
+        unstuck; uwait 3;
         terminate; $flag_combat_dead = false;
         next
       end
@@ -47,14 +51,15 @@ module DunarTemple
   end
 
   def terminate
-    leave; wait 12; uwait 10;
+    leave
     wait_until_transition_ok;
     3.times do |i|
       puts "#{3-i} seconds until redo the dungeon"
       wait(0.8)
     end
+    Combat.earth_shield; uwait 2;
     # Input.trigger_key Keymap[:vk_esc],false; uwait 1;
-    rotateX(200+rand(30))
+    rotateX(190+rand(30))
   end
 
   def reposition
@@ -62,20 +67,20 @@ module DunarTemple
     unstuck(true); extract_loots;
     wt = $timer_unstuck - Time.now.to_i
     puts "#{wt} seconds before teleport"
-    wt.times{|i| wait(0.9);}
+    wt.times{|i| wait(0.95);}; uwait 2;
     wait_until_transition_ok; uwait 2;
-    Input.zoomout 0x400+rand(0x200)
+    Input.zoomout 0x600+rand(0x200)
   end
 
   def start_room1 
     puts "Starting room#1"
     Combat.earth_shield; uwait(1);
-    move_left 1.8
-    move_front 1.5,true,false
+    move_left 2.2
+    move_front 1.7,true,false
     rotateX(90)
-    10.times{wait(0.1); Input.trigger_key Keymap[:vk_space],false}
+    9.times{wait(0.1); Input.trigger_key Keymap[:vk_space],false}
     rotateX(90)
-    6.times{wait(0.1); Input.trigger_key Keymap[:vk_space],false}
+    7.times{wait(0.1); Input.trigger_key Keymap[:vk_space],false}
     Input.key_up(Keymap[:vk_W],false)
     rotateX(-180)
     Combat.summon_dragon; uwait(0.5)
@@ -89,27 +94,29 @@ module DunarTemple
   def start_room2 
     puts "Starting room#2"
     Combat.earth_shield; uwait 1;
-    move_front 2,5,true
+    move_front 2.5,true
     Input.key_down Keymap[:vk_W],false
     Combat.summon_dragon; uwait(0.5)
     Input.trigger_key Keymap[:vk_f2]; uwait(0.5);
-    Combat.unsummon_dragon; Combat.blink;
+    Combat.unsummon_dragon; Combat.blink; 
     Input.key_up Keymap[:vk_W],false; uwait(0.5);
-    move_front 2,true;
+    move_front 2.3,true;
     Combat.summon_dragon; Combat.backjump;
     uwait(0.1)
     # Input.trigger_key Keymap[:vk_f1]
-    Combat.backjump; Combat.netherbomb;
+    Combat.backjump; Combat.roll;
+    Combat.netherbomb; Combat.roll;
+    Combat.healbuff
     Combat.engage
   end
 
   def start_room3
     puts "Start room#3"
     Combat.earth_shield; uwait 1;
-    move_front 10,true; uwait 0.5;
-    move_front 3,true
+    move_front 12,true; uwait 0.5;
+    move_front 2.2,true
     rotateX(90); uwait 0.5;
-    move_front 3,true
+    move_front 1.6,true; uwait 0.5;
     Combat.summon_dragon; Combat.backjump;
     Combat.engage
   end
@@ -121,19 +128,25 @@ module DunarTemple
       unstuck(true); extract_loots;
       wt = $timer_unstuck - Time.now.to_i
       puts "#{wt} seconds before teleport"
-      wt.times{|i| wait(0.9);}; uwait(1.5);
+      wt.times{|i| wait(0.95);}; uwait(2);
       Input.trigger_key Keymap[:vk_esc],false; uwait 1;
     end
-    Input.zoomout 0x350+rand(0x200)
-    if @timer_run % TimesPerClearInventory == 0
-      combine_shards; uwait 1;
-      Input.trigger_key Keymap[:vk_esc],false; uwait 1;
-      discard_shards; uwait 1;
-      Input.trigger_key Keymap[:vk_esc],false; uwait 1;
-      shop_sells; uwait 1;
-      puts "Inventory cleared"
-    end
-    move_back 1
+    Input.zoomout 0x800+rand(0x200)
+    clear_inventory if @timer_run % TimesPerClearInventory == 0
+    3.times{ move_back 1.5 }
+    wait 15; uwait 15;
+  end
+
+  def clear_inventory
+    Combat.earth_shield; uwait 2;
+    combine_shards; uwait 2;
+    Input.trigger_key Keymap[:vk_esc],false; uwait 0.5;
+    Input.trigger_key Keymap[:vk_D],false; uwait 0.5; Combat.earth_shield; uwait 2;
+    discard_shards; uwait 2;
+    Input.trigger_key Keymap[:vk_esc],false; uwait 0.5;
+    Input.trigger_key Keymap[:vk_A],false; uwait 0.5; Combat.earth_shield; uwait 2;
+    shop_sells; uwait 2;
+    puts "Inventory cleared"
   end
 end
 

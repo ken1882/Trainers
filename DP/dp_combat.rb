@@ -85,26 +85,26 @@ module Combat
   PetPagePos = [1843, 406]
   LootPetPos = [1743, 451]
 
-  RepairShopPos = [524, 786]
-  RepairGearsPos = [655, 522]
-  StartRepairPos = [877,517]
-
   DragonHpPos   = [[103, 175]]
   DragonHpColor = [[200, 38, 2]]
 
   module_function
   def summon_dragon
-    return if Graphics.screen_pixels_matched? DragonHpPos,DragonHpColor
+    return if dragon_summoned?
     Input.key_down(Keymap[:vk_Lalt],false); uwait(0.1);
     Input.trigger_key(Keymap[:vk_f2],false); uwait(0.1);
     Input.key_up(Keymap[:vk_Lalt],false)
   end
 
   def unsummon_dragon
-    return unless Graphics.screen_pixels_matched? DragonHpPos,DragonHpColor
+    return unless dragon_summoned?
     Input.key_down(Keymap[:vk_Lalt],false); uwait(0.1);
     Input.trigger_key(Keymap[:vk_f2],false); uwait(0.1);
     Input.key_up(Keymap[:vk_Lalt],false)
+  end
+
+  def dragon_summoned?
+    return Graphics.screen_pixels_matched? DragonHpPos,DragonHpColor
   end
 
   def scan4enemy(method=0)
@@ -148,12 +148,12 @@ module Combat
   def netherbomb
     vk = Keymap[:vk_4]
     return if cd?(vk) 
-    backjump
+    backjump; uwait(0.4);
     Input.zoomout 0x7ff
     hk(vk)
     rotateY 90; uwait(0.1);
     clickL; uwait(0.1);
-    rotateY -90
+    rotateY -88
     cd(vk, 15)
     forwardjump
     Input.zoomout 0x7ff
@@ -230,7 +230,7 @@ module Combat
 
   def target_reachable?
     # return false unless $flag_hastarget
-    hk Keymap[:vk_2]; wait 0.4;
+    hk Keymap[:vk_2]; wait 0.8;
     return !(
       Graphics.screen_pixels_matched?(
       TargetTooFarPos,TargetTooFarColor) || 
@@ -303,9 +303,14 @@ module Combat
         cam_dx = scan4enemy
         $flag_hastarget = !cam_dx.nil?
       end
+      if timer_neutralized > 3
+        unsummon_dragon; uwait 0.1;
+      elsif !dragon_summoned?
+        summon_dragon; uwait 0.1;
+      end
       can_engage = $flag_hastarget ? target_reachable? : false
       if $flag_hastarget && !can_engage
-        puts "Target too far, force search next; timer: #{timer_neutralized += 1}"
+        puts "Target too far, force search next; timer: #{timer_neutralized += 0.3}"
         rotateX 30
         wait 0.1
         next

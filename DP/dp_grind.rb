@@ -51,6 +51,11 @@ module Grinding
   DeleteTrashPos = [1357, 639]
   DeleteTrashOkPos = [911, 312]
   ColorNoItem = [30,30,30]
+
+  RepairShopPos = [524, 786]
+  RepairGearsPos = [655, 522]
+  StartRepairPos = [877,517]
+
   module_function
 
   # reset position and camera
@@ -187,9 +192,9 @@ module Grinding
 
   def combine_shards
     puts "Start combine dragon shards"
-    Input.key_down Keymap[:vk_Lcontrol],false; Fiber.yield;
-    Input.trigger_key Keymap[:vk_equal]; uwait(0.03);
-    Input.key_up Keymap[:vk_Lcontrol],false; uwait(1);
+    Input.key_down Keymap[:vk_Lcontrol],false; uwait 0.5;
+    Input.trigger_key Keymap[:vk_equal]; uwait 0.5;
+    Input.key_up Keymap[:vk_Lcontrol],false; uwait(2.5);
     Input.moveto(*ShardTypesPos); uwait 0.3;  Input.click_l false,true;
     Input.moveto(*ShardTypeListPos[1]); uwait 0.3;  Input.click_l false,true;
     Input.moveto(*ShardFilterPos); uwait 0.3;  Input.click_l false,true;
@@ -209,7 +214,7 @@ module Grinding
         Input.moveto(*ShardCombineOkPos,50); uwait 0.3;
         Input.click_l false,true;
         Input.moveto(*AttunedShardPos,50); uwait 0.3;
-        Input.click_r false,true;
+        2.times{ Input.click_r false,true; uwait 0.3; }
         Input.moveto(*DragonShardPos,50)
       end
     }
@@ -241,11 +246,13 @@ module Grinding
     end
     ShardDefFilterInput.each{|vk| Input.trigger_key vk,false}
     uwait 0.3; _CombineShardsProc.call;
+    Input.moveto *DragonShardPos; uwait 0.3;
+    Input.click_l false,true; uwait 0.3;
   end
 
   def discard_shards
     puts "Start discard useless shards"
-    Input.trigger_key Keymap[:vk_B]; uwait(0.3);
+    Input.trigger_key Keymap[:vk_B]; uwait(2.5);
     Input.moveto *DragonShardPos; uwait(0.3);
     Input.click_l false, true; uwait(0.3);
     Input.moveto *ShardTypesPos; uwait(0.3);
@@ -295,10 +302,10 @@ module Grinding
   end
 
   def shop_sells
-    Input.key_down Keymap[:vk_Lcontrol],false; Fiber.yield;
-    Input.trigger_key Keymap[:vk_minus]; uwait(0.03);
+    Input.key_down Keymap[:vk_Lcontrol],false; uwait 0.5;
+    Input.trigger_key Keymap[:vk_minus]; uwait 0.5;
     Input.key_up Keymap[:vk_Lcontrol],false; uwait(1);
-    uwait 3; Input.trigger_key Keymap[:vk_F],false; uwait 1.5;
+    uwait 3; Input.trigger_key Keymap[:vk_F],false; uwait 2.5;
     Input.moveto 1,1; uwait 0.1;
     Input.moveto *ItemPagePos[StartSellPage]; uwait 0.3;
     Input.click_l false, true; uwait(0.3);
@@ -307,8 +314,14 @@ module Grinding
       puts "Selling page##{1+i+StartSellPage}"
       ItemRowPos.each do |rpos|
         mx, my = rpos 
-        8.times do 
-          _sellpos << [mx,my] unless Graphics.screen_pixels_matched? [[mx,my]],[ColorNoItem]
+        8.times do
+          _pos = 9.times.collect{|i| [mx+(i%3-1),my+(i/3)-1] }
+          if !(_pos.collect{ |p| 
+                Graphics.screen_pixels_matched?([p], [ColorNoItem])
+              }
+            ).all?
+            _sellpos << [mx,my]
+          end
           mx += NextColumnDX
         end
       end
@@ -320,5 +333,12 @@ module Grinding
       Input.moveto *NextPagePos; uwait 0.1;
       Input.click_l false, true; uwait(0.3);
     end
+    # repair item
+    Input.moveto *RepairShopPos; uwait 0.3;
+    Input.click_l false,true; uwait 0.3;
+    Input.moveto *RepairGearsPos; uwait 0.3;
+    Input.click_l false,true; uwait 0.3;
+    Input.moveto *StartRepairPos; uwait 0.3;
+    Input.click_l false,true; uwait 5;
   end
 end
