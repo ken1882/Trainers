@@ -44,6 +44,7 @@ $flag_running = true
 $flag_paused  = false
 $flag_working = false
 $flag_pressed = false
+$flag_auto_restart = ARGV.include? '-r'; ARGV.delete '-r';
 
 $PrimaryScreenWidth  = GetSystemMetrics.call(SM_CXSCREEN)
 $PrimaryScreenHeight = GetSystemMetrics.call(SM_CYSCREEN)
@@ -265,7 +266,12 @@ SelectedWorker = WorkerFibers.find{|f| f if f.match ARGV[0]} rescue nil
 puts "Worker selected: #{SelectedWorker}" if SelectedWorker
 def main_update
   Input.update
-  if Input.trigger?(Keymap[:vk_f8])
+  if Input.trigger?(Keymap[:vk_f8]) || ($flag_auto_restart && !$flag_first_work)
+    if ($flag_auto_restart && !$flag_first_work)
+	  puts "Restarting first work task, continue in 3 seconds"
+	  sleep 3
+	end
+    $flag_first_work = true
     $flag_working ^= true
     $flag_paused = false
     puts "Working: #{$flag_working}"

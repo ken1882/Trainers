@@ -35,9 +35,10 @@ module Grinding
   DragonShardPos = [1792, 408]
   ShardTypesPos  = [1523, 440]
   ShardTypeListPos = [[1464, 469],[1469, 496],[1470, 521],[1472, 544],[1465, 575]]
-  ShardFilterPos = [1645, 441]
+  ShardFilterPos = [[1606, 438], [1645, 441]]
   ShardDmgFilterInput = [Keymap[:vk_4], Keymap[:vk_0]]
   ShardDefFilterInput = [Keymap[:vk_1], Keymap[:vk_0], Keymap[:vk_0]]
+  ShardDmg302FilterInput = [ [Keymap[:vk_6], Keymap[:vk_0]],[Keymap[:vk_6],Keymap[:vk_5]] ]
   TenthShardPos   = [[1555, 557]]
   TenthShardColor = [[23, 23, 21]]
   ItemShardsPos   = [[1507, 506],[1553, 506],[1601, 503],[1648, 503],[1695, 505],[1745, 505],[1795, 505],[1841, 503],[1506, 553],[1557, 555]]
@@ -55,7 +56,9 @@ module Grinding
   RepairShopPos = [524, 786]
   RepairGearsPos = [655, 522]
   StartRepairPos = [877,517]
-
+  
+  JBBuffs = [[242, 571],[243, 536],[245, 493],[252, 464],[254, 426],[261, 389],[263, 359],[256, 326]]
+  
   module_function
 
   # reset position and camera
@@ -76,6 +79,7 @@ module Grinding
       puts "Teleport after 60 seconds"
       $timer_unstuck = Time.now.to_i+60
     end
+	Input.zoomout 0x600+rand(0x200)
   end
 
   def extract_loots
@@ -107,6 +111,7 @@ module Grinding
         end
       end
     }
+	_exterrcnt = 0
     _EnsureExtractingProc = Proc.new{
       loop do 
         _flag_exc_started = false 
@@ -122,10 +127,15 @@ module Grinding
         if Graphics.screen_pixels_matched? LastPageToExcPos, LastPageToExcColor
           puts "Seems nothing to extract"
           break
+		elsif _exterrcnt > 5
+	      puts "Seems something went wrong, retry extracing process"
+	      Combat.earth_shield; uwait 3;
+		  return extract_loots
         end
         Input.moveto *StartExcPos; uwait(0.3)
         Input.click_l false,true
-        puts "Extract seems not started, retry"
+        puts "Extract seems not started, retry (#{_exterrcnt})"
+		_exterrcnt += 1
       end
     }
     _ExtractProc.call; Input.moveto *StartExcPos;
@@ -190,14 +200,14 @@ module Grinding
     Input.click_l(false,true);
   end
 
-  def combine_shards
+  def combine_shards(combine_302=false)
     puts "Start combine dragon shards"
     Input.key_down Keymap[:vk_Lcontrol],false; uwait 0.5;
     Input.trigger_key Keymap[:vk_equal]; uwait 0.5;
     Input.key_up Keymap[:vk_Lcontrol],false; uwait(2.5);
     Input.moveto(*ShardTypesPos); uwait 0.3;  Input.click_l false,true;
     Input.moveto(*ShardTypeListPos[1]); uwait 0.3;  Input.click_l false,true;
-    Input.moveto(*ShardFilterPos); uwait 0.3;  Input.click_l false,true;
+    Input.moveto(*ShardFilterPos[1]); uwait 0.3;  Input.click_l false,true;
     uwait 0.3
     ShardDmgFilterInput.each{|vk| Input.trigger_key vk,false}
     _CombineShardsProc = Proc.new{
@@ -213,7 +223,7 @@ module Grinding
         Input.click_l false,true;
         Input.moveto(*ShardCombineOkPos,50); uwait 0.3;
         Input.click_l false,true;
-        Input.moveto(*AttunedShardPos,50); uwait 0.3;
+        Input.moveto(*AttunedShardPos,50); uwait 0.5;
         2.times{ Input.click_r false,true; uwait 0.3; }
         Input.moveto(*DragonShardPos,50)
       end
@@ -238,7 +248,7 @@ module Grinding
     # Combine MagDef shards
     Input.moveto(*ShardTypesPos); uwait 0.3; Input.click_l false,true;
     Input.moveto(*ShardTypeListPos[2]); uwait 0.3;  Input.click_l false,true;
-    Input.moveto(*ShardFilterPos); uwait 0.3;  Input.click_l false,true;
+    Input.moveto(*ShardFilterPos[1]); uwait 0.3;  Input.click_l false,true;
     uwait 0.3
     2.times do 
       Input.trigger_key Keymap[:vk_backspace],false; uwait 0.3; 
@@ -248,6 +258,37 @@ module Grinding
     uwait 0.3; _CombineShardsProc.call;
     Input.moveto *DragonShardPos; uwait 0.3;
     Input.click_l false,true; uwait 0.3;
+    
+    return unless combine_302
+    Input.trigger_key Keymap[:vk_B]; uwait 0.5;
+    Input.trigger_key Keymap[:vk_B]; uwait 1.5;
+    Input.moveto *DragonShardPos; uwait 0.5;
+    Input.click_l false,true; uwait 0.3;
+    Input.moveto *ShardTypesPos; uwait 0.3;
+    Input.click_l false,true; uwait 0.3;
+    Input.moveto *ShardTypeListPos[2]; uwait 0.3;
+    Input.click_l false,true; uwait 0.3;
+    
+    Input.moveto *ShardFilterPos[0]; uwait 0.3;
+    Input.click_l false,true; uwait 0.3;
+    ShardDmg302FilterInput[0].each do |vk|
+      Input.trigger_key vk,false; uwait 0.1;
+    end
+    Input.moveto *ShardFilterPos[1]; uwait 0.3;
+    Input.click_l false,true; uwait 0.3;
+    ShardDmg302FilterInput[1].each do |vk|
+      Input.trigger_key vk,false; uwait 0.1;
+    end
+
+    Input.moveto *DragonShardPos; uwait 0.5;
+    Input.click_l false,true; uwait 0.3;
+
+    [ShardTypeListPos[2],ShardTypeListPos[3],ShardTypeListPos[4]].each do |spos|
+      Input.moveto(*ShardTypesPos); uwait 0.3; Input.click_l false,true;
+      Input.moveto(*spos); uwait 0.3; Input.click_l false,true;
+      _CombineShardsProc.call()
+    end
+
   end
 
   def discard_shards
@@ -340,5 +381,13 @@ module Grinding
     Input.click_l false,true; uwait 0.3;
     Input.moveto *StartRepairPos; uwait 0.3;
     Input.click_l false,true; uwait 5;
+  end
+  
+  def get_jb_buff
+	JBBuffs.each do |pos|
+	  Input.trigger_key Keymap[:vk_F],false; uwait 1;
+	  Input.moveto *pos; uwait 0.5;
+	  Input.click_l false, true; uwait 0.3;
+	end
   end
 end

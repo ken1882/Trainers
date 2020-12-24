@@ -1,23 +1,32 @@
 module DunarTemple
   extend Grinding  
   
-  TimesPerClearInventory = 3
-  @timer_run = 0
+  TimesPerClearInventory = 2
+  TimesPerJBBuff = 3
+  TimesPer302ShardCombine = 5
+  TimesPerAutoRestart = 6
+  
   ExctractBarPos     = [[856, 804],[845, 809],[959, 806]]
   ExctractBarColor   = [[2, 65, 92],[39, 33, 32],[126, 153, 158]]
+  FlagHasJB = true
+
+  @timer_run = 0
   
   module_function
   def start
     # return clear_inventory
     # return p Combat.target_reachable?
-    # return combine_shards
+    # return combine_shards(true)
     # return discard_shards
     # return extract_loots
-    # return shop_sells
+	if FlagHasJB
+	  get_jb_buff
+	  rotateX(-90-rand(20))
+	end
     loop do 
       @timer_run += 1
       puts "Running ##{@timer_run} time"
-      Input.zoomout 0x600+rand(0x300)
+      Input.zoomout 0x800+rand(0x300)
       reset_dungeon; uwait(2);
       enter_dungeon; uwait(3);
       select_difficulty; wait(5);
@@ -59,9 +68,29 @@ module DunarTemple
     end
     Combat.earth_shield; uwait 2;
     # Input.trigger_key Keymap[:vk_esc],false; uwait 1;
-    rotateX(190+rand(30))
+	if FlagHasJB && @timer_run % TimesPerJBBuff == 0
+	  rotateX(-75)
+	  Input.key_down Keymap[:vk_W],false; uwait 0.95;
+	  Input.key_up Keymap[:vk_W]; uwait 1;
+	  if @timer_run % TimesPerAutoRestart == 0
+		puts "Restarting program"
+		args = ARGV.join ' '
+		cmd = "ruby dp.rb -r #{args}"
+		exec cmd
+	  end
+	  get_jb_buff
+	  rotateX(-90-rand(20))
+	else
+	  rotateX(190+rand(30))
+	  if @timer_run % TimesPerAutoRestart == 0
+		puts "Restarting program"
+		args = ARGV.join ' '
+		cmd = "ruby dp.rb -r #{args}"
+		exec cmd
+	  end
+	end  
   end
-
+  
   def reposition
     Combat.unsummon_dragon; uwait 1;
     unstuck(true); extract_loots;
@@ -113,10 +142,10 @@ module DunarTemple
   def start_room3
     puts "Start room#3"
     Combat.earth_shield; uwait 1;
-    move_front 12,true; uwait 0.5;
-    move_front 2.2,true
+    move_front 12,true; uwait 1;
+    move_front 2.1,true
     rotateX(90); uwait 0.5;
-    move_front 1.6,true; uwait 0.5;
+    move_front 2.0,true; uwait 0.5;
     Combat.summon_dragon; Combat.backjump;
     Combat.engage
   end
@@ -135,11 +164,13 @@ module DunarTemple
     clear_inventory if @timer_run % TimesPerClearInventory == 0
     3.times{ move_back 1.5 }
     wait 15; uwait 15;
+	Input.zoomout 0x1200+rand(0x200)
   end
 
   def clear_inventory
     Combat.earth_shield; uwait 2;
-    combine_shards; uwait 2;
+    flag_combine302 = (@timer_run % TimesPer302ShardCombine == 0)
+    combine_shards(flag_combine302); uwait 2;
     Input.trigger_key Keymap[:vk_esc],false; uwait 0.5;
     Input.trigger_key Keymap[:vk_D],false; uwait 0.5; Combat.earth_shield; uwait 2;
     discard_shards; uwait 2;
