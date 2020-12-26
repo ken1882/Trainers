@@ -36,9 +36,10 @@ module Grinding
   ShardTypesPos  = [1523, 440]
   ShardTypeListPos = [[1464, 469],[1469, 496],[1470, 521],[1472, 544],[1465, 575]]
   ShardFilterPos = [[1606, 438], [1645, 441]]
-  ShardDmgFilterInput = [Keymap[:vk_4], Keymap[:vk_0]]
-  ShardDefFilterInput = [Keymap[:vk_1], Keymap[:vk_0], Keymap[:vk_0]]
-  ShardDmg302FilterInput = [ [Keymap[:vk_6], Keymap[:vk_0]],[Keymap[:vk_6],Keymap[:vk_5]] ]
+  ShardDmgFilterInput = [[Keymap[:vk_3],Keymap[:vk_5]],[Keymap[:vk_4], Keymap[:vk_0]]]
+  ShardDefFilterInput = [[Keymap[:vk_9],Keymap[:vk_5]],[Keymap[:vk_1], Keymap[:vk_0], Keymap[:vk_0]]]
+  ShardDmg302FilterInput = [ [Keymap[:vk_6],Keymap[:vk_0]],[Keymap[:vk_6],Keymap[:vk_5]] ]
+  ShardDef302FilterInput = [ [Keymap[:vk_1],Keymap[:vk_5],Keymap[:vk_0]],[Keymap[:vk_1],Keymap[:vk_6],Keymap[:vk_0]] ]
   TenthShardPos   = [[1555, 557]]
   TenthShardColor = [[23, 23, 21]]
   ItemShardsPos   = [[1507, 506],[1553, 506],[1601, 503],[1648, 503],[1695, 505],[1745, 505],[1795, 505],[1841, 503],[1506, 553],[1557, 555]]
@@ -207,9 +208,13 @@ module Grinding
     Input.key_up Keymap[:vk_Lcontrol],false; uwait(2.5);
     Input.moveto(*ShardTypesPos); uwait 0.3;  Input.click_l false,true;
     Input.moveto(*ShardTypeListPos[1]); uwait 0.3;  Input.click_l false,true;
-    Input.moveto(*ShardFilterPos[1]); uwait 0.3;  Input.click_l false,true;
-    uwait 0.3
-    ShardDmgFilterInput.each{|vk| Input.trigger_key vk,false}
+	# filter to only 198 damage shards
+	2.times do |i|
+	  Input.moveto(*ShardFilterPos[i]); uwait 0.3;
+	  Input.click_l false,true; uwait 0.3
+      ShardDmgFilterInput[i].each{|vk| Input.trigger_key vk,false}
+	  uwait 0.3
+	end
     _CombineShardsProc = Proc.new{
       loop do 
         uwait(1)
@@ -248,13 +253,16 @@ module Grinding
     # Combine MagDef shards
     Input.moveto(*ShardTypesPos); uwait 0.3; Input.click_l false,true;
     Input.moveto(*ShardTypeListPos[2]); uwait 0.3;  Input.click_l false,true;
-    Input.moveto(*ShardFilterPos[1]); uwait 0.3;  Input.click_l false,true;
-    uwait 0.3
-    2.times do 
-      Input.trigger_key Keymap[:vk_backspace],false; uwait 0.3; 
-      Input.trigger_key Keymap[:vk_delete],false; uwait 0.3;
-    end
-    ShardDefFilterInput.each{|vk| Input.trigger_key vk,false}
+    2.times do |i| 
+	  Input.moveto(*ShardFilterPos[i]); uwait 0.3;  Input.click_l false,true;
+      uwait 0.3
+      2.times do 
+        Input.trigger_key Keymap[:vk_backspace],false; uwait 0.3; 
+        Input.trigger_key Keymap[:vk_delete],false; uwait 0.3;
+      end
+      ShardDefFilterInput[i].each{|vk| Input.trigger_key vk,false}
+	  uwait 0.3
+	end
     uwait 0.3; _CombineShardsProc.call;
     Input.moveto *DragonShardPos; uwait 0.3;
     Input.click_l false,true; uwait 0.3;
@@ -282,13 +290,27 @@ module Grinding
 
     Input.moveto *DragonShardPos; uwait 0.5;
     Input.click_l false,true; uwait 0.3;
-
+	# combine mdmg,edmg,ndmg
     [ShardTypeListPos[2],ShardTypeListPos[3],ShardTypeListPos[4]].each do |spos|
       Input.moveto(*ShardTypesPos); uwait 0.3; Input.click_l false,true;
       Input.moveto(*spos); uwait 0.3; Input.click_l false,true;
       _CombineShardsProc.call()
     end
-
+	# combine dsd
+	Input.moveto *ShardTypesPos; uwait(0.3);
+    Input.click_l false, true; uwait(0.3);
+    Input.moveto *ShardScrolldownPos; uwait 0.3;
+    2.times{ Input.click_l false, true; uwait(0.2); }
+	Input.moveto *ShardTypeListPos[2]; uwait 0.3;
+	Input.click_l false, true; uwait(0.3);
+	_CombineShardsProc.call; uwait 0.5;
+	
+	# combine mdef
+	Input.moveto *ShardTypesPos; uwait(0.3);
+    Input.click_l false, true; uwait(0.3);
+	Input.moveto *ShardTypeListPos[4]; uwait 0.3;
+	Input.click_l false, true; uwait(0.3);
+	_CombineShardsProc.call; uwait 0.5;
   end
 
   def discard_shards

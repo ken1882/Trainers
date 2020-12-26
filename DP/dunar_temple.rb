@@ -19,6 +19,7 @@ module DunarTemple
     # return combine_shards(true)
     # return discard_shards
     # return extract_loots
+	# return shop_sells
 	if FlagHasJB
 	  get_jb_buff
 	  rotateX(-90-rand(20))
@@ -142,8 +143,8 @@ module DunarTemple
   def start_room3
     puts "Start room#3"
     Combat.earth_shield; uwait 1;
-    move_front 12,true; uwait 1;
-    move_front 2.1,true
+    move_front 11.5,true; uwait 1;
+    move_front 1.8,true
     rotateX(90); uwait 0.5;
     move_front 2.0,true; uwait 0.5;
     Combat.summon_dragon; Combat.backjump;

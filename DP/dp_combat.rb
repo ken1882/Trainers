@@ -32,7 +32,7 @@ end
 def move_front(duration,dash,release=true)
   cnt = (duration / JumpDuration).to_i
   duration *= JumpDuration
-  (Input.trigger_key(Keymap[:vk_W],false); wait(0.05);) if dash
+  (Input.trigger_key(Keymap[:vk_W],false); wait(0.1);) if dash
   Input.key_down Keymap[:vk_W],false
   wait(0.3)
   cnt.times do 
