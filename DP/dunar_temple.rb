@@ -16,14 +16,14 @@ module DunarTemple
   def start
     # return clear_inventory
     # return p Combat.target_reachable?
-    # return combine_shards(true)
+    return combine_shards(true)
     # return discard_shards
     # return extract_loots
-	# return shop_sells
-	if FlagHasJB
-	  get_jb_buff
-	  rotateX(-90-rand(20))
-	end
+	  return shop_sells
+    if FlagHasJB
+      get_jb_buff
+      rotateX(-90-rand(20))
+    end
     loop do 
       @timer_run += 1
       puts "Running ##{@timer_run} time"

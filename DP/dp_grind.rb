@@ -13,7 +13,8 @@ module Grinding
 
   SystemMenuPos = [1139, 30]
   UnstuckPos    = [976, 460]
-  
+  ExtractBarPos = [[900,819],[1000,819]]
+  ExtractBarColorThreshold = 50
   GearsPos = [1455, 491]
   BatchExcPos = [1752, 707]
   StartExcPos = [1360, 640]
@@ -27,8 +28,6 @@ module Grinding
   
   FirstItemPos       = [[1506, 452]]
   FirstItemColor     = [[27, 27, 27]]
-  ExctractBarPos     = [[856, 804],[845, 809],[959, 806]]
-  ExctractBarColor   = [[2, 65, 92],[39, 33, 32],[126, 153, 158]]
   LastPageToExcPos   = [[1840, 655]]
   LastPageToExcColor = [[30, 30, 28]]
 
@@ -115,11 +114,16 @@ module Grinding
 	_exterrcnt = 0
     _EnsureExtractingProc = Proc.new{
       loop do 
-        _flag_exc_started = false 
-        120.times do 
-          _flag_exc_started = Graphics.screen_pixels_matched?(
-            ExctractBarPos, ExctractBarColor
-          )
+        _flag_exc_started = true 
+        30.times do 
+          _flag_exc_started = true 
+          sy = ExtractBarPos[0][1]
+          ExtractBarPos[0][0].upto ExtractBarPos[1][0] do |sx|
+            rgb = Graphics.get_pixel(sx,sy).rgb
+            if rgb.any?{|cv| cv > ExtractBarColorThreshold}
+              _flag_exc_started = false; break;
+            end
+          end
           Fiber.yield
           break if _flag_exc_started        
         end
@@ -128,15 +132,15 @@ module Grinding
         if Graphics.screen_pixels_matched? LastPageToExcPos, LastPageToExcColor
           puts "Seems nothing to extract"
           break
-		elsif _exterrcnt > 5
-	      puts "Seems something went wrong, retry extracing process"
-	      Combat.earth_shield; uwait 3;
-		  return extract_loots
+        elsif _exterrcnt > 5
+          puts "Seems something went wrong, retry extracing process"
+          Combat.earth_shield; uwait 3;
+          return extract_loots
         end
         Input.moveto *StartExcPos; uwait(0.3)
         Input.click_l false,true
         puts "Extract seems not started, retry (#{_exterrcnt})"
-		_exterrcnt += 1
+		    _exterrcnt += 1
       end
     }
     _ExtractProc.call; Input.moveto *StartExcPos;
