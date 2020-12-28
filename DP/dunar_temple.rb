@@ -3,7 +3,7 @@ module DunarTemple
   
   TimesPerClearInventory = 2
   TimesPerJBBuff = 3
-  TimesPer302ShardCombine = 5
+  TimesPer302ShardCombine = 3
   TimesPerAutoRestart = 6
   
   ExctractBarPos     = [[856, 804],[845, 809],[959, 806]]
@@ -14,16 +14,17 @@ module DunarTemple
   
   module_function
   def start
+	# return p hud_opened?
     # return clear_inventory
     # return p Combat.target_reachable?
-    return combine_shards(true)
+    # return combine_shards(true)
     # return discard_shards
     # return extract_loots
-	  return shop_sells
-    if FlagHasJB
-      get_jb_buff
-      rotateX(-90-rand(20))
-    end
+	# return shop_sells
+	if FlagHasJB
+	  get_jb_buff
+	  rotateX(-90-rand(20))
+	end
     loop do 
       @timer_run += 1
       puts "Running ##{@timer_run} time"

@@ -13,8 +13,7 @@ module Grinding
 
   SystemMenuPos = [1139, 30]
   UnstuckPos    = [976, 460]
-  ExtractBarPos = [[900,819],[1000,819]]
-  ExtractBarColorThreshold = 50
+  
   GearsPos = [1455, 491]
   BatchExcPos = [1752, 707]
   StartExcPos = [1360, 640]
@@ -28,6 +27,8 @@ module Grinding
   
   FirstItemPos       = [[1506, 452]]
   FirstItemColor     = [[27, 27, 27]]
+  ExtractBarPos = [[900,818],[960,818]]
+  ExtractBarColorThreshold = 50
   LastPageToExcPos   = [[1840, 655]]
   LastPageToExcColor = [[30, 30, 28]]
 
@@ -58,13 +59,18 @@ module Grinding
   StartRepairPos = [877,517]
   
   JBBuffs = [[242, 571],[243, 536],[245, 493],[252, 464],[254, 426],[261, 389],[263, 359],[256, 326]]
-  
+  HudOpenedPos = [[10,5],[1900,5]]
+  HudPixelSampleRate = 100
+  HudOpenedColorAvg = 30
+  CharSelectionPos = [971, 525]
   module_function
 
   # reset position and camera
   def unstuck(async=false)
     puts "Unstucking"
-    Input.trigger_key Keymap[:vk_esc],false; uwait(0.5);
+	while !hud_opened?
+	  Input.trigger_key Keymap[:vk_esc],false; uwait(0.5);
+	end  
     Input.moveto(*SystemMenuPos); uwait(0.1);
     Input.click_l false,true; uwait(0.3);
     Input.moveto(*UnstuckPos); uwait(0.1);
@@ -85,11 +91,12 @@ module Grinding
   def extract_loots
     puts "Start extracing loots"
     Input.trigger_key Keymap[:vk_B]; uwait(0.3);
-    Input.moveto *GearsPos; uwait(0.3);
-    Input.click_l false, true; uwait(0.3);
-    Input.moveto *BatchExcPos; uwait(0.3);
-    Input.click_l false, true; uwait(0.3);
-    
+	2.times do 
+      Input.moveto *GearsPos; uwait(0.3);
+      Input.click_l false, true; uwait(0.3);
+      Input.moveto *BatchExcPos; uwait(0.3);
+      Input.click_l false, true; uwait(0.3);
+    end
     return puts("Nothing to extract!") if 3.times.collect{
       uwait(0.1); 
       px,py = FirstItemPos[0]
@@ -115,7 +122,7 @@ module Grinding
     _EnsureExtractingProc = Proc.new{
       loop do 
         _flag_exc_started = true 
-        30.times do 
+        60.times do 
           _flag_exc_started = true 
           sy = ExtractBarPos[0][1]
           ExtractBarPos[0][0].upto ExtractBarPos[1][0] do |sx|
@@ -176,7 +183,9 @@ module Grinding
   end
 
   def reset_dungeon 
-    Input.trigger_key(Keymap[:vk_esc])
+    while !hud_opened?
+      Input.trigger_key(Keymap[:vk_esc]); uwait 0.3;
+	end
     Input.moveto(*ProfilePos); wait((rand/2).floor(2));
     Input.click_r(false,true); wait((rand/2).floor(2));
     Input.moveto(*ResetDungPos); wait(0.1+(rand/5).floor(2));
@@ -194,6 +203,8 @@ module Grinding
     else
       move_front(0.5,method>1)
     end
+	uwait 1
+	logout unless hud_opened?
   end
 
   def select_difficulty
@@ -207,7 +218,7 @@ module Grinding
 
   def combine_shards(combine_302=false)
     puts "Start combine dragon shards"
-    Input.key_down Keymap[:vk_Lcontrol],false; uwait 0.5;
+	Input.key_down Keymap[:vk_Lcontrol],false; uwait 0.5;
     Input.trigger_key Keymap[:vk_equal]; uwait 0.5;
     Input.key_up Keymap[:vk_Lcontrol],false; uwait(2.5);
     Input.moveto(*ShardTypesPos); uwait 0.3;  Input.click_l false,true;
@@ -254,9 +265,9 @@ module Grinding
     _CombineShardsProc.call()
     uwait 0.5
 
-    # Combine MagDef shards
+    # Combine Phy/MagDef shards
     Input.moveto(*ShardTypesPos); uwait 0.3; Input.click_l false,true;
-    Input.moveto(*ShardTypeListPos[2]); uwait 0.3;  Input.click_l false,true;
+    Input.moveto(*ShardTypeListPos[1]); uwait 0.3;  Input.click_l false,true;
     2.times do |i| 
 	  Input.moveto(*ShardFilterPos[i]); uwait 0.3;  Input.click_l false,true;
       uwait 0.3
@@ -267,9 +278,13 @@ module Grinding
       ShardDefFilterInput[i].each{|vk| Input.trigger_key vk,false}
 	  uwait 0.3
 	end
-    uwait 0.3; _CombineShardsProc.call;
-    Input.moveto *DragonShardPos; uwait 0.3;
-    Input.click_l false,true; uwait 0.3;
+	[ShardTypeListPos[1],ShardTypeListPos[2]].each do |tpos|
+		Input.moveto(*ShardTypesPos); uwait 0.3; Input.click_l false,true;
+		Input.moveto(*tpos); uwait 0.3;  Input.click_l false,true;
+		uwait 0.3; _CombineShardsProc.call;
+		Input.moveto *DragonShardPos; uwait 0.3;
+		Input.click_l false,true; uwait 0.5;
+	end 
     
     return unless combine_302
     Input.trigger_key Keymap[:vk_B]; uwait 0.5;
@@ -300,26 +315,40 @@ module Grinding
       Input.moveto(*spos); uwait 0.3; Input.click_l false,true;
       _CombineShardsProc.call()
     end
-	# combine dsd
+	# combine phy/magdef
 	Input.moveto *ShardTypesPos; uwait(0.3);
     Input.click_l false, true; uwait(0.3);
     Input.moveto *ShardScrolldownPos; uwait 0.3;
-    2.times{ Input.click_l false, true; uwait(0.2); }
-	Input.moveto *ShardTypeListPos[2]; uwait 0.3;
-	Input.click_l false, true; uwait(0.3);
-	_CombineShardsProc.call; uwait 0.5;
-	
-	# combine mdef
-	Input.moveto *ShardTypesPos; uwait(0.3);
-    Input.click_l false, true; uwait(0.3);
+    3.times{ Input.click_l false, true; uwait(0.2); }
 	Input.moveto *ShardTypeListPos[4]; uwait 0.3;
 	Input.click_l false, true; uwait(0.3);
-	_CombineShardsProc.call; uwait 0.5;
+	2.times do |i| 
+	  Input.moveto(*ShardFilterPos[i]); uwait 0.3;  Input.click_l false,true;
+      uwait 0.3
+      2.times do 
+        Input.trigger_key Keymap[:vk_backspace],false; uwait 0.3; 
+        Input.trigger_key Keymap[:vk_delete],false; uwait 0.3;
+      end
+      ShardDef302FilterInput[i].each{|vk| Input.trigger_key vk,false}
+	  uwait 0.3
+	end
+	[ShardTypeListPos[3],ShardTypeListPos[4]].each do |tpos|
+		Input.moveto(*ShardTypesPos); uwait 0.3; Input.click_l false,true;
+		Input.moveto(*tpos); uwait 0.3;  Input.click_l false,true;
+		uwait 0.3; _CombineShardsProc.call;
+		Input.moveto *DragonShardPos; uwait 0.3;
+		Input.click_l false,true; uwait 0.5;
+	end 
+    uwait 0.3; _CombineShardsProc.call;
+	Input.moveto *DragonShardPos; uwait 0.3;
+    Input.click_l false,true; uwait 0.5;
   end
 
   def discard_shards
     puts "Start discard useless shards"
-    Input.trigger_key Keymap[:vk_B]; uwait(2.5);
+    while !hud_opened?
+	  Input.trigger_key Keymap[:vk_B]; uwait(2.5);
+	end
     Input.moveto *DragonShardPos; uwait(0.3);
     Input.click_l false, true; uwait(0.3);
     Input.moveto *ShardTypesPos; uwait(0.3);
@@ -369,10 +398,12 @@ module Grinding
   end
 
   def shop_sells
-    Input.key_down Keymap[:vk_Lcontrol],false; uwait 0.5;
-    Input.trigger_key Keymap[:vk_minus]; uwait 0.5;
-    Input.key_up Keymap[:vk_Lcontrol],false; uwait(1);
-    uwait 3; Input.trigger_key Keymap[:vk_F],false; uwait 2.5;
+	while !hud_opened?
+      Input.key_down Keymap[:vk_Lcontrol],false; uwait 0.5;
+      Input.trigger_key Keymap[:vk_minus]; uwait 0.5;
+      Input.key_up Keymap[:vk_Lcontrol],false; uwait(1);
+      uwait 3; Input.trigger_key Keymap[:vk_F],false; uwait 2.5;
+	end
     Input.moveto 1,1; uwait 0.1;
     Input.moveto *ItemPagePos[StartSellPage]; uwait 0.3;
     Input.click_l false, true; uwait(0.3);
@@ -410,10 +441,38 @@ module Grinding
   end
   
   def get_jb_buff
+	Input.trigger_key Keymap[:vk_F],false; uwait 1;
+	return logout unless hud_opened?
 	JBBuffs.each do |pos|
 	  Input.trigger_key Keymap[:vk_F],false; uwait 1;
 	  Input.moveto *pos; uwait 0.5;
 	  Input.click_l false, true; uwait 0.3;
 	end
+  end
+  
+  def hud_opened?
+    uwait 1
+	sum = 0
+	sx,sy = HudOpenedPos[0]
+	ex = HudOpenedPos[1].first
+	_cnt = ((ex-sx) / HudPixelSampleRate).to_i
+	_cnt.times do |i|
+	  rgb = Graphics.get_pixel(sx+i*HudPixelSampleRate,sy).rgb
+	  sum += (rgb.sum / 3)
+	end 
+	return (sum / _cnt) <= HudOpenedColorAvg
+  end
+  
+  def logout
+	puts "Logout!"
+	while !hud_opened?
+	  Input.trigger_key Keymap[:vk_esc],false
+	  uwait 1.5
+	end
+	Input.moveto *SystemMenuPos; uwait 0.3;
+	Input.click_l false,true; uwait 0.3;
+	Input.moveto *CharSelectionPos; uwait 0.3;
+	Input.click_l false,true; uwait 0.3;
+	exit
   end
 end
