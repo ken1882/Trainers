@@ -8,7 +8,7 @@ module DunarTemple
   
   ExctractBarPos     = [[856, 804],[845, 809],[959, 806]]
   ExctractBarColor   = [[2, 65, 92],[39, 33, 32],[126, 153, 158]]
-  FlagHasJB = true
+  FlagHasJB = false
 
   @timer_run = 0
   

@@ -263,7 +263,13 @@ WorkerFibers = [
   :start_sp_fiber, :start_eggdance_fiber, :start_dunar_temple
 ]
 SelectedWorker = WorkerFibers.find{|f| f if f.match ARGV[0]} rescue nil
-puts "Worker selected: #{SelectedWorker}" if SelectedWorker
+
+if SelectedWorker
+  puts "Worker selected: #{SelectedWorker}"
+else
+  puts "No worker selected, default set to pirate"
+end
+
 def main_update
   Input.update
   if Input.trigger?(Keymap[:vk_f8]) || ($flag_auto_restart && !$flag_first_work)
