@@ -156,7 +156,7 @@ module Input
 
   def trigger_key(kid, use_msg=true)
     key_down(kid, use_msg)
-    wait(0.03)
+    sleep(0.03)
     key_up(kid, use_msg)
   end
 
@@ -234,16 +234,17 @@ end
 $fiber = nil
 $working_stage = 0
 
-WaitInterval = 0.01
+WaitInterval = 0.05
 def wait(sec)
+  wt = WaitInterval - FPS
   (sec / WaitInterval).to_i.times do
-    sleep(WaitInterval)
+    sleep(wt) if wt > 0
     Fiber.yield
   end
 end
 
 def uwait(_t)
-  wait (_t+_t*0.6).floor(2)
+  wait(_t+_t*0.6).floor(2)
 end
 
 $HwndStack = []

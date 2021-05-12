@@ -32,7 +32,10 @@ end
 def move_front(duration,dash,release=true)
   cnt = (duration / JumpDuration).to_i
   duration *= JumpDuration
-  (Input.trigger_key(Keymap[:vk_W],false); wait(0.1);) if dash
+  if dash
+    Input.trigger_key(Keymap[:vk_W],false)
+    sleep(0.1)
+  end
   Input.key_down Keymap[:vk_W],false
   wait(0.3)
   cnt.times do 
@@ -83,7 +86,7 @@ module Combat
   CharacterDeadColor = [[2, 106, 141],[27, 27, 26],[29, 29, 27],[27, 27, 25],[25, 25, 24],[12, 12, 12],[11, 13, 12],[254, 254, 254],[187, 181, 149]]
   
   PetPagePos = [1843, 406]
-  LootPetPos = [1743, 451]
+  LootPetPos = [1604, 457] #[1743, 451]
 
   DragonHpPos   = [[103, 175]]
   DragonHpColor = [[200, 38, 2]]
@@ -163,7 +166,7 @@ module Combat
   def earth_shield
     vk = :alt_E
     return if cd?(vk) 
-    Input.key_down Keymap[:vk_Lalt],false; Fiber.yield;
+    Input.key_down Keymap[:vk_Lalt],false; sleep(0.03);
     Input.trigger_key Keymap[:vk_E]; uwait(0.03);
     Input.key_up Keymap[:vk_Lalt],false
     cd(vk, 18)
@@ -172,7 +175,7 @@ module Combat
   def elemental_activation
     vk = :alt_R
     return if cd?(vk) 
-    Input.key_down Keymap[:vk_Lalt],false; Fiber.yield;
+    Input.key_down Keymap[:vk_Lalt],false; sleep(0.03);
     Input.trigger_key Keymap[:vk_R]; uwait(0.03);
     Input.key_up Keymap[:vk_Lalt],false
     cd(vk, 42)
@@ -180,14 +183,14 @@ module Combat
 
   def blink 
     vk = :alt_Q
-    Input.key_down Keymap[:vk_Lalt],false; Fiber.yield;
+    Input.key_down Keymap[:vk_Lalt],false; sleep(0.03);
     Input.trigger_key Keymap[:vk_Q]; uwait(0.03);
     Input.key_up Keymap[:vk_Lalt],false
   end
 
   def healbuff 
     vk = :alt_3
-    Input.key_down Keymap[:vk_Lalt],false; Fiber.yield;
+    Input.key_down Keymap[:vk_Lalt],false; sleep(0.03);
     Input.trigger_key Keymap[:vk_3]; uwait(0.03);
     Input.key_up Keymap[:vk_Lalt],false
     cd(vk, 6)

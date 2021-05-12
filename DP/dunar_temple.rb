@@ -14,17 +14,18 @@ module DunarTemple
   
   module_function
   def start
-	# return p hud_opened?
+    return start_room3
+	  # return p hud_opened?
     # return clear_inventory
     # return p Combat.target_reachable?
     # return combine_shards(true)
     # return discard_shards
     # return extract_loots
-	# return shop_sells
-	if FlagHasJB
-	  get_jb_buff
-	  rotateX(-90-rand(20))
-	end
+	  # return shop_sells
+    if FlagHasJB
+      get_jb_buff
+      rotateX(-90-rand(20))
+    end
     loop do 
       @timer_run += 1
       puts "Running ##{@timer_run} time"
@@ -70,27 +71,27 @@ module DunarTemple
     end
     Combat.earth_shield; uwait 2;
     # Input.trigger_key Keymap[:vk_esc],false; uwait 1;
-	if FlagHasJB && @timer_run % TimesPerJBBuff == 0
-	  rotateX(-75)
-	  Input.key_down Keymap[:vk_W],false; uwait 0.95;
-	  Input.key_up Keymap[:vk_W]; uwait 1;
-	  if @timer_run % TimesPerAutoRestart == 0
-		puts "Restarting program"
-		args = ARGV.join ' '
-		cmd = "ruby dp.rb -r #{args}"
-		exec cmd
-	  end
-	  get_jb_buff
-	  rotateX(-90-rand(20))
-	else
-	  rotateX(190+rand(30))
-	  if @timer_run % TimesPerAutoRestart == 0
-		puts "Restarting program"
-		args = ARGV.join ' '
-		cmd = "ruby dp.rb -r #{args}"
-		exec cmd
-	  end
-	end  
+    if FlagHasJB && @timer_run % TimesPerJBBuff == 0
+      rotateX(-75)
+      Input.key_down Keymap[:vk_W],false; uwait 0.95;
+      Input.key_up Keymap[:vk_W]; uwait 1;
+      if @timer_run % TimesPerAutoRestart == 0
+        puts "Restarting program"
+        args = ARGV.join ' '
+        cmd = "ruby dp.rb -r #{args}"
+        exec cmd
+      end
+      get_jb_buff
+      rotateX(-90-rand(20))
+    else
+      rotateX(190+rand(30))
+      if @timer_run % TimesPerAutoRestart == 0
+      puts "Restarting program"
+      args = ARGV.join ' '
+      cmd = "ruby dp.rb -r #{args}"
+      exec cmd
+      end
+    end  
   end
   
   def reposition
