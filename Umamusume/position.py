@@ -1,0 +1,6 @@
+Rest      = (92, 792)
+TrainMenu = (298, 795)
+SkillSelection = (492, 793)
+Heal  = (134, 908)
+GoOut = (291, 904)
+Race  = (442, 904)
