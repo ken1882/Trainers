@@ -40,6 +40,11 @@ MsgPipeTerminated = "\x00\x50\x00TERMINATED\x00"
 MsgPipeRet = "\x00\x50\x00RET\x00"
 MsgPipeInfo = "\x00\x50\x00INFO\x00"
 
+
+UmaNumberImage = []
+for i in range(10):
+  UmaNumberImage.append(f"UmaNumber/{i}.png")
+
 def format_curtime():
   return datetime.strftime(datetime.now(), '%H:%M:%S')
 

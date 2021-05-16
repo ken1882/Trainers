@@ -1,8 +1,21 @@
+import cv2
+import numpy as np
+from win32con import MAXSTRETCHBLTMODE
 import _G
 import graphics, position
 from util import (wait, uwait, img2str, ocr_rect)
 from desktopmagic.screengrab_win32 import getRectAsImage
 from _G import (log_debug, log_error, log_info, log_warning)
+
+CVMatchThreshold = 0.6  # Similarity rate thresholf
+CVMatchMinCount  = 2    # How many matched point need to pass
+TrainingEffectStat = (
+  (0,2,5),    # speed, power, skill pt(all)
+  (1,3,5),    # stamina, willness
+  (1,2,5),    # stamina, power
+  (0,2,3,5),  # speed, power, willness
+  (0,4,5)     # speed, wisdom
+)
 
 Enum = {
   'TrainMain': {
@@ -10,10 +23,10 @@ Enum = {
     'color': ((253, 250, 211),(231, 81, 82),(74, 207, 225),(90, 181, 57)),
     'pos': ((116, 779),(357, 782),(528, 822),(534, 163)),
   },
-  'TrainSelection': {
+  'TrainSummer': {
     'id': 2,
-    'pos': [],
-    'color': [],
+    'pos': ((82, 759),(93, 762),(102, 761),(357, 782),(523, 823),(406, 937),),
+    'color': ((255, 252, 242),(228, 82, 82),(255, 252, 242),(231, 81, 82),(74, 207, 225),(253, 113, 162),)
   },
   'SkillSelection': {
     'id': 3,
@@ -111,3 +124,84 @@ def get_race_fans():
   wait(1)
   f1 = ocr_rect(position.RaceFanRect2, fname, 2.0).strip()
   return [f0, f1]
+
+def validate_train_effect(menu_index, numbers):
+  if menu_index == 0:   # speed
+    if max(numbers) != numbers[0] or numbers[1] < numbers[2]:
+      return False
+  elif menu_index == 1: # stamina
+    if max(numbers) != numbers[0] or numbers[1] < numbers[2]:
+      return False
+  elif menu_index == 2: # power
+    if max(numbers) != numbers[1] or numbers[0] < numbers[2]:
+      return False
+  elif menu_index == 3: # willness
+    if max(numbers) != numbers[2] or numbers[0] < numbers[3]:
+      return False
+  elif menu_index == 4: # wisdom
+    if max(numbers) != numbers[1] or numbers[2] < numbers[0]:
+      return False
+  return True
+
+def get_all_training_effect():
+  pass
+
+def get_training_effect(menu_index):
+  global CVMatchThreshold, CVMatchMinCount, TrainingEffectStat
+  size   = len(TrainingEffectStat[menu_index])
+  passed = False
+  while not passed:
+    effect = []
+    idx    = 0
+    while idx < size:
+      graphics.flush()
+      rect = position.TrainingIncreaseRect[TrainingEffectStat[menu_index][idx]]
+      fname = f"training{idx}.png"
+      graphics.take_snapshot(rect, fname)
+      wait(0.3)
+      src = cv2.imread(f"{_G.DCTmpFolder}/{fname}")
+      dig_x = {}
+      digit = []
+      ar_ok_cnt = []
+      ar_ok_pos = {}
+      max_match = 0
+      for i in range(10):
+        dig_x[i] = 0
+        ar_ok_pos[i] = []
+        tmp = cv2.imread(_G.UmaNumberImage[i])
+        res = cv2.matchTemplate(src, tmp, cv2.TM_CCOEFF_NORMED)
+        matched = np.where(res >= CVMatchThreshold)
+        ok_cnt  = 0
+        sum_x   = 0
+        for y,x in zip(*matched):
+          ok_cnt += 1
+          sum_x  += x
+          ar_ok_pos[i].append((x,y))
+          max_match = max(max_match, ok_cnt)
+        dig_x[i] = sum_x
+        ar_ok_cnt.append(ok_cnt)
+        ar_ok_pos[i] = sorted(ar_ok_pos[i], key=lambda _pos: _pos[0])
+      
+      for n in range(10):
+        last_x = -1
+        if ar_ok_cnt[n] < max_match:
+          continue
+        for pos in ar_ok_pos[n]:
+          if pos[0] - last_x > 10:
+            digit.append(n)
+          last_x = pos[0]
+      
+      digit = sorted(digit, key=lambda v:dig_x[v])
+      log_info(f"Training benefit#{idx}:\nok count: {ar_ok_cnt}\ndigits: {digit}\ndigit x: {dig_x}\npos: {ar_ok_pos}")
+      try:
+        number = int("".join([str(d) for d in digit]))
+      except (TypeError,ValueError):
+        number = 0
+      if number >= 2 and number <= 100:
+        effect.append(number)
+        idx += 1
+    passed = validate_train_effect(menu_index, effect)
+    if not passed:
+      log_info(f"Wrong OCR training effect ({effect}), retry")
+  return effect 
+  

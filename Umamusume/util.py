@@ -67,12 +67,12 @@ def safe_execute_func(func, args=[], kwargs={}):
 def handle_exception(err, errinfo):
   _G.log_error(f"An error occured during runtime!\n{str(err)}\n{errinfo}")
 
-def img2str(image_file):
+def img2str(image_file, lang='jpn', config='--psm 12 --psm 13'):
   if not os.path.exists(image_file) and not image_file.startswith(_G.DCTmpFolder):
     image_file = f"{_G.DCTmpFolder}/{image_file}"
-  return pytesseract.image_to_string(image_file, lang='jpn') or ''
+  return pytesseract.image_to_string(image_file, lang=lang, config=config) or ''
 
-def ocr_rect(rect, fname, zoom=1.0):
+def ocr_rect(rect, fname, zoom=1.0, lang='jpn', config='--psm 12 --psm 13'):
   log_info(f"Processing OCR for {fname}")
   if not os.path.exists(fname):
     fname = f"{_G.DCTmpFolder}/{fname}"
@@ -81,4 +81,4 @@ def ocr_rect(rect, fname, zoom=1.0):
     size = (int(img.size[0]*zoom), int(img.size[1]*zoom))
     graphics.resize_image(size, fname, fname)
   wait(0.3)
-  return img2str(fname)
+  return img2str(fname, lang, config)
