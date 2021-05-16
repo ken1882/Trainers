@@ -1,8 +1,6 @@
 from win32con import FLASHW_TIMER
-from stage import LastFrameCount
 import _G
 import win32gui
-import pytesseract
 import input
 from desktopmagic.screengrab_win32 import (
 	getDisplayRects, saveScreenToBmp, saveRectToBmp, getScreenAsImage,
@@ -10,9 +8,12 @@ from desktopmagic.screengrab_win32 import (
 )
 from PIL import Image
 
-LastFrameCount = -1
-CurrentSnapshot = None
+SnapshotCache = {}
 _G.DesktopDC = win32gui.GetDC(0)
+
+def flush():
+  global SnapshotCache
+  SnapshotCache = {}
 
 def is_color_ok(cur, target):
   for c1,c2 in zip(cur,target):
@@ -31,10 +32,10 @@ def is_pixel_match(pix, col):
   return True
 
 def get_pixel(x,y,sync=False):
-  global CurrentSnapshot
+  global SnapshotCache
   # use win32api to get pixel in real time, slower
   if sync:
-    rect = _G.get_full_app_rect()
+    rect = get_full_rect()
     x += rect[0]
     y += rect[1]
     rgb = win32gui.GetPixel(_G.DesktopDC, x, y)
@@ -43,13 +44,13 @@ def get_pixel(x,y,sync=False):
     r = (rgb & 0x0000ff)
     return (r,g,b)
   # take DC snapshot first, faster
-  take_snapshot()
-  return CurrentSnapshot.getpixel((x,y))
+  dc = take_snapshot()
+  return dc.getpixel((x,y))
 
 def get_mouse_pixel(mx=None, my=None):
   if not mx and not my:
     mx, my = input.get_cursor_pos()
-  r,g,b = get_pixel(mx, my)
+  r,g,b = get_pixel(mx, my, True)
   return ["({}, {}),".format(mx, my), "({}, {}, {}),".format(r,g,b)]
 
 def get_full_rect():
@@ -62,16 +63,36 @@ def get_full_rect():
 
 def get_content_rect():
   rect = list(win32gui.GetClientRect(_G.AppHwnd))
-  rect[0] += _G.WinTitleBarSize[0] + _G.WinDesktopBorderOffset[0]
-  rect[1] += _G.WinTitleBarSize[1] + _G.WinDesktopBorderOffset[1]
+  rect[0] += _G.WinTitleBarSize[0] + _G.WinDesktopBorderOffset[0] + _G.AppRect[0]
+  rect[1] += _G.WinTitleBarSize[1] + _G.WinDesktopBorderOffset[1] + _G.AppRect[1]
   rect[2] += _G.WinTitleBarSize[0] + _G.WinDesktopBorderOffset[0]
   rect[3] += _G.WinTitleBarSize[1] + _G.WinDesktopBorderOffset[1]
   return tuple(rect)
 
-def take_snapshot():
-  global LastFrameCount,CurrentSnapshot
-  if LastFrameCount != _G.FrameCount:
-    print("snapshot taken")
-    getRectAsImage(get_content_rect()).save(_G.DCSnapshotFile, format='png')
-    LastFrameCount = _G.FrameCount
-    CurrentSnapshot = Image.open(_G.DCSnapshotFile)
+def take_snapshot(rect=None,filename=None):
+  global SnapshotCache
+  if not filename:
+    filename = _G.DCSnapshotFile
+  if not rect:
+    rect = list(get_content_rect())
+    rect[2] += rect[0]
+    rect[3] += rect[1]
+  # note: cache will be flushed every frame during main_loop
+  if _G.LastFrameCount == _G.FrameCount and filename in SnapshotCache:
+    return SnapshotCache[filename]
+  else:
+    _G.LastFrameCount = _G.FrameCount
+  return _take_snapshot(rect, filename)
+
+def _take_snapshot(rect,filename):
+  path = filename if filename.startswith(_G.DCTmpFolder) else f"{_G.DCTmpFolder}/{filename}"
+  getRectAsImage(tuple(rect)).save(path, format='png')
+  img = Image.open(path)
+  SnapshotCache[filename] = img 
+  return img 
+
+def resize_image(size, src_fname, dst_fname):
+  img = Image.open(src_fname)
+  ret = img.resize(size)
+  ret.save(dst_fname)
+  return ret 

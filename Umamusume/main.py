@@ -25,6 +25,7 @@ def print_cache():
 def main_loop():
   global output_cache
   input.update()
+  graphics.flush()
   if _G.FlagPaused:
     return
   
@@ -40,7 +41,11 @@ def main_loop():
     log_info("Worker terminated" if _G.FlagWorking else "Worker started")
     _G.FlagWorking = True
     print(stage.get_energy())
-    print(stage.get_current_stage())
+    # print(stage.get_current_stage())
+    # print(stage.get_skill_points())
+    # print(stage.get_status())
+    print(stage.get_date())
+    print(stage.get_race_fans())
   elif input.is_trigger(win32con.VK_F9):
     log_info("Stop program requested") 
     _G.FlagRunning = False
@@ -60,8 +65,11 @@ def start_main():
     wait(_G.FPS)
 
 if __name__ == "__main__":
-  util.remove_ppl()
   util.find_app_window()
   util.resize_app_window()
-  util.move_window(x=1,y=1)
-  start_main()
+  util.move_window(x=-9,y=-31)
+  try:
+    start_main()
+  except (KeyboardInterrupt, SystemExit):
+    pass
+  

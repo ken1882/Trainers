@@ -1,13 +1,15 @@
+import pytesseract
 import _G
+from _G import log_error,log_debug,log_info,log_warning
 import os
 import win32gui, win32process
 from time import sleep
 from random import random
 import traceback
+import os.path
+from PIL import Image
+import graphics
 
-def flush():
-  _G.LastFrameCount = -1
-  _G.CurrentStage   = -1
 
 def wait(sec):
   sleep(sec)
@@ -21,13 +23,6 @@ def resume(fiber):
   except StopIteration:
     return False
   return True
-
-def remove_ppl():
-  os.system(f"{_G.DriverName} /installDriver")
-  sleep(0.1)
-  os.system(f"{_G.DriverName} /disablePPL {_G.AppPid}")
-  sleep(0.1)
-  os.system(f"{_G.DriverName} /uninstallDriver")
 
 def EnumWindowCallback(hwnd, lparam):
   if win32gui.IsWindowVisible(hwnd):
@@ -71,4 +66,19 @@ def safe_execute_func(func, args=[], kwargs={}):
 
 def handle_exception(err, errinfo):
   _G.log_error(f"An error occured during runtime!\n{str(err)}\n{errinfo}")
-  
+
+def img2str(image_file):
+  if not os.path.exists(image_file) and not image_file.startswith(_G.DCTmpFolder):
+    image_file = f"{_G.DCTmpFolder}/{image_file}"
+  return pytesseract.image_to_string(image_file, lang='jpn') or ''
+
+def ocr_rect(rect, fname, zoom=1.0):
+  log_info(f"Processing OCR for {fname}")
+  if not os.path.exists(fname):
+    fname = f"{_G.DCTmpFolder}/{fname}"
+  img = graphics.take_snapshot(rect, fname)
+  if zoom != 1.0:
+    size = (int(img.size[0]*zoom), int(img.size[1]*zoom))
+    graphics.resize_image(size, fname, fname)
+  wait(0.3)
+  return img2str(fname)

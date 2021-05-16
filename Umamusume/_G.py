@@ -8,7 +8,8 @@ AppTid  = 0
 
 DriverName = "RTCore64.exe"
 
-DCSnapshotFile = ".snapshot.png"
+DCTmpFolder = ".tmp"
+DCSnapshotFile = "snapshot.png"
 
 WindowWidth  = 596
 WindowHeight = 1070
@@ -23,6 +24,7 @@ SelectedFiber = None
 ColorBiasRange = 15
 CurrentStage   = None
 FrameCount     = 0
+LastFrameCount = -1
 
 # 0:NONE 1:ERROR 2:WARNING 3:INFO 4:DEBUG
 VerboseLevel = 3

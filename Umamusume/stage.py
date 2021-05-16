@@ -1,6 +1,8 @@
 import _G
-import graphics
-from PIL import Image
+import graphics, position
+from util import (wait, uwait, img2str, ocr_rect)
+from desktopmagic.screengrab_win32 import getRectAsImage
+from _G import (log_debug, log_error, log_info, log_warning)
 
 Enum = {
   'TrainMain': {
@@ -23,17 +25,41 @@ Enum = {
     'pos': [],
     'color': [],
   },
+  'GoalComplete': {
+    'id': 5,
+    'pos': ((153, 297),(234, 294),(307, 297),(420, 296),(297, 894),),
+    'color': ((200, 255, 35),(206, 255, 45),(198, 255, 27),(205, 255, 40),(255, 255, 255),)
+  }
 }
+
+Status = {
+  'pos': (477, 142),
+  # color
+  'color': (
+    # 絕不調(0) ~ 絕好調(4)
+    (0,0,0), (0,0,0), (0,0,0), (0,0,0), (247,71,128)
+  )
+}
+StatusBest    = 4
+StatusGood    = 3
+StatusNormal  = 2
+StatusBad     = 1
+StatusWorst   = 0
 
 ColorNoEnergy = (118,117,118)
 EnergyBarRect = (184, 131, 405, 132)
-LastFrameCount = -1
+
+
+
+def flush():
+  _G.CurrentStage   = -1
+  _G.LastFrameCount = -1
 
 def get_current_stage():
-  global Enum, LastFrameCount
-  if LastFrameCount != _G.FrameCount:
+  global Enum
+  if _G.LastFrameCount != _G.FrameCount:
     _G.CurrentStage = None
-    LastFrameCount = _G.FrameCount
+    _G.LastFrameCount = _G.FrameCount
   elif _G.CurrentStage:
     return _G.CurrentStage
   
@@ -55,3 +81,33 @@ def get_energy():
     cx  += dx
     ret += (de*dx)
   return ret 
+
+def get_skill_points():
+  filename = f"skpt.png"
+  graphics.take_snapshot(position.SkillPtRect, filename)
+  uwait(0.3)
+  res = img2str(filename)
+  try:
+    return int(res)
+  except ValueError:
+    log_warning(f"Unable to convert OCR result `{res}` to int")
+  return 0
+
+def get_status():
+  global Status
+  rgb = graphics.get_pixel(*Status['pos'])
+  for i,c in enumerate(Status['color']):
+    if rgb == c:
+      return i 
+  return StatusBest
+
+def get_date():
+  fname = 'date.png'
+  return ocr_rect(position.DateRect, fname, 1.0).strip()
+
+def get_race_fans():
+  fname = 'racefan.png'
+  f0 = ocr_rect(position.RaceFanRect1, fname, 2.0).strip()
+  wait(1)
+  f1 = ocr_rect(position.RaceFanRect2, fname, 2.0).strip()
+  return [f0, f1]
