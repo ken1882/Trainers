@@ -1,7 +1,7 @@
 from win32con import FLASHW_TIMER
 import _G
 import win32gui
-import input
+import Input
 from desktopmagic.screengrab_win32 import (
 	getDisplayRects, saveScreenToBmp, saveRectToBmp, getScreenAsImage,
 	getRectAsImage, getDisplaysAsImages
@@ -49,7 +49,7 @@ def get_pixel(x,y,sync=False):
 
 def get_mouse_pixel(mx=None, my=None):
   if not mx and not my:
-    mx, my = input.get_cursor_pos()
+    mx, my = Input.get_cursor_pos()
   r,g,b = get_pixel(mx, my, True)
   return ["({}, {}),".format(mx, my), "({}, {}, {}),".format(r,g,b)]
 
@@ -73,10 +73,17 @@ def take_snapshot(rect=None,filename=None):
   global SnapshotCache
   if not filename:
     filename = _G.DCSnapshotFile
+  offset = list(get_content_rect())
   if not rect:
-    rect = list(get_content_rect())
+    rect = offset
     rect[2] += rect[0]
     rect[3] += rect[1]
+  else:
+    rect = list(rect)
+    rect[0] += offset[0]
+    rect[1] += offset[1]
+    rect[2] += offset[0]
+    rect[3] += offset[1]
   # note: cache will be flushed every frame during main_loop
   if _G.LastFrameCount == _G.FrameCount and filename in SnapshotCache:
     return SnapshotCache[filename]

@@ -1,6 +1,6 @@
 import pytesseract
 import _G
-from _G import log_error,log_debug,log_info,log_warning
+from _G import log_error,log_debug,log_info,log_warning,resume,wait,uwait
 import os
 import win32gui, win32process
 from time import sleep
@@ -9,20 +9,7 @@ import traceback
 import os.path
 from PIL import Image
 import graphics
-
-
-def wait(sec):
-  sleep(sec)
-
-def uwait(sec):
-  sleep(sec + max(random() / 2, sec * random() / 5))
-
-def resume(fiber):
-  try:
-    next(fiber)
-  except StopIteration:
-    return False
-  return True
+from difflib import SequenceMatcher
 
 def EnumWindowCallback(hwnd, lparam):
   if win32gui.IsWindowVisible(hwnd):
@@ -82,3 +69,6 @@ def ocr_rect(rect, fname, zoom=1.0, lang='jpn', config='--psm 12 --psm 13'):
     graphics.resize_image(size, fname, fname)
   wait(0.3)
   return img2str(fname, lang, config)
+
+def diff_string(a,b):
+  return SequenceMatcher(None,a,b).ratio()
