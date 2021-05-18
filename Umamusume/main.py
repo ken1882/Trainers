@@ -1,8 +1,11 @@
-import _G
+import os
+from time import sleep
+import _G, fiber
 from _G import (log_error,log_debug,log_info,log_warning,wait,uwait,resume)
 import util, Input, graphics, stage
 import win32con,win32gui
-from fiber import *
+from threading import Thread
+import argv_parse
 
 # Cache for pos/col records
 output_cache = []
@@ -25,48 +28,49 @@ def main_loop():
   global output_cache
   Input.update()
   graphics.flush()
-  if _G.FlagPaused:
-    return
   
   if Input.is_trigger(win32con.VK_F6):
     res = graphics.get_mouse_pixel()
     if not _G.SelectedFiber:
       output_cache.extend(res)
     print(Input.get_cursor_pos(), res) 
-  elif Input.is_trigger(win32con.VK_F7):
-    log_info("Program unpaused" if _G.FlagPaused else "Program paused")
-    _G.FlagPaused ^= True
   elif Input.is_trigger(win32con.VK_F8):
     log_info("Worker terminated" if _G.FlagWorking else "Worker started")
-    _G.FlagWorking = True
-    print(stage.get_energy())
-    print(stage.get_current_stage())
-    print(stage.get_date())
-    print(stage.get_all_training_effect())
-    # print(stage.get_training_effect(0))
+    _G.FlagWorking ^= True
+    _G.SelectedFiber()
   elif Input.is_trigger(win32con.VK_F9):
     log_info("Stop program requested") 
+    _G.FlagWorking = False
     _G.FlagRunning = False
     print_cache()
 
-  if _G.Fiber:
-    if not resume(_G.Fiber):
-      log_info("Worker ended")
-      _G.Fiber = None 
-      _G.FlagWorking = False
+  if _G.Fiber and not _G.Fiber.is_alive():
+    log_info("Worker ended")
+    _G.Fiber = None 
+    _G.FlagWorking = False
     
 
 def start_main():
   while _G.FlagRunning:
     _G.FrameCount += 1
     main_loop()
-    wait(_G.FPS)
+    sleep(_G.FPS)
 
 if __name__ == "__main__":
   util.find_app_window()
   util.resize_app_window()
   util.move_window(x=1,y=1)
-  # util.move_window(x=-9,y=-31)
+  util.move_window(x=-9,y=-31)
+  args = argv_parse.load()
+  if args.job:
+    for method in dir(fiber):
+      if args.job in method:
+        _G.SelectedFiber = getattr(fiber,method)
+        print(f"Fiber set to {method}")
+        break
+  else:
+    print("Default fiber set to test")
+    _G.SelectedFiber = fiber.start_test_fiber
   try:
     start_main()
   except (KeyboardInterrupt, SystemExit):
