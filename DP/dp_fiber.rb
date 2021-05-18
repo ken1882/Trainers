@@ -8,18 +8,18 @@ SpiritPowderOKPos = [281, 587]
 def start_interact_fiber
   loop do
     break unless $flag_working
-    Input.key_down(Keymap[:vk_F])
+    Input.key_down Keymap[:vk_F],false
     Fiber.yield
-    Input.key_up(Keymap[:vk_F])
+    Input.key_up Keymap[:vk_F],false
   end
 end
 
 def start_pirate_fiber
   loop do
     break unless $flag_working
-    Input.key_down(Keymap[:vk_F])
+    Input.key_down Keymap[:vk_F],false
     wait(0.3)
-    Input.key_up(Keymap[:vk_F])
+    Input.key_up Keymap[:vk_F],false
     
     pos = PirateMissionPos[0]
     Input.set_cursor(*pos)
@@ -48,6 +48,11 @@ def start_sp_fiber(index)
     Input.click_l false,false
     wait 0.1
   end
+end
+
+def start_combat_fiber
+  $flag_always_combat = true
+  loop{ Combat.engage }
 end
 
 WindowWidth  = 1208

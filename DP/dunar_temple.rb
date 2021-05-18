@@ -14,7 +14,7 @@ module DunarTemple
   
   module_function
   def start
-    return start_room3
+    # return start_room2
 	  # return p hud_opened?
     # return clear_inventory
     # return p Combat.target_reachable?
@@ -107,12 +107,12 @@ module DunarTemple
   def start_room1 
     puts "Starting room#1"
     Combat.earth_shield; uwait(1);
-    move_left 2.2
-    move_front 1.7,true,false
+    move_left 1.5
+    move_front 1.2,true,false
     rotateX(90)
     9.times{wait(0.1); Input.trigger_key Keymap[:vk_space],false}
     rotateX(90)
-    7.times{wait(0.1); Input.trigger_key Keymap[:vk_space],false}
+    3.times{wait(0.1); Input.trigger_key Keymap[:vk_space],false}
     Input.key_up(Keymap[:vk_W],false)
     rotateX(-180)
     Combat.summon_dragon; uwait(0.5)
@@ -126,14 +126,25 @@ module DunarTemple
   def start_room2 
     puts "Starting room#2"
     Combat.earth_shield; uwait 1;
-    move_front 2.5,true
+    move_front 2.1,true
     Input.key_down Keymap[:vk_W],false
     Combat.summon_dragon; uwait(0.5)
-    Input.trigger_key Keymap[:vk_f2]; uwait(0.5);
-    Combat.unsummon_dragon; Combat.blink; 
+    Input.trigger_key Keymap[:vk_f2]; uwait(0.6);
+    Combat.blink;
     Input.key_up Keymap[:vk_W],false; uwait(0.5);
-    move_front 2.3,true;
-    Combat.summon_dragon; Combat.backjump;
+    move_front(0.6,true,true,true)
+    Thread.new{
+      sleep(1.0)
+      vk = Keymap[:vk_4]
+      Input.trigger_key(vk); sleep(0.03);
+      rotateY(90,40,true)
+      2.times{Input.click_l(false, true); sleep(0.05);}
+      rotateY(-88,40,true)
+      Combat.cd(vk, 15)
+    }
+    uwait(0.4)
+    move_front(1.0, true, true, false); Combat.blink;
+    Combat.backjump;
     uwait(0.1)
     # Input.trigger_key Keymap[:vk_f1]
     Combat.backjump; Combat.roll;
@@ -145,10 +156,10 @@ module DunarTemple
   def start_room3
     puts "Start room#3"
     Combat.earth_shield; uwait 1;
-    move_front 11.5,true; uwait 1;
-    move_front 1.8,true
+    move_front 8.5,true; uwait 1;
+    move_front 1.2,true
     rotateX(90); uwait 0.5;
-    move_front 2.0,true; uwait 0.5;
+    move_front 1.4,true; uwait 0.5;
     Combat.summon_dragon; Combat.backjump;
     Combat.engage
   end
@@ -167,7 +178,7 @@ module DunarTemple
     clear_inventory if @timer_run % TimesPerClearInventory == 0
     3.times{ move_back 1.5 }
     wait 15; uwait 15;
-	Input.zoomout 0x1200+rand(0x200)
+  	Input.zoomout 0x1200+rand(0x200)
   end
 
   def clear_inventory

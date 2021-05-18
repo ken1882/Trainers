@@ -63,6 +63,8 @@ module Grinding
   HudPixelSampleRate = 100
   HudOpenedColorAvg = 30
   CharSelectionPos = [971, 525]
+  MaxLootPage  = 5
+  MaxShardPage = 5
   module_function
 
   # reset position and camera
@@ -105,14 +107,14 @@ module Grinding
         _pos, FirstItemColor*9
       )
     }.all?
-    
+    cur_page = 0    
     mx, my = *ItemRowPos[StartExtRowN]
     _ExtractProc = Proc.new{
       for i in (StartExtRowN...[StartExtRowN+3,ItemRowPos.size].min)
         mx, my = *ItemRowPos[i]
         8.times do 
           Input.moveto mx-rand(10), my+rand(10)-5
-          Input.click_r false,true; uwait(0.03);
+          Input.click_r false,true; uwait(0.3);
           mx += NextColumnDX
           Input.click_r false,true
         end
@@ -150,19 +152,24 @@ module Grinding
 		    _exterrcnt += 1
       end
     }
-    _ExtractProc.call; Input.moveto *StartExcPos;
+    _ExtractProc.call; uwait 0.3; Input.moveto *StartExcPos;
     uwait(0.3); Input.click_l false,true; uwait(0.3);
     puts "Extract started"
     loop do 
-      _ExtractProc.call;
+      _ExtractProc.call; uwait 0.3;
       Input.moveto *GearsPos; uwait(0.5);
       _EnsureExtractingProc.call
+      cur_page += 1
       break if 3.times.collect{
         uwait(0.2); Graphics.screen_pixels_matched?(
           LastPageToExcPos, LastPageToExcColor
         )
       }.all?
-      puts "Waiting for next page of loots"
+      if cur_page < MaxLootPage
+        puts "Waiting for next page of loots"
+      else
+        puts "Max loot page reached"; break;
+      end
       uwait(3)
     end
     puts "Last page of loots, after 10 seconds ending"
@@ -231,8 +238,11 @@ module Grinding
       uwait 0.3
     end
     _CombineShardsProc = Proc.new{
+      cur_page = 0
       loop do 
         uwait(1)
+        cur_page += 0.5
+        break if cur_page >= MaxShardPage
         break if Graphics.screen_pixels_matched? TenthShardPos,TenthShardColor
         ItemShardsPos.each do |pos|
           mx, my = pos 
@@ -362,8 +372,11 @@ module Grinding
     Input.moveto *TrashBinPos; uwait 0.3;
     Input.click_l false, true; uwait(0.3);
     _SellShardProc = Proc.new{
+      cur_page = 0
       loop do 
         uwait(1)
+        cur_page += 0.5
+        break if cur_page >= MaxShardPage
         break if Graphics.screen_pixels_matched? TenthShardPos,TenthShardColor
         ItemShardsPos.each do |pos|
           mx, my = pos 
