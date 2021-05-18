@@ -38,7 +38,7 @@ EnumWindowsProc = Win32::API::Callback.new('LP', 'I'){ |handle, param|
   !flag_found # Proc return whether enum continues
 }
 
-FPS = (1 / 120)
+FPS = (1.0 / 120)
 
 $flag_running = true
 $flag_paused  = false
@@ -126,13 +126,13 @@ module Input
 
   def click_l(use_msg,apply_pos)
     mouse_ldown(use_msg,apply_pos)
-    wait(0.03)
+    sleep(0.03)
     mouse_lup(use_msg,apply_pos)
   end
 
   def click_r(use_msg,apply_pos)
     mouse_rdown(use_msg,apply_pos)
-    wait(0.03)
+    sleep(0.03)
     mouse_rup(use_msg,apply_pos)
   end
 
@@ -156,7 +156,7 @@ module Input
 
   def trigger_key(kid, use_msg=true)
     key_down(kid, use_msg)
-    sleep(0.03)
+    sleep(0.05)
     key_up(kid, use_msg)
   end
 
@@ -169,14 +169,15 @@ module Input
   end
 
   def moveto(x,y,speed=nil)
+    _MaxSteps = 42
     cx,cy = @mouse_pos
     dx = x - cx; dy = y - cy;
     if speed.nil?
       default_speed = 10
       cnt = (Math.hypot(dx,dy) / default_speed).to_i
-      if cnt > 42
-        speed = (Math.hypot(dx,dy) / 42).to_i
-        cnt   = 42
+      if cnt > _MaxSteps
+        speed = (Math.hypot(dx,dy) / _MaxSteps).to_i
+        cnt   = _MaxSteps
       else
         speed = default_speed
       end
@@ -186,7 +187,7 @@ module Input
     angle = Math.atan2(dy, dx)
     dx = speed * Math.cos(angle)
     dy = speed * Math.sin(angle)
-    cnt.times{ cx += dx; cy += dy; self.set_cursor(cx, cy, true); wait(0.01);}
+    cnt.times{ cx += dx; cy += dy; self.set_cursor(cx, cy, true); Fiber.yield;}
     self.set_cursor(x, y, false); self.set_cursor(x, y, true);
   end
   
@@ -236,15 +237,15 @@ $working_stage = 0
 
 WaitInterval = 0.05
 def wait(sec)
-  wt = WaitInterval - FPS
-  (sec / WaitInterval).to_i.times do
+  wt = [WaitInterval - FPS, 0].max
+  [(sec / WaitInterval).to_i, 1].max.times do
     sleep(wt) if wt > 0
     Fiber.yield
   end
 end
 
 def uwait(_t)
-  wait(_t+_t*0.6).floor(2)
+  wait(_t+_t*0.5).floor(2)
 end
 
 $HwndStack = []
@@ -260,7 +261,7 @@ def switch2foreground
 end
 
 WorkerFibers = [
-  :start_pirate_fiber, :start_interact_fiber,
+  :start_pirate_fiber, :start_interact_fiber, :start_combat_fiber,
   :start_sp_fiber, :start_eggdance_fiber, :start_dunar_temple
 ]
 SelectedWorker = WorkerFibers.find{|f| f if f.match ARGV[0]} rescue nil

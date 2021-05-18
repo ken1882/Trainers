@@ -1,18 +1,18 @@
 # Hardware and OS settings dependent
 DegreeSpeedFactor = 7.76
-def rotateX(degree)
-  dx = degree < 0 ? -1 : 1
-  (degree.abs*DegreeSpeedFactor).to_i.times do |i|
+def rotateX(degree, speed=20, async=false)
+  dx = degree < 0 ? -speed : speed
+  [(degree.abs*DegreeSpeedFactor/speed).to_i, 1].max.times do |i|
     MouseEvent.call(MOUSEEVENTF_MOVE, dx, 0, 0, 0)
-    Fiber.yield
+    (async ? sleep(FPS) : Fiber.yield)
   end
 end
 
-def rotateY(degree)
-  dy = degree < 0 ? -1 : 1
-  (degree.abs*DegreeSpeedFactor).to_i.times do |i|
+def rotateY(degree, speed=20, async=false)
+  dy = degree < 0 ? -speed : speed
+  (degree.abs*DegreeSpeedFactor/speed).to_i.times do |i|
     MouseEvent.call(MOUSEEVENTF_MOVE, 0, dy, 0, 0)
-    Fiber.yield
+    (async ? sleep(FPS) : Fiber.yield)
   end
 end
 
@@ -29,25 +29,27 @@ def move_left(duration)
   Input.key_up Keymap[:vk_A],false
 end
 
-def move_front(duration,dash,release=true)
-  cnt = (duration / JumpDuration).to_i
-  duration *= JumpDuration
+def move_front(duration,dash,release=true,jump=true)
   if dash
     Input.trigger_key(Keymap[:vk_W],false)
     sleep(0.1)
   end
   Input.key_down Keymap[:vk_W],false
   wait(0.3)
-  cnt.times do 
-    Input.trigger_key Keymap[:vk_space] if rand > JumpChance
-    wait(JumpDuration)
+  if jump
+    cnt = (duration / JumpDuration).to_i
+    cnt.times do 
+      Input.trigger_key Keymap[:vk_space] if rand > JumpChance
+      wait(JumpDuration)
+    end
+  else
+    wait(duration)
   end
   Input.key_up(Keymap[:vk_W],false) if release
 end
 
 def move_right(duration)
   cnt = (duration / JumpDuration).to_i
-  duration *= JumpDuration
   Input.key_down Keymap[:vk_D],false
   cnt.times do 
     Input.trigger_key Keymap[:vk_space] if rand > JumpChance
@@ -58,7 +60,6 @@ end
 
 def move_back(duration)
   cnt = (duration / JumpDuration).to_i
-  duration *= JumpDuration
   Input.key_down Keymap[:vk_S],false
   cnt.times do 
     Input.trigger_key Keymap[:vk_space] if rand > JumpChance
@@ -111,6 +112,7 @@ module Combat
   end
 
   def scan4enemy(method=0)
+    return (rand()*30).to_i.times{rotateX(2)} if $flag_always_combat
     if method == 0
       180.times do |i|
         rotateX(2)
@@ -154,13 +156,13 @@ module Combat
     backjump; uwait(0.4);
     Input.zoomout 0x7ff
     hk(vk)
-    rotateY 90; uwait(0.1);
-    clickL; uwait(0.1);
-    rotateY -88
+    rotateY 90,40; uwait(0.03);
+    clickL; uwait(0.03);
+    rotateY -88,40
     cd(vk, 15)
     forwardjump
     Input.zoomout 0x7ff
-    rotateX 180
+    rotateX 180,40
   end
 
   def earth_shield
@@ -256,12 +258,12 @@ module Combat
       Input.key_down Keymap[:vk_D],true; uwait(0.05);
       Input.trigger_key Keymap[:vk_Lshift],false; uwait(0.05);
       Input.key_up Keymap[:vk_D],true;
-      rotateX(-90)
+      rotateX(-90,40)
     else
       Input.key_down Keymap[:vk_A],true; uwait(0.05);
       Input.trigger_key Keymap[:vk_Lshift],false; uwait(0.05);
       Input.key_up Keymap[:vk_A],true;
-      rotateX(90)
+      rotateX(90,40)
     end
     Input.zoomout 0x400+rand(0x200)
   end
@@ -287,16 +289,10 @@ module Combat
         puts "Character is gg"
         60.times do |i|
           puts "#{60-i} seconds until respawn"
-          uwait 0.75
+          uwait 0.9
         end
         wait_until_transition_ok; uwait 2;
-        Input.trigger_key Keymap[:vk_9]; uwait 1.5;
-        Input.trigger_key Keymap[:vk_B]; uwait 1;
-        Input.moveto *PetPagePos; uwait 0.3;
-        clickL; uwait 0.3;
-        Input.moveto *LootPetPos; uwait 0.3;
-        clickR; uwait 0.3;
-        $flag_combat_dead = true 
+        revive_prepare
         break
       end
       elemental_activation
@@ -314,7 +310,7 @@ module Combat
       can_engage = $flag_hastarget ? target_reachable? : false
       if $flag_hastarget && !can_engage
         puts "Target too far, force search next; timer: #{timer_neutralized += 0.3}"
-        rotateX 30
+        rotateX 30,40
         wait 0.1
         next
       elsif !$flag_hastarget && in_combat?
@@ -356,5 +352,15 @@ module Combat
       Fiber.yield
     end
     puts "Combat ends"
+  end
+
+  def revive_prepare
+    Input.trigger_key Keymap[:vk_9]; uwait 1.5;
+    Input.trigger_key Keymap[:vk_B]; uwait 1;
+    Input.moveto *PetPagePos; uwait 0.3;
+    clickL; uwait 0.3;
+    Input.moveto *LootPetPos; uwait 0.3;
+    clickR; uwait 0.3;
+    $flag_combat_dead = true 
   end
 end
