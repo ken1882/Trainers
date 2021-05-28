@@ -363,4 +363,10 @@ module Combat
     clickR; uwait 0.3;
     $flag_combat_dead = true 
   end
+
+  def reset_view
+    rotateY(360,50); uwait 0.5;
+    rotateY(-150,50)
+    Input.zoomout 0xC00+rand(0x100)
+  end
 end

@@ -262,7 +262,9 @@ end
 
 WorkerFibers = [
   :start_pirate_fiber, :start_interact_fiber, :start_combat_fiber,
-  :start_sp_fiber, :start_eggdance_fiber, :start_dunar_temple
+  :start_sp_fiber, :start_eggdance_fiber, :start_dunar_temple,
+  :start_cod_fiber, :start_mail_fiber,:start_extract_fiber, :start_bag_clear_fiber,
+  :start_sell_fiber,
 ]
 SelectedWorker = WorkerFibers.find{|f| f if f.match ARGV[0]} rescue nil
 
