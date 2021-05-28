@@ -6,9 +6,11 @@ import graphics, position, Input
 from util import (img2str, ocr_rect)
 from desktopmagic.screengrab_win32 import getRectAsImage
 from _G import (log_debug,log_error,log_info,log_warning,resume,wait,uwait)
+from time import sleep
+from copy import copy
 
-CVMatchThresholdRate = 1.5 # Similarity ratio to average in consider digit matched
-CVMatchMinCount  = 2       # How many matched point need to pass
+CVMatchStdRate = 1.0      # Similarity standard deviation ratio above average in consider digit matched
+CVMatchMinCount  = 1      # How many matched point need to pass
 TrainingEffectStat = (
   (0,2,5),    # speed, power, skill pt(all)
   (1,3,5),    # stamina, willness
@@ -50,7 +52,7 @@ Status = {
   # color
   'color': (
     # 絕不調(0) ~ 絕好調(4)
-    (0,0,0), (16, 135, 247), (255, 164, 3), (255, 170, 63), (255, 131, 156)
+    (0,0,0), (16, 135, 247), (255, 212, 24), (255, 170, 63), (255, 131, 156)
   )
 }
 StatusBest    = 4
@@ -61,9 +63,11 @@ StatusWorst   = 0
 
 ColorNoEnergy = (118,117,118)
 EnergyBarRect = (184, 131, 405, 132)
+HealRoomPos = (80,908)
+HealRoomColor = (154,150,157)
 
 SupportAvailablePos = (
-  (545, 228), (545, 325), (545, 422), (545, 518)
+  (545,228), (545,325), (545,422), (545,518), (545,615)
 )
 SupportAvailableColor = ((110,107,121),(253, 172, 31),(251, 231, 120))
 
@@ -101,7 +105,7 @@ def get_energy():
 def get_skill_points():
   filename = f"skpt.png"
   graphics.take_snapshot(position.SkillPtRect, filename)
-  uwait(0.3)
+  sleep(0.3)
   res = img2str(filename)
   try:
     return int(res)
@@ -146,35 +150,54 @@ def validate_train_effect(menu_index, numbers):
       return False
   return True
 
-def get_all_training_effect():
-  ret = []
+def get_all_training_effect(only_support=False):
+  ret  = []
+  ret2 = []
   for i,pos in enumerate(position.StateCheckPos):
     speed = 20 if i == 0 else 10
     Input.moveto(*pos, speed)
-    wait(2)
+    wait(3)
     if i == 0:
       Input.mouse_down()
     else:
-      res = get_training_effect(i-1)
-      ret.append(res)
+      if not only_support:
+        res = get_training_effect(i-1)
+        ret.append(res)
+      ret2.append(get_training_supports())
   Input.mouse_up()
-  return ret
+  return [ret,ret2]
+
+def get_training_supports():
+  global SupportAvailablePos,SupportAvailableColor
+  cnt = 0
+  for pos in SupportAvailablePos:
+    rgb = graphics.get_pixel(*pos,True)
+    if any([graphics.is_color_ok(rgb,col) for col in SupportAvailableColor]):
+      cnt += 1
+    else:
+      break
+  return cnt
 
 def get_training_effect(menu_index):
-  global CVMatchThresholdRate, CVMatchMinCount, TrainingEffectStat
+  global CVMatchStdRate, CVMatchMinCount, TrainingEffectStat
   size   = len(TrainingEffectStat[menu_index])
   passed = False
   while not passed:
     effect = [0,0,0,0,0,0] # SPD,STA,POW,WIL,WIS,SKP
     idx    = 0
+    lidx   = -1
+    depth  = 0
     while idx < size:
+      depth = 0 if lidx != idx else depth
+      depth += 1
+      lidx = idx
       graphics.flush()
       rect = position.TrainingIncreaseRect[TrainingEffectStat[menu_index][idx]]
       fname = f"training{idx}.png"
       graphics.take_snapshot(rect, fname)
       wait(0.3)
       src = cv2.imread(f"{_G.DCTmpFolder}/{fname}")
-      dig_x = {}      # matched digit sum of x-coord
+      dig_x = {}      # matched digit average of x-coord
       digit = []      # matched digits
       ar_ok_cnt = []  # matched digit count
       ar_ok_pos = {}  # matched digit position
@@ -188,42 +211,82 @@ def get_training_effect(menu_index):
         res = cv2.matchTemplate(src, tmp, cv2.TM_CCOEFF_NORMED)
         match_result.append(res)
         max_similarity.append(np.max(res))
-      threshold = np.average(max_similarity) * CVMatchThresholdRate
+      threshold = np.average(max_similarity) + np.std(max_similarity) * CVMatchStdRate
       for i in range(10):
         matched = np.where(match_result[i] >= threshold)
         ok_cnt  = 0
-        sum_x   = 0
+        x_poses = []
         for y,x in zip(*matched):
           ok_cnt += 1
-          sum_x  += x
-          ar_ok_pos[i].append((x,y))
+          x_poses.append(x)
+          ar_ok_pos[i].append((y,x))
           max_match = max(max_match, ok_cnt)
-        dig_x[i] = sum_x
+        dig_x[i] = np.average(x_poses)
         ar_ok_cnt.append(ok_cnt)
-        ar_ok_pos[i] = sorted(ar_ok_pos[i], key=lambda _pos: _pos[0])
-        
+        ar_ok_pos[i] = sorted(ar_ok_pos[i], key=lambda _pos: _pos[1])
       
+
+      # filter to only local maximum left
+      for n in range(10):
+        ar = []
+        last_x = -10
+        max_sim = 0
+        for pos in ar_ok_pos[n]:
+          if pos[1] - last_x >= 10:
+            max_sim = 0
+          if match_result[n][pos] > max_sim:
+            ar.append(pos)
+            max_sim = match_result[n][pos]
+        ar_ok_pos[n] = copy(ar)
+
       # treat as another digit if match point not close to each other
       for n in range(10):
-        last_x = -1
-        if ar_ok_cnt[n] == 0 or max(ar_ok_cnt[n]+2,ar_ok_cnt[n]*1.4) < max_match:
+        last_x = -10
+        if depth < 3 and (ar_ok_cnt[n] == 0 or max(ar_ok_cnt[n]+2,ar_ok_cnt[n]*1.4) < max_match):
+          continue
+        elif ar_ok_cnt[n] < CVMatchMinCount:
           continue
         for pos in ar_ok_pos[n]:
-          if pos[0] - last_x > 10:
-            if n == 1: # number '1' could be matched with number '4'
-              overlap = 0 # overlap detection
+          if pos[1] - last_x >= 10:
+            if n == 1:
+              flag_greater = True
               for pos2 in ar_ok_pos[4]:
-                if abs(pos[0] - pos2[0]) <= 5:
-                  overlap += 1
-              if overlap <= 2:
+                if abs(pos2[1] - pos[1]) < 10 and match_result[4][pos2] > match_result[n][pos]:
+                  flag_greater = False
+                  break
+              if flag_greater:
+                digit.append(n)
+            elif n == 4:
+              flag_greater = True
+              for pos2 in ar_ok_pos[1]:
+                if abs(pos2[1] - pos[1]) < 10 and match_result[1][pos2] > match_result[n][pos]:
+                  flag_greater = False
+                  break
+              if flag_greater:
+                digit.append(n)
+            elif n == 3:
+              flag_greater = True
+              for pos2 in ar_ok_pos[8]:
+                if abs(pos2[1] - pos[1]) < 10 and match_result[8][pos2] > match_result[n][pos]:
+                  flag_greater = False
+                  break
+              if flag_greater:
+                digit.append(n)
+            elif n == 8:
+              flag_greater = True
+              for pos2 in ar_ok_pos[3]:
+                if abs(pos2[1] - pos[1]) < 10 and match_result[3][pos2] > match_result[n][pos]:
+                  flag_greater = False
+                  break
+              if flag_greater:
                 digit.append(n)
             else:
               digit.append(n)
-          last_x = pos[0]
+          last_x = pos[1]
       
       # get final number by x-coord match point
       digit = sorted(digit, key=lambda v:dig_x[v])
-      log_info(f"Training benefit#{idx}:\nthreshold: {threshold}\nsim. rate: {max_similarity}\nok count: {ar_ok_cnt}\ndigits: {digit}\ndigit x: {dig_x}\npos: {ar_ok_pos}")
+      log_info(f"Training benefit#{idx}/{depth}:\nthreshold: {threshold}\nsim. rate: {max_similarity}\nok count: {ar_ok_cnt}\ndigits: {digit}\ndigit x: {dig_x}\npos: {ar_ok_pos}")
       try:
         number = int("".join([str(d) for d in digit]))
       except (TypeError,ValueError):
@@ -238,4 +301,4 @@ def get_training_effect(menu_index):
   
 def get_event_title():
   fname = 'event.png'
-  return ocr_rect(position.EventTitleRect, fname)
+  return ocr_rect(position.EventTitleRect, fname, zoom=1.2).translate(str.maketrans('。',' ')).strip()

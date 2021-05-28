@@ -1,6 +1,7 @@
 import _G, graphics
 import win32api, win32con 
 import random, math
+from time import sleep
 from _G import (resume,wait,uwait,log_debug,log_error,log_info,log_warning)
 
 ScrollTime  = 0.03
@@ -44,7 +45,7 @@ def key_up(*args):
 def trigger_key(*args):
   for kid in args:
     key_down(kid)
-  uwait(0.03)
+  sleep(0.03)
   for kid in args:
     key_up(kid)
 
@@ -91,7 +92,7 @@ def click(x, y, app_offset=True):
 def scroll_up(x, y, delta = 100, app_offset=True, haste=False):
   mouse_down(x, y, app_offset)
   ty = y + delta
-  wait(0.01 if haste else 0.5)
+  sleep(0.01 if haste else 0.5)
   while y <= ty:
     y += (random.randint(*ScrollDelta) + haste * 2)
     set_cursor_pos(x, min([y,ty]), app_offset)
@@ -101,7 +102,7 @@ def scroll_up(x, y, delta = 100, app_offset=True, haste=False):
 def scroll_down(x, y, delta = 100, app_offset=True, haste=False):
   mouse_down(x, y, app_offset)
   ty = y - delta
-  wait(0.01 if haste else 0.5)
+  sleep(0.01 if haste else 0.5)
   while y >= ty:
     y -= (random.randint(*ScrollDelta) + haste * 2)
     set_cursor_pos(x, max([y,ty]), app_offset)
@@ -111,7 +112,7 @@ def scroll_down(x, y, delta = 100, app_offset=True, haste=False):
 def scroll_left(x, y, delta = 100, app_offset=True, haste=False):
   mouse_down(x, y, app_offset)
   tx = x + delta
-  wait(0.01 if haste else 0.5)
+  sleep(0.01 if haste else 0.5)
   while x <= tx:
     x += (random.randint(*ScrollDelta) + haste * 2)
     set_cursor_pos(min([x,tx]), y, app_offset)
@@ -121,7 +122,7 @@ def scroll_left(x, y, delta = 100, app_offset=True, haste=False):
 def scroll_right(x, y, delta = 100, app_offset=True, haste=False):
   mouse_down(x, y, app_offset)
   tx = x - delta
-  wait(0.01 if haste else 0.5)
+  sleep(0.01 if haste else 0.5)
   while x >= tx:
     x -= (random.randint(*ScrollDelta) + haste * 2)
     set_cursor_pos(max([x,tx]), y, app_offset)
@@ -130,7 +131,7 @@ def scroll_right(x, y, delta = 100, app_offset=True, haste=False):
 
 def scroll_to(x, y, x2, y2, app_offset=True, haste=False, hold=True):
   mouse_down(x, y, app_offset)
-  wait(0.01 if haste else ScrollTime)
+  sleep(0.01 if haste else ScrollTime)
   tdx, tdy = abs(x2 - x), abs(y2 - y)
   try:
     pcx, pcy = tdx // tdy, tdy // tdx
@@ -146,11 +147,12 @@ def scroll_to(x, y, x2, y2, app_offset=True, haste=False, hold=True):
     set_cursor_pos(x, y, app_offset)
     wait(0.01 if haste else ScrollTime)
   if hold:
-    uwait(1)
+    sleep(1)
   mouse_up(x, y, app_offset)
 
+
 MaxMoveTimes = 42
-def moveto(x,y,speed=10,app_offset=True):
+def moveto(x,y,speed=10,app_offset=True,aync=True):
   global MaxMoveTimes
   if app_offset:
     rect = graphics.get_content_rect()

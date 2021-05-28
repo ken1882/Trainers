@@ -67,7 +67,7 @@ def ocr_rect(rect, fname, zoom=1.0, lang='jpn', config='--psm 12 --psm 13'):
   if zoom != 1.0:
     size = (int(img.size[0]*zoom), int(img.size[1]*zoom))
     graphics.resize_image(size, fname, fname)
-  wait(0.3)
+  sleep(0.3)
   return img2str(fname, lang, config)
 
 def diff_string(a,b):

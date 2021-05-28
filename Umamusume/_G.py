@@ -2,6 +2,8 @@ from datetime import datetime
 from time import sleep
 import random
 
+from win32con import DM_YRESOLUTION
+
 AppWindowName = "umamusume"
 AppHwnd = 0
 AppRect = [0,0,0,0]
@@ -37,12 +39,11 @@ FlagPaused  = False
 FlagWorking = False
 
 MsgPipeContinue = '\x00\x50\x00CONTINUE\x00'
-MsgPipeStop  = "\x00\x50\x00STO\x00P"
+MsgPipeStop  = "\x00\x50\x00STOP\x00"
 MsgPipeError = "\x00\x50\x00ERROR\x00"
 MsgPipeTerminated = "\x00\x50\x00TERMINATED\x00"
 MsgPipeRet = "\x00\x50\x00RET\x00"
 MsgPipeInfo = "\x00\x50\x00INFO\x00"
-
 
 UmaNumberImage = []
 for i in range(10):
@@ -68,18 +69,16 @@ def log_debug(*args, **kwargs):
     print(f"[{format_curtime()}] [DEBUG]:", *args, **kwargs)
 
 def resume(fiber):
+  ret = None
   try:
-    next(fiber)
+    ret = next(fiber)
   except StopIteration:
-    return False
-  return True
+    return (MsgPipeStop, ret)
+  return (MsgPipeContinue, None)
 
+WaitInterval = 0.5
 def wait(sec):
   sleep(sec)
 
-def uwait(sec, rand_scale = 0.3):
-  if rand_scale:
-    sec += random.uniform(rand_scale/2, rand_scale*1.5)
-    if sec > 0.5:
-      sec -= random.uniform(rand_scale/4, rand_scale)
-  wait(sec)
+def uwait(sec):
+  sleep(sec + max(random() / 2, sec * random() / 5))
