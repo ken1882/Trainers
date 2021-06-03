@@ -113,12 +113,12 @@ module DunarTemple
     puts "#{wt} seconds before teleport"
     wt.times{|i| wait(0.95);}; uwait 2;
     wait_until_transition_ok; uwait 2;
-    Combat.reset_view
   end
 
   def start_room1 
     puts "Starting room#1"
-    Combat.earth_shield; uwait(1);
+    Combat.earth_shield; uwait 1;
+    Combat.reset_view; uwait 1;
     move_left 1.3
     move_front 1.2,true,false
     rotateX(90)
@@ -138,6 +138,7 @@ module DunarTemple
   def start_room2 
     puts "Starting room#2"
     Combat.earth_shield; uwait 1;
+    Combat.reset_view; uwait 1;
     move_front 2.1,true
     Input.key_down Keymap[:vk_W],false
     Combat.summon_dragon; uwait(0.5)
@@ -167,6 +168,7 @@ module DunarTemple
   def start_room3
     puts "Start room#3"
     Combat.earth_shield; uwait 1;
+    Combat.reset_view; uwait 1;
     move_front 8.5,true; uwait 1;
     move_front 1.2,true
     rotateX(90); uwait 0.5;

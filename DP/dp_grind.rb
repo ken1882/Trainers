@@ -70,6 +70,10 @@ module Grinding
   CharSelectionPos = [971, 525]
   MaxLootPage  = 5
   MaxShardPage = 5
+
+  HudIndicatorPos   = [962, 25]
+  HudIndicatorColor = [135, 242, 250]
+
   module_function
 
   # reset position and camera
@@ -377,7 +381,7 @@ module Grinding
 
     Input.moveto *ShardScrolldownPos; uwait 0.3;
     6.times{ Input.click_l false, true; uwait(0.2); }
-    Input.moveto *ShardTypeListPos[0]; uwait 0.3;
+    Input.moveto *ShardTypeListPos[1]; uwait 0.3;
     Input.click_l false, true; uwait(0.3);
     Input.moveto *TrashBinPos; uwait 0.3;
     Input.click_l false, true; uwait(0.3);
@@ -400,8 +404,6 @@ module Grinding
         Input.moveto(*DragonShardPos,30+rand(20))
       end
     }
-    # delete pdef
-    _SellShardProc.call; uwait 0.3;
 
     # delete nres,eres,dres
     [ShardTypeListPos[2],ShardTypeListPos[3],ShardTypeListPos[4]].each do |spos|
@@ -500,8 +502,8 @@ module Grinding
     _cnt.times do |i|
       rgb = Graphics.get_pixel(sx+i*HudPixelSampleRate,sy).rgb
       sum += (rgb.sum / 3)
-    end 
-    return (sum / _cnt) <= HudOpenedColorAvg
+    end
+    return (sum / _cnt) <= HudOpenedColorAvg && !Graphics.screen_pixels_matched?([HudIndicatorPos],[HudIndicatorColor])
   end
   
   def logout

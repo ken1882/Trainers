@@ -316,8 +316,8 @@ module Combat
       elsif !$flag_hastarget && in_combat?
         puts "Untargeted enemy nearby"
         roll; uwait(0.1); blink; 
-		use_skill Keymap[:vk_2]
-		netherbomb;
+        use_skill Keymap[:vk_2]
+        netherbomb;
         next
       end
       if $flag_hastarget && can_engage
