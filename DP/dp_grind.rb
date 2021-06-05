@@ -290,25 +290,25 @@ module Grinding
     uwait 0.5
 
     # Combine Phy/MagDef shards
-    Input.moveto(*ShardTypesPos); uwait 0.3; Input.click_l false,true;
-    Input.moveto(*ShardTypeListPos[1]); uwait 0.3;  Input.click_l false,true;
-    2.times do |i| 
-      Input.moveto(*ShardFilterPos[i]); uwait 0.3;  Input.click_l false,true;
-      uwait 0.3
-      2.times do 
-        Input.trigger_key Keymap[:vk_backspace],false; uwait 0.3; 
-        Input.trigger_key Keymap[:vk_delete],false; uwait 0.3;
-      end
-      ShardDefFilterInput[i].each{|vk| Input.trigger_key vk,false}
-      uwait 0.3
-    end
-    [ShardTypeListPos[1],ShardTypeListPos[2]].each do |tpos|
-      Input.moveto(*ShardTypesPos); uwait 0.3; Input.click_l false,true;
-      Input.moveto(*tpos); uwait 0.3;  Input.click_l false,true;
-      uwait 0.3; _CombineShardsProc.call;
-      Input.moveto *DragonShardPos; uwait 0.3;
-      Input.click_l false,true; uwait 0.5;
-    end 
+    # Input.moveto(*ShardTypesPos); uwait 0.3; Input.click_l false,true;
+    # Input.moveto(*ShardTypeListPos[1]); uwait 0.3;  Input.click_l false,true;
+    # 2.times do |i| 
+    #   Input.moveto(*ShardFilterPos[i]); uwait 0.3;  Input.click_l false,true;
+    #   uwait 0.3
+    #   2.times do 
+    #     Input.trigger_key Keymap[:vk_backspace],false; uwait 0.3; 
+    #     Input.trigger_key Keymap[:vk_delete],false; uwait 0.3;
+    #   end
+    #   ShardDefFilterInput[i].each{|vk| Input.trigger_key vk,false}
+    #   uwait 0.3
+    # end
+    # [ShardTypeListPos[1],ShardTypeListPos[2]].each do |tpos|
+    #   Input.moveto(*ShardTypesPos); uwait 0.3; Input.click_l false,true;
+    #   Input.moveto(*tpos); uwait 0.3;  Input.click_l false,true;
+    #   uwait 0.3; _CombineShardsProc.call;
+    #   Input.moveto *DragonShardPos; uwait 0.3;
+    #   Input.click_l false,true; uwait 0.5;
+    # end 
     
     return unless combine_302
     Input.trigger_key Keymap[:vk_B]; uwait 0.5;
@@ -340,33 +340,33 @@ module Grinding
       _CombineShardsProc.call()
     end
     # combine phy/magdef
-    Input.moveto *ShardTypesPos; uwait(0.3);
-    Input.click_l false, true; uwait(0.3);
-    Input.moveto *ShardScrolldownPos; uwait 0.3;
-    3.times{ Input.click_l false, true; uwait(0.2); }
-    Input.moveto *ShardTypeListPos[4]; uwait 0.3;
-    Input.click_l false, true; uwait(0.3);
-    2.times do |i| 
-      Input.moveto(*ShardFilterPos[i]); uwait 0.3;  Input.click_l false,true;
-        uwait 0.3
-        2.times do 
-          Input.trigger_key Keymap[:vk_backspace],false; uwait 0.3; 
-          Input.trigger_key Keymap[:vk_delete],false; uwait 0.3;
-        end
-        ShardDef302FilterInput[i].each{|vk| Input.trigger_key vk,false}
-      uwait 0.3
-    end
+    # Input.moveto *ShardTypesPos; uwait(0.3);
+    # Input.click_l false, true; uwait(0.3);
+    # Input.moveto *ShardScrolldownPos; uwait 0.3;
+    # 3.times{ Input.click_l false, true; uwait(0.2); }
+    # Input.moveto *ShardTypeListPos[4]; uwait 0.3;
+    # Input.click_l false, true; uwait(0.3);
+    # 2.times do |i| 
+    #   Input.moveto(*ShardFilterPos[i]); uwait 0.3;  Input.click_l false,true;
+    #     uwait 0.3
+    #     2.times do 
+    #       Input.trigger_key Keymap[:vk_backspace],false; uwait 0.3; 
+    #       Input.trigger_key Keymap[:vk_delete],false; uwait 0.3;
+    #     end
+    #     ShardDef302FilterInput[i].each{|vk| Input.trigger_key vk,false}
+    #   uwait 0.3
+    # end
 
-    [ShardTypeListPos[3],ShardTypeListPos[4]].each do |tpos|
-      Input.moveto(*ShardTypesPos); uwait 0.3; Input.click_l false,true;
-      Input.moveto(*tpos); uwait 0.3;  Input.click_l false,true;
-      uwait 0.3; _CombineShardsProc.call;
-      Input.moveto *DragonShardPos; uwait 0.3;
-      Input.click_l false,true; uwait 0.5;
-	  end 
-    uwait 0.3; _CombineShardsProc.call;
-  	Input.moveto *DragonShardPos; uwait 0.3;
-    Input.click_l false,true; uwait 0.5;
+    # [ShardTypeListPos[3],ShardTypeListPos[4]].each do |tpos|
+    #   Input.moveto(*ShardTypesPos); uwait 0.3; Input.click_l false,true;
+    #   Input.moveto(*tpos); uwait 0.3;  Input.click_l false,true;
+    #   uwait 0.3; _CombineShardsProc.call;
+    #   Input.moveto *DragonShardPos; uwait 0.3;
+    #   Input.click_l false,true; uwait 0.5;
+	  # end 
+    # uwait 0.3; _CombineShardsProc.call;
+  	# Input.moveto *DragonShardPos; uwait 0.3;
+    # Input.click_l false,true; uwait 0.5;
   end
 
   def discard_shards
@@ -381,7 +381,7 @@ module Grinding
 
     Input.moveto *ShardScrolldownPos; uwait 0.3;
     6.times{ Input.click_l false, true; uwait(0.2); }
-    Input.moveto *ShardTypeListPos[1]; uwait 0.3;
+    Input.moveto *ShardTypeListPos[0]; uwait 0.3;
     Input.click_l false, true; uwait(0.3);
     Input.moveto *TrashBinPos; uwait 0.3;
     Input.click_l false, true; uwait(0.3);
@@ -404,9 +404,9 @@ module Grinding
         Input.moveto(*DragonShardPos,30+rand(20))
       end
     }
-
+    _SellShardProc.call; uwait 0.3; # delete pdef
     # delete nres,eres,dres
-    [ShardTypeListPos[2],ShardTypeListPos[3],ShardTypeListPos[4]].each do |spos|
+    [ShardTypeListPos[1],ShardTypeListPos[2],ShardTypeListPos[3],ShardTypeListPos[4]].each do |spos|
       Input.moveto *ShardTypesPos; uwait(0.3);
       Input.click_l false, true; uwait(0.3);
       Input.moveto *spos; uwait 0.3;

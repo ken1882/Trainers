@@ -157,7 +157,7 @@ def start_eggdance_fiber
   end    
 end
 
-FirstShardPos = [1512, 559]
+FirstShardPos = [1512, 505]
 CODAmountPos  = [918, 262]
 SendMailPos   = [983, 724]
 
@@ -213,4 +213,15 @@ end
 
 def start_sell_fiber
   Grinding.send :shop_sells;
+end
+
+def start_auction_fiber
+  20.times do 
+    item_pos,auction_pos = [1508,498],[201,735]
+    Input.moveto(*item_pos); uwait 0.3;
+    Input.click_r false,true; uwait 0.3;
+    Input.moveto(*auction_pos); uwait 0.3;
+    Input.click_l false,true; uwait 0.3;
+    uwait(1)
+  end
 end
