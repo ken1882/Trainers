@@ -24,11 +24,8 @@ def print_cache():
   print('-'*42)
   print(f"({col})")
 
-def main_loop():
-  global output_cache
+def update_input():
   Input.update()
-  graphics.flush()
-  
   if Input.is_trigger(win32con.VK_F6):
     res = graphics.get_mouse_pixel()
     if not _G.SelectedFiber:
@@ -36,16 +33,22 @@ def main_loop():
     print(Input.get_cursor_pos(), res) 
   elif Input.is_trigger(win32con.VK_F8):
     log_info("Worker terminated" if _G.FlagWorking else "Worker started")
+    log_info(f"Frame count: {_G.FrameCount} / {_G.LastFrameCount}")
     _G.FlagWorking ^= True
-    _G.SelectedFiber()
+    _G.Fiber = _G.SelectedFiber()
   elif Input.is_trigger(win32con.VK_F9):
     log_info("Stop program requested") 
     _G.FlagWorking = False
     _G.FlagRunning = False
     print_cache()
+  
+def main_loop():
+  global output_cache
+  graphics.flush()
+  update_input()
 
-  if _G.Fiber and not _G.Fiber.is_alive():
-    log_info("Worker ended")
+  if _G.Fiber and not resume(_G.Fiber):
+    log_info(f"Worker ended, return value: {_G.pop_fiber_ret()}")
     _G.Fiber = None 
     _G.FlagWorking = False
     
@@ -68,9 +71,6 @@ if __name__ == "__main__":
         _G.SelectedFiber = getattr(fiber,method)
         print(f"Fiber set to {method}")
         break
-  else:
-    print("Default fiber set to test")
-    _G.SelectedFiber = fiber.start_test_fiber
   try:
     start_main()
   except (KeyboardInterrupt, SystemExit):

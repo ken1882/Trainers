@@ -1,6 +1,7 @@
 import pytesseract
 import _G
 from _G import log_error,log_debug,log_info,log_warning,resume,wait,uwait
+import numpy as np
 import os
 import win32gui, win32process
 from time import sleep
@@ -68,7 +69,14 @@ def ocr_rect(rect, fname, zoom=1.0, lang='jpn', config='--psm 12 --psm 13'):
     size = (int(img.size[0]*zoom), int(img.size[1]*zoom))
     graphics.resize_image(size, fname, fname)
   sleep(0.3)
-  return img2str(fname, lang, config)
+  return img2str(fname, lang, config).translate(str.maketrans('。',' ')).strip()
 
 def diff_string(a,b):
   return SequenceMatcher(None,a,b).ratio()
+
+def isdigit(n):
+  try:
+    _ = int(n)
+    return True
+  except Exception:
+    return False

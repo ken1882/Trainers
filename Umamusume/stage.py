@@ -1,16 +1,20 @@
+from copy import copy
+from time import sleep
+
 import cv2
 import numpy as np
-from win32con import MAXSTRETCHBLTMODE
-import _G
-import graphics, position, Input
-from util import (img2str, ocr_rect)
 from desktopmagic.screengrab_win32 import getRectAsImage
-from _G import (log_debug,log_error,log_info,log_warning,resume,wait,uwait)
-from time import sleep
-from copy import copy
 
-CVMatchStdRate = 1.0      # Similarity standard deviation ratio above average in consider digit matched
-CVMatchMinCount  = 1      # How many matched point need to pass
+import _G
+import corrector
+import graphics
+import Input
+import position
+import util
+from _G import log_debug, log_error, log_info, log_warning, resume, uwait, wait
+from _G import CVMatchHardRate,CVMatchMinCount,CVMatchStdRate,CVLocalDistance
+from util import img2str, isdigit, ocr_rect
+
 TrainingEffectStat = (
   (0,2,5),    # speed, power, skill pt(all)
   (1,3,5),    # stamina, willness
@@ -32,28 +36,69 @@ Enum = {
   },
   'SkillSelection': {
     'id': 3,
-    'pos': [],
-    'color': [],
+    'pos': ((239, 341),(130, 16),(28, 933),(94, 960),(552, 867),(376, 337),),
+    'color': ((156, 211, 41),(99, 93, 126),(255, 255, 255),(255, 255, 255),(255, 255, 255),(156, 211, 41),),
   },
   'RaceSelection': {
     'id': 4,
-    'pos': [],
-    'color': [],
+    'pos': ((167, 870),(29, 464),(352, 849),(252, 883),(546, 393),(35, 991),),
+    'color': ((121, 64, 22),(255, 127, 132),(165, 223, 5),(255, 255, 255),(247, 248, 247),(255, 255, 255),),
   },
-  'GoalComplete': {
+  'ObjectiveComplete': {
     'id': 5,
     'pos': ((153, 297),(234, 294),(307, 297),(420, 296),(297, 894),),
     'color': ((200, 255, 35),(206, 255, 45),(198, 255, 27),(205, 255, 40),(255, 255, 255),)
+  },
+  'TrainingComplete': {
+    'id': 6,
+    'pos': ((74, 838),(74, 861),(250, 865),(198, 832),(332, 875),(510, 847)),
+    'color': ((244, 244, 247),(55, 203, 222),(88, 215, 229),(27, 149, 55),(250, 82, 140),(244, 244, 244))
+  },
+  'ObjectivePrepare': {
+    'id': 7,
+    'pos': ((18, 87),(78, 863),(99, 894),(224, 899),(177, 856),(536, 163),(471, 813),),
+    'color': ((255, 255, 255),(244, 243, 247),(41, 193, 214),(68, 203, 222),(27, 149, 55),(90, 181, 57),(239, 42, 41),)
+  },
+  'RacePrepare': {
+    'id': 8,
+    'pos': ((362, 153),(356, 364),(359, 466),(358, 525),(437, 957),(261, 966),(170, 683),),
+    'color': ((121, 216, 35),(121, 216, 35),(121, 216, 35),(121, 216, 35),(154, 218, 4),(255, 255, 255),(255, 255, 255),)
+  },
+  'Inheritance': {
+    'id': 9,
+    'pos': ((230, 842),(261, 844),(301, 840),(324, 853),(351, 840),),
+    'color': ((255, 250, 195),(255, 243, 180),(255, 251, 208),(255, 227, 123),(255, 251, 208),)
+  },
+  'RaceResult': {
+    'id': 10,
+    'pos': ((44, 25),(56, 31),(195, 933),(371, 960),(554, 1012),(24, 56),),
+    'color': ((88, 181, 57),(88, 181, 57),(159, 220, 5),(140, 207, 0),(235, 234, 239),(255, 199, 0),)
+  },
+  'Event': {
+    'id': 11,
+    'pos': ((89, 180),(89, 193),(8, 198),(9, 181),(430, 222),),
+    'color': ((71, 199, 250),(49, 146, 244),(46, 141, 245),(74, 192, 247),(112, 202, 255),)
+  },
+  'Event2': {
+    'id': 12,
+    'pos': ((6, 206),(5, 182),(92, 195),(428, 221),(262, 170),),
+    'color': ((253, 101, 162),(255, 150, 165),(253, 105, 162),(255, 186, 206),(255, 162, 173),)
+  },
+  'Event3': {
+    'id': 13,
+    'pos': ((6, 180),(7, 225),(82, 180),(82, 224),(431, 221),),
+    'color': ((159, 226, 11),(99, 199, 20),(165, 228, 16),(101, 203, 22),(165, 235, 77),)
   }
 }
 
 Status = {
-  'pos': (473, 118),
+  'pos': (480, 117),
   # color
   'color': (
     # 絕不調(0) ~ 絕好調(4)
-    (0,0,0), (16, 135, 247), (255, 212, 24), (255, 170, 63), (255, 131, 156)
-  )
+    (201, 128, 255), (16, 135, 247), (255, 212, 24), (255, 170, 63), (255, 131, 156)
+  ),
+  'name': ('絕不調','不調','普通','好調','絕好調')
 }
 StatusBest    = 4
 StatusGood    = 3
@@ -71,9 +116,12 @@ SupportAvailablePos = (
 )
 SupportAvailableColor = ((110,107,121),(253, 172, 31),(251, 231, 120))
 
-def flush():
-  _G.CurrentStage   = -1
-  _G.LastFrameCount = -1
+SkillSelNextPageScroll = ((552,627),(526,145))
+
+Sicked = {
+  'pos': ((79, 902),(183, 933),(189, 905),),
+  'color': ((244, 243, 247),(170, 121, 247),(236, 235, 239),)
+}
 
 def get_current_stage():
   global Enum
@@ -102,9 +150,9 @@ def get_energy():
     ret += (de*dx)
   return ret 
 
-def get_skill_points():
+def get_skill_points(is_race):
   filename = f"skpt.png"
-  graphics.take_snapshot(position.SkillPtRect, filename)
+  graphics.take_snapshot(position.RaceSkillPtRect if is_race else position.SkillPtRect, filename)
   sleep(0.3)
   res = img2str(filename)
   try:
@@ -117,7 +165,7 @@ def get_status():
   global Status
   rgb = graphics.get_pixel(*Status['pos'])
   for i,c in enumerate(Status['color']):
-    if rgb == c:
+    if graphics.is_color_ok(rgb,c):
       return i 
   return StatusBest
 
@@ -126,13 +174,18 @@ def get_date():
   return ocr_rect(position.DateRect, fname, 1.0).strip()
 
 def get_race_fans():
-  fname = 'racefan.png'
-  f0 = ocr_rect(position.RaceFanRect1, fname, 2.0).strip()
+  f0 = ocr_rect(position.RaceFanRect1, 'racefan1.png', 2.0).strip()
   wait(1)
-  f1 = ocr_rect(position.RaceFanRect2, fname, 2.0).strip()
+  f1 = ocr_rect(position.RaceFanRect2, 'racefan2.png', 2.0).strip()
   return [f0, f1]
 
 def validate_train_effect(menu_index, numbers):
+  """
+  Validate training attributes increase whether legal.
+  * (int) menu_index -- From left to right, the index of training objective
+  * (int[6]) numbers -- Attributes increased, i.e. [SPD,STA,POW,WIL,WIS,SKP]
+  """
+  return True # might broken due to sickness
   if menu_index == 0:   # speed
     if max(numbers) != numbers[0] or numbers[2] < numbers[5]:
       return False
@@ -151,12 +204,17 @@ def validate_train_effect(menu_index, numbers):
   return True
 
 def get_all_training_effect(only_support=False):
+  '''
+  Get all training effects, i.e. attributes increase
+  * (bool) only_support: Only get number of supports present and ignore attributes
+  '''
   ret  = []
   ret2 = []
   for i,pos in enumerate(position.StateCheckPos):
     speed = 20 if i == 0 else 10
     Input.moveto(*pos, speed)
-    wait(3)
+    if not only_support:
+      wait(3)
     if i == 0:
       Input.mouse_down()
     else:
@@ -168,6 +226,9 @@ def get_all_training_effect(only_support=False):
   return [ret,ret2]
 
 def get_training_supports():
+  '''
+  Get number support cards present in current training objective
+  '''
   global SupportAvailablePos,SupportAvailableColor
   cnt = 0
   for pos in SupportAvailablePos:
@@ -179,7 +240,11 @@ def get_training_supports():
   return cnt
 
 def get_training_effect(menu_index):
-  global CVMatchStdRate, CVMatchMinCount, TrainingEffectStat
+  '''
+  Get attributes increase amount of training.
+  * (int 0~4) menu_index: From left to right, the index of training objective
+  '''
+  global CVMatchStdRate, CVMatchMinCount, CVLocalDistance, TrainingEffectStat
   size   = len(TrainingEffectStat[menu_index])
   passed = False
   while not passed:
@@ -191,7 +256,7 @@ def get_training_effect(menu_index):
       depth = 0 if lidx != idx else depth
       depth += 1
       lidx = idx
-      graphics.flush()
+      _G.flush()
       rect = position.TrainingIncreaseRect[TrainingEffectStat[menu_index][idx]]
       fname = f"training{idx}.png"
       graphics.take_snapshot(rect, fname)
@@ -225,14 +290,13 @@ def get_training_effect(menu_index):
         ar_ok_cnt.append(ok_cnt)
         ar_ok_pos[i] = sorted(ar_ok_pos[i], key=lambda _pos: _pos[1])
       
-
       # filter to only local maximum left
       for n in range(10):
         ar = []
         last_x = -10
         max_sim = 0
         for pos in ar_ok_pos[n]:
-          if pos[1] - last_x >= 10:
+          if pos[1] - last_x >= CVLocalDistance:
             max_sim = 0
           if match_result[n][pos] > max_sim:
             ar.append(pos)
@@ -241,41 +305,42 @@ def get_training_effect(menu_index):
 
       # treat as another digit if match point not close to each other
       for n in range(10):
-        last_x = -10
+        last_x = -CVLocalDistance
         if depth < 3 and (ar_ok_cnt[n] == 0 or max(ar_ok_cnt[n]+2,ar_ok_cnt[n]*1.4) < max_match):
           continue
         elif ar_ok_cnt[n] < CVMatchMinCount:
           continue
+          
         for pos in ar_ok_pos[n]:
-          if pos[1] - last_x >= 10:
-            if n == 1:
+          if pos[1] - last_x >= CVLocalDistance:
+            if n == 1:    # 1 and 4
               flag_greater = True
               for pos2 in ar_ok_pos[4]:
-                if abs(pos2[1] - pos[1]) < 10 and match_result[4][pos2] > match_result[n][pos]:
+                if abs(pos2[1] - pos[1]) < CVLocalDistance and match_result[4][pos2] > match_result[n][pos]:
                   flag_greater = False
                   break
               if flag_greater:
                 digit.append(n)
-            elif n == 4:
+            elif n == 4:  # 1 and 4
               flag_greater = True
               for pos2 in ar_ok_pos[1]:
-                if abs(pos2[1] - pos[1]) < 10 and match_result[1][pos2] > match_result[n][pos]:
+                if abs(pos2[1] - pos[1]) < CVLocalDistance and match_result[1][pos2] > match_result[n][pos]:
                   flag_greater = False
                   break
               if flag_greater:
                 digit.append(n)
-            elif n == 3:
+            elif n == 3:  # 3 and 8
               flag_greater = True
               for pos2 in ar_ok_pos[8]:
-                if abs(pos2[1] - pos[1]) < 10 and match_result[8][pos2] > match_result[n][pos]:
+                if abs(pos2[1] - pos[1]) < CVLocalDistance and match_result[8][pos2] > match_result[n][pos]:
                   flag_greater = False
                   break
               if flag_greater:
                 digit.append(n)
-            elif n == 8:
+            elif n == 8:  # 3 and 8
               flag_greater = True
               for pos2 in ar_ok_pos[3]:
-                if abs(pos2[1] - pos[1]) < 10 and match_result[3][pos2] > match_result[n][pos]:
+                if abs(pos2[1] - pos[1]) < CVLocalDistance and match_result[3][pos2] > match_result[n][pos]:
                   flag_greater = False
                   break
               if flag_greater:
@@ -291,7 +356,8 @@ def get_training_effect(menu_index):
         number = int("".join([str(d) for d in digit]))
       except (TypeError,ValueError):
         number = 0
-      if number >= 2 and number <= 100:
+      log_info(f"OCR result: {number}")
+      if number >= 0 and number <= 100:
         effect[TrainingEffectStat[menu_index][idx]] = number
         idx += 1
     passed = validate_train_effect(menu_index, effect)
@@ -301,4 +367,74 @@ def get_training_effect(menu_index):
   
 def get_event_title():
   fname = 'event.png'
-  return ocr_rect(position.EventTitleRect, fname, zoom=1.2).translate(str.maketrans('。',' ')).strip()
+  raw   = ocr_rect(position.EventTitleRect, fname, zoom=1.2)
+  event_names = list(_G.UmaEventData.keys())
+  rates = [util.diff_string(raw,ename) for ename in event_names]
+  event_name = event_names[rates.index(max(rates))]
+  return (event_name, _G.UmaEventData[event_name])
+
+
+def get_attributes(skpt=True,is_race=False): # include skill points
+  '''
+  * skpt: Include skill points
+  '''
+  ret = []
+  for idx,rect in enumerate(position.RaceAttributesRect if is_race else position.AttributesRect):
+    try:
+      ret.append(int("".join([n for n in ocr_rect(rect, f"attr{idx}.png") if isdigit(n)])))
+    except Exception:
+      ret.append(0)
+  if skpt:
+    ret.append(get_skill_points(is_race))
+  return ret
+
+def _ocr_available_skills():
+  ret = []
+  available_points = graphics.find_object(_G.ImageSkillUp)
+  log_info("Skillup template local max:", available_points)
+  for idx,pxy in enumerate(available_points):
+    px,py    = pxy
+    rsx,rsy  = int(px - 400), int(py - 24)
+    rex,rey  = int(px - 200), int(py + 4)
+    name_raw = ocr_rect((rsx,rsy,rex,rey), f"skill{idx}.png", zoom=1.2, lang='jpn')
+    fixed    = corrector.skill_name(name_raw)
+    print(fixed)
+    ret.append(fixed)
+  return ret
+
+def get_available_skills(_async,immediate=False):
+  '''
+  Get available skill to obtain
+  * _async -- Run function in a fiber/generator
+  * immediate -- Will spend points to get `_G.ImmediateSkills` as soon as it's available
+  '''
+  ret = []
+  flag_duped = False  
+  while not flag_duped:
+    if _async:
+      yield
+    skills = _ocr_available_skills()
+    for s in skills:
+      if s not in ret:
+        ret.append(s)
+      else:
+        flag_duped = True
+    if flag_duped:
+      break
+    sx,sy = SkillSelNextPageScroll[0]
+    ex,ey = SkillSelNextPageScroll[1]
+    Input.moveto(sx,sy)
+    Input.scroll_to(sx,sy,ex,ey)
+    uwait(1)
+
+  if _async:
+    yield (_G.MsgPipeRet, ret)
+  else:
+    return ret
+  
+def get_race_ranking():
+  for idx,fname in enumerate(_G.ImageRaceRanking):
+    pts = graphics.find_object(fname, 0.99)
+    if pts:
+      return idx+1
+  return 0

@@ -1,19 +1,15 @@
-from win32con import FLASHW_TIMER
-import _G
+import cv2
+import numpy as np
 import win32gui
-import Input
-from desktopmagic.screengrab_win32 import (
-	getDisplayRects, saveScreenToBmp, saveRectToBmp, getScreenAsImage,
-	getRectAsImage, getDisplaysAsImages
-)
+from desktopmagic.screengrab_win32 import getRectAsImage
 from PIL import Image
 
-SnapshotCache = {}
-_G.DesktopDC = win32gui.GetDC(0)
+import _G
+import Input
+from _G import log_debug, log_error, log_info, log_warning, resume, uwait, wait, flush
+from _G import (CVLocalDistance, CVMatchHardRate, CVMatchMinCount, CVMatchStdRate)
 
-def flush():
-  global SnapshotCache
-  SnapshotCache = {}
+_G.DesktopDC = win32gui.GetDC(0)
 
 def is_color_ok(cur, target):
   for c1,c2 in zip(cur,target):
@@ -32,7 +28,6 @@ def is_pixel_match(pix, col):
   return True
 
 def get_pixel(x,y,sync=False):
-  global SnapshotCache
   # use win32api to get pixel in real time, slower
   if sync:
     rect = get_full_rect()
@@ -70,7 +65,6 @@ def get_content_rect():
   return tuple(rect)
 
 def take_snapshot(rect=None,filename=None):
-  global SnapshotCache
   if not filename:
     filename = _G.DCSnapshotFile
   offset = list(get_content_rect())
@@ -85,8 +79,8 @@ def take_snapshot(rect=None,filename=None):
     rect[2] += offset[0]
     rect[3] += offset[1]
   # note: cache will be flushed every frame during main_loop
-  if _G.LastFrameCount == _G.FrameCount and filename in SnapshotCache:
-    return SnapshotCache[filename]
+  if _G.LastFrameCount == _G.FrameCount and filename in _G.SnapshotCache:
+    return _G.SnapshotCache[filename]
   else:
     _G.LastFrameCount = _G.FrameCount
   return _take_snapshot(rect, filename)
@@ -95,7 +89,7 @@ def _take_snapshot(rect,filename):
   path = filename if filename.startswith(_G.DCTmpFolder) else f"{_G.DCTmpFolder}/{filename}"
   getRectAsImage(tuple(rect)).save(path, format='png')
   img = Image.open(path)
-  SnapshotCache[filename] = img 
+  _G.SnapshotCache[filename] = img 
   return img 
 
 def resize_image(size, src_fname, dst_fname):
@@ -103,3 +97,43 @@ def resize_image(size, src_fname, dst_fname):
   ret = img.resize(size)
   ret.save(dst_fname)
   return ret 
+
+def filter_local_templates(mat, threshold):
+  '''
+  Used in cv2.matchTemplate in order to find most likely point of bitmap
+  '''
+  global CVLocalDistance
+  matched = []
+  for y,ar in enumerate(mat):
+    x = np.where(ar == np.max(ar))[0][0]
+    if ar[x] > threshold:
+      matched.append((x,y,ar[x]))
+  filtered = []
+  last_y = -CVLocalDistance
+  last_r = 0
+  cur_xy = (-1,-1)
+  log_debug("Matched template points:")
+  for x,y,rate in matched:
+    log_debug(f"{(x,y)} rate")
+    if abs(y - last_y) > CVLocalDistance:
+      last_r = 0
+      last_y = y
+      if cur_xy[0] >= 0:
+        filtered.append(cur_xy)
+      cur_xy = (-1,-1)
+
+    if abs(y - last_y) <= CVLocalDistance and rate > last_r:
+      cur_xy = (x,y)
+      last_y = y
+      last_r = rate
+  
+  if cur_xy[0] >= 0:
+    filtered.append(cur_xy)
+  return filtered
+
+def find_object(objimg_path, threshold=CVMatchHardRate):
+  take_snapshot()
+  src = cv2.imread(f"{_G.DCTmpFolder}/{_G.DCSnapshotFile}")
+  tmp = cv2.imread(objimg_path)
+  res = cv2.matchTemplate(src, tmp, cv2.TM_CCOEFF_NORMED)
+  return filter_local_templates(res, threshold)

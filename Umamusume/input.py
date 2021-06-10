@@ -5,7 +5,7 @@ from time import sleep
 from _G import (resume,wait,uwait,log_debug,log_error,log_info,log_warning)
 
 ScrollTime  = 0.03
-ScrollDelta = [3,8]
+ScrollDelta = [1,5]
 
 keystate = [0 for _ in range(0xff)]
 
@@ -138,10 +138,12 @@ def scroll_to(x, y, x2, y2, app_offset=True, haste=False, hold=True):
     pcx, pcy = min([max([pcx, 0.4]), 2]), min([max([pcy, 0.4]), 2])
   except Exception:
     pcx, pcy = 1, 1
-
+  
   while x != x2 or y != y2:
     dx = int((random.randint(*ScrollDelta) + haste * 2) * pcx)
     dy = int((random.randint(*ScrollDelta) + haste * 2) * pcy)
+    dx = 1 if dx == 0 and x != x2 else dx
+    dy = 1 if dy == 0 and y != y2 else dy
     x = min([x2, x+dx]) if x2 > x else max([x2, x-dx])
     y = min([y2, y+dy]) if y2 > y else max([y2, y-dy])
     set_cursor_pos(x, y, app_offset)
@@ -152,8 +154,10 @@ def scroll_to(x, y, x2, y2, app_offset=True, haste=False, hold=True):
 
 
 MaxMoveTimes = 42
-def moveto(x,y,speed=10,app_offset=True,aync=True):
+def moveto(x,y,speed=10,max_steps=MaxMoveTimes,app_offset=True,aync=True,rand=True):
   global MaxMoveTimes
+  if max_steps <= 0:
+    max_steps = 0x7fffffff
   if app_offset:
     rect = graphics.get_content_rect()
     x += rect[0]
@@ -162,19 +166,21 @@ def moveto(x,y,speed=10,app_offset=True,aync=True):
   dx = x - cx
   dy = y - cy
   times = int(math.hypot(dx,dy) // speed)
-  if times > MaxMoveTimes:
-    times = MaxMoveTimes
-    speed = math.hypot(dx,dy) // MaxMoveTimes
+  if times > max_steps:
+    times = max_steps
+    speed = math.hypot(dx,dy) // max_steps
   angle = math.atan2(dy,dx)
   dx = speed * math.cos(angle)
   dy = speed * math.sin(angle)
   for _ in range(times):
     cx += dx
     cy += dy
-    rx = random.randint(-_G.PosRandomRange[0],_G.PosRandomRange[0]) // 2
-    ry = random.randint(-_G.PosRandomRange[1],_G.PosRandomRange[1]) // 2
-    rx = rx // 2 if dx > dy else rx
-    ry = ry // 2 if dy > dx else ry
+    rx,ry = 0,0
+    if rand:
+      rx = random.randint(-_G.PosRandomRange[0],_G.PosRandomRange[0]) // 2
+      ry = random.randint(-_G.PosRandomRange[1],_G.PosRandomRange[1]) // 2
+      rx = rx // 2 if dx > dy else rx
+      ry = ry // 2 if dy > dx else ry
     set_cursor_pos(cx+rx, cy+ry, False)
     wait(0.01)
   set_cursor_pos(x, y, False)
