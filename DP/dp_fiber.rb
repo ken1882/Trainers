@@ -157,4 +157,71 @@ def start_eggdance_fiber
   end    
 end
 
+FirstShardPos = [1512, 505]
+CODAmountPos  = [918, 262]
+SendMailPos   = [983, 724]
 
+CopyProc = Proc.new{
+  Input.key_down(Keymap[:vk_Lcontrol],false); uwait(0.3);
+  Input.trigger_key(Keymap[:vk_C],false); uwait(0.3);
+  Input.key_up(Keymap[:vk_Lcontrol,false])
+}
+
+PasteProc = Proc.new{
+  Input.key_down(Keymap[:vk_Lcontrol],false); uwait(0.3);
+  Input.trigger_key(Keymap[:vk_V],false); uwait(0.3);
+  Input.key_up(Keymap[:vk_Lcontrol],false)
+}
+
+def start_mail_fiber(cnt)
+  cnt.to_i.times do
+    Input.moveto(*FirstShardPos); uwait(0.2);
+    Input.click_r(false,true); uwait(0.2);
+    Input.moveto(*SendMailPos); uwait(0.2);
+    2.times{ Input.click_l(false,true); uwait(0.05);}
+    uwait(0.8)
+  end
+end
+
+def start_cod_fiber(cnt)
+  cnt.to_i.times do
+    Input.moveto(*FirstShardPos); uwait(0.2);
+    Input.click_r(false,true); uwait(0.2);
+    Input.moveto(*CODAmountPos); uwait(0.2);
+    2.times{ Input.click_l(false,true); uwait(0.05);}
+    PasteProc.call; uwait(0.2);
+    Input.moveto(*SendMailPos); uwait(0.2);
+    2.times{ Input.click_l(false,true); uwait(0.05);}
+    uwait(0.8)
+  end
+end
+
+def start_extract_fiber
+  Grinding.send(:extract_loots)
+end
+
+def start_bag_clear_fiber
+  Grinding.send :combine_shards,false; uwait 2;
+  Input.trigger_key Keymap[:vk_esc],false; uwait 0.5;
+  Input.trigger_key Keymap[:vk_D],false; uwait 0.5; Combat.earth_shield; uwait 2;
+  Grinding.send :discard_shards; uwait 2;
+  Input.trigger_key Keymap[:vk_esc],false; uwait 0.5;
+  Input.trigger_key Keymap[:vk_A],false; uwait 0.5; Combat.earth_shield; uwait 2;
+  Grinding.send :shop_sells; uwait 2;
+  puts "Inventory cleared"
+end
+
+def start_sell_fiber
+  Grinding.send :shop_sells;
+end
+
+def start_auction_fiber
+  20.times do 
+    item_pos,auction_pos = [1508,498],[201,735]
+    Input.moveto(*item_pos); uwait 0.3;
+    Input.click_r false,true; uwait 0.3;
+    Input.moveto(*auction_pos); uwait 0.3;
+    Input.click_l false,true; uwait 0.3;
+    uwait(1)
+  end
+end

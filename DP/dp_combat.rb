@@ -316,8 +316,8 @@ module Combat
       elsif !$flag_hastarget && in_combat?
         puts "Untargeted enemy nearby"
         roll; uwait(0.1); blink; 
-		use_skill Keymap[:vk_2]
-		netherbomb;
+        use_skill Keymap[:vk_2]
+        netherbomb;
         next
       end
       if $flag_hastarget && can_engage
@@ -362,5 +362,11 @@ module Combat
     Input.moveto *LootPetPos; uwait 0.3;
     clickR; uwait 0.3;
     $flag_combat_dead = true 
+  end
+
+  def reset_view
+    rotateY(360,50); uwait 0.5;
+    rotateY(-150,50)
+    Input.zoomout 0xC00+rand(0x100)
   end
 end

@@ -4,16 +4,21 @@ module DunarTemple
   TimesPerClearInventory = 2
   TimesPerJBBuff = 3
   TimesPer302ShardCombine = 3
-  TimesPerAutoRestart = 6
+  TimesPerEquipmentEnhance = 9
+  TimesPerAutoRestart = 12
   
   ExctractBarPos     = [[856, 804],[845, 809],[959, 806]]
   ExctractBarColor   = [[2, 65, 92],[39, 33, 32],[126, 153, 158]]
+  DungeonMapPos   = [1750,864]
+  DungeonMapColor =  [31,33,25]
   FlagHasJB = false
 
   @timer_run = 0
   
   module_function
   def start
+    # return p in_dungeon?
+    # return Combat.reset_view
     # return start_room2
 	  # return p hud_opened?
     # return clear_inventory
@@ -30,11 +35,18 @@ module DunarTemple
       @timer_run += 1
       puts "Running ##{@timer_run} time"
       Input.zoomout 0x800+rand(0x300)
+      Combat.reset_view; uwait(0.5);
       reset_dungeon; uwait(2);
       enter_dungeon; uwait(3);
-      select_difficulty; wait(5);
+      select_difficulty; wait(8);
       wait_until_transition_ok; uwait(2.5);
       
+      if !in_dungeon?
+        puts "Not in dungeon"
+        return logout
+      end
+
+      Combat.reset_view
       start_room1 
       if $flag_combat_dead
         unstuck; uwait 3;
@@ -101,13 +113,13 @@ module DunarTemple
     puts "#{wt} seconds before teleport"
     wt.times{|i| wait(0.95);}; uwait 2;
     wait_until_transition_ok; uwait 2;
-    Input.zoomout 0x600+rand(0x200)
   end
 
   def start_room1 
     puts "Starting room#1"
-    Combat.earth_shield; uwait(1);
-    move_left 1.5
+    Combat.earth_shield; uwait 1;
+    Combat.reset_view; uwait 1;
+    move_left 1.3
     move_front 1.2,true,false
     rotateX(90)
     9.times{wait(0.1); Input.trigger_key Keymap[:vk_space],false}
@@ -126,13 +138,14 @@ module DunarTemple
   def start_room2 
     puts "Starting room#2"
     Combat.earth_shield; uwait 1;
+    Combat.reset_view; uwait 1;
     move_front 2.1,true
     Input.key_down Keymap[:vk_W],false
     Combat.summon_dragon; uwait(0.5)
     Input.trigger_key Keymap[:vk_f2]; uwait(0.6);
     Combat.blink;
     Input.key_up Keymap[:vk_W],false; uwait(0.5);
-    move_front(0.6,true,true,true)
+    move_front(0.7,true,true,true)
     Thread.new{
       sleep(1.0)
       vk = Keymap[:vk_4]
@@ -143,12 +156,11 @@ module DunarTemple
       Combat.cd(vk, 15)
     }
     uwait(0.4)
-    move_front(1.0, true, true, false); Combat.blink;
+    move_front(1.2, true, true, false); Combat.blink; uwait(0.3);
     Combat.backjump;
     uwait(0.1)
     # Input.trigger_key Keymap[:vk_f1]
     Combat.backjump; Combat.roll;
-    Combat.netherbomb; Combat.roll;
     Combat.healbuff
     Combat.engage
   end
@@ -156,6 +168,7 @@ module DunarTemple
   def start_room3
     puts "Start room#3"
     Combat.earth_shield; uwait 1;
+    Combat.reset_view; uwait 1;
     move_front 8.5,true; uwait 1;
     move_front 1.2,true
     rotateX(90); uwait 0.5;
@@ -176,6 +189,11 @@ module DunarTemple
     end
     Input.zoomout 0x800+rand(0x200)
     clear_inventory if @timer_run % TimesPerClearInventory == 0
+    if @timer_run % TimesPerEquipmentEnhance == 0
+      puts "Enhance equipment durability"
+      Combat.healbuff; uwait 1;
+      enhance_equipments; uwait 1;
+    end
     3.times{ move_back 1.5 }
     wait 15; uwait 15;
   	Input.zoomout 0x1200+rand(0x200)
@@ -192,6 +210,10 @@ module DunarTemple
     Input.trigger_key Keymap[:vk_A],false; uwait 0.5; Combat.earth_shield; uwait 2;
     shop_sells; uwait 2;
     puts "Inventory cleared"
+  end
+
+  def in_dungeon?
+    return Graphics.screen_pixels_matched?([DungeonMapPos],[DungeonMapColor])
   end
 end
 
