@@ -2,35 +2,10 @@ from numpy import gradient
 from win32gui import ExtCreatePen
 import _G,stage
 from _G import resume, resume_from, pop_fiber_ret, wait, uwait
-import Input, position, heuristics
+import Input, position, heuristics, training
 from random import randint
 
 def start_test_fiber():
-  _G.flush()
-  yield
-  try:
-    print("Energy:", stage.get_energy())
-    print("Status:", stage.Status['name'][stage.get_status()])
-    print("Date:", stage.get_date())
-    stg = stage.get_current_stage()
-    print("Stage:", stg)
-    # stat,sup = stage.get_all_training_effect(True)
-    # print(f"Stat add: {stat}\nSupports: {sup}")
-    # print(stage.get_training_effect(2))
-    # yield from resume_from(stage.get_available_skills(True))
-    if 'Event' in stg:
-      print("Event:", stage.get_event_data())
-    if stg == 'TrainMain':
-      print("Attributes:", stage.get_attributes())
-    if stg == 'ObjectivePrepare':
-      print("Attrs:", stage.get_attributes(is_race=True))
-    if stg == 'RaceResult':
-      print("Race ranking:", stage.get_race_ranking())
-    
-  except InterruptedError:
-    pass
-
-def start_train_fiber():
   heuristics.init()
   _G.flush()
   yield
@@ -53,7 +28,7 @@ def start_train_fiber():
       print("Attrs:", stage.get_attributes(is_race=True))
     if stg == 'RaceResult':
       print("Race ranking:", stage.get_race_ranking())
-    if stg != 'TrainMain':
+    if stg != 'TrainMain' and stg != 'TrainSummer':
       return
     
     attrs = stage.get_attributes()
@@ -72,3 +47,6 @@ def start_train_fiber():
     
   except InterruptedError:
     pass
+
+def start_train_fiber():
+  yield from resume_from(training.start())

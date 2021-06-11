@@ -36,8 +36,8 @@ Enum = {
   },
   'SkillSelection': {
     'id': 3,
-    'pos': ((239, 341),(130, 16),(28, 933),(94, 960),(552, 867),(376, 337),),
-    'color': ((156, 211, 41),(99, 93, 126),(255, 255, 255),(255, 255, 255),(255, 255, 255),(156, 211, 41),),
+    'pos': ((8, 18),(121, 18),(179, 14),(240, 340),(376, 337),(539, 277),),
+    'color': ((72, 68, 92),(99, 93, 126),(252, 249, 249),(156, 211, 41),(156, 211, 41),(247, 249, 247),),
   },
   'RaceSelection': {
     'id': 4,
@@ -94,6 +94,11 @@ Enum = {
     'pos': ((5, 183),(5, 203),(90, 227),(258, 172),(472, 226),),
     'color': ((255, 150, 165),(253, 101, 162),(255, 101, 165),(255, 162, 173),(255, 188, 206),)
   },
+  'Event5': {
+    'id': 13,
+    'pos': ((6, 177),(4, 205),(92, 221),(91, 195),(442, 194),),
+    'color': ((255, 150, 165),(253, 101, 163),(253, 105, 162),(253, 105, 162),(255, 192, 209),)
+  }
 }
 
 Status = {
@@ -127,6 +132,11 @@ HealthRoom = {
   'pos': ((79, 902),(183, 933),(189, 905),),
   'color': ((244, 243, 247),(170, 121, 247),(236, 235, 239),)
 }
+
+SkillBarBottomPos = (563, 814) 
+SkillBarBottomColor = (118,116,134)
+GetSkillPos = (241, 859)
+GetSkillColor = (154,218,8)
 
 def get_current_stage():
   global Enum
@@ -397,7 +407,7 @@ def get_attributes(skpt=True,is_race=False): # include skill points
     ret.append(get_skill_points(is_race))
   return ret
 
-def _ocr_available_skills():
+def _ocr_available_skills(immediate=False):
   ret = []
   available_points = graphics.find_object(_G.ImageSkillUp, threshold=0.95)
   log_info("Skillup template local max:", available_points)
@@ -407,8 +417,13 @@ def _ocr_available_skills():
     rex,rey  = int(px - 200), int(py + 4)
     name_raw = ocr_rect((rsx,rsy,rex,rey), f"skill{idx}.png", zoom=1.2, lang='jpn')
     fixed    = corrector.skill_name(name_raw)
-    print(fixed)
-    ret.append(fixed)
+    if immediate and fixed in _G.CurrentUma.ImmediateSkills:
+      Input.moveto(px+15,py+15)
+      uwait(0.3)
+      Input.click()
+      uwait(0.3)
+    else:
+      ret.append(fixed)
   return ret
 
 def get_available_skills(_async,immediate=False):
@@ -424,13 +439,16 @@ def get_available_skills(_async,immediate=False):
       yield
     else:
       _G.flush()
-    skills = _ocr_available_skills()
+    skills = _ocr_available_skills(immediate)
     for s in skills:
       if s not in ret:
         ret.append(s)
       else:
         flag_duped = True
+    # break if duped or to bottom
     if flag_duped:
+      break
+    if graphics.is_color_ok(graphics.get_pixel(*SkillBarBottomPos, True), SkillBarBottomColor):
       break
     sx,sy = SkillSelNextPageScroll[0]
     ex,ey = SkillSelNextPageScroll[1]
@@ -452,3 +470,6 @@ def get_race_ranking():
 
 def is_healthroom_available():
   return graphics.is_pixel_match(HealthRoom['pos'], HealthRoom['color'])
+
+def has_obtained_skill():
+  return graphics.is_color_ok(graphics.get_pixel(*GetSkillPos, True), GetSkillColor)

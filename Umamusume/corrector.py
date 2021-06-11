@@ -33,5 +33,4 @@ def date(ori):
   month = month.translate(str.maketrans('符','後')).strip()
   mrate = [util.diff_string(month, m) for m in DateMonth]
   month = DateMonth[mrate.index(max(mrate))]
-  log_info(f'`{ori}` => `{year} {month}`')
   return DateYear.index(year)*24 + DateMonth.index(month)

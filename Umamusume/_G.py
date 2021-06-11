@@ -165,16 +165,22 @@ with open("UmaLibrary/UmaMusumeLibraryMainStory.json", 'r') as fp:
           continue
         UmaEventData[name] = event[name]
 
+UmaRaceData = {}
+with open("UmaLibrary/RaceDataLibrary.json", 'r') as fp:
+  raw = json.load(fp)
+  for tier in raw['Race']:
+    for race in raw['Race'][tier]:
+      UmaRaceData[race['Name']] = race
 ### Program Depended Constants/Variables
 
 CurrentUmaName = 'MihonoBorubon'
 CurrentUma     = None
-CurrentDate    = 0 # before start
+CurrentDate    = 0  # before start
+CurrentAction  = None
 RaceHistory    = []
-NextObjectiveIndex = 7
+NextObjectiveIndex = 0
 CurrentAttributes  = [0,0,0,0,0,0]
 CurrentOwnedSkills = []
-
 
 ActionTrain     = 0
 ActionRest      = 1
@@ -182,3 +188,4 @@ ActionHeal      = 2
 ActionRace      = 3
 ActionGetSkill  = 4
 ActionPlay      = 5
+ActionObjective = 6

@@ -43,7 +43,7 @@ AttrTrainPos = (
   (495, 870),   # Wisdom
 )
 
-EventTitleRect = (86,192,384,226)
+EventTitleRect = (86,192,286,226)
 
 AttributesRect = (
   ( 57,688,108,710),

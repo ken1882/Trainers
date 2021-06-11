@@ -54,15 +54,30 @@ ObjectiveAttributeFair = [
 ]
 
 OptionalRace = [
-  
+  '宝塚記念',
+  '安田記念',
+  '天皇賞（秋）',
+  'エリザベス女王杯',
+  'ジャパンカップ',
+  '有馬記念',
+  '大阪杯',
+  'ホープフルステークス'
 ]
 
 PreferredEventOption = {
   '追加の自主トレ': 0,
   '愉快ッ！密着取材！': 0,
+  'オペレーション：外出時トラブル': 1,
+  '素敵な♪練習日和': 2,
+  'あぁ、故郷': 1,
+  '完全無欠のスイーツ': 0,
+  'ダシが重要！！': 0,
+  'あんし〜ん笹針師、参☆上': 1,
+  '初詣': 1
 }
 
-# Skill to immediate get (by prior knowledge)
+# Skill to get immediately as soon as it's available
+# regardless any situation (by prior knowledge)
 ImmediateSkills = [
   '先頭の景色は譲らない…！',
   '勝利の鼓動',
@@ -77,7 +92,6 @@ ImmediateSkills = [
   '直線回復',
   '全身全霊',
   '末脚',
-  '垂れウマ回避',
   '臨機応変',
   'レーンの魔術師',
 ]

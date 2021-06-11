@@ -1,4 +1,6 @@
-import _G, stage
+from os import stat
+from corrector import date
+import _G, stage, corrector
 import UmaData.common
 import UmaData.MihonoBorubon
 from random import randint
@@ -79,3 +81,25 @@ def determine_event_selection(event_data):
 def determine_next_main_action():
   energy = stage.get_energy()
   sicked = stage.is_healthroom_available()
+  date   = stage.get_date()
+  status = stage.get_status()
+  log_info("Energy:", energy)
+  log_info("Status:", stage.Status['name'][status])
+  log_info("Date:", date)
+  log_info("Sicked:", sicked)
+  _G.CurrentDate = date
+  if sicked:
+    return (_G.ActionHeal, None)
+  
+  if energy < 45:
+    if date > 72: # ファイナルズ開催中
+      return (_G.ActionTrain, 4)
+    for race_name in _G.CurrentUma.OptionalRace:
+      if any([corrector.date(dat) == date for dat in _G.UmaRaceData[race_name]['Date']]):
+        return (_G.ActionRace, None)
+    return (_G.ActionRest, None)
+  
+  if status < 4 and energy < 85:
+    return (_G.ActionPlay, None)
+  
+  return (_G.ActionTrain, None)
