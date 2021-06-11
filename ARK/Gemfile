@@ -1,0 +1,6 @@
+source 'https://rubygems.org'
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+
+gem 'win32-api'
+gem 'win32con'
+gem 'windows-pr'

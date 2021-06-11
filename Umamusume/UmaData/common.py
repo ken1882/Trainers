@@ -94,3 +94,12 @@ RunningStyleSkillOrder = [
     '追込のコツ○',
   ],
 ]
+
+DebuffSkills = [
+  '小心者',
+  'ゲート難',
+  '手抜き癖',
+  'あきらめ癖',
+  'バ群嫌い',
+  
+]

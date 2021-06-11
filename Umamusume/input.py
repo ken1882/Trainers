@@ -84,10 +84,16 @@ def set_cursor_pos(x, y, app_offset=True):
     y += rect[1]
   win32api.SetCursorPos((int(x),int(y)))
 
-def click(x, y, app_offset=True):
-  set_cursor_pos(x, y, app_offset)
+def click(x=None, y=None, app_offset=True):
+  if x and y:
+    set_cursor_pos(x, y, app_offset)
   mouse_down(x, y, app_offset)
   mouse_up(x, y, app_offset)
+
+def dclick(x=None, y=None, app_offset=True):
+  click(x,y,app_offset)
+  uwait(0.1)
+  click(x,y,app_offset)
 
 def scroll_up(x, y, delta = 100, app_offset=True, haste=False):
   mouse_down(x, y, app_offset)
@@ -184,3 +190,6 @@ def moveto(x,y,speed=10,max_steps=MaxMoveTimes,app_offset=True,aync=True,rand=Tr
     set_cursor_pos(cx+rx, cy+ry, False)
     wait(0.01)
   set_cursor_pos(x, y, False)
+
+def rmoveto(x,y,rrange=8,**kwargs):
+  moveto(x+random.randint(-rrange, rrange), y+random.randint(-rrange, rrange), **kwargs)

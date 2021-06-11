@@ -21,6 +21,8 @@ WindowHeight = 1070
 WinTitleBarSize = (1, 31)
 WinDesktopBorderOffset = (8,0)
 
+DataCollectDirectory = ".traindata"
+
 FPS   = (1.0 / 120)
 Fiber = None
 FiberRet = None
@@ -126,7 +128,6 @@ ImageRaceRanking = [
   'UmaTemplate/ranking_5.png',
 ]
 
-
 UmaSkillData = {}
 with open("UmaLibrary/SkillData.json", 'r') as fp:
   UmaSkillData = json.load(fp)['Skill']
@@ -164,30 +165,20 @@ with open("UmaLibrary/UmaMusumeLibraryMainStory.json", 'r') as fp:
           continue
         UmaEventData[name] = event[name]
 
-### Program Depended Constants
-# Skill to immediate get (by prior knowledge)
-ImmediateSkills = [
-  '先頭の景色は譲らない…！',
-  '勝利の鼓動',
-  '汝、皇帝の神威を見よ',
-  'G00 1st.F∞;',
-  '右回り◎',
-  '左回り◎',
-  '根幹距離◎',
-  '非根幹距離◎',
-  '良バ場◎',
-  '道悪◎',
-  '晴れの日◎',
-  '徹底マーク◎',
-  '円弧のマエストロ',
-  'コーナー回復○',
-  '好転一息',
-  '直線回復',
-  '全身全霊',
-  '末脚',
-  '垂れウマ回避',
-  '臨機応変',
-  'レーンの魔術師',
-  '小心者',
-  'ゲート難',
-]
+### Program Depended Constants/Variables
+
+CurrentUmaName = 'MihonoBorubon'
+CurrentUma     = None
+CurrentDate    = 0 # before start
+RaceHistory    = []
+NextObjectiveIndex = 7
+CurrentAttributes  = [0,0,0,0,0,0]
+CurrentOwnedSkills = []
+
+
+ActionTrain     = 0
+ActionRest      = 1
+ActionHeal      = 2
+ActionRace      = 3
+ActionGetSkill  = 4
+ActionPlay      = 5

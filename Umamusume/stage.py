@@ -74,21 +74,26 @@ Enum = {
     'pos': ((44, 25),(56, 31),(195, 933),(371, 960),(554, 1012),(24, 56),),
     'color': ((88, 181, 57),(88, 181, 57),(159, 220, 5),(140, 207, 0),(235, 234, 239),(255, 199, 0),)
   },
-  'Event': {
+  'Event': { # Support Event
     'id': 11,
     'pos': ((89, 180),(89, 193),(8, 198),(9, 181),(430, 222),),
     'color': ((71, 199, 250),(49, 146, 244),(46, 141, 245),(74, 192, 247),(112, 202, 255),)
   },
-  'Event2': {
+  'Event2': { # Charactor Event
     'id': 12,
     'pos': ((6, 206),(5, 182),(92, 195),(428, 221),(262, 170),),
     'color': ((253, 101, 162),(255, 150, 165),(253, 105, 162),(255, 186, 206),(255, 162, 173),)
   },
-  'Event3': {
+  'Event3': { # Story Event
     'id': 13,
     'pos': ((6, 180),(7, 225),(82, 180),(82, 224),(431, 221),),
     'color': ((159, 226, 11),(99, 199, 20),(165, 228, 16),(101, 203, 22),(165, 235, 77),)
-  }
+  },
+  'Event4': { # Character Custom Event
+    'id': 12,
+    'pos': ((5, 183),(5, 203),(90, 227),(258, 172),(472, 226),),
+    'color': ((255, 150, 165),(253, 101, 162),(255, 101, 165),(255, 162, 173),(255, 188, 206),)
+  },
 }
 
 Status = {
@@ -96,7 +101,7 @@ Status = {
   # color
   'color': (
     # 絕不調(0) ~ 絕好調(4)
-    (201, 128, 255), (16, 135, 247), (255, 212, 24), (255, 170, 63), (255, 131, 156)
+    (201, 128, 255), (13, 174, 247), (255, 212, 24), (255, 170, 63), (255, 131, 156)
   ),
   'name': ('絕不調','不調','普通','好調','絕好調')
 }
@@ -118,7 +123,7 @@ SupportAvailableColor = ((110,107,121),(253, 172, 31),(251, 231, 120))
 
 SkillSelNextPageScroll = ((552,627),(526,145))
 
-Sicked = {
+HealthRoom = {
   'pos': ((79, 902),(183, 933),(189, 905),),
   'color': ((244, 243, 247),(170, 121, 247),(236, 235, 239),)
 }
@@ -171,7 +176,11 @@ def get_status():
 
 def get_date():
   fname = 'date.png'
-  return ocr_rect(position.DateRect, fname, 1.0).strip()
+  try:
+    return corrector.date(ocr_rect(position.DateRect, fname, 1.0).strip())
+  except Exception as err:
+    log_warning("Unable to get date:", err)
+    return -1
 
 def get_race_fans():
   f0 = ocr_rect(position.RaceFanRect1, 'racefan1.png', 2.0).strip()
@@ -210,11 +219,10 @@ def get_all_training_effect(only_support=False):
   '''
   ret  = []
   ret2 = []
-  for i,pos in enumerate(position.StateCheckPos):
+  for i,pos in enumerate(position.AttrTrainPos):
     speed = 20 if i == 0 else 10
     Input.moveto(*pos, speed)
-    if not only_support:
-      wait(3)
+    wait(0.1 if only_support else 3)
     if i == 0:
       Input.mouse_down()
     else:
@@ -365,12 +373,13 @@ def get_training_effect(menu_index):
       log_info(f"Wrong OCR training effect ({effect}), retry")
   return effect 
   
-def get_event_title():
+def get_event_data():
   fname = 'event.png'
-  raw   = ocr_rect(position.EventTitleRect, fname, zoom=1.2)
+  raw   = ocr_rect(position.EventTitleRect, fname, zoom=1.2).split('  ')[0]
   event_names = list(_G.UmaEventData.keys())
   rates = [util.diff_string(raw,ename) for ename in event_names]
   event_name = event_names[rates.index(max(rates))]
+  log_info(f"`{raw}` => `{event_name}`")
   return (event_name, _G.UmaEventData[event_name])
 
 
@@ -390,7 +399,7 @@ def get_attributes(skpt=True,is_race=False): # include skill points
 
 def _ocr_available_skills():
   ret = []
-  available_points = graphics.find_object(_G.ImageSkillUp)
+  available_points = graphics.find_object(_G.ImageSkillUp, threshold=0.95)
   log_info("Skillup template local max:", available_points)
   for idx,pxy in enumerate(available_points):
     px,py    = pxy
@@ -406,13 +415,15 @@ def get_available_skills(_async,immediate=False):
   '''
   Get available skill to obtain
   * _async -- Run function in a fiber/generator
-  * immediate -- Will spend points to get `_G.ImmediateSkills` as soon as it's available
+  * immediate -- Will spend points to get `ImmediateSkills` as soon as it's available
   '''
   ret = []
   flag_duped = False  
   while not flag_duped:
     if _async:
       yield
+    else:
+      _G.flush()
     skills = _ocr_available_skills()
     for s in skills:
       if s not in ret:
@@ -438,3 +449,6 @@ def get_race_ranking():
     if pts:
       return idx+1
   return 0
+
+def is_healthroom_available():
+  return graphics.is_pixel_match(HealthRoom['pos'], HealthRoom['color'])
