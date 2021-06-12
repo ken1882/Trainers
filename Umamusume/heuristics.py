@@ -5,6 +5,7 @@ import UmaData.common
 import UmaData.MihonoBorubon
 from random import randint
 from _G import log_debug, log_error, log_info, log_warning
+from UmaData.common import get_skill_rstyle
 
 # How many weight added to objective per difference
 AttrDistanceWeightPlus = [
@@ -35,6 +36,14 @@ def init():
     if _G.CurrentUmaName == module:
       _G.CurrentUma = getattr(UmaData, module)
       break
+  cur_date = stage.get_date()
+  _G.NextObjectiveIndex = 0
+  if cur_date:
+    for date in _G.CurrentUma.ObjectiveDate:
+      if cur_date > corrector.date(date):
+        _G.NextObjectiveIndex += 1
+  _G.NextObjectiveIndex = min(len(_G.CurrentUma.ObjectiveDate)-1, _G.NextObjectiveIndex)
+  log_info(f"Current date: {cur_date}, next objective: {_G.CurrentUma.ObjectiveDate[_G.NextObjectiveIndex]}")
 
 def get_objective_weight(depth=0):
   obj_idx = min(len(_G.CurrentUma.ObjectiveAttributeMin)-1, _G.NextObjectiveIndex+depth)
@@ -69,6 +78,9 @@ def determine_training_objective(sup_num=[0,0,0,0,0],attr_inc=[0,0,0,0,0]):
   
 def determine_event_selection(event_data):
   event_name,event_options = event_data
+  if len(event_options) <= 1:
+    return 0
+
   if event_name in _G.CurrentUma.PreferredEventOption:
     ret = _G.CurrentUma.PreferredEventOption[event_name]
     log_info(f"Preferred option:{ret}")
@@ -78,28 +90,65 @@ def determine_event_selection(event_data):
   log_info(f"Randomly choosed option: {ret}")
   return ret
 
+def get_optional_race(date):
+  for race_name in _G.CurrentUma.OptionalRace:
+    if any([corrector.date(dat) == date for dat in _G.UmaRaceData[race_name]['Date']]):
+      return _G.UmaRaceData[race_name]
+  return None
+
 def determine_next_main_action():
   energy = stage.get_energy()
   sicked = stage.is_healthroom_available()
   date   = stage.get_date()
   status = stage.get_status()
+  race   = get_optional_race(date)
+  _G.CurrentDate = date
+  _G.CurrentAttributes = stage.get_attributes()
   log_info("Energy:", energy)
   log_info("Status:", stage.Status['name'][status])
   log_info("Date:", date)
   log_info("Sicked:", sicked)
-  _G.CurrentDate = date
+  log_info("Attributes:", _G.CurrentAttributes)
+
+  if race:
+    _flag_ok = True
+    for idx,attr in enumerate(_G.CurrentUma.ObjectiveAttributeMin[_G.NextObjectiveIndex]):
+      print(_G.CurrentAttributes[idx], attr, _G.CurrentAttributes[idx] < attr)
+      if _G.CurrentAttributes[idx] < attr:
+        _flag_ok = False
+        break
+    if _flag_ok:
+      return (_G.ActionRace, race)
+
   if sicked:
     return (_G.ActionHeal, None)
   
   if energy < 45:
     if date > 72: # ファイナルズ開催中
       return (_G.ActionTrain, 4)
-    for race_name in _G.CurrentUma.OptionalRace:
-      if any([corrector.date(dat) == date for dat in _G.UmaRaceData[race_name]['Date']]):
-        return (_G.ActionRace, None)
     return (_G.ActionRest, None)
   
-  if status < 4 and energy < 85:
+  if stage.get_current_stage() == 'TrainMain' and status < 4 and energy < 80:
     return (_G.ActionPlay, None)
   
   return (_G.ActionTrain, None)
+
+def determine_skills2get(skills):
+  names = [s[0] for s in skills]
+  costs = [s[1] for s in skills]
+  points = _G.CurrentAttributes[5]
+  ret = []
+  log_info("Skill points:", points)
+  for sk in UmaData.common.NormalSkillOrder:
+    if points < 50: # unable to get more skills
+      break
+    if sk not in names or points < costs[names.index(sk)]:
+      continue
+    
+    sk_rstyle = get_skill_rstyle(sk)
+    if sk_rstyle != None and sk_rstyle != _G.CurrentUma.RunningStyle:
+      continue
+    ret.append(sk)
+    points -= costs[names.index(sk)]
+  return ret  
+  

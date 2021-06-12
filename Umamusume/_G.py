@@ -81,11 +81,11 @@ def resume(fiber):
   try:
     ret = next(fiber)
     if ret and ret[0] == MsgPipeRet:
+      log_info("Fiber signaled return")
       FiberRet = ret[1]
-      Fiber    = None
       return False
   except StopIteration:
-    Fiber = None
+    log_info("Fiber has stopped")
     return False
   return True
 
@@ -119,7 +119,8 @@ def uwait(sec):
 UmaNumberImage = []
 for i in range(10):
   UmaNumberImage.append(f"UmaTemplate/{i}.png")
-ImageSkillUp = "UmaTemplate/up.png"
+ImageSkillUp  = "UmaTemplate/up.png"
+ImageSkillUp2 = "UmaTemplate/up2.png"
 ImageRaceRanking = [
   'UmaTemplate/ranking_1.png',
   'UmaTemplate/ranking_2.png',
@@ -181,6 +182,8 @@ RaceHistory    = []
 NextObjectiveIndex = 0
 CurrentAttributes  = [0,0,0,0,0,0]
 CurrentOwnedSkills = []
+CurrentRaceData    = None
+MinGetSkillPoints  = 100
 
 ActionTrain     = 0
 ActionRest      = 1

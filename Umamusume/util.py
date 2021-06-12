@@ -80,3 +80,9 @@ def isdigit(n):
     return True
   except Exception:
     return False
+
+def str2int(ss):
+  try:
+    return int("".join([n for n in ss if isdigit(n)]))
+  except ValueError:
+    return None

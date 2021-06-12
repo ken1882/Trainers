@@ -23,7 +23,6 @@ def skill_name(name):
   return ret
 
 def date(ori):
-  print(ori)
   try:
     year, month = ori.split('級')
   except ValueError:
@@ -34,3 +33,14 @@ def date(ori):
   mrate = [util.diff_string(month, m) for m in DateMonth]
   month = DateMonth[mrate.index(max(mrate))]
   return DateYear.index(year)*24 + DateMonth.index(month)
+
+def readable_date(datn):
+  year  = DateYear[datn // 24]
+  month = DateMonth[datn % 24]
+  return f"{year} {month}"
+
+def skill_cost(cost):
+  ret = util.str2int(cost)
+  if ret > 400:
+    return ret % 100
+  return ret

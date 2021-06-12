@@ -98,6 +98,11 @@ Enum = {
     'id': 13,
     'pos': ((6, 177),(4, 205),(92, 221),(91, 195),(442, 194),),
     'color': ((255, 150, 165),(253, 101, 163),(253, 105, 162),(253, 105, 162),(255, 192, 209),)
+  },
+  'ObjectiveRetry': {
+    'id': 14,
+    'pos': ((172, 264),(498, 448),(75, 720),(322, 727),(512, 754),(558, 687),(305, 612),),
+    'color': ((126, 204, 11),(238, 230, 227),(255, 253, 255),(154, 218, 8),(151, 215, 5),(250, 251, 250),(236, 231, 228),)
   }
 }
 
@@ -196,7 +201,7 @@ def get_race_fans():
   f0 = ocr_rect(position.RaceFanRect1, 'racefan1.png', 2.0).strip()
   wait(1)
   f1 = ocr_rect(position.RaceFanRect2, 'racefan2.png', 2.0).strip()
-  return [f0, f1]
+  return [util.str2int(f0), util.str2int(f1)]
 
 def validate_train_effect(menu_index, numbers):
   """
@@ -400,37 +405,54 @@ def get_attributes(skpt=True,is_race=False): # include skill points
   ret = []
   for idx,rect in enumerate(position.RaceAttributesRect if is_race else position.AttributesRect):
     try:
-      ret.append(int("".join([n for n in ocr_rect(rect, f"attr{idx}.png") if isdigit(n)])))
+      attr_raw = ocr_rect(rect, f"attr{idx}.png")
+      ret.append(util.str2int(attr_raw))
     except Exception:
       ret.append(0)
   if skpt:
     ret.append(get_skill_points(is_race))
   return ret
 
-def _ocr_available_skills(immediate=False):
+def _ocr_available_skills(immediate=False,to_get=[]):
   ret = []
-  available_points = graphics.find_object(_G.ImageSkillUp, threshold=0.95)
+  up_pos  = graphics.find_object(_G.ImageSkillUp, threshold=0.95)
+  up_pos2 = graphics.find_object(_G.ImageSkillUp2, threshold=0.95)
+  available_points = up_pos + up_pos2
   log_info("Skillup template local max:", available_points)
+  checked = []
   for idx,pxy in enumerate(available_points):
     px,py    = pxy
+    px = int(px)
+    py = int(py)
     rsx,rsy  = int(px - 400), int(py - 24)
     rex,rey  = int(px - 200), int(py + 4)
     name_raw = ocr_rect((rsx,rsy,rex,rey), f"skill{idx}.png", zoom=1.2, lang='jpn')
+    cost_raw = ocr_rect((px-56,py+8,px-12,py+34), f"cost{idx}.png", lang='eng')
     fixed    = corrector.skill_name(name_raw)
-    if immediate and fixed in _G.CurrentUma.ImmediateSkills:
+    cost     = corrector.skill_cost(cost_raw)
+    log_info("Skill cost:", cost)
+    if fixed in checked:
+      log_info("Skill already checked, skip")
+      continue
+    checked.append(fixed)
+    if fixed in to_get or immediate and fixed in _G.CurrentUma.ImmediateSkills:
       Input.moveto(px+15,py+15)
       uwait(0.3)
       Input.click()
       uwait(0.3)
+      _G.CurrentOwnedSkills.append(fixed)
+      _G.CurrentAttributes[5] -= cost
     else:
-      ret.append(fixed)
+      ret.append((fixed, cost))
   return ret
 
-def get_available_skills(_async,immediate=False):
+def get_available_skills(_async,immediate=False,to_get=[]):
   '''
   Get available skill to obtain
-  * _async -- Run function in a fiber/generator
-  * immediate -- Will spend points to get `ImmediateSkills` as soon as it's available
+  * `_async` -- Run function in a fiber/generator
+  * `immediate=False` -- Will spend points to get `ImmediateSkills` as soon as it's available and won't returned, \
+    wanrning that `_G.CurrentAttributes[5]` (skill points) will be reduced here.
+  * `to_get=[]` -- Skill names to get
   '''
   ret = []
   flag_duped = False  
@@ -439,7 +461,7 @@ def get_available_skills(_async,immediate=False):
       yield
     else:
       _G.flush()
-    skills = _ocr_available_skills(immediate)
+    skills = _ocr_available_skills(immediate, to_get)
     for s in skills:
       if s not in ret:
         ret.append(s)
@@ -463,7 +485,7 @@ def get_available_skills(_async,immediate=False):
   
 def get_race_ranking():
   for idx,fname in enumerate(_G.ImageRaceRanking):
-    pts = graphics.find_object(fname, 0.99)
+    pts = graphics.find_object(fname, 0.98)
     if pts:
       return idx+1
   return 0

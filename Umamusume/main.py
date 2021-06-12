@@ -31,6 +31,9 @@ def update_input():
     if not _G.SelectedFiber:
       output_cache.extend(res)
     print(Input.get_cursor_pos(), res) 
+  elif Input.is_trigger(win32con.VK_F7):
+    log_info("Worker unpaused" if _G.FlagPaused else "Worker paused")
+    _G.FlagPaused ^= True
   elif Input.is_trigger(win32con.VK_F8):
     log_info("Worker terminated" if _G.FlagWorking else "Worker started")
     log_info(f"Frame count: {_G.FrameCount} / {_G.LastFrameCount}")
@@ -47,7 +50,7 @@ def main_loop():
   graphics.flush()
   update_input()
 
-  if _G.Fiber and not resume(_G.Fiber):
+  if not _G.FlagPaused and _G.Fiber and not resume(_G.Fiber):
     log_info(f"Worker ended, return value: {_G.pop_fiber_ret()}")
     _G.Fiber = None 
     _G.FlagWorking = False

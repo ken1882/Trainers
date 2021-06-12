@@ -21,10 +21,12 @@ SeeRaceResultPos     = (197, 946)
 GetSkillPos     = (287,870)
 ConfirmSkillPos = (413,953)
 CloseSkillPos   = (282,671)
-CommonReturnPos  = (63,993)
-
-RaceJoinPos    = (408,871)
-ConfirmRacePos = (414,737)
+CommonReturnPos = (63,993)
+SkillBarTopPos  = (562,389)
+RaceJoinPos     = (408,871)
+ConfirmRacePos  = (414,737)
+RaceResultOkPos = (300,940)
+RaceCompletePos = (410,950)
 
 TrainingIncreaseRect  = (
   (32,630,100,658),
