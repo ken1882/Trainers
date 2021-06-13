@@ -39,6 +39,10 @@ def main_loop():
         Input.rmoveto(*position.EventOption[len(edata[1])][oindex])
         uwait(0.3)
         Input.click()
+        if edata[0] == 'あんし〜ん笹針師、参☆上':
+          uwait(1)
+          Input.rmoveto(*position.EventOption[2][0])
+          Input.click()
         uwait(3)
     if 'Event' not in scene:
       flag_has_event = False
@@ -259,6 +263,7 @@ def process_objective_complete():
     Input.click()
     yield
   _G.NextObjectiveIndex += 1
+  uwait(2)
 
 def process_inheritance():
   log_info("Process inheritance")

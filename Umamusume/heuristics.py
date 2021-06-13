@@ -131,7 +131,9 @@ def determine_next_main_action():
   
   if stage.get_current_stage() == 'TrainMain' and status < 4 and energy < 80:
     return (_G.ActionPlay, None)
-  
+  if stage.get_current_stage() == 'TrainSummer' and status < 4 and energy < 60:
+    return (_G.ActionRest, None)
+
   return (_G.ActionTrain, None)
 
 def determine_skills2get(skills):
@@ -145,7 +147,6 @@ def determine_skills2get(skills):
       break
     if sk not in names or points < costs[names.index(sk)]:
       continue
-    
     sk_rstyle = get_skill_rstyle(sk)
     if sk_rstyle != None and sk_rstyle != _G.CurrentUma.RunningStyle:
       continue
@@ -155,6 +156,6 @@ def determine_skills2get(skills):
   
 def should_learn_skill(date):
   pts = _G.CurrentAttributes[5]
-  if date == 0 or date > 75:
+  if date == 0 or date > 50:
     return pts > _G.MaxGetSkillPoints
   return pts > _G.MinGetSkillPoints

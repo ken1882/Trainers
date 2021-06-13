@@ -27,7 +27,7 @@ SkillBarTopPos  = (562,389)
 RaceJoinPos     = (408,871)
 ConfirmRacePos  = (414,737)
 RaceResultOkPos = (300,940)
-RaceCompletePos = (410,950)
+RaceCompletePos = (390,950)
 ConfirmExRacePos = (411, 666)
 
 TrainingIncreaseRect  = (
@@ -74,6 +74,8 @@ SkillNameRect = (
 EventOption = (
   ((286, 665),), # No option
   ((286, 665),), # 1 option
-  ((381, 574),(372, 669),),
-  ((374, 481),(382,583),(374,674)),
+  ((381, 574),(372, 669),), # 2
+  ((374, 481),(382,583),(374,674)), # 3
+  ((308, 308),(297, 393),(295, 488),(317, 582)), # 4
+  ((308, 308),(297, 393),(295, 488),(317, 582),(305, 672)) # 5
 )
