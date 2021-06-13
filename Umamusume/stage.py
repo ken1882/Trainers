@@ -103,6 +103,16 @@ Enum = {
     'id': 14,
     'pos': ((172, 264),(498, 448),(75, 720),(322, 727),(512, 754),(558, 687),(305, 612),),
     'color': ((126, 204, 11),(238, 230, 227),(255, 253, 255),(154, 218, 8),(151, 215, 5),(250, 251, 250),(236, 231, 228),)
+  },
+  'NoticeRaceExhaustion': {
+    'id': 15,
+    'pos': ((14, 332),(302, 329),(57, 501),(520, 544),(76, 651),(339, 665),),
+    'color': ((101, 186, 0),(255, 255, 255),(88, 181, 57),(254, 254, 254),(255, 255, 255),(143, 212, 8),)
+  },
+  'RaiseComplete': {
+    'id': 16,
+    'pos': ((8, 18),(131, 12),(429, 374),(360, 278),(366, 589),(75, 830),(78, 863),(177, 820),(327, 877),(484, 834),),
+    'color': ((72, 68, 92),(99, 93, 126),(255, 166, 72),(121, 216, 35),(121, 216, 35),(247, 247, 250),(53, 203, 221),(27, 149, 55),(248, 80, 140),(49, 120, 189),)
   }
 }
 
@@ -435,13 +445,16 @@ def _ocr_available_skills(immediate=False,to_get=[]):
       log_info("Skill already checked, skip")
       continue
     checked.append(fixed)
-    if fixed in to_get or immediate and fixed in _G.CurrentUma.ImmediateSkills:
+    if (fixed in to_get) or (immediate and fixed in _G.CurrentUma.ImmediateSkills):
       Input.moveto(px+15,py+15)
       uwait(0.3)
       Input.click()
       uwait(0.3)
       _G.CurrentOwnedSkills.append(fixed)
       _G.CurrentAttributes[5] -= cost
+      log_info("Skill points left:", _G.CurrentAttributes[5])
+      if (_G.CurrentAttributes[5] < _G.MinGetSkillPoints) or (fixed in to_get and to_get.index(fixed) == len(to_get) - 1):
+        return _G.MsgPipeStop
     else:
       ret.append((fixed, cost))
   return ret
@@ -462,6 +475,8 @@ def get_available_skills(_async,immediate=False,to_get=[]):
     else:
       _G.flush()
     skills = _ocr_available_skills(immediate, to_get)
+    if skills == _G.MsgPipeStop:
+      break
     for s in skills:
       if s not in ret:
         ret.append(s)
@@ -495,3 +510,10 @@ def is_healthroom_available():
 
 def has_obtained_skill():
   return graphics.is_color_ok(graphics.get_pixel(*GetSkillPos, True), GetSkillColor)
+
+def is_common_race(race):
+  if race['Date'][0] == 'ファイナルズ 開催中':
+    return True
+  if race['Date'][0] == 'ジュニア級デビュー前':
+    return True
+  return False

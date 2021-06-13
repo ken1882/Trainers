@@ -40,7 +40,7 @@ def init():
   _G.NextObjectiveIndex = 0
   if cur_date:
     for date in _G.CurrentUma.ObjectiveDate:
-      if cur_date > corrector.date(date):
+      if cur_date > corrector.date(date,False):
         _G.NextObjectiveIndex += 1
   _G.NextObjectiveIndex = min(len(_G.CurrentUma.ObjectiveDate)-1, _G.NextObjectiveIndex)
   log_info(f"Current date: {cur_date}, next objective: {_G.CurrentUma.ObjectiveDate[_G.NextObjectiveIndex]}")
@@ -92,7 +92,7 @@ def determine_event_selection(event_data):
 
 def get_optional_race(date):
   for race_name in _G.CurrentUma.OptionalRace:
-    if any([corrector.date(dat) == date for dat in _G.UmaRaceData[race_name]['Date']]):
+    if any([corrector.date(dat,False) == date for dat in _G.UmaRaceData[race_name]['Date']]):
       return _G.UmaRaceData[race_name]
   return None
 
@@ -112,6 +112,7 @@ def determine_next_main_action():
 
   if race:
     _flag_ok = True
+    log_info("Attributes to next objective:")
     for idx,attr in enumerate(_G.CurrentUma.ObjectiveAttributeMin[_G.NextObjectiveIndex]):
       print(_G.CurrentAttributes[idx], attr, _G.CurrentAttributes[idx] < attr)
       if _G.CurrentAttributes[idx] < attr:
@@ -152,3 +153,8 @@ def determine_skills2get(skills):
     points -= costs[names.index(sk)]
   return ret  
   
+def should_learn_skill(date):
+  pts = _G.CurrentAttributes[5]
+  if date == 0 or date > 75:
+    return pts > _G.MaxGetSkillPoints
+  return pts > _G.MinGetSkillPoints

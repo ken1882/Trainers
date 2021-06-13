@@ -184,6 +184,7 @@ CurrentAttributes  = [0,0,0,0,0,0]
 CurrentOwnedSkills = []
 CurrentRaceData    = None
 MinGetSkillPoints  = 100
+MaxGetSkillPoints  = 180
 
 ActionTrain     = 0
 ActionRest      = 1

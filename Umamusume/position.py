@@ -6,11 +6,12 @@ GoOut = (291, 904)
 Race  = (442, 904)
 
 CommonNext = (297,894)
+RaceResultNext = (310, 796)
 
 SkillPtRect     = (492,696,548,721) 
 RaceSkillPtRect = (492,745,548,771)
 
-DateRect      = (10,33,141,52)
+DateRect      = (10,33,160,52)
 RaceFanRect1  = (246,633,340,653) 
 RaceFanRect2  = (246,758,340,775)
 
@@ -27,6 +28,7 @@ RaceJoinPos     = (408,871)
 ConfirmRacePos  = (414,737)
 RaceResultOkPos = (300,940)
 RaceCompletePos = (410,950)
+ConfirmExRacePos = (411, 666)
 
 TrainingIncreaseRect  = (
   (32,630,100,658),
@@ -70,8 +72,8 @@ SkillNameRect = (
 )
 
 EventOption = (
-  (), # No option
-  (), # 1 option, needn't
+  ((286, 665),), # No option
+  ((286, 665),), # 1 option
   ((381, 574),(372, 669),),
   ((374, 481),(382,583),(374,674)),
 )

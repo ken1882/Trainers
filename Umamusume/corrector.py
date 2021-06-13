@@ -22,7 +22,7 @@ def skill_name(name):
   log_info(f'`{name}` => `{ret}`')
   return ret
 
-def date(ori):
+def date(ori, log=True):
   try:
     year, month = ori.split('級')
   except ValueError:
@@ -32,6 +32,8 @@ def date(ori):
   month = month.translate(str.maketrans('符','後')).strip()
   mrate = [util.diff_string(month, m) for m in DateMonth]
   month = DateMonth[mrate.index(max(mrate))]
+  if log:
+    log_info(f'`{ori}` => `{year} {month}`')
   return DateYear.index(year)*24 + DateMonth.index(month)
 
 def readable_date(datn):

@@ -11,6 +11,7 @@ def start():
   yield from main_loop()
 
 def main_loop():
+  flag_has_event = False
   while True:
     yield
     scene = stage.get_current_stage()
@@ -19,19 +20,36 @@ def main_loop():
       continue
     if scene == 'TrainMain' or scene == 'TrainSummer':
       yield from next_main_action()
+    if scene == 'RaiseComplete':
+      log_info("Raising completed")
+      break
     elif scene == 'ObjectivePrepare':
       yield from process_objective()
-    else:
-      if 'Event' in scene:
+    elif scene == 'ObjectiveComplete':
+      yield from process_objective_complete()
+    elif scene == 'Inheritance':
+      yield from process_inheritance()
+    elif scene == 'RacePrepare':
+      yield from process_race()
+    elif 'Event' in scene:
+        if not flag_has_event:
+          log_info("Event detected, waiting for 3 seconds")
+          flag_has_event = True
+          uwait(3)
+          continue
         edata = stage.get_event_data() # name,options
-        print("Event:", edata[0])
+        log_info("Event:", edata[0])
         oindex = heuristics.determine_event_selection(edata)
+        flag_has_event = False
         Input.rmoveto(*position.EventOption[len(edata[1])][oindex])
         uwait(0.3)
         Input.click()
-        uwait(2)
+        uwait(3)
+    if 'Event' not in scene:
+      flag_has_event = False
 
 def next_main_action():
+  log_info("Processing main action")
   actions = heuristics.determine_next_main_action()
   yield
   if actions[0] == _G.ActionHeal:
@@ -56,16 +74,21 @@ def next_main_action():
     uwait(4)
     return
   if actions[0] == _G.ActionRace:
-    if _G.CurrentAttributes[5] > _G.MinGetSkillPoints: # skill points
+    if heuristics.should_learn_skill(_G.CurrentDate):
       Input.rmoveto(*position.SkillSelection)
       Input.click()
       yield from get_skills()
       uwait(0.3)
       Input.rmoveto(*position.CommonReturnPos)
       Input.click()
-      uwait(1)
+      uwait(2)
     else:
       log_info(f"Not enough points to learn skill ({_G.CurrentAttributes[5]})")
+    Input.rmoveto(*position.Race)
+    Input.click()
+    yield from select_race(actions[1])
+    uwait(3)
+    yield from process_race()
       
   if actions[0] == _G.ActionTrain:
     _G.CurrentAction = _G.ActionTrain
@@ -100,7 +123,7 @@ def process_objective():
   attrs = stage.get_attributes(is_race=True)
   _G.CurrentAttributes = attrs
   log_info("Attributes:", attrs)
-  if attrs[5] > _G.MinGetSkillPoints: # skill points
+  if heuristics.should_learn_skill(_G.CurrentDate):
     Input.rmoveto(*position.PreObjectiveSkillPos)
     uwait(0.3)
     yield
@@ -115,13 +138,11 @@ def process_objective():
   Input.rmoveto(*position.PreObjectiveRacePos)
   Input.click()
   yield from select_race(_G.UmaRaceData[obj_name])
-  while not stage.get_current_stage() == 'RacePrepare':
-    uwait(1)
-    _G.flush()
-    yield
-  yield from race_processing()
+  uwait(3)
+  yield from process_race()
 
 def get_skills():
+  log_info("Getting skills")
   while not stage.get_current_stage() == 'SkillSelection':
     uwait(1)
     yield
@@ -134,12 +155,13 @@ def get_skills():
   if _G.CurrentAttributes[5] > _G.MinGetSkillPoints:
     log_info("Checking skills to learn, points left:", _G.CurrentAttributes[5])
     obtains = heuristics.determine_skills2get(skills)
+    log_info("Obtain skill order:", obtains)
     learnable = []
     for sn in obtains:
       for name,cost in skills:
         if name != sn:
           continue
-        if cost < _G.CurrentAttributes[5]:
+        if cost > _G.CurrentAttributes[5]:
           continue
         _G.CurrentAttributes[5] -= cost
         learnable.append(name)
@@ -171,13 +193,21 @@ def get_skills():
     uwait(0.3)
 
 def select_race(target):
+  log_info("Selecting race")
+  uwait(2)
+  _G.flush()
+  if stage.get_current_stage() == 'NoticeRaceExhaustion':
+    Input.rmoveto(*position.ConfirmExRacePos)
+    Input.click()
+    uwait(1.5)
   while not stage.get_current_stage() == 'RaceSelection':
     uwait(1)
     _G.flush()
     yield
   f1, f2 = stage.get_race_fans()
+  log_info("Race fans:", f1, f2)
   mx,my = 0,0
-  if f1 == target['Fans'] or target['Date'][0] == 'ファイナルズ 開催中':
+  if f1 == target['Fans'] or stage.is_common_race(target):
     mx = (position.RaceFanRect1[0] + position.RaceFanRect1[2]) // 2
     my = (position.RaceFanRect1[1] + position.RaceFanRect1[3]) // 2
   elif f2 == target['Fans']:
@@ -195,7 +225,12 @@ def select_race(target):
   Input.moveto(*position.ConfirmRacePos)
   Input.click()
 
-def race_processing():
+def process_race():
+  log_info("Process race")
+  while not stage.get_current_stage() == 'RacePrepare':
+    uwait(1)
+    _G.flush()
+    yield
   Input.rmoveto(*position.SeeRaceResultPos)
   Input.click()
   for _ in range(10):
@@ -210,3 +245,30 @@ def race_processing():
   ranking = stage.get_race_ranking()
   ranking_str = str(ranking)+'着' if ranking > 0 else '着外'
   log_info("Race ended, ranking:", ranking_str)
+  Input.rmoveto(*position.RaceResultOkPos)
+  Input.click()
+  for _ in range(3):
+    uwait(0.5)
+    Input.rmoveto(*position.RaceResultNext, rrange=15)
+    Input.click()
+  for _ in range(3):
+    uwait(0.5)
+    Input.rmoveto(*position.RaceCompletePos, rrange=15)
+    Input.click()
+  
+def process_objective_complete():
+  log_info("Objective complete")
+  for _ in range(5):
+    uwait(1)
+    Input.rmoveto(*position.CommonNext, rrange=15)
+    Input.click()
+    yield
+  _G.NextObjectiveIndex += 1
+
+def process_inheritance():
+  log_info("Process inheritance")
+  for _ in range(3):
+    uwait(1)
+    Input.rmoveto(*position.CommonNext, rrange=15)
+    Input.click()
+    yield
