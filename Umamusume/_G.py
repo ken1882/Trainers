@@ -130,11 +130,11 @@ ImageRaceRanking = [
 ]
 
 UmaSkillData = {}
-with open("UmaLibrary/SkillData.json", 'r') as fp:
+with open("UmaLibrary/SkillData.json", 'r', encoding='utf8') as fp:
   UmaSkillData = json.load(fp)['Skill']
 
 UmaEventData = {}
-with open("UmaLibrary/UmaMusumeLibrary.json", 'r') as fp:
+with open("UmaLibrary/UmaMusumeLibrary.json", 'r', encoding='utf8') as fp:
   raw = json.load(fp)
   # Character
   for star in raw['Charactor']:
@@ -156,7 +156,7 @@ with open("UmaLibrary/UmaMusumeLibrary.json", 'r') as fp:
           continue
         UmaEventData[name] = event[name]
 
-with open("UmaLibrary/UmaMusumeLibraryMainStory.json", 'r') as fp:
+with open("UmaLibrary/UmaMusumeLibraryMainStory.json", 'r', encoding='utf8') as fp:
   raw = json.load(fp)
   for chap in raw['MainStory']:
     for scenario in raw['MainStory'][chap]:
@@ -167,7 +167,7 @@ with open("UmaLibrary/UmaMusumeLibraryMainStory.json", 'r') as fp:
         UmaEventData[name] = event[name]
 
 UmaRaceData = {}
-with open("UmaLibrary/RaceDataLibrary.json", 'r') as fp:
+with open("UmaLibrary/RaceDataLibrary.json", 'r', encoding='utf8') as fp:
   raw = json.load(fp)
   for tier in raw['Race']:
     for race in raw['Race'][tier]:

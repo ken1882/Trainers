@@ -137,3 +137,12 @@ def find_object(objimg_path, threshold=CVMatchHardRate):
   tmp = cv2.imread(objimg_path)
   res = cv2.matchTemplate(src, tmp, cv2.TM_CCOEFF_NORMED)
   return filter_local_templates(res, threshold)
+
+def find_object_with_rates(objimg_path, threshold=CVMatchHardRate):
+  take_snapshot()
+  src = cv2.imread(f"{_G.DCTmpFolder}/{_G.DCSnapshotFile}")
+  tmp = cv2.imread(objimg_path)
+  res = cv2.matchTemplate(src, tmp, cv2.TM_CCOEFF_NORMED)
+  objects = filter_local_templates(res, threshold)
+  rates = [res[y][x] for x,y in objects]
+  return (objects, rates)

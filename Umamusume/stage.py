@@ -49,10 +49,10 @@ Enum = {
     'pos': ((153, 297),(234, 294),(307, 297),(420, 296),(297, 894),),
     'color': ((200, 255, 35),(206, 255, 45),(198, 255, 27),(205, 255, 40),(255, 255, 255),)
   },
-  'TrainingComplete': {
+  'RaiseComplete': {
     'id': 6,
-    'pos': ((74, 838),(74, 861),(250, 865),(198, 832),(332, 875),(510, 847)),
-    'color': ((244, 244, 247),(55, 203, 222),(88, 215, 229),(27, 149, 55),(250, 82, 140),(244, 244, 244))
+    'pos': ((8, 18),(131, 12),(429, 374),(360, 278),(366, 589),(75, 830),(78, 863),(177, 820),(327, 877),(484, 834),),
+    'color': ((72, 68, 92),(99, 93, 126),(255, 166, 72),(121, 216, 35),(121, 216, 35),(247, 247, 250),(53, 203, 221),(27, 149, 55),(248, 80, 140),(49, 120, 189),)
   },
   'ObjectivePrepare': {
     'id': 7,
@@ -109,11 +109,6 @@ Enum = {
     'pos': ((14, 332),(302, 329),(57, 501),(520, 544),(76, 651),(339, 665),),
     'color': ((101, 186, 0),(255, 255, 255),(88, 181, 57),(254, 254, 254),(255, 255, 255),(143, 212, 8),)
   },
-  'RaiseComplete': {
-    'id': 16,
-    'pos': ((8, 18),(131, 12),(429, 374),(360, 278),(366, 589),(75, 830),(78, 863),(177, 820),(327, 877),(484, 834),),
-    'color': ((72, 68, 92),(99, 93, 126),(255, 166, 72),(121, 216, 35),(121, 216, 35),(247, 247, 250),(53, 203, 221),(27, 149, 55),(248, 80, 140),(49, 120, 189),)
-  }
 }
 
 Status = {
@@ -247,7 +242,7 @@ def get_all_training_effect(only_support=False):
   for i,pos in enumerate(position.AttrTrainPos):
     speed = 20 if i == 0 else 10
     Input.moveto(*pos, speed)
-    wait(0.1 if only_support else 3)
+    wait(0.5 if only_support else 3)
     if i == 0:
       Input.mouse_down()
     else:
@@ -499,11 +494,14 @@ def get_available_skills(_async,immediate=False,to_get=[]):
     return ret
   
 def get_race_ranking():
+  mrate = 0.2
+  ret   = 0
   for idx,fname in enumerate(_G.ImageRaceRanking):
-    pts = graphics.find_object(fname, 0.98)
-    if pts:
-      return idx+1
-  return 0
+    pts,rts = graphics.find_object_with_rates(fname, 0.98)
+    if pts and rts[0] > mrate:
+      ret = idx+1
+      mrate = rts[0]
+  return ret
 
 def is_healthroom_available():
   return graphics.is_pixel_match(HealthRoom['pos'], HealthRoom['color'])

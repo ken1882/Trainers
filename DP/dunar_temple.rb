@@ -1,7 +1,7 @@
 module DunarTemple
   extend Grinding  
   
-  TimesPerClearInventory = 2
+  TimesPerClearInventory = 1
   TimesPerJBBuff = 3
   TimesPer302ShardCombine = 3
   TimesPerEquipmentEnhance = 9
@@ -12,6 +12,8 @@ module DunarTemple
   DungeonMapPos   = [1750,864]
   DungeonMapColor =  [31,33,25]
   FlagHasJB = false
+  FlagHasMerchant = false
+  FlagHasCombiner  = false
 
   @timer_run = 0
   
@@ -200,15 +202,19 @@ module DunarTemple
   end
 
   def clear_inventory
-    Combat.earth_shield; uwait 2;
-    flag_combine302 = (@timer_run % TimesPer302ShardCombine == 0)
-    combine_shards(flag_combine302); uwait 2;
-    Input.trigger_key Keymap[:vk_esc],false; uwait 0.5;
+    if FlagHasCombiner
+      Combat.earth_shield; uwait 2;
+      flag_combine302 = (@timer_run % TimesPer302ShardCombine == 0)
+      combine_shards(flag_combine302); uwait 2;
+      Input.trigger_key Keymap[:vk_esc],false; uwait 0.5;
+    end
     Input.trigger_key Keymap[:vk_D],false; uwait 0.5; Combat.earth_shield; uwait 2;
     discard_shards; uwait 2;
-    Input.trigger_key Keymap[:vk_esc],false; uwait 0.5;
-    Input.trigger_key Keymap[:vk_A],false; uwait 0.5; Combat.earth_shield; uwait 2;
-    shop_sells; uwait 2;
+    if FlagHasMerchant
+      Input.trigger_key Keymap[:vk_esc],false; uwait 0.5;
+      Input.trigger_key Keymap[:vk_A],false; uwait 0.5; Combat.earth_shield; uwait 2;
+      shop_sells; uwait 2;
+    end
     puts "Inventory cleared"
   end
 
