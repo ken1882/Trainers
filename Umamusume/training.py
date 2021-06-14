@@ -84,6 +84,7 @@ def next_main_action():
     else:
       log_info(f"Not enough points to learn skill ({_G.CurrentAttributes[5]})")
     Input.rmoveto(*position.Race)
+    uwait(0.3)
     Input.click()
     yield from select_race(actions[1])
     uwait(3)
@@ -131,10 +132,11 @@ def process_objective():
     uwait(0.3)
     Input.rmoveto(*position.CommonReturnPos)
     Input.click()
-    uwait(1)
+    uwait(3)
   else:
     log_info(f"Not enough points to learn skill ({_G.CurrentAttributes[5]})")
   Input.rmoveto(*position.PreObjectiveRacePos)
+  uwait(0.3)
   Input.click()
   yield from select_race(_G.UmaRaceData[obj_name])
   uwait(3)
