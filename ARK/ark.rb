@@ -189,6 +189,15 @@ module Input
     self.set_cursor(x, y, false); self.set_cursor(x, y, true);
   end
   
+  def cursor_move(dx,dy,speed=0)
+    return MouseEvent.call(MOUSEEVENTF_MOVE, dx, dy, 0, 0) if speed <= 0
+    cnt = (Math.hypot(dx,dy) / speed).to_i
+    px,py = (dx / cnt).to_i, (dy / cnt).to_i
+    lx,ly = dx - px*cnt, dy - py*cnt
+    cnt.times{ MouseEvent.call(MOUSEEVENTF_MOVE, px, py, 0, 0); sleep(0.05); }
+    MouseEvent.call(MOUSEEVENTF_MOVE, lx, ly, 0, 0)
+  end
+
   def zoomout(n)
     MouseEvent.call(MOUSEEVENTF_WHEEL, 0, 0, -n, 0)
   end
@@ -259,7 +268,7 @@ def switch2foreground
 end
 
 WorkerFibers = [
-  :start_interact_fiber, :start_walk_fiber
+  :start_interact_fiber, :start_walk_fiber, :start_slaughter_fiber
 ]
 SelectedWorker = WorkerFibers.find{|f| f if f.match ARGV[0]} rescue nil
 
