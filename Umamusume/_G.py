@@ -172,6 +172,7 @@ with open("UmaLibrary/RaceDataLibrary.json", 'r', encoding='utf8') as fp:
   for tier in raw['Race']:
     for race in raw['Race'][tier]:
       UmaRaceData[race['Name']] = race
+CommonRaces = ['ファイナルズ決勝', 'ファイナルズ準決勝', 'ファイナルズ予選', 'メイクデビュー']
 ### Program Depended Constants/Variables
 
 CurrentUmaName = 'MihonoBorubon'
@@ -180,8 +181,10 @@ CurrentDate    = 0  # before start
 CurrentAction  = None
 RaceHistory    = []
 NextObjectiveIndex = 0
+SkillPointsSpent   = 0
 CurrentAttributes  = [0,0,0,0,0,0]
 CurrentOwnedSkills = []
+CurrentStatus      = 2
 CurrentRaceData    = None
 MinGetSkillPoints  = 100
 MaxGetSkillPoints  = 180

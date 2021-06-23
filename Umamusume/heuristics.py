@@ -102,6 +102,7 @@ def determine_next_main_action():
   date   = stage.get_date()
   status = stage.get_status()
   race   = get_optional_race(date)
+  _G.CurrentStatus = status
   _G.CurrentDate = date
   _G.CurrentAttributes = stage.get_attributes()
   log_info("Energy:", energy)

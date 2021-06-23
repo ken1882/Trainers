@@ -181,7 +181,7 @@ def get_skill_points(is_race):
   sleep(0.3)
   res = img2str(filename)
   try:
-    return int(res)
+    return abs(int(res))
   except ValueError:
     log_warning(f"Unable to convert OCR result `{res}` to int")
   return 0
@@ -411,7 +411,7 @@ def get_attributes(skpt=True,is_race=False): # include skill points
   for idx,rect in enumerate(position.RaceAttributesRect if is_race else position.AttributesRect):
     try:
       attr_raw = ocr_rect(rect, f"attr{idx}.png")
-      ret.append(util.str2int(attr_raw))
+      ret.append(abs(util.str2int(attr_raw)))
     except Exception:
       ret.append(0)
   if skpt:
@@ -445,7 +445,7 @@ def _ocr_available_skills(immediate=False,to_get=[]):
       uwait(0.3)
       Input.click()
       uwait(0.3)
-      _G.CurrentOwnedSkills.append(fixed)
+      _G.CurrentOwnedSkills.append((fixed,cost))
       _G.CurrentAttributes[5] -= cost
       log_info("Skill points left:", _G.CurrentAttributes[5])
       if (_G.CurrentAttributes[5] < _G.MinGetSkillPoints) or (fixed in to_get and to_get.index(fixed) == len(to_get) - 1):

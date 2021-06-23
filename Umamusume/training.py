@@ -1,7 +1,10 @@
+from os import stat
+import collector
 import _G,util,stage,graphics,Input,heuristics,position
 from _G import resume_from,resume,wait,uwait,log_info,log_warning,log_debug,log_error
 
 def start():
+  util.ensure_dir_exist(f"{_G.DataCollectDirectory}/.csv")
   heuristics.init()
   yield from main_loop()
 
@@ -86,6 +89,7 @@ def next_main_action():
     Input.rmoveto(*position.Race)
     uwait(0.3)
     Input.click()
+    _G.CurrentRaceData = actions[1]
     yield from select_race(actions[1])
     uwait(3)
     yield from process_race()
@@ -120,8 +124,11 @@ def process_objective():
   obj_name = _G.CurrentUma.ObjectiveName[_G.NextObjectiveIndex]
   log_info("Processing objective:", obj_name)
   _G.CurrentAction = _G.ActionObjective
+  status = stage.get_status()
   attrs = stage.get_attributes(is_race=True)
+  _G.CurrentStatus = status
   _G.CurrentAttributes = attrs
+  log_info("Status:", status)
   log_info("Attributes:", attrs)
   if heuristics.should_learn_skill(_G.CurrentDate):
     Input.rmoveto(*position.PreObjectiveSkillPos)
@@ -188,7 +195,7 @@ def get_skills():
     uwait(0.3)
     Input.rmoveto(*position.ConfirmSkillPos)
     Input.click()
-    uwait(3)
+    uwait(5)
     Input.rmoveto(*position.CloseSkillPos)
     Input.click()
     uwait(0.3)
@@ -207,16 +214,23 @@ def select_race(target):
     yield
   f1, f2 = stage.get_race_fans()
   log_info("Race fans:", f1, f2)
-  mx,my = 0,0
+
+  mx = (position.RaceFanRect1[0] + position.RaceFanRect1[2]) // 2
+  my = (position.RaceFanRect1[1] + position.RaceFanRect1[3]) // 2
   if f1 == target['Fans'] or stage.is_common_race(target):
     mx = (position.RaceFanRect1[0] + position.RaceFanRect1[2]) // 2
     my = (position.RaceFanRect1[1] + position.RaceFanRect1[3]) // 2
   elif f2 == target['Fans']:
     mx = (position.RaceFanRect2[0] + position.RaceFanRect2[2]) // 2
     my = (position.RaceFanRect2[1] + position.RaceFanRect2[3]) // 2
-  if mx == 0 or my == 0:
-    raise RuntimeError("No corresponding race data found!")
+  else:
+    log_warning("No corresponding race found, processed to first choice")
+  if stage.is_common_race(target):
+    for rname in _G.CommonRaces:
+      if _G.UmaRaceData[rname]['Fans'] == f1:
+        target = _G.UmaRaceData[rname]
   _G.CurrentRaceData = target
+  log_info("Race selected:", target['Name'])
   Input.rmoveto(mx, my)
   Input.click()
   uwait(0.3)
@@ -228,22 +242,33 @@ def select_race(target):
 
 def process_race():
   log_info("Process race")
-  while not stage.get_current_stage() == 'RacePrepare':
-    uwait(1)
-    _G.flush()
-    yield
-  Input.rmoveto(*position.SeeRaceResultPos)
-  Input.click()
-  for _ in range(10):
-    uwait(0.5)
-    yield
-  while not stage.get_current_stage() == 'RaceResult':
-    Input.rmoveto(*position.CommonNext)
+  flag_race_finished = False
+  retries = 0
+  while not flag_race_finished:
+    while not stage.get_current_stage() == 'RacePrepare':
+      uwait(1)
+      _G.flush()
+      yield
+    Input.rmoveto(*position.SeeRaceResultPos)
     Input.click()
-    _G.flush()
-    uwait(1)
-    yield
+    for _ in range(10):
+      uwait(0.5)
+      yield
+    while True:
+      stg = stage.get_current_stage()
+      Input.rmoveto(*position.CommonNext)
+      Input.click()
+      _G.flush()
+      uwait(1)
+      yield
+      if stg == 'RaceResult':
+        flag_race_finished = True
+        break
+      elif stg == 'ObjectiveRetry':
+        log_info("Objective failed, retry")
+        uwait(3)
   ranking = stage.get_race_ranking()
+  collector.record_race_result(_G.CurrentRaceData['Name'], ranking, retries)
   ranking_str = str(ranking)+'着' if ranking > 0 else '着外'
   log_info("Race ended, ranking:", ranking_str)
   Input.rmoveto(*position.RaceResultOkPos)

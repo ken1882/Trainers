@@ -86,3 +86,14 @@ def str2int(ss):
     return int("".join([n for n in ss if isdigit(n)]))
   except ValueError:
     return None
+
+def ensure_dir_exist(path):
+  path = path.split('/')
+  path.pop()
+  if len(path) == 0:
+    return
+  pwd = ""
+  for dir in path:
+    pwd += f"{dir}/"
+    if not os.path.exists(pwd):
+      os.mkdir(pwd)
