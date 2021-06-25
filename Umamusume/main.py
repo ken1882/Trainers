@@ -47,7 +47,7 @@ def update_input():
   
 def main_loop():
   global output_cache
-  graphics.flush()
+  _G.flush()
   update_input()
 
   if not _G.FlagPaused and _G.Fiber and not resume(_G.Fiber):

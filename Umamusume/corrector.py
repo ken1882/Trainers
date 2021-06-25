@@ -43,6 +43,9 @@ def readable_date(datn):
 
 def skill_cost(cost):
   ret = util.str2int(cost)
+  if not ret:
+    print(f"[Warning] Unable to ocr a skill cost of {cost} from {ret}")
+    return 9999
   if ret > 400:
     return ret % 100
   return ret

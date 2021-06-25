@@ -38,6 +38,8 @@ def init():
       break
   cur_date = stage.get_date()
   _G.NextObjectiveIndex = 0
+  _G.CurrentOwnedSkills = []
+  _G.CurrentRaceData    = None
   if cur_date:
     for date in _G.CurrentUma.ObjectiveDate:
       if cur_date > corrector.date(date,False):

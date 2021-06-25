@@ -266,6 +266,10 @@ def process_race():
         break
       elif stg == 'ObjectiveRetry':
         log_info("Objective failed, retry")
+        Input.rmoveto(*position.ObjectiveRetryPos)
+        wait(0.3)
+        Input.click()
+        retries += 1
         uwait(3)
   ranking = stage.get_race_ranking()
   collector.record_race_result(_G.CurrentRaceData['Name'], ranking, retries)

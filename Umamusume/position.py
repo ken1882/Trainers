@@ -29,6 +29,7 @@ ConfirmRacePos  = (414,737)
 RaceResultOkPos = (300,940)
 RaceCompletePos = (390,950)
 ConfirmExRacePos = (411, 666)
+ObjectiveRetryPos = (423, 745)
 
 TrainingIncreaseRect  = (
   (32,630,100,658),
@@ -60,7 +61,7 @@ RaceAttributesRect = (
   ( 57,740,108,762),
   (148,740,200,762),
   (236,740,290,762),
-  (327,740,381,762),
+  (331,740,381,762),
   (420,740,471,762)
 )
 

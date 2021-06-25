@@ -136,7 +136,7 @@ SupportAvailablePos = (
 )
 SupportAvailableColor = ((110,107,121),(253, 172, 31),(251, 231, 120))
 
-SkillSelNextPageScroll = ((552,627),(526,145))
+SkillSelNextPageScroll = ((552,627),(526,143))
 
 HealthRoom = {
   'pos': ((79, 902),(183, 933),(189, 905),),
@@ -395,7 +395,7 @@ def get_training_effect(menu_index):
   
 def get_event_data():
   fname = 'event.png'
-  raw   = ocr_rect(position.EventTitleRect, fname, zoom=1.2).split('  ')[0]
+  raw   = ocr_rect(position.EventTitleRect, fname, zoom=1.2).split('  ')[0].replace(' ','')
   event_names = list(_G.UmaEventData.keys())
   rates = [util.diff_string(raw,ename) for ename in event_names]
   event_name = event_names[rates.index(max(rates))]
@@ -411,7 +411,10 @@ def get_attributes(skpt=True,is_race=False): # include skill points
   for idx,rect in enumerate(position.RaceAttributesRect if is_race else position.AttributesRect):
     try:
       attr_raw = ocr_rect(rect, f"attr{idx}.png")
-      ret.append(abs(util.str2int(attr_raw)))
+      attr = abs(util.str2int(attr_raw))
+      if attr > 1200: # possible misrecognization
+        attr %= 1000
+      ret.append(attr)
     except Exception:
       ret.append(0)
   if skpt:
@@ -429,8 +432,8 @@ def _ocr_available_skills(immediate=False,to_get=[]):
     px,py    = pxy
     px = int(px)
     py = int(py)
-    rsx,rsy  = int(px - 400), int(py - 24)
-    rex,rey  = int(px - 200), int(py + 4)
+    rsx,rsy  = int(px - 400), int(py - 24) # skill name rect
+    rex,rey  = int(px - 250), int(py + 4)
     name_raw = ocr_rect((rsx,rsy,rex,rey), f"skill{idx}.png", zoom=1.2, lang='jpn')
     cost_raw = ocr_rect((px-56,py+8,px-12,py+34), f"cost{idx}.png", lang='eng')
     fixed    = corrector.skill_name(name_raw)
@@ -445,9 +448,17 @@ def _ocr_available_skills(immediate=False,to_get=[]):
       uwait(0.3)
       Input.click()
       uwait(0.3)
+      if fixed[-1] == '◎':
+        flag_lvled = False
+        for sk in _G.CurrentOwnedSkills:
+          if sk[0][:-1] == fixed[:-1]:
+            flag_lvled = True
+            break
+        if not flag_lvled:
+          fixed = fixed[:-1] + '○'
       _G.CurrentOwnedSkills.append((fixed,cost))
       _G.CurrentAttributes[5] -= cost
-      log_info("Skill points left:", _G.CurrentAttributes[5])
+      log_info(f"Learned skill {fixed}; points left: {_G.CurrentAttributes[5]}")
       if (_G.CurrentAttributes[5] < _G.MinGetSkillPoints) or (fixed in to_get and to_get.index(fixed) == len(to_get) - 1):
         return _G.MsgPipeStop
     else:
