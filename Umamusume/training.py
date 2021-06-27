@@ -271,6 +271,7 @@ def process_race():
         Input.click()
         retries += 1
         uwait(3)
+        break
   ranking = stage.get_race_ranking()
   collector.record_race_result(_G.CurrentRaceData['Name'], ranking, retries)
   ranking_str = str(ranking)+'着' if ranking > 0 else '着外'

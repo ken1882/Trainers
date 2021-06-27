@@ -11,7 +11,7 @@ DateMonth = [
   '開催中'
 ]
 
-def skill_name(name):
+def skill_name(name,cost=0):
   max_r = 0.1
   ret = name
   for sk in _G.UmaSkillData:

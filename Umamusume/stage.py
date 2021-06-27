@@ -436,8 +436,8 @@ def _ocr_available_skills(immediate=False,to_get=[]):
     rex,rey  = int(px - 250), int(py + 4)
     name_raw = ocr_rect((rsx,rsy,rex,rey), f"skill{idx}.png", zoom=1.2, lang='jpn')
     cost_raw = ocr_rect((px-56,py+8,px-12,py+34), f"cost{idx}.png", lang='eng')
-    fixed    = corrector.skill_name(name_raw)
     cost     = corrector.skill_cost(cost_raw)
+    fixed    = corrector.skill_name(name_raw,cost)
     log_info("Skill cost:", cost)
     if fixed in checked:
       log_info("Skill already checked, skip")
