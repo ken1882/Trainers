@@ -60,8 +60,8 @@ def get_content_rect():
   rect = list(win32gui.GetClientRect(_G.AppHwnd))
   rect[0] += _G.WinTitleBarSize[0] + _G.WinDesktopBorderOffset[0] + _G.AppRect[0]
   rect[1] += _G.WinTitleBarSize[1] + _G.WinDesktopBorderOffset[1] + _G.AppRect[1]
-  rect[2] += _G.WinTitleBarSize[0] + _G.WinDesktopBorderOffset[0]
-  rect[3] += _G.WinTitleBarSize[1] + _G.WinDesktopBorderOffset[1]
+  rect[2] += _G.WinTitleBarSize[0] - _G.WinTitleBarSize[0]
+  rect[3] += _G.WinTitleBarSize[1] - _G.WinTitleBarSize[1]
   return tuple(rect)
 
 def take_snapshot(rect=None,filename=None):
