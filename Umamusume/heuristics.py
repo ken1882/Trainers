@@ -20,6 +20,10 @@ def init():
   _G.NextObjectiveIndex = 0
   _G.CurrentOwnedSkills = []
   _G.CurrentRaceData    = None
+  for date,name in list(_G.CurrentUma.DateOptionalRace.items()):
+    intdate = corrector.date(date)
+    _G.CurrentUma.DateOptionalRace[intdate] = name
+    log_info(f"Date Race translated {date} => {intdate} ({name})")
   if cur_date:
     for date in _G.CurrentUma.ObjectiveDate:
       if cur_date > corrector.date(date,False):
@@ -71,7 +75,7 @@ def determine_training_objective(sup_num=[0,0,0,0,0],attr_inc=[0,0,0,0,0]):
       mul = _G.CurrentUma.OverAttributeWeightMultiplier[idx]
     else:
       mul = _G.CurrentUma.FairAttributeWeightMultiplier[idx]
-    mul = mul * (dd ** decay)
+    mul = mul * (decay ** dd)
     attr_weight[idx] *= mul
   log_info(f"Attribute training weight: {attr_weight}")
   return attr_weight.index( max(attr_weight) )
@@ -91,6 +95,8 @@ def determine_event_selection(event_data):
   return ret
 
 def get_optional_race(date):
+  if date in _G.CurrentUma.DateOptionalRace:
+    return _G.UmaRaceData[_G.CurrentUma.DateOptionalRace[date]]
   for race_name in _G.CurrentUma.OptionalRace:
     if any([corrector.date(dat,False) == date for dat in _G.UmaRaceData[race_name]['Date']]):
       return _G.UmaRaceData[race_name]

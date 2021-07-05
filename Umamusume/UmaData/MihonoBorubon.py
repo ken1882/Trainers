@@ -131,6 +131,11 @@ OptionalRace = [
   '有馬記念',
 ]
 
+# Optional race specified by date
+DateOptionalRace = {
+  
+}
+
 PreferredEventOption = {
   '追加の自主トレ': 0,
   '愉快ッ！密着取材！': 0,

@@ -221,6 +221,7 @@ def select_race(target):
   
   flag_found = False
   for i in range(2):
+    _G.flush()
     f1, f2 = stage.get_race_fans()
     log_info("Race fans:", f1, f2)
     mx = (position.RaceFanRect1[0] + position.RaceFanRect1[2]) // 2
