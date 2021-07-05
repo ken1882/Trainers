@@ -175,7 +175,7 @@ with open("UmaLibrary/RaceDataLibrary.json", 'r', encoding='utf8') as fp:
 CommonRaces = ['ファイナルズ決勝', 'ファイナルズ準決勝', 'ファイナルズ予選', 'メイクデビュー']
 ### Program Depended Constants/Variables
 
-CurrentUmaName = 'MihonoBorubon'
+CurrentUmaName = ''
 CurrentUma     = None
 CurrentDate    = 0  # before start
 CurrentAction  = None

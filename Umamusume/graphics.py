@@ -12,6 +12,7 @@ from _G import (CVLocalDistance, CVMatchHardRate, CVMatchMinCount, CVMatchStdRat
 _G.DesktopDC = win32gui.GetDC(0)
 
 def is_color_ok(cur, target):
+  log_debug("=== Pixel Color Comparing ===")
   for c1,c2 in zip(cur,target):
     if _G.VerboseLevel >= 4:
       print('-'*10)

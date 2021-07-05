@@ -6,6 +6,7 @@ import util, Input, graphics, stage
 import win32con,win32gui
 from threading import Thread
 import argv_parse
+import UmaData
 
 # Cache for pos/col records
 output_cache = []
@@ -24,9 +25,35 @@ def print_cache():
   print('-'*42)
   print(f"({col})")
 
+def update_detector():
+  last_tick = 0
+  while _G.FlagRunning:
+    sleep(_G.FPS*2)
+    if _G.FrameCount == last_tick:
+      continue
+    if Input.is_trigger(win32con.VK_F5):
+      print("Received redetect signal",flush=True)
+      last_tick = _G.FrameCount
+    elif Input.is_trigger(win32con.VK_F6):
+      print("Received position signal",flush=True)
+      last_tick = _G.FrameCount
+    elif Input.is_trigger(win32con.VK_F7):
+      print("Received pause signal",flush=True)
+      last_tick = _G.FrameCount
+    elif Input.is_trigger(win32con.VK_F8):
+      print("Received worker signal",flush=True)
+      last_tick = _G.FrameCount
+    elif Input.is_trigger(win32con.VK_F9):
+      print("Received termination signal",flush=True)
+      last_tick = _G.FrameCount
+
 def update_input():
   Input.update()
-  if Input.is_trigger(win32con.VK_F6):
+  if Input.is_trigger(win32con.VK_F5):
+    print("Redetecting app window")
+    util.find_app_window()
+    util.move_window(x=-9,y=-31)
+  elif Input.is_trigger(win32con.VK_F6):
     res = graphics.get_mouse_pixel()
     if not _G.SelectedFiber:
       output_cache.extend(res)
@@ -49,18 +76,21 @@ def main_loop():
   global output_cache
   _G.flush()
   update_input()
-
   if not _G.FlagPaused and _G.Fiber and not resume(_G.Fiber):
     log_info(f"Worker ended, return value: {_G.pop_fiber_ret()}")
     _G.Fiber = None 
     _G.FlagWorking = False
-    
 
 def start_main():
-  while _G.FlagRunning:
-    _G.FrameCount += 1
-    main_loop()
-    sleep(_G.FPS)
+  _th = Thread(target=update_detector)
+  _th.start()
+  try:
+    while _G.FlagRunning:
+      _G.FrameCount += 1
+      main_loop()
+      sleep(_G.FPS)
+  finally:
+    _G.FlagRunning = False
 
 if __name__ == "__main__":
   util.find_app_window()
@@ -72,9 +102,20 @@ if __name__ == "__main__":
     for method in dir(fiber):
       if args.job in method:
         _G.SelectedFiber = getattr(fiber,method)
-        print(f"Fiber set to {method}")
+        log_info(f"Fiber set to {method}")
         break
+  if args.uma:
+    _G.CurrentUmaName = ''
+    mxrat = 0
+    for umamusume in dir(UmaData):
+      if umamusume[0] == '_':
+        continue
+      rate = util.diff_string(args.uma.lower(), str(umamusume).lower())
+      if rate > mxrat:
+        _G.CurrentUmaName = umamusume
+        mxrat = rate
+  log_info(f"Umamusume selected: {_G.CurrentUmaName}")
   try:
     start_main()
   except (KeyboardInterrupt, SystemExit):
-    pass
+    _G.FlagRunning = False

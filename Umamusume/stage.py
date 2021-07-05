@@ -109,6 +109,16 @@ Enum = {
     'pos': ((14, 332),(302, 329),(57, 501),(520, 544),(76, 651),(339, 665),),
     'color': ((101, 186, 0),(255, 255, 255),(88, 181, 57),(254, 254, 254),(255, 255, 255),(143, 212, 8),)
   },
+  'SkillLearningComplete': {
+    'id': 16,
+    'pos': ((16, 331),(54, 330),(159, 326),(211, 335),(366, 332),(543, 334),(357, 670),(530, 705),(310, 669),),
+    'color': ((101, 186, 0),(101, 186, 0),(130, 207, 11),(255, 255, 255),(255, 255, 255),(123, 203, 11),(244, 242, 244),(250, 251, 250),(121, 64, 22),)
+  },
+  'NotEnoughFans': {
+    'id': 17,
+    'pos': ((15, 264),(157, 265),(254, 265),(379, 268),(456, 266),(261, 500),(347, 459),(343, 438),),
+    'color': ((101, 186, 0),(123, 203, 11),(255, 255, 255),(255, 255, 255),(123, 203, 11),(85, 181, 255),(255, 190, 63),(255, 127, 132),)
+  }
 }
 
 Status = {
@@ -147,6 +157,12 @@ SkillBarBottomPos = (563, 814)
 SkillBarBottomColor = (118,116,134)
 GetSkillPos = (241, 859)
 GetSkillColor = (154,218,8)
+
+RaceRunningStyle = {
+  'pos':((531, 537),(481, 537),(434, 537),(387, 536)),
+  'color': (255,255,255),
+  'name': ('逃げ','先行','差し','追込')
+}
 
 def get_current_stage():
   global Enum
@@ -513,6 +529,14 @@ def get_race_ranking():
       ret = idx+1
       mrate = rts[0]
   return ret
+
+def get_running_style():
+  global RaceRunningStyle
+  for idx,pos in enumerate(RaceRunningStyle['pos']):
+    if graphics.is_color_ok(graphics.get_pixel(*pos),RaceRunningStyle['color']):
+      return idx
+  log_warning("Unable to identify running style of current race")
+  return None
 
 def is_healthroom_available():
   return graphics.is_pixel_match(HealthRoom['pos'], HealthRoom['color'])

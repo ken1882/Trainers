@@ -29,6 +29,10 @@ def main_loop():
       yield from process_inheritance()
     elif scene == 'RacePrepare':
       yield from process_race()
+    elif scene == 'NotEnoughFans':
+      Input.rmoveto(*position.NoFansCancelPos)
+      uwait(0.3)
+      Input.click()
     elif 'Event' in scene:
         if not flag_has_event:
           log_info("Event detected, waiting for 3 seconds")
@@ -195,7 +199,9 @@ def get_skills():
     uwait(0.3)
     Input.rmoveto(*position.ConfirmSkillPos)
     Input.click()
-    uwait(5)
+    while not stage.get_current_stage() == 'SkillLearningComplete':
+      uwait(1)
+      yield
     Input.rmoveto(*position.CloseSkillPos)
     Input.click()
     uwait(0.3)
@@ -212,18 +218,29 @@ def select_race(target):
     uwait(1)
     _G.flush()
     yield
-  f1, f2 = stage.get_race_fans()
-  log_info("Race fans:", f1, f2)
-
-  mx = (position.RaceFanRect1[0] + position.RaceFanRect1[2]) // 2
-  my = (position.RaceFanRect1[1] + position.RaceFanRect1[3]) // 2
-  if f1 == target['Fans'] or stage.is_common_race(target):
+  
+  flag_found = False
+  for i in range(2):
+    f1, f2 = stage.get_race_fans()
+    log_info("Race fans:", f1, f2)
     mx = (position.RaceFanRect1[0] + position.RaceFanRect1[2]) // 2
     my = (position.RaceFanRect1[1] + position.RaceFanRect1[3]) // 2
-  elif f2 == target['Fans']:
-    mx = (position.RaceFanRect2[0] + position.RaceFanRect2[2]) // 2
-    my = (position.RaceFanRect2[1] + position.RaceFanRect2[3]) // 2
-  else:
+    if f1 == target['Fans'] or stage.is_common_race(target):
+      mx = (position.RaceFanRect1[0] + position.RaceFanRect1[2]) // 2
+      my = (position.RaceFanRect1[1] + position.RaceFanRect1[3]) // 2
+      flag_found = True
+      break
+    elif f2 == target['Fans']:
+      mx = (position.RaceFanRect2[0] + position.RaceFanRect2[2]) // 2
+      my = (position.RaceFanRect2[1] + position.RaceFanRect2[3]) // 2
+      flag_found = True
+      break
+    if i == 1:
+      break
+    Input.moveto(*position.RaceSelectionScrollPos[0])
+    uwait(0.3)
+    Input.scroll_to(*position.RaceSelectionScrollPos[0],*position.RaceSelectionScrollPos[1], slow=True)
+  if not flag_found:
     log_warning("No corresponding race found, processed to first choice")
   if stage.is_common_race(target):
     for rname in _G.CommonRaces:
@@ -249,6 +266,13 @@ def process_race():
       uwait(1)
       _G.flush()
       yield
+    rstyle = stage.get_running_style()
+    log_info(f"Strategy: {stage.RaceRunningStyle['name'][rstyle]}")
+    if rstyle != _G.CurrentUma.RunningStyle:
+      change_running_style()
+      uwait(1)
+      yield
+      continue
     Input.rmoveto(*position.SeeRaceResultPos)
     Input.click()
     for _ in range(10):
@@ -286,7 +310,21 @@ def process_race():
     uwait(0.5)
     Input.rmoveto(*position.RaceCompletePos, rrange=15)
     Input.click()
-  
+
+def change_running_style():
+  Input.rmoveto(*position.ChangeRunningStylePos)
+  uwait(0.3)
+  Input.click()
+  uwait(0.5)
+  Input.rmoveto(*position.RaceRunningStylePos[_G.CurrentUma.RunningStyle])
+  uwait(0.3)
+  Input.click()
+  uwait(0.3)
+  Input.rmoveto(*position.ChangeRunningStyleOkPos)
+  uwait(0.3)
+  Input.click()
+  uwait(1)
+
 def process_objective_complete():
   log_info("Objective complete")
   for _ in range(5):

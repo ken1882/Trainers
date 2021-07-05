@@ -135,7 +135,7 @@ def scroll_right(x, y, delta = 100, app_offset=True, haste=False):
     wait(0.01 if haste else ScrollTime)
   mouse_up(x, y, app_offset)
 
-def scroll_to(x, y, x2, y2, app_offset=True, haste=False, hold=True):
+def scroll_to(x, y, x2, y2, app_offset=True, haste=False, hold=True, slow=False):
   mouse_down(x, y, app_offset)
   sleep(0.01 if haste else ScrollTime)
   tdx, tdy = abs(x2 - x), abs(y2 - y)
@@ -148,6 +148,8 @@ def scroll_to(x, y, x2, y2, app_offset=True, haste=False, hold=True):
   while x != x2 or y != y2:
     dx = int((random.randint(*ScrollDelta) + haste * 2) * pcx)
     dy = int((random.randint(*ScrollDelta) + haste * 2) * pcy)
+    dx = 1 if dx > 0 and slow else dx
+    dy = 1 if dy > 0 and slow else dy
     dx = 1 if dx == 0 and x != x2 else dx
     dy = 1 if dy == 0 and y != y2 else dy
     x = min([x2, x+dx]) if x2 > x else max([x2, x-dx])

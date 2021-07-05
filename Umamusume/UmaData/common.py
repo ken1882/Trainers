@@ -1,5 +1,4 @@
-
-RunningStyleSkillOrder = [
+RunningStyleSkills = [
   [ # 逃
     '逃亡者',
     '押し切り準備',
@@ -25,6 +24,8 @@ RunningStyleSkillOrder = [
   [ # 先
     'スピードスター',
     '抜け出し準備',
+    '技巧派',
+    '巧みなステップ',
     '食いしん坊',
     '栄養補給',
     '余裕綽々',
@@ -35,8 +36,6 @@ RunningStyleSkillOrder = [
     '先行直線○',
     '先行コーナー◎',
     '先行コーナー○',
-    '技巧派',
-    '巧みなステップ',
     '決意の直滑降',
     '直滑降',
     'くじけぬ精神',
@@ -230,14 +229,14 @@ NormalSkillOrder = [
   '先駆け',
   'スピードスター',
   '抜け出し準備',
+  '巧みなステップ',
+  '技巧派',
   '食いしん坊',
   '栄養補給',
   '余裕綽々',
   'スタミナキープ',
   'レースプランナー',
   '好位追走',
-  '巧みなステップ',
-  '技巧派',
   '迅速果断',
   '位置取り押し上げ',
   '乗り換え上手',
@@ -444,8 +443,8 @@ DebuffSkills = [
 ]
 
 def get_skill_rstyle(sk):
-  global RunningStyleSkillOrder
-  for idx,sskills in enumerate(RunningStyleSkillOrder):
+  global RunningStyleSkills
+  for idx,sskills in enumerate(RunningStyleSkills):
     if sk in sskills:
       return idx
   return None

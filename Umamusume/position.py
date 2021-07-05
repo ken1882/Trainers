@@ -31,6 +31,14 @@ RaceCompletePos = (390,950)
 ConfirmExRacePos = (411, 666)
 ObjectiveRetryPos = (423, 745)
 
+ChangeRunningStylePos = (463, 601)
+RaceRunningStylePos   = ((473, 627),(346, 620),(223, 620),(91, 620)) # 逃先差追
+ChangeRunningStyleOkPos = (412, 745)
+
+RaceSelectionScrollPos = ((541, 690),(569, 442))
+
+NoFansCancelPos = (150, 733)
+
 TrainingIncreaseRect  = (
   (32,630,100,658),
   (118,625,199,660),

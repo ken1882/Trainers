@@ -1,33 +1,13 @@
-from os import stat
-from corrector import date
+import corrector
 import _G, stage, corrector
 import UmaData.common
-import UmaData.MihonoBorubon
 from random import randint
 from _G import log_debug, log_error, log_info, log_warning
 from UmaData.common import get_skill_rstyle
+import UmaData.MihonoBorubon
+import UmaData.OguriCap
 
-# How many weight added to objective per difference
-AttrDistanceWeightPlus = [
-  0.01,
-  0.01,
-  0.01,
-  0.01,
-  0.01,
-]
 
-# Weight for each suppor card present
-SupporterWeightMultiplier = 1.0
-
-# Objective prehead calculating when determine attribute weight
-ObjectiveDepth = 2
-
-# When prehead calc, attribute weight decay per depth
-ObjectiveWeightDecay = 0.8
-
-# Post-calc of y = λx + σ
-ObjectiveWeightLambda = 1.0
-ObjectiveWeightSigma  = 0
 
 def init():
   for module in dir(UmaData):
@@ -56,7 +36,8 @@ def get_objective_weight(depth=0):
   log_info(f"Attr diff: {attr_distance}")
   attr_weight = []
   for idx,dis in enumerate(attr_distance):
-    attr_weight.append( dis * AttrDistanceWeightPlus[idx] * (ObjectiveWeightDecay**depth))
+    w = dis * _G.CurrentUma.AttrDistanceWeightPlus[idx] * (_G.CurrentUma.ObjectiveWeightDecay**depth)
+    attr_weight.append(w)
   return attr_weight
 
 def determine_training_objective(sup_num=[0,0,0,0,0],attr_inc=[0,0,0,0,0]):
@@ -64,17 +45,34 @@ def determine_training_objective(sup_num=[0,0,0,0,0],attr_inc=[0,0,0,0,0]):
   * sup_num -- Support cards present in each training
   * attr_inc -- Unused
   '''
-  attr_weight      = [n * SupporterWeightMultiplier for n in sup_num]
+  attr_weight      = [n * _G.CurrentUma.SupporterWeightMultiplier for n in sup_num]
   objective_weight = [0,0,0,0,0]
-  for depth in range(ObjectiveDepth+1):
+  # pre-calc objectives
+  for depth in range(_G.CurrentUma.ObjectiveDepth+1):
     if depth + _G.NextObjectiveIndex >= len(_G.CurrentUma.ObjectiveAttributeMin):
       break
     weights = get_objective_weight(depth)
     objective_weight = [sum(n) for n in zip(objective_weight,weights)]
     log_info(f"Objective weight: {weights}")
-
   
+  # attribute training weight calculation
   attr_weight = [sum(n) for n in zip(attr_weight,objective_weight)]
+  obj_idx = min(len(_G.CurrentUma.ObjectiveAttributeMin)-1, _G.NextObjectiveIndex)
+  dd = corrector.date(_G.CurrentUma.ObjectiveDate[obj_idx]) - stage.get_date()
+  log_info(f"Attribute weight: {attr_weight}")
+  log_info(f"Next objective date left: {dd}")
+  dd = max(0,dd-2)
+  for idx,attr in enumerate(_G.CurrentAttributes[:5]):
+    mul   = 1.0
+    decay = _G.CurrentUma.ObjectiveWeightDecay
+    if attr < _G.CurrentUma.ObjectiveAttributeMin[obj_idx][idx]:
+      mul = _G.CurrentUma.MinAttributeWeightMultiplier[idx]
+    elif attr > _G.CurrentUma.ObjectiveAttributeFair[obj_idx][idx]:
+      mul = _G.CurrentUma.OverAttributeWeightMultiplier[idx]
+    else:
+      mul = _G.CurrentUma.FairAttributeWeightMultiplier[idx]
+    mul = mul * (dd ** decay)
+    attr_weight[idx] *= mul
   log_info(f"Attribute training weight: {attr_weight}")
   return attr_weight.index( max(attr_weight) )
   
@@ -117,8 +115,10 @@ def determine_next_main_action():
     _flag_ok = True
     log_info("Attributes to next objective:")
     for idx,attr in enumerate(_G.CurrentUma.ObjectiveAttributeMin[_G.NextObjectiveIndex]):
-      print(_G.CurrentAttributes[idx], attr, _G.CurrentAttributes[idx] < attr)
-      if _G.CurrentAttributes[idx] < attr:
+      d = max(0, corrector.date(_G.CurrentUma.ObjectiveDate[_G.NextObjectiveIndex]) - date - 2)
+      w = attr * (_G.CurrentUma.MinAttributeDateWeightDecay[idx] ** d)
+      print(f"{_G.CurrentAttributes[idx]} / {attr} => {w} {_G.CurrentAttributes[idx] < w}")
+      if _G.CurrentAttributes[idx] < w:
         _flag_ok = False
         break
     if _flag_ok:
