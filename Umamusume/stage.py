@@ -448,7 +448,7 @@ def _ocr_available_skills(immediate=False,to_get=[]):
     px,py    = pxy
     px = int(px)
     py = int(py)
-    rsx,rsy  = int(px - 400), int(py - 24) # skill name rect
+    rsx,rsy  = int(px - 400), int(py - 32) # skill name rect
     rex,rey  = int(px - 250), int(py + 4)
     name_raw = ocr_rect((rsx,rsy,rex,rey), f"skill{idx}.png", zoom=1.2, lang='jpn')
     cost_raw = ocr_rect((px-56,py+8,px-12,py+34), f"cost{idx}.png", lang='eng')

@@ -21,6 +21,8 @@ def init():
   _G.CurrentOwnedSkills = []
   _G.CurrentRaceData    = None
   for date,name in list(_G.CurrentUma.DateOptionalRace.items()):
+    if type(date) == int:
+      continue
     intdate = corrector.date(date)
     _G.CurrentUma.DateOptionalRace[intdate] = name
     log_info(f"Date Race translated {date} => {intdate} ({name})")
