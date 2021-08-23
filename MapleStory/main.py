@@ -7,6 +7,8 @@ import win32con,win32api
 from threading import Thread
 import fiber
 import argv_parse
+import multiprocessing
+from multiprocessing import Process,Pipe
 
 # Cache for pos/col records
 output_cache = []
@@ -73,7 +75,10 @@ def update_input():
     _G.FlagWorking = False
     _G.FlagRunning = False
     print_cache()
-  
+
+def update_pipes():
+  pass
+
 def main_loop():
   global output_cache
   _G.flush()
@@ -93,6 +98,9 @@ def start_main():
   finally:
     _G.FlagRunning = False
 
+def start_childprocess():
+  pass
+
 if __name__ == "__main__":
   utils.find_app_window()
   args = argv_parse.load()
@@ -103,6 +111,9 @@ if __name__ == "__main__":
         log_info(f"Fiber set to {method}")
         break
   try:
+    start_childprocess()
     start_main()
   except (KeyboardInterrupt, SystemExit):
     _G.FlagRunning = False
+  finally:
+    _G.termiante()

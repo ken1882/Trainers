@@ -1,9 +1,11 @@
 from datetime import datetime
-from os import get_exec_path
+from os import get_exec_path, name
 from time import sleep
 from random import random
 from copy import copy
 import json
+import multiprocessing
+from multiprocessing import Process,Pipe
 
 AppWindowName = "MapleStory"
 AppHwnd = 0
@@ -36,6 +38,11 @@ LastFrameCount = -1
 PosRandomRange = (8,8)
 
 SnapshotCache = {}  # OCR snapshot cache for current frame
+
+ChildProcess = {}
+ChildPipe    = {}
+PipeIn  = None
+PipeOut = None
 
 # 0:NONE 1:ERROR 2:WARNING 3:INFO 4:DEBUG
 VerboseLevel = 3
@@ -183,9 +190,22 @@ def flush():
   CurrentStage   = None
   SnapshotCache  = {}
 
-WaitInterval = 0.5
 def wait(sec):
   sleep(sec)
 
 def uwait(sec):
   sleep(sec + max(random() / 2, sec * random() / 5))
+
+def spawn_childproc(name, target, args):
+  global ChildProcess,ChildPipe
+  pi, po = Pipe()
+  ChildProcess[name] = Process(target=target, args=args)
+  ChildPipe[name] = (pi,po)
+
+def termiante():
+  global ChildPipe,ChildProcess
+  for name,proc in ChildProcess.items():
+    pi,po = ChildPipe[name]
+    pi.close()
+    po.close()
+    proc.terminate()
