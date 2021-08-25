@@ -62,14 +62,21 @@ def update_input():
   elif Input.is_trigger(win32con.VK_F7):
     log_info("Worker unpaused" if _G.FlagPaused else "Worker paused")
     _G.FlagPaused ^= True
+    if _G.FlagPaused:
+      utils.message_child(_G.MsgPipePause)
+    else:
+      utils.message_child(_G.MsgPipeContinue)
   elif Input.is_trigger(win32con.VK_F8):
     log_info("Worker terminated" if _G.FlagWorking else "Worker started")
     log_info(f"Frame count: {_G.FrameCount} / {_G.LastFrameCount}")
     _G.FlagWorking ^= True
-    if _G.SelectedFiber:
-      _G.Fiber = _G.SelectedFiber()
-    else:
-      log_info("No job assigned")
+    if _G.FlagWorking:
+      if _G.SelectedFiber:
+        _G.SelectedFiber()
+      else:
+        log_info("No job assigned")
+    elif _G.MainChild:
+      stop_main_child()
   elif Input.is_trigger(win32con.VK_F9):
     log_info("Stop program requested") 
     _G.FlagWorking = False
@@ -77,16 +84,19 @@ def update_input():
     print_cache()
 
 def update_pipes():
-  pass
+  if Input.is_trigger(win32con.VK_SPACE):
+    print("Msg sent")
+    if _G.MainChildPipe:
+      _G.MainChildPipe[0].send("Hello World!")
 
 def main_loop():
   global output_cache
   _G.flush()
   update_input()
-  if not _G.FlagPaused and _G.Fiber and not resume(_G.Fiber):
-    log_info(f"Worker ended, return value: {_G.pop_fiber_ret()}")
-    _G.Fiber = None 
-    _G.FlagWorking = False
+  update_pipes()
+  if not _G.FlagPaused and _G.MainChild and not _G.MainChild.is_alive():
+    log_info(f"Subprocess worker ended unexpectedly")
+    stop_main_child()
 
 def start_main():
   Input.update()
@@ -100,6 +110,20 @@ def start_main():
 
 def start_childprocess():
   pass
+
+def stop_main_child():
+  print("Terminating subprocess")
+  utils.message_child(_G.MsgPipeStop)
+  _G.MainChild.terminate()
+  if _G.MainChildPipe:
+    pi,po = _G.MainChildPipe
+    pi.close()
+    po.close()
+  _G.MainChildPipe = None
+  _G.MainChild = None
+  _G.MainChildName = None
+  _G.FlagWorking = False
+  log_info(f"Subprocess worker ended")
 
 if __name__ == "__main__":
   utils.find_app_window()
