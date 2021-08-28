@@ -6,7 +6,7 @@ from _G import log_debug, log_error, log_info, log_warning
 from UmaData.common import get_skill_rstyle
 import UmaData.MihonoBorubon
 import UmaData.OguriCap
-
+import UmaData.SeiunSky
 
 
 def init():

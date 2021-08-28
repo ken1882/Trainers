@@ -33,6 +33,8 @@ def main_loop():
       Input.rmoveto(*position.NoFansCancelPos)
       uwait(0.3)
       Input.click()
+    elif scene == 'ClawMiniGame':
+      yield from process_minigame_claw()
     elif 'Event' in scene:
         if not flag_has_event:
           log_info("Event detected, waiting for 3 seconds")
@@ -328,7 +330,7 @@ def change_running_style():
 
 def process_objective_complete():
   log_info("Objective complete")
-  for _ in range(5):
+  for _ in range(4):
     uwait(1)
     Input.rmoveto(*position.CommonNext, rrange=15)
     Input.click()
@@ -343,3 +345,27 @@ def process_inheritance():
     Input.rmoveto(*position.CommonNext, rrange=15)
     Input.click()
     yield
+
+ClawForwardTime = (2, 1.1, 0.6)
+def process_minigame_claw():
+  mx,my = position.ClawMiniGamePos
+  Input.rmoveto(mx, my-250)
+  uwait(1)
+  Input.click()
+  uwait(0.3)
+  Input.rmoveto(mx, my)
+  uwait(0.3)
+  for i,t in enumerate(ClawForwardTime):
+    log_info(f"Minigame round {i+1}")
+    Input.mouse_down()
+    wait(t)
+    Input.mouse_up()
+    for _ in range(25-i*3):
+      uwait(0.5)
+      yield
+  log_info("Minigame ended")
+  uwait(2)
+  Input.rmoveto(*position.ClawMiniGameEndPos)
+  uwait(0.3)
+  Input.click()
+  uwait(2)
