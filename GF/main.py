@@ -1,195 +1,107 @@
-from multiprocessing import set_start_method, freeze_support, Pool
-import PIL.ImageGrab
-import win32api, win32con, win32gui
-import os, time, random, sys
-import G, util, action, stage, const, update, Input
-import numpy as np
-from G import uwait, Mode
-from datetime import datetime
-import json
-import sysargv
-import grind
+import os
+from time import sleep
+import _G, fiber
+from _G import (log_error,log_debug,log_info,log_warning,wait,uwait,resume)
+import util, Input, graphics, stage
+import win32con,win32gui
+from threading import Thread
+import argv_parse
 
-# assign constants
-PWD = os.path.dirname(os.path.realpath(__file__))
-Hwnd = win32gui.GetForegroundWindow()
-LastHwnd = None
-os.environ['PATH'] += ';{}\\bin'.format(PWD)
-os.environ['TESSDATA_PREFIX'] = PWD + '\\bin'
+# Cache for pos/col records
+output_cache = []
 
-if __name__ == '__main__':
-  set_start_method('spawn', force=True)
-  freeze_support()
-  G.Pool = Pool(2)
+def print_cache():
+  pos = ""
+  col = ""
+  print(output_cache)
+  for i,ss in enumerate(output_cache):
+    if i & 1 == 0:
+      pos += ss 
+    else:
+      col += ss
+  print('-'*42)
+  print(f"({pos})")
+  print('-'*42)
+  print(f"({col})")
 
-def start():
-  global LastHwnd
-  util.find_app()
-  util.align_window()
-  util.initialize()
-
-  if G.AppHwnd == 0:
-    print("App not found, aborting")
-    return exit()
-
-  if G.FlagAlign:
-    util.align_window(0,0)
-  print("Start hwnd {}, max FPS: {}".format(hex(G.AppHwnd), 1/G.FPS))
-  util.change_title(const.AppTitle)
-  
-  if stage.is_stage_combat_map() and grind.is_battle_ready():
-    G.FlagPlayerTurn = True
-    grind.initialize()
-
-  while G.FlagRunning:
-    uwait(G.FPS, False)
-    update.main_update()
-    cur_hwnd = win32gui.GetForegroundWindow()
-
-    if cur_hwnd != G.AppHwnd and not G.FlagRebooting:
-      if LastHwnd == G.AppHwnd:
-        print("App unfocused auto-paused")
-        LastHwnd = cur_hwnd
-      elif G.FlagForceFocus and G.AppHwnd and not G.FlagPaused:
-        print("Force Focus Flag is set! Switch to app")
-        uwait(1.2)
-        util.trigger_key(win32con.VK_RETURN)
-        action.switch2app()
+def update_detector():
+  last_tick = 0
+  while _G.FlagRunning:
+    sleep(_G.FPS*2)
+    if _G.FrameCount == last_tick:
       continue
-    elif LastHwnd != G.AppHwnd and not G.FlagRebooting:
-      print("Switched to app, begin in 1.2 seconds")
-      LastHwnd = cur_hwnd
-      uwait(1.2)
-    
-    G.CurInternCount += 1
-    G.FrameCount += 1
-    if G.CurInternCount >= G.InternUpdateTime:
-      G.CurInternCount = 0
-      util.getAppRect()
-      if not G.FlagPaused:
-        update.process_update()
-        Input.clean_intern()
+    if Input.is_trigger(win32con.VK_F5):
+      print("Received redetect signal",flush=True)
+      last_tick = _G.FrameCount
+    elif Input.is_trigger(win32con.VK_F6):
+      print("Received position signal",flush=True)
+      last_tick = _G.FrameCount
+    elif Input.is_trigger(win32con.VK_F7):
+      print("Received pause signal",flush=True)
+      last_tick = _G.FrameCount
+    elif Input.is_trigger(win32con.VK_F8):
+      print("Received worker signal",flush=True)
+      last_tick = _G.FrameCount
+    elif Input.is_trigger(win32con.VK_F9):
+      print("Received termination signal",flush=True)
+      last_tick = _G.FrameCount
+
+def update_input():
+  Input.update()
+  if Input.is_trigger(win32con.VK_F5):
+    print("Redetecting app window")
+    util.find_app_window()
+    util.move_window(x=-9,y=-31)
+  elif Input.is_trigger(win32con.VK_F6):
+    res = graphics.get_mouse_pixel()
+    if not _G.SelectedFiber:
+      output_cache.extend(res)
+    print(Input.get_cursor_pos(), res) 
+  elif Input.is_trigger(win32con.VK_F7):
+    log_info("Worker unpaused" if _G.FlagPaused else "Worker paused")
+    _G.FlagPaused ^= True
+  elif Input.is_trigger(win32con.VK_F8):
+    log_info("Worker terminated" if _G.FlagWorking else "Worker started")
+    log_info(f"Frame count: {_G.FrameCount} / {_G.LastFrameCount}")
+    _G.FlagWorking ^= True
+    _G.Fiber = _G.SelectedFiber()
+  elif Input.is_trigger(win32con.VK_F9):
+    log_info("Stop program requested") 
+    _G.FlagWorking = False
+    _G.FlagRunning = False
+    print_cache()
+  
+def main_loop():
+  global output_cache
+  _G.flush()
+  update_input()
+  if not _G.FlagPaused and _G.Fiber and not resume(_G.Fiber):
+    log_info(f"Worker ended, return value: {_G.pop_fiber_ret()}")
+    _G.Fiber = None 
+    _G.FlagWorking = False
+
+def start_main():
+  _th = Thread(target=update_detector)
+  _th.start()
+  try:
+    while _G.FlagRunning:
+      _G.FrameCount += 1
+      main_loop()
+      sleep(_G.FPS)
+  finally:
+    _G.FlagRunning = False
 
 if __name__ == "__main__":
-  if not os.path.isdir("tmp"):
-    os.mkdir("tmp")
-  # load config
-  Config = {}
-  with open('config.py') as file:
-    exec(file.read())
-  G.MaxRepair = Config['MaxRepair']
-  G.WorstRepairTime = Config['WorstRepairTime']
-  G.StopFastRepairItemThreshold = Config['StopFastRepairItemThreshold']
-  G.RetireDollNumber = Config['RetireDollNumber']
-  G.MinCombatResources = Config['MinCombatResources']
-  const.EditMainGunnerIndexA = Config['MainGunnerIndexA']
-  const.EditMainGunnerIndexB = Config['MainGunnerIndexB']
-  const.TeamEngagingMovement = Config['TeamEngagingMovement']
-  const.TeamMovementPos = Config['TeamMovementPos']
-  const.EventCombatMovement = Config['EventCombatMovement']
-  const.EventLevelPos = Config['EventLevelPos']
-  const.TeamDeployPos = Config['TeamDeployPos']
-  
-  print("Config Loaded:")
-  for k, v in Config.items():
-    if k == 'TeamEngagingMovement':
-      print("\n{}:".format(k))
-      for level in v:
-        print("{}:".format(level))
-        for i, moves in enumerate(v[level]):
-          print("  Team {}:".format(i))
-          for mv in moves:
-            print("    Second {} => {}".format(mv[0], mv[1]))
-        print('')
-    elif k in ('MainGunnerIndexB', 'MainGunnerIndexA', 'EventLevelPos', 'LevelFastRepairThreshold', 'LevelWorstRepairTime'):
-      print("\n{}:".format(k))
-      for level in v:
-        print("  {}: {}".format(level, v[level]))
-    elif k == 'TeamDeployPos':
-      print("\n{}:".format(k))
-      for level in v:
-        print("{}:".format(level))
-        for tid, pos in enumerate(v[level]):
-          print("  Team {}: {}".format(tid, pos))
-        print('')
-    elif k == 'TeamMovementPos':
-      print("\n{}:".format(k))
-      for level in v:
-        print("{}:".format(level))
-        for turn_id, turns in enumerate(v[level]):
-          print("  Turn {}:".format(turn_id))
-          for team_id, moves in enumerate(turns):
-            print("    Team {}:".format(team_id))
-            for move in moves:
-              print("      {} => {}".format(move[0], move[1]))
-        print('')
-    elif k == 'EventCombatMovement':
-      print("\n{}:".format(k))
-      for level in v:
-        print("{}:".format(level))
-        for turn_id, turns in enumerate(v[level]):
-          print("  Turn {}:".format(turn_id))
-          for _i, move in enumerate(turns):
-            print("    {}, {}".format(move[0], move[1:]))
-        print('')
-    else:
-      print(k, v)
-  print('-'*15)
-  sysargv.load()
-
+  util.find_app_window()
+  util.resize_app_window()
+  args = argv_parse.load()
+  if args.job:
+    for method in dir(fiber):
+      if args.job in method:
+        _G.SelectedFiber = getattr(fiber,method)
+        log_info(f"Fiber set to {method}")
+        break
   try:
-    G.FastRepairThreshold = Config['LevelFastRepairThreshold'][G.GrindLevel]
-  except KeyError:
-    G.FastRepairThreshold = Config['FastRepairThreshold']
-  
-  try:
-    G.WorstRepairTime = Config['LevelWorstRepairTime'][G.GrindLevel]
-  except KeyError:
-    G.WorstRepairTime = Config['WorstRepairTime']  
-
-  try:
-    G.CheckRepairCount = Config['CheckRepairCount'][G.GrindLevel]
-  except KeyError:
-    G.CheckRepairCount = Config['CheckRepairCount']['default']
-    
-  print("Repair time threshold for {}: {}".format(G.GrindLevel, G.FastRepairThreshold))
-  print("Worst repair time:", G.WorstRepairTime)
-  print("Autocombat/Grind Level Resources threshold:", G.MinCombatResources)
-  print("Check repair count:", G.CheckRepairCount)
-  print('-'*15)
-
-def test_func():
-  util.initialize()
-  util.find_app()
-  util.align_window()
-  util.getAppRect()
-  util.getPixel()
-  
-def test_fiber_func():
-  fiber = action.unselect()
-  while util.resume(fiber):
-    G.FrameCount += 1
-    Input.update()
-    uwait(G.FPS)    
-    if Input.is_trigger(Input.keymap.kF9, False):
-      break
-
-def tmp_test_func():
-  # print(stage.is_stage_neutralized())
-  print(stage.get_current_stage())
-  # test_fiber_func()
-  print(stage.is_plan_phase_overed())
-
-if __name__ == '__main__':
-  try:
-    if G.FlagTest:
-      test_func()
-      tmp_test_func()
-      if G.FlagAlign:
-        util.align_window(0,0)
-    elif G.Mode > 0:
-      start()
-    elif G.Mode != -1:
-      sysargv.show_help()
-  finally:
-    util.terminate()
+    start_main()
+  except (KeyboardInterrupt, SystemExit):
+    _G.FlagRunning = False
