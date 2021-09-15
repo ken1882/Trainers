@@ -269,3 +269,7 @@ def moveto(x,y,speed=10,max_steps=MaxMoveTimes,app_offset=False,aync=True,rand=T
 
 def rmoveto(x,y,rrange=8,**kwargs):
   moveto(x+random.randint(-rrange, rrange), y+random.randint(-rrange, rrange), **kwargs)
+
+def get_keybd_pair(code):
+  yield Keyboard(code)
+  yield Keyboard(code, win32con.KEYEVENTF_KEYUP)

@@ -38,6 +38,8 @@ ChangeRunningStyleOkPos = (412, 745)
 RaceSelectionScrollPos = ((541, 690),(569, 442))
 
 NoFansCancelPos = (150, 733)
+ClawMiniGamePos = (284, 912)
+ClawMiniGameEndPos = (313, 939)
 
 TrainingIncreaseRect  = (
   (32,630,100,658),

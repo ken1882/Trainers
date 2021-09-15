@@ -118,6 +118,11 @@ Enum = {
     'id': 17,
     'pos': ((15, 264),(157, 265),(254, 265),(379, 268),(456, 266),(261, 500),(347, 459),(343, 438),),
     'color': ((101, 186, 0),(123, 203, 11),(255, 255, 255),(255, 255, 255),(123, 203, 11),(85, 181, 255),(255, 190, 63),(255, 127, 132),)
+  },
+  'ClawMiniGame': {
+    'id': 18,
+    'pos': ((293, 380),(383, 36),(412, 246),(382, 294),(499, 302),(552, 245),),
+    'color': ((250, 210, 236),(255, 253, 255),(250, 183, 225),(170, 233, 253),(252, 225, 242),(250, 227, 171),)
   }
 }
 
@@ -146,7 +151,7 @@ SupportAvailablePos = (
 )
 SupportAvailableColor = ((110,107,121),(253, 172, 31),(251, 231, 120))
 
-SkillSelNextPageScroll = ((552,627),(526,143))
+SkillSelNextPageScroll = ((552,627),(526,204))
 
 HealthRoom = {
   'pos': ((79, 902),(183, 933),(189, 905),),
@@ -449,7 +454,7 @@ def _ocr_available_skills(immediate=False,to_get=[]):
     px = int(px)
     py = int(py)
     rsx,rsy  = int(px - 400), int(py - 32) # skill name rect
-    rex,rey  = int(px - 250), int(py + 4)
+    rex,rey  = int(px - 250), int(py - 4)
     name_raw = ocr_rect((rsx,rsy,rex,rey), f"skill{idx}.png", zoom=1.2, lang='jpn')
     cost_raw = ocr_rect((px-56,py+8,px-12,py+34), f"cost{idx}.png", lang='eng')
     cost     = corrector.skill_cost(cost_raw)
@@ -512,7 +517,7 @@ def get_available_skills(_async,immediate=False,to_get=[]):
     sx,sy = SkillSelNextPageScroll[0]
     ex,ey = SkillSelNextPageScroll[1]
     Input.moveto(sx,sy)
-    Input.scroll_to(sx,sy,ex,ey)
+    Input.scroll_to(sx,sy,ex,ey,slow=True)
     uwait(1)
 
   if _async:

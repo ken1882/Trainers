@@ -3,6 +3,7 @@ import _G
 from _G import uwait
 import Input
 import Arcana_UpperPath
+from utils import spawn_childproc
 
 def start_click_fiber():
   cnt = int(_G.ConsoleArgv.ntimes)
@@ -13,9 +14,13 @@ def start_click_fiber():
     uwait(0.03)
     yield
 
-def get_keybd_pair(code):
-  yield Input.Keyboard(code)
-  yield Input.Keyboard(code, win32con.KEYEVENTF_KEYUP)
+def start_arcana_up():
+  name = 'macro_main'
+  spawn_childproc(name, Arcana_UpperPath.start_main)
+  _G.MainChild = _G.ChildProcess[name]
+  _G.MainChildPipe = _G.ChildPipe[name]
+  _G.MainChildName = name
+  print("Chlid proc started")
 
 def start_test_fiber():
   pass

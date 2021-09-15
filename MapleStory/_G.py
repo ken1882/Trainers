@@ -4,8 +4,6 @@ from time import sleep
 from random import random
 from copy import copy
 import json
-import multiprocessing
-from multiprocessing import Process,Pipe
 
 AppWindowName = "MapleStory"
 AppHwnd = 0
@@ -39,8 +37,11 @@ PosRandomRange = (8,8)
 
 SnapshotCache = {}  # OCR snapshot cache for current frame
 
-ChildProcess = {}
-ChildPipe    = {}
+ChildProcess  = {}
+ChildPipe     = {}
+MainChild     = None
+MainChildName = None
+MainChildPipe = None
 PipeIn  = None
 PipeOut = None
 
@@ -57,6 +58,7 @@ MsgPipeError = "\x00\x50\x00ERROR\x00"
 MsgPipeTerminated = "\x00\x50\x00TERMINATED\x00"
 MsgPipeRet = "\x00\x50\x00RET\x00"
 MsgPipeInfo = "\x00\x50\x00INFO\x00"
+MsgPipePause = "\x00\x50\x00PAUSE\x00"
 
 CVMatchHardRate  = 0.7    # Hard-written threshold in order to match
 CVMatchStdRate   = 1.22   # Similarity standard deviation ratio above average in consider digit matched
@@ -196,16 +198,13 @@ def wait(sec):
 def uwait(sec):
   sleep(sec + max(random() / 2, sec * random() / 5))
 
-def spawn_childproc(name, target, args):
-  global ChildProcess,ChildPipe
-  pi, po = Pipe()
-  ChildProcess[name] = Process(target=target, args=args)
-  ChildPipe[name] = (pi,po)
-
 def termiante():
   global ChildPipe,ChildProcess
   for name,proc in ChildProcess.items():
-    pi,po = ChildPipe[name]
-    pi.close()
-    po.close()
-    proc.terminate()
+    try:
+      pi,po = ChildPipe[name]
+      pi.close()
+      po.close()
+      proc.terminate()
+    except Exception:
+      pass

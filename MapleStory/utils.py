@@ -1,4 +1,4 @@
-import pytesseract
+# import pytesseract
 import _G
 from _G import log_error,log_debug,log_info,log_warning,resume,wait,uwait
 import numpy as np
@@ -8,9 +8,11 @@ from time import sleep
 from random import random
 import traceback
 import os.path
-from PIL import Image
 import graphics
+import collections
 from difflib import SequenceMatcher
+import multiprocessing
+from multiprocessing import Process,Pipe
 
 def EnumWindowCallback(hwnd, lparam):
   if win32gui.IsWindowVisible(hwnd):
@@ -87,6 +89,14 @@ def str2int(ss):
   except ValueError:
     return None
 
+def flatten(ar):
+  for i in ar:
+    if isinstance(i, collections.Iterable) and not isinstance(i, str):
+      for j in flatten(i):
+        yield j
+    else:
+      yield i
+
 def ensure_dir_exist(path):
   path = path.split('/')
   path.pop()
@@ -97,3 +107,16 @@ def ensure_dir_exist(path):
     pwd += f"{dir}/"
     if not os.path.exists(pwd):
       os.mkdir(pwd)
+
+def spawn_childproc(name, target, *args):
+  pi, po = Pipe()
+  _G.ChildProcess[name] = Process(target=target, args=tuple( flatten([pi,po,args]) ), daemon=True)
+  _G.ChildPipe[name] = (pi,po)
+  _G.ChildProcess[name].start()
+
+def message_child(msg):
+  '''
+  Sending a PIPE message to main child
+  '''
+  if _G.MainChildPipe:
+    _G.MainChildPipe[0].send(msg)
