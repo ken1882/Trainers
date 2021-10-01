@@ -51,7 +51,6 @@ def update_input():
   if Input.is_trigger(win32con.VK_F5):
     print("Redetecting app window")
     utils.find_app_window()
-    utils.move_window(x=-9,y=-31)
   elif Input.is_trigger(win32con.VK_F6):
     res = graphics.get_mouse_pixel()
     if not _G.SelectedFiber:

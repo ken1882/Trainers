@@ -88,6 +88,7 @@ def click(x=None, y=None, app_offset=False):
   if x and y:
     set_cursor_pos(x, y, app_offset)
   mouse_down(x, y, app_offset)
+  uwait(0.01)
   mouse_up(x, y, app_offset)
 
 def dclick(x=None, y=None, app_offset=False):
@@ -193,5 +194,5 @@ def moveto(x,y,speed=10,max_steps=MaxMoveTimes,app_offset=True,aync=True,rand=Tr
     wait(0.01)
   set_cursor_pos(x, y, False)
 
-def rmoveto(x,y,rrange=8,**kwargs):
+def rmoveto(x,y,rrange=10,**kwargs):
   moveto(x+random.randint(-rrange, rrange), y+random.randint(-rrange, rrange), **kwargs)

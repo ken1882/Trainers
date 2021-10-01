@@ -1,4 +1,5 @@
 from copy import copy
+import enum
 from time import sleep
 
 import cv2
@@ -13,6 +14,7 @@ import utils
 from _G import log_debug, log_error, log_info, log_warning, resume, uwait, wait
 from _G import CVMatchHardRate,CVMatchMinCount,CVMatchStdRate,CVLocalDistance
 from utils import img2str, isdigit, ocr_rect
+import re
 
 TrainingEffectStat = (
   (0,2,5),    # speed, power, skill pt(all)
@@ -64,3 +66,16 @@ def get_current_stage():
       return key
   return None
 
+def get_disks():
+  ret = []
+  for i,rect in enumerate(position.DiskNames):
+    name = utils.ocr_rect(rect, f'disk#{i}.png', lang='eng', config='--psm 12 --psm 13 -c tessedit_char_whitelist=ACENYaceghlr')
+    name = [ch if re.match(r'\w',ch) else '' for ch in name]
+    name = ''.join(name)
+    if utils.diff_string(_G.DiskTypes[0], name) > 0.75:
+      ret.append(_G.DiskTypes[0])
+    elif utils.diff_string(_G.DiskTypes[2], name) > 0.75:
+      ret.append(_G.DiskTypes[2])
+    else:
+      ret.append(_G.DiskTypes[1])
+  return ret

@@ -54,6 +54,9 @@ CVMatchStdRate   = 1.22   # Similarity standard deviation ratio above average in
 CVMatchMinCount  = 1      # How many matched point need to pass
 CVLocalDistance  = 10     # Template local maximum picking range
 
+
+DiskTypes = ['Accele', 'Blast', 'Charge']
+
 def format_curtime():
   return datetime.strftime(datetime.now(), '%H:%M:%S')
 

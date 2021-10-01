@@ -12,16 +12,22 @@ def start_mirror_fiber():
     stg = stage.get_current_stage()
     if stg == 'MirrorPvPSelection':
       break
-    elif stg == 'MirrorRanking' or stg == 'MirrorLevel':
-      mx,my = position.MirrorOpponentSelect
-      Input.moveto(mx+randint(-10,10), my+randint(-10,10))
+    elif stg == 'MirrorRanking' or stg == 'MirrorLevel': 
+      Input.rmoveto(*position.MirrorOpponentSelect)
       uwait(0.3)
       Input.click()
       for _ in range(10):
         uwait(0.05)
         yield
-      mx,my = position.MirrorBattleStart
-      Input.moveto(mx+randint(-10,10), my+randint(-10,10))
+      Input.rmoveto(*position.MirrorBattleStart)
       uwait(0.3)
       Input.click()
       yield from combat.start_combat()
+      uwait(0.3)
+      for _ in range(5):
+        Input.rmoveto(*position.GeneralNext)
+        uwait(0.3)
+        Input.click()
+    for _ in range(10):
+      uwait(0.05)
+      yield
