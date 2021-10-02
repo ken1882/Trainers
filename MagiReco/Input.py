@@ -50,31 +50,35 @@ def trigger_key(*args):
     key_up(kid)
 
 def mouse_down(x=None, y=None, app_offset=True):
-  cx, cy = get_cursor_pos(app_offset)
-  rect = graphics.get_content_rect()
+  rect = None
+  if app_offset:
+    rect = graphics.get_content_rect()
   if x is None:
-    x = cx
+    x = 0
   elif app_offset:
     x += rect[0]
   if y is None:
-    y = cy
+    y = 0
   elif app_offset:
     y += rect[1]
-  win32api.SetCursorPos((x,y))
+  if x or y:
+    win32api.SetCursorPos((x,y))
   win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,x,y,0,0)
 
 def mouse_up(x=None, y=None, app_offset=True):
-  cx, cy = get_cursor_pos(app_offset)
-  rect = graphics.get_content_rect()
+  rect = None
+  if app_offset:
+    rect = graphics.get_content_rect()
   if x is None:
-    x = cx
+    x = 0
   elif app_offset:
     x += rect[0]
   if y is None:
-    y = cy
+    y = 0
   elif app_offset:
     y += rect[1]
-  win32api.SetCursorPos((x,y))
+  if x or y :
+    win32api.SetCursorPos((x,y))
   win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,x,y,0,0)
 
 def set_cursor_pos(x, y, app_offset=True):
@@ -88,12 +92,12 @@ def click(x=None, y=None, app_offset=False):
   if x and y:
     set_cursor_pos(x, y, app_offset)
   mouse_down(x, y, app_offset)
-  uwait(0.01)
+  sleep(0.05)
   mouse_up(x, y, app_offset)
 
 def dclick(x=None, y=None, app_offset=False):
   click(x,y,app_offset)
-  uwait(0.1)
+  sleep(0.1)
   click(x,y,app_offset)
 
 def scroll_up(x, y, delta = 100, app_offset=True, haste=False):

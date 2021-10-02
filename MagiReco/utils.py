@@ -60,8 +60,11 @@ def img2str(image_file, lang='jpn', config='--psm 12 --psm 13'):
     image_file = f"{_G.DCTmpFolder}/{image_file}"
   return pytesseract.image_to_string(image_file, lang=lang, config=config) or ''
 
-def ocr_rect(rect, fname, zoom=1.0, lang='jpn', config='--psm 12 --psm 13'):
+def ocr_rect(rect, fname, zoom=1.0, lang='jpn', config='--psm 12 --psm 13', **kwargs):
   log_info(f"Processing OCR for {fname}")
+  if kwargs.get('num_only'):
+    lang = 'eng'
+    config += ' -c tessedit_char_whitelist=1234567890'
   if not os.path.exists(fname):
     fname = f"{_G.DCTmpFolder}/{fname}"
   img = graphics.take_snapshot(rect, fname)

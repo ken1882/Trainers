@@ -96,7 +96,7 @@ if __name__ == "__main__":
   args = argv_parse.load()
   if args.job:
     for method in dir(fiber):
-      if args.job in method:
+      if args.job in method and 'fiber' in method:
         _G.SelectedFiber = getattr(fiber,method)
         log_info(f"Fiber set to {method}")
         break

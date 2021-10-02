@@ -48,6 +48,14 @@ Enum = {
   'MirrorPvPSelection': {
     'pos': ((1, 146),(942, 137),(362, 553),(239, 314),(579, 312),),
     'color': ((32, 45, 66),(50, 34, 94),(25, 38, 56),(0, 92, 188),(97, 66, 163),)
+  },
+  'MirrorVicotry': {
+    'pos': ((361, 195),(613, 195),(491, 289),),
+    'color': ((203, 185, 116),(203, 185, 116),(221, 205, 120),)
+  },
+  'MirrorDefeat': {
+    'pos': ((382, 281),(451, 290),(542, 298),(585, 296),),
+    'color': ((213, 211, 209),(178, 170, 169),(160, 144, 132),(169, 157, 145),)
   }
 }
 
@@ -66,6 +74,9 @@ def get_current_stage():
       return key
   return None
 
+def check_pixels(pixstruct):
+  return graphics.is_pixel_match(pixstruct['pos'], pixstruct['color'])
+
 def get_disks():
   ret = []
   for i,rect in enumerate(position.DiskNames):
@@ -78,4 +89,22 @@ def get_disks():
       ret.append(_G.DiskTypes[2])
     else:
       ret.append(_G.DiskTypes[1])
+  return ret
+
+def get_current_formation():
+  ret = []
+  for i,pixstr in enumerate(position.BattlerPosition):
+    if i == 0 or pixstr['pos'] == (0,0):
+      continue
+    if check_pixels(pixstr):
+      ret.append(i)
+  return ret
+
+def get_connection_targets():
+  ret = []
+  for i,pos in enumerate(position.ConnectionPos):
+    if i == 0:
+      continue
+    if graphics.is_color_ok(graphics.get_pixel(*pos, True), position.ConnectionColor):
+      ret.append(i)
   return ret
