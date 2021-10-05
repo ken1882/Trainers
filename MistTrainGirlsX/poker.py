@@ -9,7 +9,7 @@ PokerColors  = ['C', 'D', 'H', 'S']
 PokerNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'X', 'J', 'Q', 'K']
 PokerWeight  = {
   '0': 0,
-  '1': 11,
+  '1': 14,
   '2': 2,
   '3': 3,
   '4': 4,
@@ -144,11 +144,13 @@ def main():
     log_info("You win! Processed to double ups")
     cur = start_doubleup()
     bets = InitBets
-    while InitBets < MaxEarnPerRound:
+    times = 0
+    while bets < MaxEarnPerRound:
+      times += 1
       if Throttling:
-        uwait(0.5)
-      log_info(f"Card weight {cur}")
-      if cur in range(6,10):
+        uwait(0.2)
+      log_info(f"#{times}: card weight {cur}")
+      if times >= 6 and cur in range(7,10):
         log_info("End doubleups")
         break
       else:
@@ -175,6 +177,6 @@ def start():
     main()
     sleep(0.5)
     if Throttling:
-      sleep(1.5)
+      sleep(1)
 
 start()
