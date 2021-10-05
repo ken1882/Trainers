@@ -165,3 +165,5 @@ def start():
     log_info(f"Today's progress: {prog}")
     main()
     sleep(0.5)
+
+start()
