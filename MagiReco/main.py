@@ -2,7 +2,7 @@ import os
 from time import sleep
 import _G, fiber
 from _G import (log_error,log_debug,log_info,log_warning,wait,uwait,resume)
-import util, Input, graphics, stage
+import utils, Input, graphics, stage
 import win32con,win32gui
 from threading import Thread
 import argv_parse
@@ -50,8 +50,7 @@ def update_input():
   Input.update()
   if Input.is_trigger(win32con.VK_F5):
     print("Redetecting app window")
-    util.find_app_window()
-    util.move_window(x=-9,y=-31)
+    utils.find_app_window()
   elif Input.is_trigger(win32con.VK_F6):
     res = graphics.get_mouse_pixel()
     if not _G.SelectedFiber:
@@ -92,12 +91,12 @@ def start_main():
     _G.FlagRunning = False
 
 if __name__ == "__main__":
-  util.find_app_window()
-  util.resize_app_window()
+  utils.find_app_window()
+  utils.resize_app_window()
   args = argv_parse.load()
   if args.job:
     for method in dir(fiber):
-      if args.job in method:
+      if args.job in method and 'fiber' in method:
         _G.SelectedFiber = getattr(fiber,method)
         log_info(f"Fiber set to {method}")
         break
