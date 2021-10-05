@@ -90,3 +90,10 @@ EventOption = (
   ((308, 308),(297, 393),(295, 488),(317, 582)), # 4
   ((308, 308),(297, 393),(295, 488),(317, 582),(305, 672)) # 5
 )
+
+TourmentFindMatch     = (286, 874)
+TourmentPlayerListOk  = (291, 944)
+TourmentRaceStart     = (283, 941)
+TourmentRaceSkip      = (451, 988)
+TourmentResultSkip    = (523, 986)
+TourmentResultOk      = (414, 948)
