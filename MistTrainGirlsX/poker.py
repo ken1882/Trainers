@@ -2,6 +2,7 @@ import requests
 import sys
 from datetime import datetime
 from time import sleep
+from random import randint
 
 JokerColor = '$'
 PokerColors  = ['C', 'D', 'H', 'S']
@@ -26,12 +27,16 @@ BetRate  = 2
 InitBets = 1900
 BetGoal  = 4900000
 MaxEarnPerRound = 900000
+Throttling = True
 
 def format_curtime():
   return datetime.strftime(datetime.now(), '%H:%M:%S')
 
 def log_info(*args):
   print(f"[{format_curtime()}] [INFO]:", *args)
+
+def uwait(sec):
+  sleep(sec + randint(0,8) / 10)
 
 headers = {
   'Authorization': sys.argv[1]
@@ -130,6 +135,8 @@ def main():
   for k in keeps:
     exchanges.remove(k)
   won = exchange_cards(exchanges)
+  if Throttling:
+    uwait(0.5)
   if won == 0:
     log_info("GG")
     game_over()
@@ -138,6 +145,8 @@ def main():
     cur = start_doubleup()
     bets = InitBets
     while InitBets < MaxEarnPerRound:
+      if Throttling:
+        uwait(0.5)
       log_info(f"Card weight {cur}")
       if cur in range(6,10):
         log_info("End doubleups")
@@ -165,5 +174,7 @@ def start():
     log_info(f"Today's progress: {prog}")
     main()
     sleep(0.5)
+    if Throttling:
+      sleep(1.5)
 
 start()
