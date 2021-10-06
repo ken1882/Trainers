@@ -1,4 +1,5 @@
 from _G import *
+import json
 
 Headers = {
   'Accept': 'application/json',
@@ -21,23 +22,26 @@ def get_layer_gears(mchid):
   return res.json()['r']['CurrentPieces']
 
 def bulk_enhance(chid, lv=None, lgn=None, mgn=None, kp=None):
-  if all([ k == None for k in [lv,lgn,mgn,kp] ] ):
+  if all([ not k for k in [lv,lgn,mgn,kp] ] ):
     log_info("No bulk enhance items assigned")
     return
+  gear_dat = None
   if lgn or mgn:
     lgn = lgn or 0
     mgn = mgn or 0
-  res = Session.post(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/BulkEnhance/{chid}", {
+    gear_dat = {
+      "LayerGearQuantity": lgn,
+      "MistGearQuantity": mgn
+    }
+  res = Session.post(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/BulkEnhance/{chid}", json.dumps({
     "UCharacterLevelupModel": lv,
-    "GearPointAddModel":{
-        "LayerGearQuantity": lgn,
-        "MistGearQuantity": mgn
-    },
-    "KizunaPointAddModel": kp
-  }, headers=Headers)
+    "GearPointAddModel": gear_dat,
+    "KizunaPointAddModel": kp,
+  }), headers=Headers)
   if not is_response_ok(res):
-    return False
-  return True
+    return (None,None,None)
+  rjs = res.json()['r']['UCharacterViewModel']
+  return (rjs['Level'], rjs['GearLevel'], rjs['KizunaRank'])
 
 def level_up(chid,level=1):
   can_lvup = True
@@ -53,10 +57,11 @@ def do_enhance(character):
   chid  = character['Id']
   mchid = character['MCharacterId']
   log_info("Enhancing character of id", chid)
-  # lgn = get_layer_gears(mchid)
-  # log_info("Layer gears:", lgn)
-  # if lgn > 0:
-  #   bulk_enhance(chid, lgn=lgn)
+  lgn = get_layer_gears(mchid)
+  log_info("Layer gears:", lgn)
+  if lgn > 0 and character['GearLevel'] < MaxGearLevel:
+    elv,glv,klv = bulk_enhance(chid, lgn=lgn)
+    log_info(f"Enhance done; Gear Level={glv}")
   if character['CanLevelup']:
     lv = level_up(chid, character['Level'])
     log_info(f"Levelup complete, current level={lv}")
