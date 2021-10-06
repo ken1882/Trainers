@@ -25,6 +25,7 @@ PokerWeight  = {
 }
 BetRate  = 2
 InitBets = 1900
+FinalBets = 3900
 MaxEarnPerDay = 5000000
 MaxEarnPerRound = 1000000
 BetGoal  = 6000000
@@ -65,7 +66,8 @@ def game_over():
 
 def place_bet():
   log_info("Place Bet")
-  res = Session.post(f'https://mist-train-east4.azurewebsites.net/api/Casino/Poker/Bet?type={BetRate}&betCoin={InitBets}')
+  bets = FinalBets if FlagLastRound else InitBets
+  res = Session.post(f'https://mist-train-east4.azurewebsites.net/api/Casino/Poker/Bet?type={BetRate}&betCoin={bets}')
   print(res, res.json())
   cards = res.json()['r']
   log_info("Drew cards:", cards)
