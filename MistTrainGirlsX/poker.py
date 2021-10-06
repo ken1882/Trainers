@@ -2,7 +2,7 @@ import requests
 import sys
 from datetime import datetime
 from time import sleep
-from random import randint
+from random import randint, triangular
 
 JokerColor = '$'
 PokerColors  = ['C', 'D', 'H', 'S']
@@ -25,9 +25,13 @@ PokerWeight  = {
 }
 BetRate  = 2
 InitBets = 1900
-BetGoal  = 4900000
-MaxEarnPerRound = 900000
+MaxEarnPerDay = 5000000
+MaxEarnPerRound = 1000000
+BetGoal  = 6000000
 Throttling = True
+LastRoundThreshold = 4900000
+FlagLastRound = False
+CurrentEarnedBets = 0
 
 def format_curtime():
   return datetime.strftime(datetime.now(), '%H:%M:%S')
@@ -128,6 +132,7 @@ def continue_doubleup(ch):
   return (rjs['Result'] == 3, PokerWeight[rjs['DrawCard'][1]], rjs['RewardCoinCount'])
 
 def main():
+  global CurrentEarnedBets,FlagLastRound
   cards = place_bet()
   keeps = determine_card_keep(cards)
   log_info("Keep cards at index:", keeps)
@@ -150,17 +155,21 @@ def main():
       if Throttling:
         uwait(0.2)
       log_info(f"#{times}: card weight {cur}")
-      if times >= 6 and cur in range(7,10):
+      param = 1
+      if not FlagLastRound and times >= 4 and cur in range(7,10):
         log_info("End doubleups")
         break
       else:
         param = 1 if cur < 7 else 2
-        failed,cur,bets = continue_doubleup(param)
-        if failed:
-          log_info(f"Double up failed, GG")
-          break
-        else:
-          log_info(f"Double up passed, current reward: {bets}")
+      failed,cur,bets = continue_doubleup(param)
+      if failed:
+        log_info(f"Double up failed, GG")
+        break
+      elif CurrentEarnedBets + bets >= MaxEarnPerDay:
+        log_info("End round to process to last shot")
+        break
+      else:
+        log_info(f"Double up passed, current reward: {bets}")
     log_info("Double up ended")
     game_over()
 
@@ -170,10 +179,15 @@ def get_won_progress():
   return res.json()['r']['TodayCasinoCoinStatus']['GetCoinValueToday']
 
 def start():
+  global CurrentEarnedBets,FlagLastRound
   start_game()
-  prog = get_won_progress()
-  while prog < BetGoal:
-    log_info(f"Today's progress: {prog}")
+  CurrentEarnedBets = get_won_progress()
+  while CurrentEarnedBets < BetGoal:
+    CurrentEarnedBets = get_won_progress()  
+    log_info(f"Today's progress: {CurrentEarnedBets}")
+    if CurrentEarnedBets >= LastRoundThreshold:
+      FlagLastRound = True
+      log_info("Last round")
     main()
     sleep(0.5)
     if Throttling:
