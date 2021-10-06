@@ -1,8 +1,4 @@
-import requests
-import sys
-from datetime import datetime
-from time import sleep
-from random import randint, triangular
+from _G import *
 
 JokerColor = '$'
 PokerColors  = ['C', 'D', 'H', 'S']
