@@ -16,9 +16,11 @@ def get_expeditions():
   ret = []
   for inf in rsj['r']:
     t = inf['CompletedAt']
+    if t:
+      t = jpt2localt(datetime.strptime(t, "%Y-%m-%dT%H:%M:%S"))
     ret.append({
       'id': inf['Id'],
-      'time': datetime.strptime(t, "%Y-%m-%dT%H:%M:%S") if t else None
+      'time': t
     })
   return ret
 
@@ -47,7 +49,6 @@ def main():
       log_info(f"Expedition#{id} is ready for dispatch")
       go_expeds.append(id)
       continue
-    ctime = jpt2localt(ctime)
     log_info(f"Expedition#{id} complete time: {ctime.strftime('%Y-%m-%d@%H:%M:%S')}")
     if datetime.now() >= ctime:
       ok_expeds.append(id)
