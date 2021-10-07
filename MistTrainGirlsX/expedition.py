@@ -1,5 +1,6 @@
 from _G import *
-from datetime import date, datetime
+from datetime import datetime
+import json
 
 Headers = {
   'Accept': 'application/json',
@@ -22,9 +23,9 @@ def get_expeditions():
   return ret
 
 def complete_expeditions(ids):
-  res = Session.post('https://mist-train-east4.azurewebsites.net/api/Expeditions/completeAll', {
-    'uExpeditionIds': ids
-  })
+  res = Session.post('https://mist-train-east4.azurewebsites.net/api/Expeditions/completeAll', 
+    json.dumps({'uExpeditionIds': ids}), headers=Headers
+  )
   if not is_response_ok(res):
     return False
   return True
@@ -35,3 +36,31 @@ def start_expeditions(ids):
     if not is_response_ok(res):
       return False
   return True
+
+def main():
+  expeds = get_expeditions()
+  go_expeds = []
+  ok_expeds = []
+  for exped in expeds:
+    id,ctime = exped['id'],exped['time']
+    if not ctime:
+      log_info(f"Expedition#{id} is ready for dispatch")
+      go_expeds.append(id)
+      continue
+    ctime = jpt2localt(ctime)
+    log_info(f"Expedition#{id} complete time: {ctime.strftime('%Y-%m-%d@%H:%M:%S')}")
+    if datetime.now() >= ctime:
+      ok_expeds.append(id)
+      go_expeds.append(id)
+    uwait(0.5)
+  if ok_expeds:
+    complete_expeditions(ok_expeds)
+    log_info("Expedition completed:", ok_expeds)
+  else:
+    log_info("No expedition completed")
+  uwait(1)
+  if go_expeds:
+    start_expeditions(go_expeds)
+    log_info("Expedition dispatched:", go_expeds)
+  else:
+    log_info("No ready expedition to be dispatched")
