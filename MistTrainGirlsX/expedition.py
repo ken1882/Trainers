@@ -65,3 +65,7 @@ def main():
     log_info("Expedition dispatched:", go_expeds)
   else:
     log_info("No ready expedition to be dispatched")
+
+
+if __name__ == '__main__':
+  main()

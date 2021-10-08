@@ -198,4 +198,5 @@ def start():
       sleep(1)
     CurrentEarnedBets = get_won_progress() 
 
-start()
+if __name__ == "__main__":
+  start()

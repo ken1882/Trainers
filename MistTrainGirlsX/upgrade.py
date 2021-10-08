@@ -73,3 +73,6 @@ def enhance_all_characters():
     log_info(f"Progress: {i+1}/{len(ar)}")
     uwait(0.5)
   log_info("Upgrade completed")
+
+if __name__ == '__main__':
+  enhance_all_characters()
