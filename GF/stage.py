@@ -14,14 +14,6 @@ from _G import log_debug, log_error, log_info, log_warning, resume, uwait, wait
 from _G import CVMatchHardRate,CVMatchMinCount,CVMatchStdRate,CVLocalDistance
 from util import img2str, isdigit, ocr_rect
 
-TrainingEffectStat = (
-  (0,2,5),    # speed, power, skill pt(all)
-  (1,3,5),    # stamina, willness
-  (1,2,5),    # stamina, power
-  (0,2,3,5),  # speed, power, willness
-  (0,4,5)     # speed, wisdom
-)
-
 Enum = {
   'TrainMain': {
     'id': 1,

@@ -110,5 +110,10 @@ def wait(sec):
 def uwait(sec):
   sleep(sec + max(random() / 2, sec * random() / 5))
 
+def cwait(sec):
+  times = sec // WaitInterval
+  for _ in range(times):
+    sleep(WaitInterval)
+    yield
 
 ### Loading process
