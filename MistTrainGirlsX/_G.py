@@ -59,6 +59,11 @@ CVMatchStdRate   = 1.22   # Similarity standard deviation ratio above average in
 CVMatchMinCount  = 1      # How many matched point need to pass
 CVLocalDistance  = 10     # Template local maximum picking range
 
+ERROR_SUCCESS    = 0x0
+ERROR_NOSTAMINA  = 0x6
+
+BATTLESTAT_VICTORY = 0x2
+
 def format_curtime():
   return datetime.strftime(datetime.now(), '%H:%M:%S')
 
