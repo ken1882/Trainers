@@ -1,10 +1,10 @@
 from time import thread_time
 from _G import *
+import pprint
 from pprint import PrettyPrinter
 pp = PrettyPrinter(indent=2)
 import json
-
-
+import discord
 
 PartyId  = 0
 StageId  = 0
@@ -113,29 +113,58 @@ def process_victory():
   res = Session.post('https://mist-train-east4.azurewebsites.net/api/Battle/victory?isSimulation=false')
   if not is_response_ok(res):
     exit()
+  return res.json()['r']
 
 def recover_stamina():
   res = Session.get('https://mist-train-east4.azurewebsites.net/api/UItems/ApRecoveryItems')
   if not is_response_ok(res):
     exit()
   items = res.json()['r']
+  log_info("Recovery items:", pprint.pformat(items, indent=2), '-'*21, sep='\n')
   items = sorted(items, key=lambda i:i['Stock'])
   nid = items[-1]['MItemId']
   num = min(RecoveryBatchAmount, items[-1]['Stock'])
   res = Session.post(f"https://mist-train-east4.azurewebsites.net/api/Users/recoverStamina/{nid}/{num}")
   if not is_response_ok(res):
     exit()
+  log_info("Current stamina:", res.json()['r']['CurrentStamina'])
+
+def log_battle_status(data):
+  string  = '\n====== Status ======\n'
+  string += f"Wave#{data['BattleState']['WaveNumber']} Turn#{data['BattleState']['TurnNumber']}\n"
+  string += "----- Players -----\n"
+  for ch in data['BattleState']['Characters']:
+    string += f"ID#{ch['ID']} HP:{ch['HP']} SP:{ch['SP']} OP:{ch['OP']}\n"
+  string += "----- Enemies -----\n"
+  for ch in data['BattleState']['Enemies']:
+    string += f"ID#{ch['ID']} HP:{ch['CurrentHPPercent']}%\n"
+  string += "====================\n"
+  log_info(string)
+
+def log_player_profile(data):
+  string  = '\n===== Player Info =====\n'
+  string += f"Level: {data['Level']}\n"
+  string += f"Exp: {data['TotalExperience']}\n"
+  string += f"Gold: {data['Money']}\n"
+  string += f"Stamina: {data['CurrentActionPoints']} / {data['MaxActionPoints']}\n"
+  string += "=======================\n"
+  log_info(string)
 
 def process_battle(data):
+  log_info("Battle started")
+  log_battle_status(data)
   while data['BattleState']['BattleStatus'] != BATTLESTAT_VICTORY:
     actions = determine_actions(data)
     log_info("Actions:")
     pp.pprint(actions)
     data = process_actions(actions)
+    log_battle_status(data)
     uwait(0.3)
     if Throttling:
       uwait(1)
-  process_victory()
+  res = process_victory()
+  log_player_profile(res['UUser'])
+  discord.update_player_profile(res['UUserPreferences']['Name'], res['UUser']['Level'])
 
 def main():
   global PartyId,StageId,BattleId,RentalUid

@@ -122,12 +122,12 @@ def uwait(sec):
   sleep(sec + randint(0,8) / 10)
 
 def is_response_ok(res):
-  print(res)
+  log_debug(res)
   if res.status_code != 200:
     log_error(f"An error occurred during sending request:\n{res}\n{res.json()}\n\n")
     return False
-  print(res.json())
-  print('\n')
+  log_debug(res.json())
+  log_debug('\n')
   return True
 
 def jpt2localt(jp_time):
