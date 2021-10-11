@@ -18,9 +18,9 @@ BattleStyle = [ # 0=通常 1=限制 2=全力
   2,
   2,
 ]
-RecoveryUsage = 0 # 0=Use most, 
+RecoveryUsage = 424 # 0=Use most, others=Use with that item id if exists
 RecoveryBatchAmount = 5 # How many items to use once
-Throttling = True
+Throttling = False
 UnmovableEffects = [22,23]
 
 Headers = {
@@ -122,9 +122,13 @@ def recover_stamina():
   items = res.json()['r']
   log_info("Recovery items:", pprint.pformat(items, indent=2), '-'*21, sep='\n')
   items = sorted(items, key=lambda i:i['Stock'])
-  nid = items[-1]['MItemId']
-  num = min(RecoveryBatchAmount, items[-1]['Stock'])
+  nidx  = -1
+  if RecoveryUsage != 0:
+    nidx = next((i for i,item in enumerate(items) if item["MItemId"] == RecoveryUsage), -1)
+  nid = items[nidx]['MItemId']
+  num = min(RecoveryBatchAmount, items[nidx]['Stock'])
   res = Session.post(f"https://mist-train-east4.azurewebsites.net/api/Users/recoverStamina/{nid}/{num}")
+  log_info(f"Recovey item@{nid} used, stock left: {items[nidx]['Stock']-num}")
   if not is_response_ok(res):
     exit()
   log_info("Current stamina:", res.json()['r']['CurrentStamina'])

@@ -11,4 +11,4 @@ def update_player_profile(name, level):
   config.read(ConfigFilePath)
   config['Images']['SmallImageTooltip'] = f"{name} - Rank.{level}"
   with open(ConfigFilePath, 'w') as fp:
-    config.write(fp)
+    config.write(fp, space_around_delimiters=False)
