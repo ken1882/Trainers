@@ -21,6 +21,7 @@ AppTargetUseMsg = True
 
 DCTmpFolder = ".tmp"
 DCSnapshotFile = "snapshot.png"
+STATIC_FILE_DIRECTORY = './static'
 
 WindowWidth  = 1920
 WindowHeight = 1080
@@ -175,19 +176,45 @@ def get_lparam(val):
 
 CharacterDatabase = {}
 EnemyDatabase     = {}
+FormationDatabase = {}
+SkillDatabase     = {}
+LinkSkillDatabase = {}
 
 def load_database():
-  global CharacterDatabase,EnemyDatabase
-  try:
-    CharacterDatabase = get_request('https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterViewModel.json')
-    EnemyDatabase     = get_request('https://assets.mist-train-girls.com/production-client-web-static/MasterData/MEnemyViewModel.json')
-    if CharacterDatabase:
-      with open('./static/character_base.json') as fp:
-        pass
-  except (SystemExit, Exception) as err:
-    log_error(f"Error occurred ({err}) while requesting database, using local ones instead.")
+  global CharacterDatabase,EnemyDatabase,FormationDatabase,SkillDatabase,LinkSkillDatabase
+  links = [
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MEnemyViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MFormationViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MSkillViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MLinkSkillViewModel.json',
+  ]
+  for i,link in enumerate(links):
+    try:
+      db = get_request(link)
+    except (SystemExit, Exception) as err:
+      log_error(f"Error occurred ({err}) while requesting database, using local instead")
+    path = f"{STATIC_FILE_DIRECTORY}/{link.split('/')[-1]}"
+    if db:
+      with open(path, 'w') as fp:
+        fp.write(json.dumps(db,indent=2))
+    else:
+      with open(path, 'r') as fp:
+        db = json.load(fp)
+    if i == 0:
+      CharacterDatabase = db
+    elif i == 1:
+      EnemyDatabase = db
+    elif i == 2:
+      FormationDatabase = db
+    elif i == 3:
+      SkillDatabase = db
+    elif i == 4:
+      LinkSkillDatabase = db
+
 
 Session = requests.Session()
 Session.headers = {
   'Authorization': sys.argv[1]
 }
+load_database()
