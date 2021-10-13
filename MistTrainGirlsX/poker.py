@@ -58,7 +58,7 @@ def game_over():
   won,have = rjs['WinCoinCount'],rjs['UserCoinCount']
   res = Session.post('https://mist-train-east4.azurewebsites.net/api/Casino/Poker/Result')
   print(res, res.json())
-  log_info(f"Won bets {won}; Now have {have+won}")
+  log_info(f"Won bets {won}; Now have {have}")
 
 def place_bet():
   log_info("Place Bet")
