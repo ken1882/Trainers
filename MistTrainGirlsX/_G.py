@@ -4,6 +4,7 @@ from datetime import datetime,timedelta
 from time import sleep,gmtime,strftime
 from random import randint
 from copy import copy
+import json
 
 ARGV = {}
 
@@ -41,7 +42,7 @@ PosRandomRange = (8,8)
 SnapshotCache = {}  # OCR snapshot cache for current frame
 
 # 0:NONE 1:ERROR 2:WARNING 3:INFO 4:DEBUG
-VerboseLevel = 3
+VerboseLevel = 4
 
 FlagRunning = True
 FlagPaused  = False
@@ -63,6 +64,12 @@ ERROR_SUCCESS    = 0x0
 ERROR_NOSTAMINA  = 0x6
 
 BATTLESTAT_VICTORY = 0x2
+
+PostHeaders = {
+  'Accept': 'application/json',
+  'Content-Type': 'application/json',
+  'Accept-Encoding': 'gzip, deflate, br'
+}
 
 def format_curtime():
   return datetime.strftime(datetime.now(), '%H:%M:%S')
@@ -130,6 +137,26 @@ def is_response_ok(res):
   log_debug('\n')
   return True
 
+def get_request(url):
+  res = Session.get(url)
+  if not is_response_ok(res):
+    exit()
+  if not res.content:
+    return None
+  return res.json()
+
+def post_request(url, data=None):
+  res = None
+  if data:
+    res = Session.post(url, json.dumps(data), headers=PostHeaders)
+  else:
+    res = Session.post(url)
+  if not is_response_ok(res):
+    exit()
+  if not res.content:
+    return None
+  return res.json()
+
 def jpt2localt(jp_time):
   '''
   Convert Japanese timezone (GMT+9) datetime object to local timezone
@@ -144,6 +171,21 @@ def make_lparam(x, y):
 
 def get_lparam(val):
   return (val & 0xffff, val >> 16)
+
+
+CharacterDatabase = {}
+EnemyDatabase     = {}
+
+def load_database():
+  global CharacterDatabase,EnemyDatabase
+  try:
+    CharacterDatabase = get_request('https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterViewModel.json')
+    EnemyDatabase     = get_request('https://assets.mist-train-girls.com/production-client-web-static/MasterData/MEnemyViewModel.json')
+    if CharacterDatabase:
+      with open('./static/character_base.json') as fp:
+        pass
+  except (SystemExit, Exception) as err:
+    log_error(f"Error occurred ({err}) while requesting database, using local ones instead.")
 
 Session = requests.Session()
 Session.headers = {

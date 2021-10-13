@@ -30,21 +30,16 @@ Headers = {
 }
 
 def start_battle():
-  res = Session.post(f"https://mist-train-east4.azurewebsites.net/api/Battle/canstart/{StageId}?uPartyId={PartyId}")
-  if not is_response_ok(res):
-    exit()
-  rsj = res.json()
-  if rsj['r']['FaildReason'] != ERROR_SUCCESS:
-    return rsj['r']['FaildReason']
-  res = Session.post(f"https://mist-train-east4.azurewebsites.net/api/Battle/start/{StageId}?uPartyId={PartyId}&rentalUUserId={RentalUid}&isRaidHelper=null&uRaidId=null&raidParticipationMode=null")
-  if not is_response_ok(res):
-    exit()
-  return res.json()['r']
+  res = post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/canstart/{StageId}?uPartyId={PartyId}")
+  if res['r']['FaildReason'] != ERROR_SUCCESS:
+    return res['r']['FaildReason']
+  res = post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/start/{StageId}?uPartyId={PartyId}&rentalUUserId={RentalUid}&isRaidHelper=null&uRaidId=null&raidParticipationMode=null")
+  return res['r']
 
 def process_actions(commands):
   log_info("Process actions")
-  res = Session.post(f"https://mist-train-east4.azurewebsites.net/api/Battle/attack/{BattleId}",
-    json.dumps({
+  res = post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/attack/{BattleId}",
+    {
       "Type":1,
       "IsSimulation": False,
       "BattleSettings": {
@@ -56,12 +51,17 @@ def process_actions(commands):
         "EnableConnect":True
       },
       "Commands": commands
-    }),
-    headers=Headers
+    }
   )
-  if not is_response_ok(res):
-    exit()
-  return res.json()['r']
+  return res['r']
+
+def get_alive_characters(characters):
+  ret = []
+  for ch in characters:
+    if ch["HP"] <= 0:
+      continue
+    ret.append(ch)
+  return ret
 
 def get_movable_characters(characters):
   ret = []
@@ -110,16 +110,17 @@ def determine_actions(data):
 
 def process_victory():
   log_info("Victory")
-  res = Session.post('https://mist-train-east4.azurewebsites.net/api/Battle/victory?isSimulation=false')
-  if not is_response_ok(res):
-    exit()
-  return res.json()['r']
+  res = post_request('https://mist-train-east4.azurewebsites.net/api/Battle/victory?isSimulation=false')
+  return res['r']
+
+def process_defeat():
+  log_info("Defeat")
+  res = post_request('https://mist-train-east4.azurewebsites.net/api/Battle/defeat?isSimulation=false')
+  return res['r']
 
 def recover_stamina():
-  res = Session.get('https://mist-train-east4.azurewebsites.net/api/UItems/ApRecoveryItems')
-  if not is_response_ok(res):
-    exit()
-  items = res.json()['r']
+  res = get_request('https://mist-train-east4.azurewebsites.net/api/UItems/ApRecoveryItems')
+  items = res['r']
   log_info("Recovery items:", pprint.pformat(items, indent=2), '-'*21, sep='\n')
   items = sorted(items, key=lambda i:i['Stock'])
   nidx  = -1
@@ -127,23 +128,24 @@ def recover_stamina():
     nidx = next((i for i,item in enumerate(items) if item["MItemId"] == RecoveryUsage), -1)
   nid = items[nidx]['MItemId']
   num = min(RecoveryBatchAmount, items[nidx]['Stock'])
-  res = Session.post(f"https://mist-train-east4.azurewebsites.net/api/Users/recoverStamina/{nid}/{num}")
+  res = post_request(f"https://mist-train-east4.azurewebsites.net/api/Users/recoverStamina/{nid}/{num}")
   log_info(f"Recovey item@{nid} used, stock left: {items[nidx]['Stock']-num}")
-  if not is_response_ok(res):
-    exit()
-  log_info("Current stamina:", res.json()['r']['CurrentStamina'])
+  log_info("Current stamina:", res['r']['CurrentStamina'])
 
 def log_battle_status(data):
-  string  = '\n====== Status ======\n'
-  string += f"Wave#{data['BattleState']['WaveNumber']} Turn#{data['BattleState']['TurnNumber']}\n"
-  string += "----- Players -----\n"
-  for ch in data['BattleState']['Characters']:
-    string += f"ID#{ch['ID']} HP:{ch['HP']} SP:{ch['SP']} OP:{ch['OP']}\n"
-  string += "----- Enemies -----\n"
-  for ch in data['BattleState']['Enemies']:
-    string += f"ID#{ch['ID']} HP:{ch['CurrentHPPercent']}%\n"
-  string += "====================\n"
-  log_info(string)
+  try:
+    string  = '\n====== Status ======\n'
+    string += f"Wave#{data['BattleState']['WaveNumber']} Turn#{data['BattleState']['TurnNumber']}\n"
+    string += "----- Players -----\n"
+    for ch in data['BattleState']['Characters']:
+      string += f"ID#{ch['ID']} HP:{ch['HP']} SP:{ch['SP']} OP:{ch['OP']}\n"
+    string += "----- Enemies -----\n"
+    for ch in data['BattleState']['Enemies']:
+      string += f"ID#{ch['ID']} HP:{ch['CurrentHPPercent']}%\n"
+    string += "====================\n"
+    log_info(string)
+  except Exception as err:
+    log_error("Error occurred during loggin battle status:\n", err)
 
 def log_player_profile(data):
   string  = '\n===== Player Info =====\n'
@@ -154,10 +156,13 @@ def log_player_profile(data):
   string += "=======================\n"
   log_info(string)
 
+def is_defeated(data):
+  return len(get_alive_characters(data['BattleState']['Characters'])) == 0
+
 def process_battle(data):
   log_info("Battle started")
   log_battle_status(data)
-  while data['BattleState']['BattleStatus'] != BATTLESTAT_VICTORY:
+  while not is_defeated(data) and data['BattleState']['BattleStatus'] != BATTLESTAT_VICTORY:
     actions = determine_actions(data)
     log_info("Actions:")
     pp.pprint(actions)
@@ -166,9 +171,12 @@ def process_battle(data):
     uwait(0.3)
     if Throttling:
       uwait(1)
-  res = process_victory()
-  log_player_profile(res['UUser'])
-  discord.update_player_profile(res['UUserPreferences']['Name'], res['UUser']['Level'])
+  if is_defeated(data):
+    process_defeat()
+  else:
+    res = process_victory()
+    log_player_profile(res['UUser'])
+    discord.update_player_profile(res['UUserPreferences']['Name'], res['UUser']['Level'])
 
 def main():
   global PartyId,StageId,BattleId,RentalUid

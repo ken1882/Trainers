@@ -1,5 +1,5 @@
 from _G import *
-import json
+import player
 
 Headers = {
   'Accept': 'application/json',
@@ -8,12 +8,6 @@ Headers = {
 }
 MaxExpLevel  = 50
 MaxGearLevel = 20
-
-def get_characters():
-  res = Session.get('https://mist-train-east4.azurewebsites.net/api/UCharacters')
-  if not is_response_ok(res):
-    return []
-  return res.json()['r']
 
 def get_layer_gears(mchid):
   res = Session.get(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/LimitBreakPieces/{mchid}")
@@ -33,24 +27,24 @@ def bulk_enhance(chid, lv=None, lgn=None, mgn=None, kp=None):
       "LayerGearQuantity": lgn,
       "MistGearQuantity": mgn
     }
-  res = Session.post(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/BulkEnhance/{chid}", json.dumps({
+  res = post_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/BulkEnhance/{chid}", {
     "UCharacterLevelupModel": lv,
     "GearPointAddModel": gear_dat,
     "KizunaPointAddModel": kp,
-  }), headers=Headers)
-  if not is_response_ok(res):
+  })
+  if not res:
     return (None,None,None)
-  rjs = res.json()['r']['UCharacterViewModel']
+  rjs = res['r']['UCharacterViewModel']
   return (rjs['Level'], rjs['GearLevel'], rjs['KizunaRank'])
 
 def level_up(chid,level=1):
   can_lvup = True
   while can_lvup and level < MaxExpLevel:
     level += 1
-    res = Session.post(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/Levelup/{chid}/{level}")
-    if not is_response_ok(res):
+    res = post_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/Levelup/{chid}/{level}")
+    if not res:
       break
-    can_lvup = res.json()['r']['UCharacterViewModel']['CanLevelup']
+    can_lvup = res['r']['UCharacterViewModel']['CanLevelup']
   return level
 
 def do_enhance(character):
@@ -67,7 +61,7 @@ def do_enhance(character):
     log_info(f"Levelup complete, current level={lv}")
 
 def enhance_all_characters():
-  ar = get_characters()
+  ar = player.get_characters()
   for i,ch in enumerate(ar):
     do_enhance(ch)
     log_info(f"Progress: {i+1}/{len(ar)}")

@@ -9,12 +9,11 @@ Headers = {
 }
 
 def get_expeditions():
-  res = Session.get('https://mist-train-east4.azurewebsites.net/api/Expeditions')
-  if not is_response_ok(res):
+  res = get_request('https://mist-train-east4.azurewebsites.net/api/Expeditions')
+  if not res:
     return []
-  rsj = res.json()
   ret = []
-  for inf in rsj['r']:
+  for inf in res['r']:
     t = inf['CompletedAt']
     if t:
       t = jpt2localt(datetime.strptime(t, "%Y-%m-%dT%H:%M:%S"))
@@ -25,17 +24,17 @@ def get_expeditions():
   return ret
 
 def complete_expeditions(ids):
-  res = Session.post('https://mist-train-east4.azurewebsites.net/api/Expeditions/completeAll', 
-    json.dumps({'uExpeditionIds': ids}), headers=Headers
+  res = post_request('https://mist-train-east4.azurewebsites.net/api/Expeditions/completeAll', 
+    {'uExpeditionIds': ids}
   )
-  if not is_response_ok(res):
+  if not res:
     return False
   return True
 
 def start_expeditions(ids):
   for id in ids:
-    res = Session.post(f'https://mist-train-east4.azurewebsites.net/api/Expeditions/{id}/depart', headers=Headers)
-    if not is_response_ok(res):
+    res = post_request(f'https://mist-train-east4.azurewebsites.net/api/Expeditions/{id}/depart')
+    if not res:
       return False
   return True
 
