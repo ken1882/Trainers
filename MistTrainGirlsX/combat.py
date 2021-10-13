@@ -55,6 +55,24 @@ def process_actions(commands):
   )
   return res['r']
 
+def surrender():
+  log_info("Abort battle")
+  res = post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/surrender",
+    {
+      "Type":1,
+      "IsSimulation": False,
+      "BattleSettings": {
+        "BattleAutoSetting":3,
+        "BattleSpeed":2,
+        "BattleSpecialSkillAnimation":0,
+        "IsAutoSpecialSkill":False,
+        "IsAutoOverDrive":True,
+        "EnableConnect":True
+      },
+    }
+  )
+  return res['r']
+
 def get_alive_characters(characters):
   ret = []
   for ch in characters:
@@ -126,6 +144,7 @@ def recover_stamina():
   nidx  = -1
   if RecoveryUsage != 0:
     nidx = next((i for i,item in enumerate(items) if item["MItemId"] == RecoveryUsage), -1)
+    nidx = -1 if items[nidx]['Stock'] <= 0 else nidx
   nid = items[nidx]['MItemId']
   num = min(RecoveryBatchAmount, items[nidx]['Stock'])
   res = post_request(f"https://mist-train-east4.azurewebsites.net/api/Users/recoverStamina/{nid}/{num}")
@@ -191,6 +210,7 @@ def main():
       if data == ERROR_NOSTAMINA:
         log_info("Recover Stamina")
         recover_stamina()
+        continue
     else:
       BattleId = data['BattleId']
       process_battle(data)
