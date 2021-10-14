@@ -178,7 +178,7 @@ def log_battle_status(data, actions=[]):
       rps = f"RP: {ch['RP']}/{ch['MaxRP']}"
       string += "{:15} {:8} {:10} {:8}\n".format(hps, sps, ops, rps)
       action  = next((act for act in actions if act['UnitSerialId'] == ch['ID']), None)
-      if 'BattleActions' in data and action:
+      if action:
         act = action['CommandId']
         if act < 0:
           action = '通常攻撃'
@@ -188,7 +188,7 @@ def log_battle_status(data, actions=[]):
           action = act['Name'] if act else ''
       elif ch['HP'] == 0:
         action = '戦闘不能'
-      else:
+      elif 'BattleActions' in data:
         action = '動く不能'
       string += f"Action: {action}\n" if action else ''
       # string += '-----\n'
@@ -200,9 +200,8 @@ def log_battle_status(data, actions=[]):
         action = next((act for act in data['BattleActions'] if act['ActorId'] == ch['ID']), None)
         if action:
           action = get_skill(action['SkillId'])
-          string += f" Action: {action['Name']}\n"
-      else:
-        string += '\n'
+          string += f" Action: {action['Name']}"
+      string += '\n'
       # string +='-----\n'
     string += "===============================\n"
     log_info(string)

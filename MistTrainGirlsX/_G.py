@@ -137,23 +137,18 @@ SSCOPE_ENEMY = 1
 SSCOPE_ALLY  = 2
 STYPE_NORMAL_ATTACK = 5
 
+# Item constants
+ITYPE_WEAPON      = 1
+ITYPE_ARMOR       = 2
+ITYPE_ACCESORY    = 3
+ITYPE_CONSUMABLE  = 4
+ITYPE_GEAR        = 10
+
 PostHeaders = {
   'Accept': 'application/json',
   'Content-Type': 'application/json',
   'Accept-Encoding': 'gzip, deflate, br'
 }
-
-CharacterDatabase = {}
-EnemyDatabase     = {}
-FormationDatabase = {}
-SkillDatabase     = {}
-LinkSkillDatabase = {}
-__CharacterCache  = {}
-__EnemyCache      = {}
-__FormationCache  = {}
-__SkillCache      = {}
-__LinkSkillCache  = {}
-
 
 def is_response_ok(res):
   log_debug(res)
@@ -199,14 +194,33 @@ def make_lparam(x, y):
 def get_lparam(val):
   return (val & 0xffff, val >> 16)
 
+
+CharacterDatabase = {}
+EnemyDatabase     = {}
+FormationDatabase = {}
+SkillDatabase     = {}
+LinkSkillDatabase = {}
+ConsumableDatabase= {}
+WeaponDatabase    = {}
+ArmorDatabase     = {}
+AccessoryDatabase = {}
+GearDatabase      = {}
+
 def load_database():
-  global CharacterDatabase,EnemyDatabase,FormationDatabase,SkillDatabase,LinkSkillDatabase,VerboseLevel
+  global VerboseLevel
+  global CharacterDatabase,EnemyDatabase,FormationDatabase,SkillDatabase,LinkSkillDatabase
+  global ConsumableDatabase,WeaponDatabase,ArmorDatabase,AccessoryDatabase,GearDatabase
   links = [
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MEnemyViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MFormationViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MSkillViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MLinkSkillViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MItemViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MWeaponViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MArmorViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MAccessoryViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterPieceViewModel.json'
   ]
   for i,link in enumerate(links):
     try:
@@ -220,6 +234,11 @@ def load_database():
     else:
       with open(path, 'r') as fp:
         db = json.load(fp)
+    try:
+      _tmp = __convert2indexdb(db)
+      db = _tmp
+    except Exception:
+      pass
     if i == 0:
       CharacterDatabase = db
     elif i == 1:
@@ -230,27 +249,66 @@ def load_database():
       SkillDatabase = db
     elif i == 4:
       LinkSkillDatabase = db
+    elif i == 5:
+      ConsumableDatabase = db
+    elif i == 6:
+      WeaponDatabase = db
+    elif i == 7:
+      ArmorDatabase = db
+    elif i == 8:
+      AccessoryDatabase = db
+    elif i == 9:
+      GearDatabase = db
+
+
+def __convert2indexdb(db):
+  ret = {}
+  for obj in db:
+    ret[obj['Id']] = obj
+  return ret
 
 def get_character_base(id):
-  if id in __CharacterCache:
-    return __CharacterCache[id]
-  ch = next((ch for ch in CharacterDatabase if ch['Id'] == id), None)
-  __CharacterCache[id] = ch
-  return ch
+  return CharacterDatabase[id]
 
 def get_skill(id):
-  if id in __SkillCache:
-    return __SkillCache[id]
-  sk = next((sk for sk in SkillDatabase if sk['Id'] == id), None)
-  __SkillCache[id] = sk
-  return sk
+  return SkillDatabase[id]
 
 def get_enemy(id):
-  if id in __EnemyCache:
-    return __EnemyCache[id]
-  en = next((en for en in EnemyDatabase if en['Id'] == id), None)
-  __EnemyCache[id] = en
-  return en
+  return EnemyDatabase[id]
+
+def get_consumable(id):
+  return ConsumableDatabase[id]
+
+def get_weapon(id):
+  return WeaponDatabase[id]
+
+def get_armor(id):
+  return ArmorDatabase[id]
+
+def get_accessory(id):
+  return AccessoryDatabase[id]
+
+def get_gear(id):
+  return GearDatabase[id]
+
+def get_item(item):
+  if 'ItemType' not in item or 'ItemId' not in item:
+    log_warning("Invalid item object: ", item)
+    return item
+  id = item['ItemId']
+  if item['ItemType'] == ITYPE_CONSUMABLE:
+    return get_consumable(id)
+  elif item['ItemType'] == ITYPE_WEAPON:
+    return get_weapon(id)
+  elif item['ItemType'] == ITYPE_ARMOR:
+    return get_armor(id)
+  elif item['ItemType'] == ITYPE_ACCESORY:
+    return get_accessory(id)
+  elif item['ItemType'] == ITYPE_GEAR:
+    return get_gear(id)
+  else:
+    log_warning(f"Unknown item type: {item['ItemType']} for {item}")
+  return item
 
 def clear_cache():
   global __CharacterCache,__EnemyCache,__FormationCache,__SkillCache,__LinkSkillCache
