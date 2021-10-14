@@ -1,3 +1,4 @@
+from os import kill
 import requests
 import sys
 from datetime import datetime,timedelta
@@ -5,6 +6,7 @@ from time import sleep,gmtime,strftime
 from random import randint
 from copy import copy
 import json
+import traceback
 
 ARGV = {}
 
@@ -43,7 +45,7 @@ PosRandomRange = (8,8)
 SnapshotCache = {}  # OCR snapshot cache for current frame
 
 # 0:NONE 1:ERROR 2:WARNING 3:INFO 4:DEBUG
-VerboseLevel = 4
+VerboseLevel = 3
 
 FlagRunning = True
 FlagPaused  = False
@@ -60,17 +62,6 @@ CVMatchHardRate  = 0.7    # Hard-written threshold in order to match
 CVMatchStdRate   = 1.22   # Similarity standard deviation ratio above average in consider digit matched
 CVMatchMinCount  = 1      # How many matched point need to pass
 CVLocalDistance  = 10     # Template local maximum picking range
-
-ERROR_SUCCESS    = 0x0
-ERROR_NOSTAMINA  = 0x6
-
-BATTLESTAT_VICTORY = 0x2
-
-PostHeaders = {
-  'Accept': 'application/json',
-  'Content-Type': 'application/json',
-  'Accept-Encoding': 'gzip, deflate, br'
-}
 
 def format_curtime():
   return datetime.strftime(datetime.now(), '%H:%M:%S')
@@ -129,6 +120,41 @@ def wait(sec):
 def uwait(sec):
   sleep(sec + randint(0,8) / 10)
 
+def handle_exception(err):
+  err_info = traceback.format_exc()
+  msg = f"{err}\n{err_info}\n"
+  log_error(msg)
+
+# Errnos
+ERROR_SUCCESS    = 0x0
+ERROR_NOSTAMINA  = 0x6
+
+# Battle contants
+BATTLESTAT_VICTORY = 0x2
+
+# Skill constants
+SSCOPE_ENEMY = 1
+SSCOPE_ALLY  = 2
+STYPE_NORMAL_ATTACK = 5
+
+PostHeaders = {
+  'Accept': 'application/json',
+  'Content-Type': 'application/json',
+  'Accept-Encoding': 'gzip, deflate, br'
+}
+
+CharacterDatabase = {}
+EnemyDatabase     = {}
+FormationDatabase = {}
+SkillDatabase     = {}
+LinkSkillDatabase = {}
+__CharacterCache  = {}
+__EnemyCache      = {}
+__FormationCache  = {}
+__SkillCache      = {}
+__LinkSkillCache  = {}
+
+
 def is_response_ok(res):
   log_debug(res)
   if res.status_code != 200:
@@ -173,15 +199,8 @@ def make_lparam(x, y):
 def get_lparam(val):
   return (val & 0xffff, val >> 16)
 
-
-CharacterDatabase = {}
-EnemyDatabase     = {}
-FormationDatabase = {}
-SkillDatabase     = {}
-LinkSkillDatabase = {}
-
 def load_database():
-  global CharacterDatabase,EnemyDatabase,FormationDatabase,SkillDatabase,LinkSkillDatabase
+  global CharacterDatabase,EnemyDatabase,FormationDatabase,SkillDatabase,LinkSkillDatabase,VerboseLevel
   links = [
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MEnemyViewModel.json',
@@ -212,6 +231,26 @@ def load_database():
     elif i == 4:
       LinkSkillDatabase = db
 
+def get_character_base(id):
+  if id in __CharacterCache:
+    return __CharacterCache[id]
+  ch = next((ch for ch in CharacterDatabase if ch['Id'] == id), None)
+  __CharacterCache[id] = ch
+  return ch
+
+def get_skill(id):
+  if id in __SkillCache:
+    return __SkillCache[id]
+  sk = next((sk for sk in SkillDatabase if sk['Id'] == id), None)
+  __SkillCache[id] = sk
+  return sk
+
+def get_enemy(id):
+  if id in __EnemyCache:
+    return __EnemyCache[id]
+  en = next((en for en in EnemyDatabase if en['Id'] == id), None)
+  __EnemyCache[id] = en
+  return en
 
 Session = requests.Session()
 Session.headers = {
