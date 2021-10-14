@@ -1,6 +1,12 @@
 from _G import *
 from copy import deepcopy
 
+__UCharacterCache = {}
+
+def clear_cache():
+  global __UCharacterCache
+  __UCharacterCache = {}
+  
 def get_profile():
   res  = get_request('https://mist-train-east4.azurewebsites.net/api/Users/Me')['r']
   res2 = get_request('https://mist-train-east4.azurewebsites.net/api/Users/MyPreferences')['r']
@@ -10,6 +16,15 @@ def get_profile():
 def get_characters():
   res = get_request('https://mist-train-east4.azurewebsites.net/api/UCharacters')
   return res['r']
+
+def get_character_by_uid(uid, flush=False):
+  if not flush and uid in __UCharacterCache:
+    return __UCharacterCache[uid]
+  chars = get_characters()
+  ret = next((ch for ch in chars if ch['Id'] == uid), None)
+  if ret:
+    __UCharacterCache[uid] = ret
+  return ret
 
 def get_current_parties():
   upid = get_profile()['UPartyId']

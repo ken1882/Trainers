@@ -1,3 +1,4 @@
+from os import kill
 import requests
 import sys
 from datetime import datetime,timedelta
@@ -5,6 +6,7 @@ from time import sleep,gmtime,strftime
 from random import randint
 from copy import copy
 import json
+import traceback
 
 ARGV = {}
 
@@ -43,7 +45,7 @@ PosRandomRange = (8,8)
 SnapshotCache = {}  # OCR snapshot cache for current frame
 
 # 0:NONE 1:ERROR 2:WARNING 3:INFO 4:DEBUG
-VerboseLevel = 4
+VerboseLevel = 3
 
 FlagRunning = True
 FlagPaused  = False
@@ -60,17 +62,6 @@ CVMatchHardRate  = 0.7    # Hard-written threshold in order to match
 CVMatchStdRate   = 1.22   # Similarity standard deviation ratio above average in consider digit matched
 CVMatchMinCount  = 1      # How many matched point need to pass
 CVLocalDistance  = 10     # Template local maximum picking range
-
-ERROR_SUCCESS    = 0x0
-ERROR_NOSTAMINA  = 0x6
-
-BATTLESTAT_VICTORY = 0x2
-
-PostHeaders = {
-  'Accept': 'application/json',
-  'Content-Type': 'application/json',
-  'Accept-Encoding': 'gzip, deflate, br'
-}
 
 def format_curtime():
   return datetime.strftime(datetime.now(), '%H:%M:%S')
@@ -129,6 +120,36 @@ def wait(sec):
 def uwait(sec):
   sleep(sec + randint(0,8) / 10)
 
+def handle_exception(err):
+  err_info = traceback.format_exc()
+  msg = f"{err}\n{err_info}\n"
+  log_error(msg)
+
+# Errnos
+ERROR_SUCCESS    = 0x0
+ERROR_NOSTAMINA  = 0x6
+
+# Battle contants
+BATTLESTAT_VICTORY = 0x2
+
+# Skill constants
+SSCOPE_ENEMY = 1
+SSCOPE_ALLY  = 2
+STYPE_NORMAL_ATTACK = 5
+
+# Item constants
+ITYPE_WEAPON      = 1
+ITYPE_ARMOR       = 2
+ITYPE_ACCESORY    = 3
+ITYPE_CONSUMABLE  = 4
+ITYPE_GEAR        = 10
+
+PostHeaders = {
+  'Accept': 'application/json',
+  'Content-Type': 'application/json',
+  'Accept-Encoding': 'gzip, deflate, br'
+}
+
 def is_response_ok(res):
   log_debug(res)
   if res.status_code != 200:
@@ -179,15 +200,27 @@ EnemyDatabase     = {}
 FormationDatabase = {}
 SkillDatabase     = {}
 LinkSkillDatabase = {}
+ConsumableDatabase= {}
+WeaponDatabase    = {}
+ArmorDatabase     = {}
+AccessoryDatabase = {}
+GearDatabase      = {}
 
 def load_database():
+  global VerboseLevel
   global CharacterDatabase,EnemyDatabase,FormationDatabase,SkillDatabase,LinkSkillDatabase
+  global ConsumableDatabase,WeaponDatabase,ArmorDatabase,AccessoryDatabase,GearDatabase
   links = [
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MEnemyViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MFormationViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MSkillViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MLinkSkillViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MItemViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MWeaponViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MArmorViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MAccessoryViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterPieceViewModel.json'
   ]
   for i,link in enumerate(links):
     try:
@@ -201,6 +234,11 @@ def load_database():
     else:
       with open(path, 'r') as fp:
         db = json.load(fp)
+    try:
+      _tmp = __convert2indexdb(db)
+      db = _tmp
+    except Exception:
+      pass
     if i == 0:
       CharacterDatabase = db
     elif i == 1:
@@ -211,7 +249,74 @@ def load_database():
       SkillDatabase = db
     elif i == 4:
       LinkSkillDatabase = db
+    elif i == 5:
+      ConsumableDatabase = db
+    elif i == 6:
+      WeaponDatabase = db
+    elif i == 7:
+      ArmorDatabase = db
+    elif i == 8:
+      AccessoryDatabase = db
+    elif i == 9:
+      GearDatabase = db
 
+
+def __convert2indexdb(db):
+  ret = {}
+  for obj in db:
+    ret[obj['Id']] = obj
+  return ret
+
+def get_character_base(id):
+  return CharacterDatabase[id]
+
+def get_skill(id):
+  return SkillDatabase[id]
+
+def get_enemy(id):
+  return EnemyDatabase[id]
+
+def get_consumable(id):
+  return ConsumableDatabase[id]
+
+def get_weapon(id):
+  return WeaponDatabase[id]
+
+def get_armor(id):
+  return ArmorDatabase[id]
+
+def get_accessory(id):
+  return AccessoryDatabase[id]
+
+def get_gear(id):
+  return GearDatabase[id]
+
+def get_item(item):
+  if 'ItemType' not in item or 'ItemId' not in item:
+    log_warning("Invalid item object: ", item)
+    return item
+  id = item['ItemId']
+  if item['ItemType'] == ITYPE_CONSUMABLE:
+    return get_consumable(id)
+  elif item['ItemType'] == ITYPE_WEAPON:
+    return get_weapon(id)
+  elif item['ItemType'] == ITYPE_ARMOR:
+    return get_armor(id)
+  elif item['ItemType'] == ITYPE_ACCESORY:
+    return get_accessory(id)
+  elif item['ItemType'] == ITYPE_GEAR:
+    return get_gear(id)
+  else:
+    log_warning(f"Unknown item type: {item['ItemType']} for {item}")
+  return item
+
+def clear_cache():
+  global __CharacterCache,__EnemyCache,__FormationCache,__SkillCache,__LinkSkillCache
+  __CharacterCache  = {}
+  __EnemyCache      = {}
+  __FormationCache  = {}
+  __SkillCache      = {}
+  __LinkSkillCache  = {}
 
 Session = requests.Session()
 Session.headers = {

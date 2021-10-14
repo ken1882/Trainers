@@ -3,7 +3,7 @@ from _G import *
 import pprint
 from pprint import PrettyPrinter
 pp = PrettyPrinter(indent=2)
-import json
+import player
 import discord
 
 PartyId  = 0
@@ -22,6 +22,8 @@ RecoveryUsage = 424 # 0=Use most, others=Use with that item id if exists
 RecoveryBatchAmount = 5 # How many items to use once
 Throttling = False
 UnmovableEffects = [22,23]
+MaxSP = 20
+MaxOP = 100
 
 Headers = {
   'Accept': 'application/json',
@@ -91,15 +93,25 @@ def get_movable_characters(characters):
     ret.append(ch)
   return ret
 
+def is_skill_usable(character, skill):
+  sp = character['SP']
+  rp = character['RP']
+  if skill['SkillCategory'] != SSCOPE_ENEMY:
+    return False
+  if sp < skill['SPCost'] or rp < skill['RPCost']:
+    return False
+  return True
+
 def determine_skill(character):
   sp = character['SP']
   skills = []
   for sk in character['Skills']:
     if not sk['IsCommandSkill']:
       continue
-    if (sk['Id'] <= 0 or sk['SP'] <= 0) and sk['SkillType'] != 5:
+    if (sk['Id'] <= 0 or sk['SP'] <= 0) and sk['SkillType'] != STYPE_NORMAL_ATTACK:
       continue
-    skills.append(sk)
+    if is_skill_usable(character, get_skill(sk['SkillRefId'])):
+      skills.append(sk)
   skills = sorted(skills, key=lambda s:s['SP'])
   if BattleStyle[character['ID']] == 1 and sp >= skills[-1]['SP']:
     return skills[-1]['Id']
@@ -151,20 +163,50 @@ def recover_stamina():
   log_info(f"Recovey item@{nid} used, stock left: {items[nidx]['Stock']-num}")
   log_info("Current stamina:", res['r']['CurrentStamina'])
 
-def log_battle_status(data):
+def log_battle_status(data, actions=[]):
   try:
-    string  = '\n====== Status ======\n'
+    string  = '\n========== Status ==========\n'
     string += f"Wave#{data['BattleState']['WaveNumber']} Turn#{data['BattleState']['TurnNumber']}\n"
-    string += "----- Players -----\n"
-    for ch in data['BattleState']['Characters']:
-      string += f"ID#{ch['ID']} HP:{ch['HP']} SP:{ch['SP']} OP:{ch['OP']}\n"
-    string += "----- Enemies -----\n"
+    string += "***** Players *****\n"
+    for idx,ch in enumerate(data['BattleState']['Characters']):
+      actor = player.get_character_by_uid(ch['CID'])
+      bchar = get_character_base(actor['MCharacterId'])
+      string += f"{bchar['Name']} {bchar['MCharacterBase']['Name']}\n"
+      hps = f"HP: {ch['HP']}/{actor['UCharacterBaseViewModel']['Status']['HP']}"
+      sps = f"SP: {ch['SP']}/{MaxSP}"
+      ops = f"OP: {ch['OP']}/{MaxOP}"
+      rps = f"RP: {ch['RP']}/{ch['MaxRP']}"
+      string += "{:15} {:8} {:10} {:8}\n".format(hps, sps, ops, rps)
+      action  = next((act for act in actions if act['UnitSerialId'] == ch['ID']), None)
+      if action:
+        act = action['CommandId']
+        if act < 0:
+          action = '通常攻撃'
+        else:
+          act = next((sk for sk in ch['Skills'] if sk['Id'] == act), None)
+          act = get_skill(act['SkillRefId']) if act else ''
+          action = act['Name'] if act else ''
+      elif ch['HP'] == 0:
+        action = '戦闘不能'
+      elif 'BattleActions' in data:
+        action = '動く不能'
+      string += f"Action: {action}\n" if action else ''
+      # string += '-----\n'
+    string += "\n***** Enemies *****\n"
     for ch in data['BattleState']['Enemies']:
-      string += f"ID#{ch['ID']} HP:{ch['CurrentHPPercent']}%\n"
-    string += "====================\n"
+      name = get_enemy(ch['EID'])['Name']
+      string += f"{name} (HP:{ch['CurrentHPPercent']}%)"
+      if 'BattleActions' in data:
+        action = next((act for act in data['BattleActions'] if act['ActorId'] == ch['ID']), None)
+        if action:
+          action = get_skill(action['SkillId'])
+          string += f" Action: {action['Name']}"
+      string += '\n'
+      # string +='-----\n'
+    string += "===============================\n"
     log_info(string)
   except Exception as err:
-    log_error("Error occurred during loggin battle status:\n", err)
+    log_error("Error occurred during loggin battle status:", handle_exception(err))
 
 def log_player_profile(data):
   string  = '\n===== Player Info =====\n'
@@ -181,12 +223,11 @@ def is_defeated(data):
 def process_battle(data):
   log_info("Battle started")
   log_battle_status(data)
+  player.clear_cache()
   while not is_defeated(data) and data['BattleState']['BattleStatus'] != BATTLESTAT_VICTORY:
     actions = determine_actions(data)
-    log_info("Actions:")
-    pp.pprint(actions)
     data = process_actions(actions)
-    log_battle_status(data)
+    log_battle_status(data, actions)
     uwait(0.3)
     if Throttling:
       uwait(1)
