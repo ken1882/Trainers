@@ -252,6 +252,14 @@ def get_enemy(id):
   __EnemyCache[id] = en
   return en
 
+def clear_cache():
+  global __CharacterCache,__EnemyCache,__FormationCache,__SkillCache,__LinkSkillCache
+  __CharacterCache  = {}
+  __EnemyCache      = {}
+  __FormationCache  = {}
+  __SkillCache      = {}
+  __LinkSkillCache  = {}
+
 Session = requests.Session()
 Session.headers = {
   'Authorization': sys.argv[1]

@@ -178,7 +178,7 @@ def log_battle_status(data, actions=[]):
       rps = f"RP: {ch['RP']}/{ch['MaxRP']}"
       string += "{:15} {:8} {:10} {:8}\n".format(hps, sps, ops, rps)
       action  = next((act for act in actions if act['UnitSerialId'] == ch['ID']), None)
-      if action:
+      if 'BattleActions' in data and action:
         act = action['CommandId']
         if act < 0:
           action = '通常攻撃'
@@ -196,10 +196,13 @@ def log_battle_status(data, actions=[]):
     for ch in data['BattleState']['Enemies']:
       name = get_enemy(ch['EID'])['Name']
       string += f"{name} (HP:{ch['CurrentHPPercent']}%)"
-      action = next((act for act in data['BattleActions'] if act['ActorId'] == ch['ID']), None)
-      if action:
-        action = get_skill(action['SkillId'])
-        string += f" Action: {action['Name']}\n"
+      if 'BattleActions' in data:
+        action = next((act for act in data['BattleActions'] if act['ActorId'] == ch['ID']), None)
+        if action:
+          action = get_skill(action['SkillId'])
+          string += f" Action: {action['Name']}\n"
+      else:
+        string += '\n'
       # string +='-----\n'
     string += "===============================\n"
     log_info(string)
@@ -221,6 +224,7 @@ def is_defeated(data):
 def process_battle(data):
   log_info("Battle started")
   log_battle_status(data)
+  player.clear_cache()
   while not is_defeated(data) and data['BattleState']['BattleStatus'] != BATTLESTAT_VICTORY:
     actions = determine_actions(data)
     data = process_actions(actions)
