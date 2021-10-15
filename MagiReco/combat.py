@@ -21,7 +21,7 @@ def start_combat():
   global ActionQueue
   while not is_battle_ended():
     stg = ''
-    while not stg == 'CombatPlayerTurn':
+    while not stg or 'CombatPlayerTurn' not in stg:
       if is_battle_ended():
         break
       log_info("Current stage:", stg, '; waiting for player turn')
