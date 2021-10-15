@@ -7,6 +7,9 @@ from random import randint
 from copy import copy
 import json
 import traceback
+import unicodedata
+import os
+from time import time
 
 ARGV = {}
 
@@ -63,6 +66,51 @@ CVMatchStdRate   = 1.22   # Similarity standard deviation ratio above average in
 CVMatchMinCount  = 1      # How many matched point need to pass
 CVLocalDistance  = 10     # Template local maximum picking range
 
+Throttling = True
+StarbrustStream = True
+STATIC_FILE_TTL = 60*60*24
+
+CH_WIDTH = {
+  'F': 2, 'H': 1, 'W': 2,
+  'N': 1, 'A': 1, 'Na': 1,
+}
+
+SYMBOL_WIDTH = {
+  '♪': 1,
+  '★': 2,
+  '☆': 2,
+}
+
+def format_padded_utfstring(*tuples):
+  '''
+  Padding string with various charcter width, tuple format:\n
+  `(text, width, pad_right=False)`\n
+  If `pad_right` is set to True, the given text will right-aligned instead left\n
+  '''
+  global SYMBOL_WIDTH, CH_WIDTH
+  ret = ''
+  for dat in tuples:
+    pad_right = False
+    if len(dat) == 2:
+      text,width = dat
+    elif len(dat) == 3:
+      text,width,pad_right = dat
+    else:
+      raise RuntimeError(f"Wrong number of arugments, expected 2 or 3 but get {len(dat)}")
+    text = str(text)
+    w = 0
+    for ch in text:
+      sym = unicodedata.east_asian_width(ch)
+      if sym != 'A':
+        w += CH_WIDTH[sym]
+      else:
+        w += SYMBOL_WIDTH[ch] if ch in SYMBOL_WIDTH else CH_WIDTH[sym]
+    if width <= w:
+      ret += text
+    else:
+      ret += (' ' * (width - w))+text if pad_right else text+(' ' * (width - w))
+  return ret
+
 def format_curtime():
   return datetime.strftime(datetime.now(), '%H:%M:%S')
 
@@ -118,7 +166,11 @@ def wait(sec):
   sleep(sec)
 
 def uwait(sec):
-  sleep(sec + randint(0,8) / 10)
+  if StarbrustStream:
+    return
+  dt = randint(0,8) / 10
+  dt = dt if Throttling else dt / 3
+  sleep(sec+dt)
 
 def handle_exception(err):
   err_info = traceback.format_exc()
@@ -144,6 +196,8 @@ ITYPE_ACCESORY    = 3
 ITYPE_CONSUMABLE  = 4
 ITYPE_GEAR        = 10
 
+LastErrorCode = 0
+
 PostHeaders = {
   'Accept': 'application/json',
   'Content-Type': 'application/json',
@@ -151,9 +205,14 @@ PostHeaders = {
 }
 
 def is_response_ok(res):
+  global LastErrorCode
   log_debug(res)
   if res.status_code != 200:
-    log_error(f"An error occurred during sending request:\n{res}\n{res.json()}\n\n")
+    LastErrorCode = res.status_code
+    if res.status_code == 403:
+      log_error("Server is under maintenance!")
+    else:
+      log_error(f"An error occurred during sending request:\n{res}\n{res.content}\n\n")
     return False
   log_debug(res.json())
   log_debug('\n')
@@ -205,11 +264,13 @@ WeaponDatabase    = {}
 ArmorDatabase     = {}
 AccessoryDatabase = {}
 GearDatabase      = {}
+FieldSkillDatabase= {}
 
-def load_database():
+def load_database(forced=False):
   global VerboseLevel
   global CharacterDatabase,EnemyDatabase,FormationDatabase,SkillDatabase,LinkSkillDatabase
   global ConsumableDatabase,WeaponDatabase,ArmorDatabase,AccessoryDatabase,GearDatabase
+  global FieldSkillDatabase
   links = [
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MEnemyViewModel.json',
@@ -220,14 +281,18 @@ def load_database():
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MWeaponViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MArmorViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MAccessoryViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterPieceViewModel.json'
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterPieceViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MFieldSkillViewModel.json'
   ]
   for i,link in enumerate(links):
-    try:
-      db = get_request(link)
-    except (SystemExit, Exception) as err:
-      log_error(f"Error occurred ({err}) while requesting database, using local instead")
     path = f"{STATIC_FILE_DIRECTORY}/{link.split('/')[-1]}"
+    db = None
+    if forced or not os.path.exists(path) or time() - os.path.getmtime(path) > STATIC_FILE_TTL:
+      try:
+        db = get_request(link)
+      except (SystemExit, Exception) as err:
+        log_error(f"Error occurred ({err}) while requesting database, using local instead")
+    # Init dbs
     if db:
       with open(path, 'w') as fp:
         fp.write(json.dumps(db,indent=2))
@@ -259,7 +324,8 @@ def load_database():
       AccessoryDatabase = db
     elif i == 9:
       GearDatabase = db
-
+    elif i == 10:
+      FieldSkillDatabase = db
 
 def __convert2indexdb(db):
   ret = {}
@@ -268,28 +334,74 @@ def __convert2indexdb(db):
   return ret
 
 def get_character_base(id):
+  if id not in CharacterDatabase:
+    load_database(True)
+    if id not in CharacterDatabase:
+      raise RuntimeError(f"Invalid character id: {id}")
   return CharacterDatabase[id]
 
 def get_skill(id):
+  if id not in SkillDatabase:
+    load_database(True)
+    if id not in SkillDatabase:
+      raise RuntimeError(f"Invalid skill id: {id}")
   return SkillDatabase[id]
 
 def get_enemy(id):
+  if id not in EnemyDatabase:
+    load_database(True)
+    if id not in EnemyDatabase:
+      raise RuntimeError(f"Invalid enemy id: {id}")
   return EnemyDatabase[id]
 
 def get_consumable(id):
+  if id not in ConsumableDatabase:
+    load_database(True)
+    if id not in ConsumableDatabase:
+      raise RuntimeError(f"Invalid consunable id: {id}")
   return ConsumableDatabase[id]
 
 def get_weapon(id):
+  if id not in WeaponDatabase:
+    load_database(True)
+    if id not in WeaponDatabase:
+      raise RuntimeError(f"Invalid weapon id: {id}")
   return WeaponDatabase[id]
 
 def get_armor(id):
+  if id not in ArmorDatabase:
+    load_database(True)
+    if id not in ArmorDatabase:
+      raise RuntimeError(f"Invalid armor id: {id}")
   return ArmorDatabase[id]
 
 def get_accessory(id):
+  if id not in AccessoryDatabase:
+    load_database(True)
+    if id not in AccessoryDatabase:
+      raise RuntimeError(f"Invalid accessory id: {id}")
   return AccessoryDatabase[id]
 
 def get_gear(id):
+  if id not in GearDatabase:
+    load_database(True)
+    if id not in GearDatabase:
+      raise RuntimeError(f"Invalid gear id: {id}")
   return GearDatabase[id]
+
+def get_formation(id):
+  if id not in FormationDatabase:
+    load_database(True)
+    if id not in FormationDatabase:
+      raise RuntimeError(f"Invalid formation id: {id}")
+  return FormationDatabase[id]
+
+def get_fskill(id):
+  if id not in FieldSkillDatabase:
+    load_database(True)
+    if id not in FieldSkillDatabase:
+      raise RuntimeError(f"Invalid field kill id: {id}")
+  return FieldSkillDatabase[id]
 
 def get_item(item):
   if 'ItemType' not in item or 'ItemId' not in item:

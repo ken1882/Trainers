@@ -31,16 +31,42 @@ def get_current_parties():
   res = get_request(f"https://mist-train-east4.azurewebsites.net/api/UParties/GetUPartiesFromUPartyId/{upid}")
   return res['r']
 
-def format_readable_parties(data):
+def interpret_parties(data):
   ret = []
   for party in data:
     dat = deepcopy(party)
-    dat['Formation'] = next((format for format in FormationDatabase if format["Id"] == party['MFormationId']), None),
+    dat['Formation'] = get_formation(party['MFormationId']),
+    if type(dat['Formation']) == tuple:
+      dat['Formation'] = dat['Formation'][0]
     for i,ch in enumerate(party['UCharacterSlots']):
       if not ch or not ch['UCharacter']:
         continue
       mchid = ch['UCharacter']['MCharacterId']
-      dat['UCharacterSlots'][i]['MCharacter'] = next((ch for ch in CharacterDatabase if ch['Id'] == mchid), None)
+      dat['UCharacterSlots'][i]['MCharacter'] = get_character_base(mchid)
     ret.append(dat)
 
   return ret
+
+def log_party_status():
+  if VerboseLevel < 3:
+    return
+  NAME_WIDTH  = 50
+  POWER_WIDTH = 8
+  HP_WIDTH    = 7
+  string  = '\n' + '='*30 + ' Parties ' + '='*30 + '\n'
+  pdat = get_current_parties()
+  ppd  = interpret_parties(pdat['UParties'])
+  for party in ppd:
+    string += f"Party#{party['PartyNo']} Id:{party['Id']} (Name: {party['Name'] or ''})\n"
+    string += f"Formation: {party['Formation']['Name']}\n"
+    string += format_padded_utfstring(('名前', NAME_WIDTH), ('戦力', POWER_WIDTH, True), ('HP', HP_WIDTH, True)) + '\n'
+    for ch in party['UCharacterSlots']:
+      if not ch['UCharacterId']:
+        continue
+      string += format_padded_utfstring(
+        (f"{ch['MCharacter']['Name']}{ch['MCharacter']['MCharacterBase']['Name']}", NAME_WIDTH),
+        (ch['TotalStatus'], POWER_WIDTH, True),
+        (ch['UCharacter']['UCharacterBaseViewModel']['Status']['HP'], HP_WIDTH, True),
+      ) + '\n'
+    string += '-'*69+'\n'
+  log_info(string)

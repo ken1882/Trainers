@@ -25,7 +25,6 @@ FinalBets = 3900
 MaxEarnPerDay = 5000000
 MaxEarnPerRound = 1000000
 BetGoal  = 6000000
-Throttling = True
 LastRoundThreshold = 4900000
 FlagLastRound = False
 CurrentEarnedBets = 0
@@ -159,7 +158,7 @@ def process_doubleup():
       log_info(f"Double up passed, current reward: {bets}")
   log_info("Double up ended")
 
-def main():
+def start():
   cards = place_bet()
   keeps = determine_card_keep(cards)
   log_info("Keep cards at index:", keeps)
@@ -182,7 +181,7 @@ def get_won_progress():
   print(res, res.json())
   return res.json()['r']['TodayCasinoCoinStatus']['GetCoinValueToday']
 
-def start():
+def main():
   global CurrentEarnedBets,FlagLastRound
   start_game()
   CurrentEarnedBets = get_won_progress()
@@ -191,7 +190,7 @@ def start():
     if CurrentEarnedBets >= LastRoundThreshold:
       FlagLastRound = True
       log_info("Last round")
-    main()
+    start()
     log_info(f"Today's progress: {CurrentEarnedBets}")
     sleep(0.5)
     if Throttling:
@@ -199,4 +198,4 @@ def start():
     CurrentEarnedBets = get_won_progress() 
 
 if __name__ == "__main__":
-  start()
+  main()

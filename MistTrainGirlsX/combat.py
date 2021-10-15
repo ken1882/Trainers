@@ -1,9 +1,9 @@
-from time import thread_time
 from _G import *
 import pprint
 from pprint import PrettyPrinter
 pp = PrettyPrinter(indent=2)
 import player
+import friend
 import discord
 
 PartyId  = 0
@@ -16,14 +16,15 @@ BattleStyle = [ # 0=通常 1=限制 2=全力
   2,
   2,
   2,
-  2,
+  1,
 ]
 RecoveryUsage = 424 # 0=Use most, others=Use with that item id if exists
 RecoveryBatchAmount = 5 # How many items to use once
-Throttling = False
 UnmovableEffects = [22,23]
 MaxSP = 20
 MaxOP = 100
+
+LOG_STATUS = True
 
 Headers = {
   'Accept': 'application/json',
@@ -96,31 +97,30 @@ def get_movable_characters(characters):
 def is_skill_usable(character, skill):
   sp = character['SP']
   rp = character['RP']
-  if skill['SkillCategory'] != SSCOPE_ENEMY:
-    return False
   if sp < skill['SPCost'] or rp < skill['RPCost']:
     return False
   return True
 
+def is_offensive_skill(skill):
+  return skill['SkillCategory'] == SSCOPE_ENEMY
+
 def determine_skill(character):
-  sp = character['SP']
   skills = []
   for sk in character['Skills']:
     if not sk['IsCommandSkill']:
       continue
     if (sk['Id'] <= 0 or sk['SP'] <= 0) and sk['SkillType'] != STYPE_NORMAL_ATTACK:
       continue
-    if is_skill_usable(character, get_skill(sk['SkillRefId'])):
-      skills.append(sk)
+    skills.append(sk)
   skills = sorted(skills, key=lambda s:s['SP'])
-  if BattleStyle[character['ID']] == 1 and sp >= skills[-1]['SP']:
-    return skills[-1]['Id']
-  elif BattleStyle[character['ID']] == 2:
-    ret = 0
-    for sk in skills:
-      if sp >= sk['SP']:
-        ret = sk['Id']
-    return ret
+  for sk in reversed(skills):
+    mskill = get_skill(sk['SkillRefId'])
+    if not is_offensive_skill(mskill):
+      continue
+    elif is_skill_usable(character, mskill):
+      return sk['Id']
+    elif BattleStyle[character['ID']] == 1:
+      break # only use most powerful offensive skill
   return skills[0]['Id'] # normal attack
 
 def determine_target(enemies):
@@ -164,6 +164,8 @@ def recover_stamina():
   log_info("Current stamina:", res['r']['CurrentStamina'])
 
 def log_battle_status(data, actions=[]):
+  if not LOG_STATUS or VerboseLevel < 3:
+    return
   try:
     string  = '\n========== Status ==========\n'
     string += f"Wave#{data['BattleState']['WaveNumber']} Turn#{data['BattleState']['TurnNumber']}\n"
@@ -189,7 +191,7 @@ def log_battle_status(data, actions=[]):
       elif ch['HP'] == 0:
         action = '戦闘不能'
       elif 'BattleActions' in data:
-        action = '動く不能'
+        action = '行動不能'
       string += f"Action: {action}\n" if action else ''
       # string += '-----\n'
     string += "\n***** Enemies *****\n"
@@ -209,6 +211,8 @@ def log_battle_status(data, actions=[]):
     log_error("Error occurred during loggin battle status:", handle_exception(err))
 
 def log_player_profile(data):
+  if not LOG_STATUS or VerboseLevel < 3:
+    return
   string  = '\n===== Player Info =====\n'
   string += f"Level: {data['Level']}\n"
   string += f"Exp: {data['TotalExperience']}\n"
@@ -238,14 +242,55 @@ def process_battle(data):
     log_player_profile(res['UUser'])
     discord.update_player_profile(res['UUserPreferences']['Name'], res['UUser']['Level'])
 
+def process_partyid_input():
+  pid = 0
+  while pid not in range(1,11):
+    try:
+      pid = int(input("Party number (0 for list your parties): "))
+    except Exception:
+      pid = 0
+    if pid == 0:
+      player.log_party_status()
+  pid = next((p['Id'] for p in player.get_current_parties()['UParties'] if p['PartyNo'] == pid), None)
+  return pid
+
+def process_stageid_input():
+  sid = 0
+  while not sid:
+    sid = int(input("Stage id: "))
+  return sid
+
+def process_rentalid_input():
+  rid = 0
+  valids = []
+  pdat,odat = friend.get_rentals()
+  for dat in pdat:
+    valids.append(dat['UUserId'])
+  for dat in odat:
+    valids.append(dat['UUserId'])
+  while rid not in valids:
+    try:
+      rid = int(input("Rental friend's id (0 for list availables): "))
+    except Exception:
+      rid = 0
+    if not rid:
+      friend.log_rentals(True)
+  return rid
+
 def main():
   global PartyId,StageId,BattleId,RentalUid
-  PartyId = int(input("Party id: "))
-  StageId = int(input("Stage id: "))
-  RentalUid = int(input("Rental friend's id (0 for none): "))
+  PartyId = process_partyid_input()
+  log_info("Party Id:", PartyId)
+  StageId = process_stageid_input()
+  RentalUid = process_rentalid_input()
+  log_info("Rental Id:", RentalUid)
+  discord.update_status(StageId)
   if RentalUid <= 0:
     RentalUid = 'null'
+  cnt = 0
   while True:
+    cnt += 1
+    log_info(f"Running combat iteration#{cnt}")
     data = start_battle()
     if type(data) == int:
       if data == ERROR_NOSTAMINA:
@@ -261,4 +306,9 @@ def main():
       uwait(1)
 
 if __name__ == '__main__':
-  main()
+  try:
+    main()
+  except (SystemExit, KeyboardInterrupt):
+    if LastErrorCode == 403:
+      discord.update_status(0)
+    exit()
