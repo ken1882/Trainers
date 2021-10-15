@@ -13,13 +13,13 @@ PartyId  = 0
 StageId  = 0
 BattleId = 0
 RentalUid = 0
-BattleStyle = [ # 0=通常 1=限制 2=全力
+BattleStyle = [ # 0=通常 1=限制 2=全力 3=使用最低熟練度
   0, # reserved, don't touch
   2,
   2,
-  2,
-  2,
-  2,
+  3,
+  3,
+  3,
 ]
 RecoveryUsage = 424 # 0=Use most, others=Use with that item id if exists
 RecoveryBatchAmount = 5 # How many items to use once
@@ -108,6 +108,12 @@ def is_skill_usable(character, skill):
 def is_offensive_skill(skill):
   return skill['SkillCategory'] == SSCOPE_ENEMY
 
+def get_least_proficient_skill(character, skills):
+  mcharacter = player.get_character_by_uid(character['CID'])
+  uskills = [mcharacter['USkill1'], mcharacter['USkill2'], mcharacter['USkill3']]
+  luskill = sorted(uskills, key=lambda sk:sk['Rank'])[0]
+  return next((sk for sk in skills if sk['Id'] == luskill['Id']), skills[0])
+
 def determine_skill(character):
   skills = []
   for sk in character['Skills']:
@@ -117,27 +123,36 @@ def determine_skill(character):
       continue
     skills.append(sk)
   skills = sorted(skills, key=lambda s:s['SP'])
+  if BattleStyle[character['ID']] == 3:
+    skill = get_least_proficient_skill(character, skills)
+    if is_skill_usable(character, get_skill(skill['SkillRefId'])):
+      return skill
+    return skills[0]
   for sk in reversed(skills):
     mskill = get_skill(sk['SkillRefId'])
     if not is_offensive_skill(mskill):
       continue
     elif is_skill_usable(character, mskill):
-      return sk['Id']
+      return sk
     elif BattleStyle[character['ID']] == 1:
       break # only use most powerful offensive skill
-  return skills[0]['Id'] # normal attack
+  return skills[0] # normal attack
 
-def determine_target(enemies):
-  return enemies[0]['ID']
+def determine_target(skill, enemies, characters):
+  mskill = get_skill(skill['SkillRefId'])
+  if is_offensive_skill(mskill):
+    return enemies[0]['ID']
+  return sorted(characters, key=lambda ch:ch['HP'])[0]['ID']
 
 def determine_actions(data):
   charcaters = get_movable_characters(data['BattleState']['Characters'])
   ret = []
   for ch in charcaters:
+    skill = determine_skill(ch)
     ret.append({
       'UnitSerialId': ch['ID'],
-      'TargetId': determine_target(data['BattleState']['Enemies']),
-      'CommandId': determine_skill(ch),
+      'TargetId': determine_target(skill, data['BattleState']['Enemies'], charcaters),
+      'CommandId': skill['Id'],
       'IsOverDrive': ch['OP'] >= 100
     })
   return ret
@@ -208,7 +223,7 @@ def log_battle_status(data, actions=[]):
       string += f"{name} (HP:{ch['CurrentHPPercent']}%)"
       if 'BattleActions' in data:
         action = next((act for act in data['BattleActions'] if act['ActorId'] == ch['ID']), None)
-        if action:
+        if action and action['SkillId']:
           action = get_skill(action['SkillId'])
           string += f" Action: {action['Name']}"
       string += '\n'
