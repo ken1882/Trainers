@@ -45,6 +45,7 @@ def level_up(chid,level=1):
     if not res:
       break
     can_lvup = res['r']['UCharacterViewModel']['CanLevelup']
+    uwait(0.1)
   return level
 
 def do_enhance(character):
@@ -65,7 +66,7 @@ def enhance_all_characters():
   for i,ch in enumerate(ar):
     do_enhance(ch)
     log_info(f"Progress: {i+1}/{len(ar)}")
-    uwait(0.5)
+    uwait(0.3)
   log_info("Upgrade completed")
 
 if __name__ == '__main__':

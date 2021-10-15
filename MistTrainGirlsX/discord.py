@@ -1,14 +1,8 @@
 import os
 import configparser
+from stage import StageStatus
 
 ConfigFilePath = os.getenv("MTGDiscordRPCConfigPath")
-
-StageStatus = {
-          0: ('Waiting for maintenance', 'メンテナンス中...'),
-  304013106: ('Playing events', '入隊訓練：カラマチ/クインズウェイ (Inferno)'),
-  101002505: ('Playing main story', 'クエスト 2-5 (Very Hard)'),
-}
-
 ProfileCache = ''
 
 def update_player_profile(name, level):

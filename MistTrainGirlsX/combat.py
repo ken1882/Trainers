@@ -1,3 +1,4 @@
+from random import triangular
 from _G import *
 import pprint
 from pprint import PrettyPrinter
@@ -5,6 +6,8 @@ pp = PrettyPrinter(indent=2)
 import player
 import friend
 import discord
+
+LOG_STATUS = True
 
 PartyId  = 0
 StageId  = 0
@@ -16,7 +19,7 @@ BattleStyle = [ # 0=通常 1=限制 2=全力
   2,
   2,
   2,
-  1,
+  2,
 ]
 RecoveryUsage = 424 # 0=Use most, others=Use with that item id if exists
 RecoveryBatchAmount = 5 # How many items to use once
@@ -24,7 +27,7 @@ UnmovableEffects = [22,23]
 MaxSP = 20
 MaxOP = 100
 
-LOG_STATUS = True
+LastBattleWon = False
 
 Headers = {
   'Accept': 'application/json',
@@ -32,11 +35,12 @@ Headers = {
   'Accept-Encoding': 'gzip, deflate, br'
 }
 
-def start_battle():
-  res = post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/canstart/{StageId}?uPartyId={PartyId}")
+def start_battle(sid, pid, rid=0):
+  rid = rid if rid else 'null'
+  res = post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/canstart/{sid}?uPartyId={pid}")
   if res['r']['FaildReason'] != ERROR_SUCCESS:
     return res['r']['FaildReason']
-  res = post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/start/{StageId}?uPartyId={PartyId}&rentalUUserId={RentalUid}&isRaidHelper=null&uRaidId=null&raidParticipationMode=null")
+  res = post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=null&uRaidId=null&raidParticipationMode=null")
   return res['r']
 
 def process_actions(commands):
@@ -139,12 +143,16 @@ def determine_actions(data):
   return ret
 
 def process_victory():
+  global LastBattleWon
   log_info("Victory")
+  LastBattleWon = True
   res = post_request('https://mist-train-east4.azurewebsites.net/api/Battle/victory?isSimulation=false')
   return res['r']
 
 def process_defeat():
+  global LastBattleWon
   log_info("Defeat")
+  LastBattleWon = False
   res = post_request('https://mist-train-east4.azurewebsites.net/api/Battle/defeat?isSimulation=false')
   return res['r']
 
@@ -224,7 +232,9 @@ def log_player_profile(data):
 def is_defeated(data):
   return len(get_alive_characters(data['BattleState']['Characters'])) == 0
 
-def process_battle(data):
+def process_combat(data):
+  global LastBattleWon
+  LastBattleWon = False
   log_info("Battle started")
   log_battle_status(data)
   player.clear_cache()
@@ -241,6 +251,7 @@ def process_battle(data):
     res = process_victory()
     log_player_profile(res['UUser'])
     discord.update_player_profile(res['UUserPreferences']['Name'], res['UUser']['Level'])
+  return LastBattleWon
 
 def process_partyid_input():
   pid = 0
@@ -277,8 +288,23 @@ def process_rentalid_input():
       friend.log_rentals(True)
   return rid
 
+def start_battle_process(sid, pid, rid):
+  global BattleId,LastErrorCode
+  data = start_battle(sid, pid, rid)
+  if type(data) == int:
+    if data == ERROR_NOSTAMINA:
+      log_info("Recover Stamina")
+      recover_stamina()
+      data = start_battle(sid, pid, rid)
+  if type(data) == dict and 'BattleId' in data:
+    BattleId = data['BattleId']
+    return process_combat(data)
+  else:
+    LastErrorCode = data
+    raise RuntimeError(f"Unable to start battle (ERRNO={data})")
+
 def main():
-  global PartyId,StageId,BattleId,RentalUid
+  global PartyId,StageId,RentalUid
   PartyId = process_partyid_input()
   log_info("Party Id:", PartyId)
   StageId = process_stageid_input()
@@ -291,15 +317,7 @@ def main():
   while True:
     cnt += 1
     log_info(f"Running combat iteration#{cnt}")
-    data = start_battle()
-    if type(data) == int:
-      if data == ERROR_NOSTAMINA:
-        log_info("Recover Stamina")
-        recover_stamina()
-        continue
-    else:
-      BattleId = data['BattleId']
-      process_battle(data)
+    start_battle_process(StageId, PartyId, RentalUid)
     log_info("Battle Ended")
     uwait(1.5)
     if Throttling:
