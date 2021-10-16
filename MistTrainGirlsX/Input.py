@@ -1,12 +1,19 @@
 import _G, graphics
-import win32api, win32con 
+import sys, importlib
 import random, math
 from time import sleep
+from threading import Thread
 from _G import (resume,wait,uwait,log_debug,log_error,log_info,log_warning,make_lparam,get_lparam)
+
+try:
+  import win32api,win32con
+except Exception:
+  pass # import linux version
+
 
 ScrollTime  = 0.03
 ScrollDelta = [1,5]
-
+BG_THEAD_NAME = 'BASE_INPUT'
 keystate = [0 for _ in range(0xff)]
 
 def update():
@@ -214,3 +221,19 @@ def moveto(x,y,speed=10,max_steps=MaxMoveTimes,app_offset=True,aync=True,rand=Tr
 
 def rmoveto(x,y,rrange=10,**kwargs):
   moveto(x+random.randint(-rrange, rrange), y+random.randint(-rrange, rrange), **kwargs)
+
+def main_bgkey_loop():
+  while _G.FlagRunning:
+    wait(_G.FPS)
+    update()
+    if is_trigger(win32con.VK_F7):
+      _G.FlagPaused ^= True
+      print("Worker", 'paused' if _G.FlagPaused else 'unpaused')
+    elif is_trigger(win32con.VK_F8):
+      _G.FlagRunning = False
+
+def start_bgkey_listener():
+  th = Thread(target=main_bgkey_loop, daemon=True)
+  _G.ThreadPool[BG_THEAD_NAME] = th
+  th.start()
+  return th

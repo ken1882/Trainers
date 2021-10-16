@@ -1,4 +1,3 @@
-from os import kill
 import requests
 import sys
 from datetime import datetime,timedelta
@@ -49,6 +48,7 @@ SnapshotCache = {}  # OCR snapshot cache for current frame
 
 # 0:NONE 1:ERROR 2:WARNING 3:INFO 4:DEBUG
 VerboseLevel = 3
+VerboseLevel = 4 if ('-v' in sys.argv or '--verbose' in sys.argv) else VerboseLevel
 
 FlagRunning = True
 FlagPaused  = False
@@ -61,12 +61,14 @@ MsgPipeTerminated = "\x00\x50\x00TERMINATED\x00"
 MsgPipeRet = "\x00\x50\x00RET\x00"
 MsgPipeInfo = "\x00\x50\x00INFO\x00"
 
+ThreadPool = {}
+
 CVMatchHardRate  = 0.7    # Hard-written threshold in order to match
 CVMatchStdRate   = 1.22   # Similarity standard deviation ratio above average in consider digit matched
 CVMatchMinCount  = 1      # How many matched point need to pass
 CVLocalDistance  = 10     # Template local maximum picking range
 
-Throttling = True
+Throttling = False
 StarbrustStream = True
 STATIC_FILE_TTL = 60*60*24
 
@@ -101,10 +103,10 @@ def format_padded_utfstring(*tuples):
     w = 0
     for ch in text:
       sym = unicodedata.east_asian_width(ch)
-      if sym != 'A':
-        w += CH_WIDTH[sym]
-      else:
+      if sym == 'A':
         w += SYMBOL_WIDTH[ch] if ch in SYMBOL_WIDTH else CH_WIDTH[sym]
+      else:
+        w += CH_WIDTH[sym]
     if width <= w:
       ret += text
     else:
@@ -218,6 +220,10 @@ def is_response_ok(res):
   log_debug('\n')
   return True
 
+def is_day_changing():
+  curt = localt2jpt(datetime.now())
+  return (curt.hour == 4 and curt.minute >= 55) or (curt.hour == 5 and curt.minute < 5)
+
 def get_request(url):
   res = Session.get(url)
   if not is_response_ok(res):
@@ -246,6 +252,12 @@ def jpt2localt(jp_time):
   time_local = int(strftime("%z", gmtime())) // 100
   delta = time_jp - time_local
   return jp_time - timedelta(hours=delta)
+
+def localt2jpt(local_time):
+  time_jp = +9
+  time_local = int(strftime("%z", gmtime())) // 100
+  delta = time_jp - time_local
+  return local_time + timedelta(hours=delta)
 
 def make_lparam(x, y):
   return (y << 16) | x
@@ -422,16 +434,8 @@ def get_item(item):
     log_warning(f"Unknown item type: {item['ItemType']} for {item}")
   return item
 
-def clear_cache():
-  global __CharacterCache,__EnemyCache,__FormationCache,__SkillCache,__LinkSkillCache
-  __CharacterCache  = {}
-  __EnemyCache      = {}
-  __FormationCache  = {}
-  __SkillCache      = {}
-  __LinkSkillCache  = {}
-
 Session = requests.Session()
 Session.headers = {
-  'Authorization': sys.argv[1]
+  'Authorization': sys.argv[1] if len(sys.argv) >= 2 else ''
 }
 load_database()

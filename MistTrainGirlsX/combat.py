@@ -6,6 +6,9 @@ pp = PrettyPrinter(indent=2)
 import player
 import friend
 import discord
+import Input
+from threading import Thread
+import win32con
 
 LOG_STATUS = True
 
@@ -15,8 +18,8 @@ BattleId = 0
 RentalUid = 0
 BattleStyle = [ # 0=通常 1=限制 2=全力 3=使用最低熟練度
   0, # reserved, don't touch
-  2,
-  2,
+  3,
+  3,
   3,
   3,
   3,
@@ -26,8 +29,10 @@ RecoveryBatchAmount = 5 # How many items to use once
 UnmovableEffects = [22,23]
 MaxSP = 20
 MaxOP = 100
+MaxProficiency = 99
 
 LastBattleWon = False
+FlagRequestReEnter = False
 
 Headers = {
   'Accept': 'application/json',
@@ -36,6 +41,7 @@ Headers = {
 }
 
 def start_battle(sid, pid, rid=0):
+  log_info("Staring batlle")
   rid = rid if rid else 'null'
   res = post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/canstart/{sid}?uPartyId={pid}")
   if res['r']['FaildReason'] != ERROR_SUCCESS:
@@ -112,7 +118,9 @@ def get_least_proficient_skill(character, skills):
   mcharacter = player.get_character_by_uid(character['CID'])
   uskills = [mcharacter['USkill1'], mcharacter['USkill2'], mcharacter['USkill3']]
   luskill = sorted(uskills, key=lambda sk:sk['Rank'])[0]
-  return next((sk for sk in skills if sk['Id'] == luskill['Id']), skills[0])
+  if luskill['Rank'] == MaxProficiency:
+    return None
+  return next((sk for sk in skills if sk['Id'] == luskill['Id']), None)
 
 def determine_skill(character):
   skills = []
@@ -125,9 +133,10 @@ def determine_skill(character):
   skills = sorted(skills, key=lambda s:s['SP'])
   if BattleStyle[character['ID']] == 3:
     skill = get_least_proficient_skill(character, skills)
-    if is_skill_usable(character, get_skill(skill['SkillRefId'])):
-      return skill
-    return skills[0]
+    if skill: # Act like BattleStyle=2 if all skills are mastered
+      if is_skill_usable(character, get_skill(skill['SkillRefId'])):
+        return skill
+      return skills[0]
   for sk in reversed(skills):
     mskill = get_skill(sk['SkillRefId'])
     if not is_offensive_skill(mskill):
@@ -305,6 +314,7 @@ def process_rentalid_input():
 
 def start_battle_process(sid, pid, rid):
   global BattleId,LastErrorCode
+  log_debug("Stage/Party/Rental:", sid, pid, rid)
   data = start_battle(sid, pid, rid)
   if type(data) == int:
     if data == ERROR_NOSTAMINA:
@@ -318,8 +328,20 @@ def start_battle_process(sid, pid, rid):
     LastErrorCode = data
     raise RuntimeError(f"Unable to start battle (ERRNO={data})")
 
+def update_input():
+  global FlagRunning,FlagPaused,FlagRequestReEnter
+  Input.update()
+  if Input.is_trigger(win32con.VK_F7):
+    FlagPaused ^= True
+    print("Worker", 'paused' if FlagPaused else 'unpaused')
+  elif Input.is_trigger(win32con.VK_F8):
+    FlagRunning = False
+  elif Input.is_trigger(win32con.VK_F5):
+    FlagRequestReEnter = True
+
 def main():
   global PartyId,StageId,RentalUid
+  global FlagRunning,FlagPaused,FlagRequestReEnter
   PartyId = process_partyid_input()
   log_info("Party Id:", PartyId)
   StageId = process_stageid_input()
@@ -329,7 +351,19 @@ def main():
   if RentalUid <= 0:
     RentalUid = 'null'
   cnt = 0
-  while True:
+  while FlagRunning:
+    while FlagPaused:
+      update_input()
+      wait(0.1)
+    if FlagRequestReEnter:
+      print("Re-enter signal received")
+      PartyId = process_partyid_input()
+      log_info("Party Id:", PartyId)
+      StageId = process_stageid_input()
+      RentalUid = process_rentalid_input()
+      log_info("Rental Id:", RentalUid)
+      discord.update_status(StageId)
+      FlagRequestReEnter = False
     cnt += 1
     log_info(f"Running combat iteration#{cnt}")
     start_battle_process(StageId, PartyId, RentalUid)
@@ -337,10 +371,12 @@ def main():
     uwait(1.5)
     if Throttling:
       uwait(1)
+    update_input()
 
 if __name__ == '__main__':
   try:
     main()
+    FlagRunning = False
   except (SystemExit, KeyboardInterrupt):
     if LastErrorCode == 403:
       discord.update_status(0)
