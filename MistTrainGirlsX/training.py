@@ -1,6 +1,6 @@
 from copy import deepcopy
 from _G import *
-import player
+import player, game
 
 ChargeUseGold     = False
 ChargeUseLesser   = True  # マナドリンクミニ, 自主練時間を1時間チャージできる。
@@ -24,11 +24,11 @@ EnergyItemTable = {
 }
 
 def checkout():
-  res = post_request('https://mist-train-east4.azurewebsites.net/api/Training/updateCheckPoint')
+  res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Training/updateCheckPoint')
   return res['r']
 
 def get_charge_items():
-  res = get_request('https://mist-train-east4.azurewebsites.net/api/Training/Items')
+  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/Training/Items')
   return res['r']
 
 # Uses greedy instead of DP due to items are divisible
@@ -44,7 +44,7 @@ def determine_charge_usage(cur, items):
   return ret
 
 def charge_energy(goldcnt, payload):
-  res = post_request(f"https://mist-train-east4.azurewebsites.net/api/Training/chargeEnergy?useMoneyCount={goldcnt}", payload)
+  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Training/chargeEnergy?useMoneyCount={goldcnt}", payload)
   return res
 
 def main():

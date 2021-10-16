@@ -1,6 +1,7 @@
 from _G import *
 import combat, discord
 from stage import StageStatus
+import game
 
 ATYPE_NONE     = 0
 ATYPE_SLASH    = 1
@@ -15,7 +16,7 @@ def find_floor_sid(n):
   return next((k for k,p in StageStatus.items() if key in p[1]), None)
 
 def get_stage_weakness(sid):
-  data = get_quest(sid)
+  data = game.get_quest(sid)
   rec_str = data['RecommendOffenceAttribute']
   if ATYPE_SLASH_CHAR in rec_str:
     return ATYPE_SLASH

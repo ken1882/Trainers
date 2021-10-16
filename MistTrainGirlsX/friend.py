@@ -1,16 +1,19 @@
-from _G import *
+import _G
+from _G import format_padded_utfstring, log_info
+import game
+import utils
 
 def get_friends():
-  res = get_request('https://mist-train-east4.azurewebsites.net/api/Friends')
+  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/Friends')
   return res['r']
 
 def get_rentals():
-  res = get_request('https://mist-train-east4.azurewebsites.net/api/Friends/Rental')
+  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/Friends/Rental')
   return [res['r']['FriendUsers'], res['r']['OtherUsers']]
 
 def send_request(duid):
-  res = get_request(f"https://mist-train-east4.azurewebsites.net/api/Friends/Search/{duid}")
-  res = post_request("https://mist-train-east4.azurewebsites.net/api/Friends/SendRequests", [res['r']['UUserId']])
+  res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/Friends/Search/{duid}")
+  res = game.post_request("https://mist-train-east4.azurewebsites.net/api/Friends/SendRequests", [res['r']['UUserId']])
   return res
 
 
@@ -28,7 +31,7 @@ def log_rentals(ls_others=False):
   for dat in fdat:
     if not dat['MFieldSkillId']:
       continue
-    fsk = get_fskill(dat['MFieldSkillId'])
+    fsk = utils.get_fskill(dat['MFieldSkillId'])
     string += format_padded_utfstring(
       (dat['Name'], 20, True),
       (f"{fsk['Name']} (LV.{dat['FieldSkillLevel']}/{fsk['MFieldSkillRarity']['LevelLimit']})", width_sname, True),
@@ -46,7 +49,7 @@ def log_rentals(ls_others=False):
   for dat in odat:
     if not dat['MFieldSkillId']:
       continue
-    fsk = get_fskill(dat['MFieldSkillId'])
+    fsk = utils.get_fskill(dat['MFieldSkillId'])
     string += format_padded_utfstring(
       (dat['Name'], 20, True),
       (f"{fsk['Name']} (LV.{dat['FieldSkillLevel']}/{fsk['MFieldSkillRarity']['LevelLimit']})", width_sname, True),

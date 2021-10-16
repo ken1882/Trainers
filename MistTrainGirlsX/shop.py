@@ -1,6 +1,5 @@
-from types import GetSetDescriptorType
 from _G import *
-import player
+import player, game
 
 
 MinimumKeepGold = 10000000
@@ -11,7 +10,7 @@ PurchaseItemTypes = [
 ]
 
 def get_daily_shop():
-  res = get_request('https://mist-train-east4.azurewebsites.net/api/Markets/DailyShop')
+  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/Markets/DailyShop')
   return res['r']
 
 def log_profile(pdat):
@@ -38,18 +37,18 @@ def determine_goods2buy(goods, gold, gem=0):
 
 def purchase_goods(goods):
   for good in goods:
-    res = post_request(f"https://mist-train-east4.azurewebsites.net/api/Markets/DailyShopItems/{good['Id']}/purchase")
+    res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Markets/DailyShopItems/{good['Id']}/purchase")
     if res:
       log_info(f"Purchased item#{good['Id']} ({get_readable_item_detail(good).split()[0]})")
 
 def get_readable_item_detail(item):
-  item = get_item(item)
+  item = game.get_item(item)
   ret = ''
   if 'Name' in item:
     ret += item['Name'] + '\n'
     ret += "  {}\n".format(item['Description'].replace('\r\n','')) if 'Description' in item else ''
   elif 'MCharacterId' in item:
-    ch = get_character_base(item['MCharacterId'])
+    ch = game.get_character_base(item['MCharacterId'])
     return f"ギヤ：{ch['Name']}{ch['MCharacterBase']['Name']}\n"
   else:
     ret = str(item) + '\n'

@@ -1,4 +1,5 @@
 from _G import *
+import game
 
 JokerColor = '$'
 PokerColors  = ['C', 'D', 'H', 'S']
@@ -38,33 +39,27 @@ def log_info(*args):
 def uwait(sec):
   sleep(sec + randint(0,8) / 10)
 
-headers = {
-  'Authorization': sys.argv[1]
-}
-Session = requests.Session()
-Session.headers = headers
-
 def start_game():
   log_info("Start game")
-  res = Session.post('https://mist-train-east4.azurewebsites.net/api/Casino/Poker')
-  print(res, res.json())
+  res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Casino/Poker')
+  print(res)
 
 def game_over():
   log_info("Game Over")
-  res = Session.post('https://mist-train-east4.azurewebsites.net/api/Casino/Poker')
-  rjs = res.json()['r']
-  print(res, rjs)
+  res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Casino/Poker')
+  rjs = res['r']
+  print(rjs)
   won,have = rjs['WinCoinCount'],rjs['UserCoinCount']
-  res = Session.post('https://mist-train-east4.azurewebsites.net/api/Casino/Poker/Result')
-  print(res, res.json())
+  res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Casino/Poker/Result')
+  print(res)
   log_info(f"Won bets {won}; Now have {have}")
 
 def place_bet():
   log_info("Place Bet")
   bets = FinalBets if FlagLastRound else InitBets
-  res = Session.post(f'https://mist-train-east4.azurewebsites.net/api/Casino/Poker/Bet?type={BetRate}&betCoin={bets}')
-  print(res, res.json())
-  cards = res.json()['r']
+  res = game.post_request(f'https://mist-train-east4.azurewebsites.net/api/Casino/Poker/Bet?type={BetRate}&betCoin={bets}')
+  print(res)
+  cards = res['r']
   log_info("Drew cards:", cards)
   return cards
 
@@ -111,21 +106,21 @@ def exchange_cards(indicies):
   params = []
   for i in indicies:
     params.append(f"changeIndexes={i}")
-  res = Session.post(url+'&'.join(params))
-  print(res, res.json())
-  return res.json()['r']['RewardCoinCount']
+  res = game.post_request(url+'&'.join(params))
+  print(res)
+  return res['r']['RewardCoinCount']
 
 def start_doubleup():
-  res = Session.post('https://mist-train-east4.azurewebsites.net/api/Casino/Poker/DoubleUp/Start')
-  print(res, res.json())
-  return PokerWeight[res.json()['r'][1]]
+  res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Casino/Poker/DoubleUp/Start')
+  print(res)
+  return PokerWeight[res['r'][1]]
 
 def continue_doubleup(ch):
   # 1=higher 2=lower
   log_info(f"Double up guessed {'higher' if ch == 1 else 'lower'}")
-  res = Session.post(f'https://mist-train-east4.azurewebsites.net/api/Casino/Poker/DoubleUp/Choose?choice={ch}')
-  print(res, res.json())
-  rjs = res.json()['r']
+  res = game.post_request(f'https://mist-train-east4.azurewebsites.net/api/Casino/Poker/DoubleUp/Choose?choice={ch}')
+  print(res)
+  rjs = res['r']
   return (rjs['Result'] == 3, PokerWeight[rjs['DrawCard'][1]], rjs['RewardCoinCount'])
 
 def process_doubleup():
@@ -177,9 +172,9 @@ def start():
     game_over()
 
 def get_won_progress():
-  res = Session.get('https://mist-train-east4.azurewebsites.net/api/Casino/GetCasinoTop')
-  print(res, res.json())
-  return res.json()['r']['TodayCasinoCoinStatus']['GetCoinValueToday']
+  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/Casino/GetCasinoTop')
+  print(res)
+  return res['r']['TodayCasinoCoinStatus']['GetCoinValueToday']
 
 def main():
   global CurrentEarnedBets,FlagLastRound
@@ -198,4 +193,5 @@ def main():
     CurrentEarnedBets = get_won_progress() 
 
 if __name__ == "__main__":
+  game.init()
   main()

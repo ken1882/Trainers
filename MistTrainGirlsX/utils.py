@@ -8,9 +8,12 @@ from time import sleep
 from random import random
 import traceback
 import os.path
-from PIL import Image
+from time import time
 import graphics
+import json
 from difflib import SequenceMatcher
+from datetime import datetime,timedelta
+from time import sleep,gmtime,strftime
 
 def EnumWindowCallback(hwnd, lparam):
   if win32gui.IsWindowVisible(hwnd):
@@ -114,3 +117,18 @@ def ensure_dir_exist(path):
     pwd += f"{dir}/"
     if not os.path.exists(pwd):
       os.mkdir(pwd)
+
+def jpt2localt(jp_time):
+  '''
+  Convert Japanese timezone (GMT+9) datetime object to local timezone
+  '''
+  time_jp = +9
+  time_local = int(strftime("%z", gmtime())) // 100
+  delta = time_jp - time_local
+  return jp_time - timedelta(hours=delta)
+
+def localt2jpt(local_time):
+  time_jp = +9
+  time_local = int(strftime("%z", gmtime())) // 100
+  delta = time_jp - time_local
+  return local_time + timedelta(hours=delta)

@@ -1,6 +1,7 @@
 from _G import *
 from datetime import datetime
-import json
+import game
+import utils
 
 Headers = {
   'Accept': 'application/json',
@@ -9,14 +10,14 @@ Headers = {
 }
 
 def get_expeditions():
-  res = get_request('https://mist-train-east4.azurewebsites.net/api/Expeditions')
+  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/Expeditions')
   if not res:
     return []
   ret = []
   for inf in res['r']:
     t = inf['CompletedAt']
     if t:
-      t = jpt2localt(datetime.strptime(t, "%Y-%m-%dT%H:%M:%S"))
+      t = utils.jpt2localt(datetime.strptime(t, "%Y-%m-%dT%H:%M:%S"))
     ret.append({
       'id': inf['Id'],
       'time': t
@@ -24,7 +25,7 @@ def get_expeditions():
   return ret
 
 def complete_expeditions(ids):
-  res = post_request('https://mist-train-east4.azurewebsites.net/api/Expeditions/completeAll', 
+  res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Expeditions/completeAll', 
     {'uExpeditionIds': ids}
   )
   if not res:
@@ -33,7 +34,7 @@ def complete_expeditions(ids):
 
 def start_expeditions(ids):
   for id in ids:
-    res = post_request(f'https://mist-train-east4.azurewebsites.net/api/Expeditions/{id}/depart')
+    res = game.post_request(f'https://mist-train-east4.azurewebsites.net/api/Expeditions/{id}/depart')
     if not res:
       return False
   return True
@@ -67,4 +68,5 @@ def main():
 
 
 if __name__ == '__main__':
+  game.init()
   main()

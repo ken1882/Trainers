@@ -1,4 +1,3 @@
-from random import triangular
 from _G import *
 import pprint
 from pprint import PrettyPrinter
@@ -7,7 +6,7 @@ import player
 import friend
 import discord
 import Input
-from threading import Thread
+import game
 import win32con
 
 LOG_STATUS = True
@@ -50,15 +49,15 @@ Headers = {
 def start_battle(sid, pid, rid=0):
   log_info("Staring batlle")
   rid = rid if rid else 'null'
-  res = post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/canstart/{sid}?uPartyId={pid}")
+  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/canstart/{sid}?uPartyId={pid}")
   if res['r']['FaildReason'] != ERROR_SUCCESS:
     return res['r']['FaildReason']
-  res = post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=null&uRaidId=null&raidParticipationMode=null")
+  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=null&uRaidId=null&raidParticipationMode=null")
   return res['r']
 
 def process_actions(commands):
   log_info("Process actions")
-  res = post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/attack/{BattleId}",
+  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/attack/{BattleId}",
     {
       "Type":1,
       "IsSimulation": False,
@@ -77,7 +76,7 @@ def process_actions(commands):
 
 def surrender():
   log_info("Abort battle")
-  res = post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/surrender",
+  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/surrender",
     {
       "Type":1,
       "IsSimulation": False,
@@ -141,11 +140,11 @@ def determine_skill(character):
   if BattleStyle[character['ID']] == 3:
     skill = get_least_proficient_skill(character, skills)
     if skill: # Act like BattleStyle=2 if all skills are mastered
-      if is_skill_usable(character, get_skill(skill['SkillRefId'])):
+      if is_skill_usable(character, game.get_skill(skill['SkillRefId'])):
         return skill
       return skills[0]
   for sk in reversed(skills):
-    mskill = get_skill(sk['SkillRefId'])
+    mskill = game.get_skill(sk['SkillRefId'])
     if not is_offensive_skill(mskill):
       continue
     elif is_skill_usable(character, mskill):
@@ -155,7 +154,7 @@ def determine_skill(character):
   return skills[0] # normal attack
 
 def determine_target(skill, enemies, characters):
-  mskill = get_skill(skill['SkillRefId'])
+  mskill = game.get_skill(skill['SkillRefId'])
   if is_offensive_skill(mskill):
     return enemies[0]['ID']
   return sorted(characters, key=lambda ch:ch['HP'])[0]['ID']
@@ -191,24 +190,24 @@ def sell_surplus_loots(loots):
     if curn <= maxn:
       continue
     player.sell_item(sitem, curn-minn)
-    log_info(f"Sold item {get_item_name(loot)}, amount={curn-minn}")
+    log_info(f"Sold item {game.get_item_name(loot)}, amount={curn-minn}")
 
 def process_victory():
   global LastBattleWon
   log_info("Victory")
   LastBattleWon = True
-  res = post_request('https://mist-train-east4.azurewebsites.net/api/Battle/victory?isSimulation=false')
+  res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Battle/victory?isSimulation=false')
   return res['r']
 
 def process_defeat():
   global LastBattleWon
   log_info("Defeat")
   LastBattleWon = False
-  res = post_request('https://mist-train-east4.azurewebsites.net/api/Battle/defeat?isSimulation=false')
+  res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Battle/defeat?isSimulation=false')
   return res['r']
 
 def recover_stamina():
-  res = get_request('https://mist-train-east4.azurewebsites.net/api/UItems/ApRecoveryItems')
+  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UItems/ApRecoveryItems')
   items = res['r']
   log_info("Recovery items:", pprint.pformat(items, indent=2), '-'*21, sep='\n')
   items = sorted(items, key=lambda i:i['Stock'])
@@ -218,7 +217,7 @@ def recover_stamina():
     nidx = -1 if items[nidx]['Stock'] <= 0 else nidx
   nid = items[nidx]['MItemId']
   num = min(RecoveryBatchAmount, items[nidx]['Stock'])
-  res = post_request(f"https://mist-train-east4.azurewebsites.net/api/Users/recoverStamina/{nid}/{num}")
+  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Users/recoverStamina/{nid}/{num}")
   log_info(f"Recovey item@{nid} used, stock left: {items[nidx]['Stock']-num}")
   log_info("Current stamina:", res['r']['CurrentStamina'])
 
@@ -231,7 +230,7 @@ def log_battle_status(data, actions=[]):
     string += "***** Players *****\n"
     for idx,ch in enumerate(data['BattleState']['Characters']):
       actor = player.get_character_by_uid(ch['CID'])
-      bchar = get_character_base(actor['MCharacterId'])
+      bchar = game.get_character_base(actor['MCharacterId'])
       string += f"{bchar['Name']} {bchar['MCharacterBase']['Name']}\n"
       hps = f"HP: {ch['HP']}/{actor['UCharacterBaseViewModel']['Status']['HP']}"
       sps = f"SP: {ch['SP']}/{MaxSP}"
@@ -245,7 +244,7 @@ def log_battle_status(data, actions=[]):
           action = '通常攻撃'
         else:
           act = next((sk for sk in ch['Skills'] if sk['Id'] == act), None)
-          act = get_skill(act['SkillRefId']) if act else ''
+          act = game.get_skill(act['SkillRefId']) if act else ''
           action = act['Name'] if act else ''
       elif ch['HP'] == 0:
         action = '戦闘不能'
@@ -255,12 +254,12 @@ def log_battle_status(data, actions=[]):
       # string += '-----\n'
     string += "\n***** Enemies *****\n"
     for ch in data['BattleState']['Enemies']:
-      name = get_enemy(ch['EID'])['Name']
+      name = game.get_enemy(ch['EID'])['Name']
       string += f"{name} (HP:{ch['CurrentHPPercent']}%)"
       if 'BattleActions' in data:
         action = next((act for act in data['BattleActions'] if act['ActorId'] == ch['ID']), None)
         if action and action['SkillId']:
-          action = get_skill(action['SkillId'])
+          action = game.get_skill(action['SkillId'])
           string += f" Action: {action['Name']}"
       string += '\n'
       # string +='-----\n'
@@ -277,7 +276,7 @@ def log_loots(data):
     if loot['ItemType'] == ITYPE_GOLD:
       string += f"Gold: {loot['ItemQuantity']}\n"
       continue
-    name = get_item_name(loot)
+    name = game.get_item_name(loot)
     string += f"{name} x{loot['ItemQuantity']}\n"
   string += '='*69 + '\n'
   log_info(string)
@@ -417,6 +416,7 @@ def main():
 
 if __name__ == '__main__':
   try:
+    game.init()
     main()
     FlagRunning = False
   except (SystemExit, KeyboardInterrupt):
