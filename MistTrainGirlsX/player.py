@@ -70,3 +70,24 @@ def log_party_status():
       ) + '\n'
     string += '-'*69+'\n'
   log_info(string)
+
+
+def get_gear_stock(id):
+  items = get_request('https://mist-train-east4.azurewebsites.net/api/UCharacterPieces')
+  if items:
+    items = items['r']
+  return next((it for it in items if it['MCharacterPieceId'] == id), None)
+
+def get_stock_item(item):
+  if item['ItemType'] == ITYPE_GEAR:
+    return get_gear_stock(item['ItemId'])
+  return None
+
+def sell_gear(item, amount):
+  uid = item['UCharacterPieceId']
+  res = post_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacterPieces/{uid}/trade/{amount}")
+  return res['r']
+
+def sell_item(item, amount=1):
+  if item['ItemType'] == ITYPE_GEAR:
+    return sell_gear(item, amount)

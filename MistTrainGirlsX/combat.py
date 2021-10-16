@@ -26,6 +26,13 @@ BattleStyle = [ # 0=通常 1=限制 2=全力 3=使用最低熟練度
 ]
 RecoveryUsage = 424 # 0=Use most, others=Use with that item id if exists
 RecoveryBatchAmount = 5 # How many items to use once
+
+AutoSellItems = [
+  #       type     Id   Maximum keep  Minimum keep
+  ( ITYPE_GEAR,   106,           500,          100), # gear from main story 2-5
+]
+
+
 UnmovableEffects = [22,23]
 MaxSP = 20
 MaxOP = 100
@@ -166,6 +173,26 @@ def determine_actions(data):
     })
   return ret
 
+def sell_surplus_loots(loots):
+  global AutoSellItems
+  for item in AutoSellItems:
+    type = item[0]
+    id   = item[1]
+    loot = next((it for it in loots if not it['Sold'] and it['ItemType'] == type and id == it['ItemId']), None)
+    if not loot:
+      continue
+    maxn = item[2]
+    minn = item[3]
+    sitem = player.get_stock_item(loot)
+    if not sitem:
+      continue
+    sitem['ItemType'] = type
+    curn = sitem['Stock']
+    if curn <= maxn:
+      continue
+    player.sell_item(sitem, curn-minn)
+    log_info(f"Sold item {get_item_name(loot)}, amount={curn-minn}")
+
 def process_victory():
   global LastBattleWon
   log_info("Victory")
@@ -242,6 +269,19 @@ def log_battle_status(data, actions=[]):
   except Exception as err:
     log_error("Error occurred during loggin battle status:", handle_exception(err))
 
+def log_loots(data):
+  if not LOG_STATUS or VerboseLevel < 3:
+    return
+  string  = '\n' + '='*31 + ' Loots ' + '='*31 + '\n'
+  for loot in data:
+    if loot['ItemType'] == ITYPE_GOLD:
+      string += f"Gold: {loot['ItemQuantity']}\n"
+      continue
+    name = get_item_name(loot)
+    string += f"{name} x{loot['ItemQuantity']}\n"
+  string += '='*69 + '\n'
+  log_info(string)
+
 def log_player_profile(data):
   if not LOG_STATUS or VerboseLevel < 3:
     return
@@ -273,6 +313,8 @@ def process_combat(data):
     process_defeat()
   else:
     res = process_victory()
+    log_loots(res['QuestLoots']['Items'])
+    sell_surplus_loots(res['QuestLoots']['Items'])
     log_player_profile(res['UUser'])
     discord.update_player_profile(res['UUserPreferences']['Name'], res['UUser']['Level'])
   return LastBattleWon

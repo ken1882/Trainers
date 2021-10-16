@@ -196,6 +196,7 @@ ITYPE_WEAPON      = 1
 ITYPE_ARMOR       = 2
 ITYPE_ACCESORY    = 3
 ITYPE_CONSUMABLE  = 4
+ITYPE_GOLD        = 6
 ITYPE_GEAR        = 10
 
 LastErrorCode = 0
@@ -222,9 +223,12 @@ def is_response_ok(res):
 
 def is_day_changing():
   curt = localt2jpt(datetime.now())
-  return (curt.hour == 4 and curt.minute >= 55) or (curt.hour == 5 and curt.minute < 5)
+  return (curt.hour == 4 and curt.minute >= 58) or (curt.hour == 5 and curt.minute < 3)
 
 def get_request(url):
+  while is_day_changing():
+    log_warning("Server day changing, wait for 1 minute")
+    wait(60)
   res = Session.get(url)
   if not is_response_ok(res):
     exit()
@@ -233,6 +237,9 @@ def get_request(url):
   return res.json()
 
 def post_request(url, data=None):
+  while is_day_changing():
+    log_warning("Server day changing, wait for 1 minute")
+    wait(60)
   res = None
   if data:
     res = Session.post(url, json.dumps(data), headers=PostHeaders)
@@ -277,12 +284,13 @@ ArmorDatabase     = {}
 AccessoryDatabase = {}
 GearDatabase      = {}
 FieldSkillDatabase= {}
+QuestDatabase     = {}
 
 def load_database(forced=False):
   global VerboseLevel
   global CharacterDatabase,EnemyDatabase,FormationDatabase,SkillDatabase,LinkSkillDatabase
   global ConsumableDatabase,WeaponDatabase,ArmorDatabase,AccessoryDatabase,GearDatabase
-  global FieldSkillDatabase
+  global FieldSkillDatabase,QuestDatabase
   links = [
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MEnemyViewModel.json',
@@ -294,7 +302,8 @@ def load_database(forced=False):
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MArmorViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MAccessoryViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterPieceViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MFieldSkillViewModel.json'
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MFieldSkillViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MQuestViewModel.json'
   ]
   for i,link in enumerate(links):
     path = f"{STATIC_FILE_DIRECTORY}/{link.split('/')[-1]}"
@@ -338,6 +347,8 @@ def load_database(forced=False):
       GearDatabase = db
     elif i == 10:
       FieldSkillDatabase = db
+    elif i == 11:
+      QuestDatabase = db
 
 def __convert2indexdb(db):
   ret = {}
@@ -415,6 +426,13 @@ def get_fskill(id):
       raise RuntimeError(f"Invalid field kill id: {id}")
   return FieldSkillDatabase[id]
 
+def get_quest(id):
+  if id not in QuestDatabase:
+    load_database(True)
+    if id not in QuestDatabase:
+      raise RuntimeError(f"Invalid quest id: {id}")
+  return QuestDatabase[id]
+
 def get_item(item):
   if 'ItemType' not in item or 'ItemId' not in item:
     log_warning("Invalid item object: ", item)
@@ -433,6 +451,17 @@ def get_item(item):
   else:
     log_warning(f"Unknown item type: {item['ItemType']} for {item}")
   return item
+
+def get_item_name(item):
+  item = get_item(item)
+  if 'Name' in item:
+    return item['Name']
+  elif 'MCharacterId' in item:
+    ch = get_character_base(item['MCharacterId'])
+    return f"ギヤ：{ch['Name']}{ch['MCharacterBase']['Name']}"
+  if 'ItemType' in item and 'ItemId' in item:
+    return f"Item type {item['ItemType']} id:{item['ItemId']}"
+  return str(item)
 
 Session = requests.Session()
 Session.headers = {
