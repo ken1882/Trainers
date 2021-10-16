@@ -91,5 +91,5 @@ def sell_gear(item, amount):
   return res['r']
 
 def sell_item(item, amount=1):
-  if item['ItemType'] == game.ITYPE_GEAR:
+  if item['ItemType'] == ITYPE_GEAR:
     return sell_gear(item, amount)

@@ -1,11 +1,16 @@
-import _G
-from _G import log_info,log_debug,log_warning,log_error,wait,uwait
+from _G import *
 from utils import localt2jpt
 from datetime import datetime
 import json
 import os,sys
 from time import time
 import requests
+
+PostHeaders = {
+  'Accept': 'application/json',
+  'Content-Type': 'application/json',
+  'Accept-Encoding': 'gzip, deflate, br'
+}
 
 CharacterDatabase = {}
 EnemyDatabase     = {}
@@ -66,7 +71,7 @@ def post_request(url, data=None):
     wait(60)
   res = None
   if data:
-    res = Session.post(url, json.dumps(data), headers=_G.PostHeaders)
+    res = Session.post(url, json.dumps(data), headers=PostHeaders)
   else:
     res = Session.post(url)
   if not is_response_ok(res):
@@ -95,9 +100,9 @@ def load_database(forced=False):
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MQuestViewModel.json'
   ]
   for i,link in enumerate(links):
-    path = f"{_G.STATIC_FILE_DIRECTORY}/{link.split('/')[-1]}"
+    path = f"{STATIC_FILE_DIRECTORY}/{link.split('/')[-1]}"
     db = None
-    if forced or not os.path.exists(path) or time() - os.path.getmtime(path) > _G.STATIC_FILE_TTL:
+    if forced or not os.path.exists(path) or time() - os.path.getmtime(path) > STATIC_FILE_TTL:
       try:
         db = get_request(link)
       except (SystemExit, Exception) as err:
@@ -227,15 +232,15 @@ def get_item(item):
     log_warning("Invalid item object: ", item)
     return item
   id = item['ItemId']
-  if item['ItemType'] == _G.ITYPE_CONSUMABLE:
+  if item['ItemType'] == ITYPE_CONSUMABLE:
     return get_consumable(id)
-  elif item['ItemType'] == _G.ITYPE_WEAPON:
+  elif item['ItemType'] == ITYPE_WEAPON:
     return get_weapon(id)
-  elif item['ItemType'] == _G.ITYPE_ARMOR:
+  elif item['ItemType'] == ITYPE_ARMOR:
     return get_armor(id)
-  elif item['ItemType'] == _G.ITYPE_ACCESORY:
+  elif item['ItemType'] == ITYPE_ACCESORY:
     return get_accessory(id)
-  elif item['ItemType'] == _G.ITYPE_GEAR:
+  elif item['ItemType'] == ITYPE_GEAR:
     return get_gear(id)
   else:
     log_warning(f"Unknown item type: {item['ItemType']} for {item}")

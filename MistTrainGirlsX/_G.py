@@ -197,12 +197,6 @@ ITYPE_GEAR        = 10
 
 LastErrorCode = 0
 
-PostHeaders = {
-  'Accept': 'application/json',
-  'Content-Type': 'application/json',
-  'Accept-Encoding': 'gzip, deflate, br'
-}
-
 def make_lparam(x, y):
   return (y << 16) | x
 
