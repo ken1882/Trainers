@@ -26,12 +26,15 @@ FieldSkillDatabase= {}
 QuestDatabase     = {}
 Session = None
 
+FlagAutoReauth = False
+
 def init():
-  global Session
+  global Session,FlagAutoReauth
   Session = requests.Session()
   Session.headers = {
-    'Authorization': sys.argv[1] if len(sys.argv) >= 2 else ''
+    'Authorization': next((arg for arg in sys.argv if arg.startswith('Bearer')), '')
   }
+  FlagAutoReauth = next((True for arg in sys.argv if arg=='-a' or arg=='--auto-reauth'), False)
   load_database()
 
 def is_response_ok(res):
@@ -44,7 +47,7 @@ def is_response_ok(res):
     else:
       log_error(f"An error occurred during sending request:\n{res}\n{res.content}\n\n")
     return False
-  log_debug(res.json())
+  log_debug(res.content)
   log_debug('\n')
   return True
 
@@ -53,32 +56,78 @@ def is_day_changing():
   return (curt.hour == 4 and curt.minute >= 58) or (curt.hour == 5 and curt.minute < 3)
 
 def get_request(url):
-  global Session
+  global Session,LastErrorCode
   while is_day_changing():
     log_warning("Server day changing, wait for 1 minute")
     wait(60)
+    if not is_day_changing():
+      log_info("Server day changed, attempting to reauth game")
+      reauth_game()
+      wait(1)
+      break
   res = Session.get(url)
   if not is_response_ok(res):
-    exit()
+    if FlagAutoReauth and LastErrorCode == 401:
+      log_info("Attempting to reauth game")
+      reauth_game()
+      wait(1)
+      return get_request(url)
+    else:
+      exit()
   if not res.content:
     return None
   return res.json()
 
 def post_request(url, data=None):
-  global Session
+  global Session,LastErrorCode
   while is_day_changing():
     log_warning("Server day changing, wait for 1 minute")
     wait(60)
+    if not is_day_changing():
+      log_info("Server day changed, attempting to reauth game")
+      reauth_game()
+      wait(1)
+      break
   res = None
   if data:
     res = Session.post(url, json.dumps(data), headers=PostHeaders)
   else:
     res = Session.post(url)
   if not is_response_ok(res):
-    exit()
+    if FlagAutoReauth and LastErrorCode == 401:
+      log_info("Attempting to reauth game")
+      reauth_game()
+      wait(1)
+      return get_request(url)
+    else:
+      exit()
   if not res.content:
     return None
   return res.json()
+
+def reauth_game():
+  global Session
+  session = requests.Session()
+  with open(f"{DCTmpFolder}/dmmcookies.key", 'r') as fp:
+    raw = fp.read()
+  for line in raw.split(';'):
+    k,v = line.strip().split('=')
+    session.cookies.set(k, v)
+  payload = ''
+  with open(f"{DCTmpFolder}/dmmform.key", 'r') as fp:
+    payload = fp.read()
+  res = session.post('https://osapi.dmm.com/gadgets/makeRequest', payload, headers={
+    'Accept': '*/*',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Content-Type': 'application/x-www-form-urlencoded',
+  })
+  if not is_response_ok(res):
+    log_error("Unable to reauth game, abort")
+    exit()
+  content = ''.join(res.content.decode('utf8').split('>')[1:])
+  data = json.loads(content)
+  res_json = json.loads(data[list(data.keys())[0]]['body'])
+  Session.headers['Authorization'] = f"Bearer {res_json['r']}"
 
 def load_database(forced=False):
   global VerboseLevel
