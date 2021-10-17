@@ -37,14 +37,14 @@ def interpret_parties(data):
   ret = []
   for party in data:
     dat = deepcopy(party)
-    dat['Formation'] = utils.get_formation(party['MFormationId']),
+    dat['Formation'] = game.get_formation(party['MFormationId']),
     if type(dat['Formation']) == tuple:
       dat['Formation'] = dat['Formation'][0]
     for i,ch in enumerate(party['UCharacterSlots']):
       if not ch or not ch['UCharacter']:
         continue
       mchid = ch['UCharacter']['MCharacterId']
-      dat['UCharacterSlots'][i]['MCharacter'] = utils.get_character_base(mchid)
+      dat['UCharacterSlots'][i]['MCharacter'] = game.get_character_base(mchid)
     ret.append(dat)
 
   return ret
@@ -61,11 +61,11 @@ def log_party_status():
   for party in ppd:
     string += f"Party#{party['PartyNo']} Id:{party['Id']} (Name: {party['Name'] or ''})\n"
     string += f"Formation: {party['Formation']['Name']}\n"
-    string += utils.format_padded_utfstring(('名前', NAME_WIDTH), ('戦力', POWER_WIDTH, True), ('HP', HP_WIDTH, True)) + '\n'
+    string += format_padded_utfstring(('名前', NAME_WIDTH), ('戦力', POWER_WIDTH, True), ('HP', HP_WIDTH, True)) + '\n'
     for ch in party['UCharacterSlots']:
       if not ch['UCharacterId']:
         continue
-      string += utils.format_padded_utfstring(
+      string += format_padded_utfstring(
         (f"{ch['MCharacter']['Name']}{ch['MCharacter']['MCharacterBase']['Name']}", NAME_WIDTH),
         (ch['TotalStatus'], POWER_WIDTH, True),
         (ch['UCharacter']['UCharacterBaseViewModel']['Status']['HP'], HP_WIDTH, True),
@@ -73,6 +73,11 @@ def log_party_status():
     string += '-'*69+'\n'
   log_info(string)
 
+def get_consumable_stock(id):
+  items = game.get_request('https://mist-train-east4.azurewebsites.net/api/UItems')
+  if items:
+    items = items['r']
+  return next((it for it in items if it['MItemId'] == id), None)
 
 def get_gear_stock(id):
   items = game.get_request('https://mist-train-east4.azurewebsites.net/api/UCharacterPieces')
@@ -83,7 +88,14 @@ def get_gear_stock(id):
 def get_stock_item(item):
   if item['ItemType'] == ITYPE_GEAR:
     return get_gear_stock(item['ItemId'])
+  elif item['ItemType'] == ITYPE_CONSUMABLE:
+    return get_consumable_stock(item['ItemId'])
   return None
+
+def sell_consumable(item, amount):
+  uid = item['Id']
+  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/UItems/{uid}/sell/{amount}")
+  return res['r']
 
 def sell_gear(item, amount):
   uid = item['UCharacterPieceId']
@@ -93,3 +105,5 @@ def sell_gear(item, amount):
 def sell_item(item, amount=1):
   if item['ItemType'] == ITYPE_GEAR:
     return sell_gear(item, amount)
+  elif item['ItemType'] == ITYPE_CONSUMABLE:
+    return sell_consumable(item, amount)

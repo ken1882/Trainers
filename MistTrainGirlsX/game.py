@@ -6,7 +6,7 @@ import json
 import os,sys
 from time import time
 import requests
-from requests.exceptions import ConnectTimeout
+from requests.exceptions import ConnectTimeout,ReadTimeout
 
 PostHeaders = {
   'Accept': 'application/json',
@@ -67,11 +67,10 @@ def get_request(url, depth=1):
     if not is_day_changing():
       log_info("Server day changed, attempting to reauth game")
       reauth_game()
-      wait(1)
       break
   try:
     res = Session.get(url, timeout=NetworkTimeout)
-  except ConnectTimeout as err:
+  except (ConnectTimeout, ReadTimeout) as err:
     if depth < NetworkMaxRetry:
       log_warning(f"Connection timeout for {url}, retry (depth={depth+1})")
       return get_request(url, depth=depth+1)
@@ -81,7 +80,6 @@ def get_request(url, depth=1):
     if FlagAutoReauth and LastErrorCode == 401:
       log_info("Attempting to reauth game")
       reauth_game()
-      wait(1)
       return get_request(url)
     else:
       exit()
@@ -146,6 +144,9 @@ def reauth_game():
   data = json.loads(content)
   res_json = json.loads(data[list(data.keys())[0]]['body'])
   Session.headers['Authorization'] = f"Bearer {res_json['r']}"
+  wait(1)
+  res = Session.post('https://mist-train-east4.azurewebsites.net/api/Login')
+  return res
 
 def load_database(forced=False):
   global VerboseLevel

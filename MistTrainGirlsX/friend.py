@@ -1,7 +1,5 @@
-import _G
-from _G import format_padded_utfstring, log_info
+from _G import *
 import game
-import utils
 
 def get_friends():
   res = game.get_request('https://mist-train-east4.azurewebsites.net/api/Friends')
@@ -31,7 +29,7 @@ def log_rentals(ls_others=False):
   for dat in fdat:
     if not dat['MFieldSkillId']:
       continue
-    fsk = utils.get_fskill(dat['MFieldSkillId'])
+    fsk = game.get_fskill(dat['MFieldSkillId'])
     string += format_padded_utfstring(
       (dat['Name'], 20, True),
       (f"{fsk['Name']} (LV.{dat['FieldSkillLevel']}/{fsk['MFieldSkillRarity']['LevelLimit']})", width_sname, True),
@@ -49,7 +47,7 @@ def log_rentals(ls_others=False):
   for dat in odat:
     if not dat['MFieldSkillId']:
       continue
-    fsk = utils.get_fskill(dat['MFieldSkillId'])
+    fsk = game.get_fskill(dat['MFieldSkillId'])
     string += format_padded_utfstring(
       (dat['Name'], 20, True),
       (f"{fsk['Name']} (LV.{dat['FieldSkillLevel']}/{fsk['MFieldSkillRarity']['LevelLimit']})", width_sname, True),
