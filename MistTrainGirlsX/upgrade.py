@@ -1,4 +1,5 @@
 from _G import *
+import game
 import player
 
 Headers = {
@@ -12,13 +13,11 @@ MaxKizunaPoint = 1300
 TotalKizunaPoint = [0, 0, 100, 250, 400, 550, 700, 850, 1000, 1150, 1300]
 
 def get_layer_gears(mchid):
-  res = Session.get(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/LimitBreakPieces/{mchid}")
-  if not is_response_ok(res):
-    return None
-  return res.json()['r']['CurrentPieces']
+  res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/LimitBreakPieces/{mchid}")
+  return res['r']['CurrentPieces']
 
 def get_kizuna(uid):
-  res = get_request(F"https://mist-train-east4.azurewebsites.net/api/Kizuna/{uid}")
+  res = game.get_request(F"https://mist-train-east4.azurewebsites.net/api/Kizuna/{uid}")
   return res['r']
 
 def determine_kizuna_usage(kdat):
@@ -52,7 +51,7 @@ def bulk_enhance(chid, lv=None, lgn=None, mgn=None, kp=None):
     "KizunaPointAddModel": kp,
   }
   log_debug("Request payload:\n", payload)
-  res = post_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/BulkEnhance/{chid}", payload)
+  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/BulkEnhance/{chid}", payload)
   if not res:
     return (None,None,None)
   rjs = res['r']['UCharacterViewModel']
@@ -62,7 +61,7 @@ def level_up(chid,level=1):
   can_lvup = True
   while can_lvup and level < MaxExpLevel:
     level += 1
-    res = post_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/Levelup/{chid}/{level}")
+    res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/Levelup/{chid}/{level}")
     if not res:
       break
     can_lvup = res['r']['UCharacterViewModel']['CanLevelup']

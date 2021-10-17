@@ -1,5 +1,4 @@
 from _G import *
-import utils
 import game
 from copy import deepcopy
 

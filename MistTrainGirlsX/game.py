@@ -124,13 +124,18 @@ def post_request(url, data=None, depth=1):
 def reauth_game():
   global Session
   session = requests.Session()
-  with open(f"{DCTmpFolder}/dmmcookies.key", 'r') as fp:
+  cookie_path = f"{DCTmpFolder}/dmmcookies.key"
+  form_path   = f"{DCTmpFolder}/dmmform.key"
+  if not os.path.exists(form_path) or not os.path.exists(cookie_path):
+    log_error("Missing re-auth file info, abort program")
+    exit()
+  with open(cookie_path, 'r') as fp:
     raw = fp.read()
   for line in raw.split(';'):
     k,v = line.strip().split('=')
     session.cookies.set(k, v)
   payload = ''
-  with open(f"{DCTmpFolder}/dmmform.key", 'r') as fp:
+  with open(form_path, 'r') as fp:
     payload = fp.read()
   res = session.post('https://osapi.dmm.com/gadgets/makeRequest', payload, headers={
     'Accept': '*/*',
