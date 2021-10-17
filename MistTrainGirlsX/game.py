@@ -1,3 +1,4 @@
+from requests import exceptions
 from _G import *
 from utils import localt2jpt
 from datetime import datetime
@@ -5,6 +6,7 @@ import json
 import os,sys
 from time import time
 import requests
+from requests.exceptions import ConnectTimeout
 
 PostHeaders = {
   'Accept': 'application/json',
@@ -26,7 +28,9 @@ FieldSkillDatabase= {}
 QuestDatabase     = {}
 Session = None
 
-FlagAutoReauth = False
+FlagAutoReauth  = False
+NetworkMaxRetry = 5
+NetworkTimeout  = 3
 
 def init():
   global Session,FlagAutoReauth
@@ -45,7 +49,7 @@ def is_response_ok(res):
     if res.status_code == 403:
       log_error("Server is under maintenance!")
     else:
-      log_error(f"An error occurred during sending request:\n{res}\n{res.content}\n\n")
+      log_error(f"An error occurred during sending request to {res.url}:\n{res}\n{res.content}\n\n")
     return False
   log_debug(res.content)
   log_debug('\n')
@@ -55,7 +59,7 @@ def is_day_changing():
   curt = localt2jpt(datetime.now())
   return (curt.hour == 4 and curt.minute >= 58) or (curt.hour == 5 and curt.minute < 3)
 
-def get_request(url):
+def get_request(url, depth=1):
   global Session,LastErrorCode
   while is_day_changing():
     log_warning("Server day changing, wait for 1 minute")
@@ -65,7 +69,14 @@ def get_request(url):
       reauth_game()
       wait(1)
       break
-  res = Session.get(url)
+  try:
+    res = Session.get(url, timeout=NetworkTimeout)
+  except ConnectTimeout as err:
+    if depth < NetworkMaxRetry:
+      log_warning(f"Connection timeout for {url}, retry (depth={depth+1})")
+      return get_request(url, depth=depth+1)
+    else:
+      raise err
   if not is_response_ok(res):
     if FlagAutoReauth and LastErrorCode == 401:
       log_info("Attempting to reauth game")
@@ -78,7 +89,7 @@ def get_request(url):
     return None
   return res.json()
 
-def post_request(url, data=None):
+def post_request(url, data=None, depth=1):
   global Session,LastErrorCode
   while is_day_changing():
     log_warning("Server day changing, wait for 1 minute")
@@ -89,10 +100,17 @@ def post_request(url, data=None):
       wait(1)
       break
   res = None
-  if data:
-    res = Session.post(url, json.dumps(data), headers=PostHeaders)
-  else:
-    res = Session.post(url)
+  try:
+    if data:
+      res = Session.post(url, json.dumps(data), headers=PostHeaders, timeout=NetworkTimeout)
+    else:
+      res = Session.post(url, timeout=NetworkTimeout)
+  except ConnectTimeout as err:
+    if depth < NetworkMaxRetry:
+      log_warning(f"Connection timeout for {url}, retry (depth={depth+1})")
+      return post_request(url, data, depth=depth+1)
+    else:
+      raise err
   if not is_response_ok(res):
     if FlagAutoReauth and LastErrorCode == 401:
       log_info("Attempting to reauth game")

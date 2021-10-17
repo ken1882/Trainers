@@ -44,14 +44,15 @@ def start_game():
   res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Casino/Poker')
   print(res)
 
-def game_over():
+def game_over(submit_result):
   log_info("Game Over")
   res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Casino/Poker')
   rjs = res['r']
   print(rjs)
   won,have = rjs['WinCoinCount'],rjs['UserCoinCount']
-  res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Casino/Poker/Result')
-  print(res)
+  if submit_result:
+    res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Casino/Poker/Result')
+    print(res)
   log_info(f"Won bets {won}; Now have {have}")
 
 def place_bet():
@@ -138,20 +139,21 @@ def process_doubleup():
       log_info("Last goal achieved, end game")
       break
     elif not FlagLastRound and times >= 4 and cur in range(7,10):
-      log_info("End doubleups")
+      log_info("End doubleups due next round has high risk")
       break
     else:
       param = 1 if cur < 7 else 2
     failed,cur,bets = continue_doubleup(param)
     if failed:
       log_info(f"Double up failed, GG")
-      break
+      return False # needn't submit result if lost
     elif not FlagLastRound and CurrentEarnedBets + bets*2 >= MaxEarnPerDay:
       log_info("End round for potential last shot")
       break
     else:
       log_info(f"Double up passed, current reward: {bets}")
-  log_info("Double up ended")
+  log_info("Double up ended, reward:", bets)
+  return bets < MaxEarnPerRound # needn't submit result if reached max earn
 
 def start():
   cards = place_bet()
@@ -165,11 +167,11 @@ def start():
     uwait(0.5)
   if won == 0:
     log_info("GG")
-    game_over()
+    game_over(True)
   else:
     log_info("You win! Processed to double ups")
-    process_doubleup()
-    game_over()
+    submit = process_doubleup()
+    game_over(submit)
 
 def get_won_progress():
   res = game.get_request('https://mist-train-east4.azurewebsites.net/api/Casino/GetCasinoTop')
