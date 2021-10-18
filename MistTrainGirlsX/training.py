@@ -75,4 +75,5 @@ def main():
   log_info("Charge completed:", res['r'])
 
 if __name__ == '__main__':
+  game.init()
   main()

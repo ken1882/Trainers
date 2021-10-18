@@ -86,4 +86,5 @@ def main():
   log_invoice(buys)
 
 if __name__ == '__main__':
+  game.init()
   main()

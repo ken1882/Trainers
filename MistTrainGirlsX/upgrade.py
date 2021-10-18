@@ -101,4 +101,5 @@ def main():
   enhance_all_characters()
 
 if __name__ == '__main__':
+  game.init()
   main()

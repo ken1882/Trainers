@@ -27,11 +27,11 @@ RecoveryUsage = 424 # 0=Use most, others=Use with that item id if exists
 RecoveryBatchAmount = 5 # How many items to use once
 
 AutoSellItems = [
-  #       type     Id   Maximum keep  Minimum keep
-  ( ITYPE_GEAR,   106,           500,          100), # gear from main story 2-5
-  ( ITYPE_CONSUMABLE,   7, 99900, 99000),  # small cake from 2-5
-  ( ITYPE_CONSUMABLE,  10, 99000, 99000),  # A Weapon enhance material
-  ( ITYPE_CONSUMABLE,  11, 99900, 99000),  # S Weapon enhance material
+  #             type     Id  Maximum keep  Minimum keep
+  (       ITYPE_GEAR,   106,          500,          100), # Gear：[古の魔女の末裔]セイラム
+  ( ITYPE_CONSUMABLE,     7,        99900,        99000), # Small cake
+  ( ITYPE_CONSUMABLE,    10,        99000,        99000), # A Weapon enhance material
+  ( ITYPE_CONSUMABLE,    11,        99900,        99000)  # S Weapon enhance material
 ]
 
 

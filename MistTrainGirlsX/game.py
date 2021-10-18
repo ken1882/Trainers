@@ -1,4 +1,4 @@
-from requests import exceptions
+import re
 from _G import *
 from utils import localt2jpt
 from datetime import datetime
@@ -7,6 +7,7 @@ import os,sys
 from time import time
 import requests
 from requests.exceptions import ConnectTimeout,ReadTimeout
+from urllib.parse import quote_plus
 
 PostHeaders = {
   'Accept': 'application/json',
@@ -124,27 +125,50 @@ def post_request(url, data=None, depth=1):
 def reauth_game():
   global Session
   session = requests.Session()
+  session.headers = {
+    'Accept': '*/*',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Content-Type': 'application/x-www-form-urlencoded',
+  }
   cookie_path = f"{DCTmpFolder}/dmmcookies.key"
   form_path   = f"{DCTmpFolder}/dmmform.key"
   if not os.path.exists(form_path) or not os.path.exists(cookie_path):
     log_error("Missing re-auth file info, abort program")
     exit()
+  
   with open(cookie_path, 'r') as fp:
-    raw = fp.read()
-  for line in raw.split(';'):
-    k,v = line.strip().split('=')
-    session.cookies.set(k, v)
-  payload = ''
+    raw_cookies = fp.read()
+
   with open(form_path, 'r') as fp:
-    payload = fp.read()
-  res = session.post('https://osapi.dmm.com/gadgets/makeRequest', payload, headers={
-    'Accept': '*/*',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Content-Type': 'application/x-www-form-urlencoded',
-  })
+    raw_form = fp.read()
+
+  # Update token
+  for line in raw_cookies.split('\n')[0].split(';'):
+    seg = line.strip().split('=')
+    k = seg[0]
+    v = '='.join(seg[1:])
+    session.cookies.set(k, v)
+
+  res = session.post('https://pc-play.games.dmm.co.jp/play/MistTrainGirlsX/check/ajax-index/', raw_form.split('\n')[0])
   if not is_response_ok(res):
     log_error("Unable to reauth game, abort")
     exit()
+  
+  # Replace old token with new one
+  token = res.json()['result']
+  log_debug("New token:", token)
+  payload = raw_form.split('\n')[1]
+  rep = re.search(r"st=(.+?)&", payload).group(0)
+  rep = rep.split('=')[1][:-1]
+  payload = payload.replace(rep, quote_plus(token))
+
+  log_debug("Request payload:", payload, sep='\n')
+  # Start game
+  res = session.post('https://osapi.dmm.com/gadgets/makeRequest', payload)
+  if not is_response_ok(res):
+    log_error("Unable to reauth game, abort")
+    exit()
+  
   content = ''.join(res.content.decode('utf8').split('>')[1:])
   data = json.loads(content)
   res_json = json.loads(data[list(data.keys())[0]]['body'])
