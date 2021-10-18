@@ -1,4 +1,5 @@
 from _G import *
+import itertools
 import pprint
 from pprint import PrettyPrinter
 pp = PrettyPrinter(indent=2)
@@ -8,6 +9,8 @@ import discord
 import Input
 import game
 import win32con
+import utils
+from stage import StageAlias
 
 LOG_STATUS = True
 
@@ -42,6 +45,9 @@ MaxProficiency = 99
 
 LastBattleWon = False
 FlagRequestReEnter = False
+
+AvailableFriendRentals = []
+RentalCycle = None
 
 Headers = {
   'Accept': 'application/json',
@@ -140,7 +146,10 @@ def determine_skill(character):
       continue
     skills.append(sk)
   skills = sorted(skills, key=lambda s:s['SP'])
-  if BattleStyle[character['ID']] == 3:
+  bstyle = BattleStyle[character['ID']]
+  if bstyle == 0: # Normal attack only
+    return skills[0]
+  if bstyle == 3:
     skill = get_least_proficient_skill(character, skills)
     if skill: # Act like BattleStyle=2 if all skills are mastered
       if is_skill_usable(character, game.get_skill(skill['SkillRefId'])):
@@ -152,7 +161,7 @@ def determine_skill(character):
       continue
     elif is_skill_usable(character, mskill):
       return sk
-    elif BattleStyle[character['ID']] == 1:
+    elif bstyle == 1:
       break # only use most powerful offensive skill
   return skills[0] # normal attack
 
@@ -336,29 +345,39 @@ def process_partyid_input():
 def process_stageid_input():
   sid = 0
   while not sid:
-    sid = int(input("Stage id: "))
+    sid = input("Stage id: ")
+    if not utils.isdigit(sid):
+      if sid in StageAlias:
+        sid = StageAlias[sid]
+      else:
+        continue
+    sid = int(sid)
   return sid
 
 def process_rentalid_input():
+  global AvailableFriendRentals,RentalCycle
   rid = 0
   valids = []
   pdat,odat = friend.get_rentals()
   for dat in pdat:
-    valids.append(dat['UUserId'])
+    uid = dat['UUserId']
+    valids.append(uid)
+    AvailableFriendRentals.append(uid)
   for dat in odat:
     valids.append(dat['UUserId'])
-  while rid not in valids:
+  while rid not in valids and rid != -1:
     try:
-      rid = int(input("Rental friend's id (0 for list availables): "))
+      rid = int(input("Rental friend's id (0 for list availables, -1 for round-robin): "))
     except Exception:
       rid = 0
     if not rid:
       friend.log_rentals(True)
+  RentalCycle = itertools.cycle(AvailableFriendRentals)
   return rid
 
 def start_battle_process(sid, pid, rid):
   global BattleId,LastErrorCode
-  log_debug("Stage/Party/Rental:", sid, pid, rid)
+  log_info("Stage/Party/Rental IDs:", sid, pid, rid)
   data = start_battle(sid, pid, rid)
   if type(data) == int:
     if data == ERROR_NOSTAMINA:
@@ -383,36 +402,39 @@ def update_input():
   elif Input.is_trigger(win32con.VK_F5):
     FlagRequestReEnter = True
 
-def main():
-  global PartyId,StageId,RentalUid
-  global FlagRunning,FlagPaused,FlagRequestReEnter
-  PartyId = process_partyid_input()
+def process_prepare_inputs():
+  pid = process_partyid_input()
   log_info("Party Id:", PartyId)
-  StageId = process_stageid_input()
-  RentalUid = process_rentalid_input()
-  log_info("Rental Id:", RentalUid)
+  sid = process_stageid_input()
+  rid = process_rentalid_input()
+  log_info("Rental Id:", 'Round-Robin' if rid == -1 else rid)
+  if rid != -1 and rid <= 0:
+    rid = 'null'
+  return (pid, sid, rid)
+
+def main():
+  global PartyId,StageId,RentalUid,AvailableFriendRentals,RentalCycle
+  global FlagRunning,FlagPaused,FlagRequestReEnter
+  PartyId,StageId,RentalUid = process_prepare_inputs()
   discord.update_status(StageId)
-  if RentalUid <= 0:
-    RentalUid = 'null'
   cnt = 0
   while FlagRunning:
     while FlagPaused:
       update_input()
       wait(0.1)
     if FlagRequestReEnter:
-      print("Re-enter signal received")
-      PartyId = process_partyid_input()
-      log_info("Party Id:", PartyId)
-      StageId = process_stageid_input()
-      RentalUid = process_rentalid_input()
-      log_info("Rental Id:", RentalUid)
+      PartyId,StageId,RentalUid = process_prepare_inputs()
       discord.update_status(StageId)
       FlagRequestReEnter = False
+      cnt = 0
     cnt += 1
     log_info(f"Running combat iteration#{cnt}")
-    start_battle_process(StageId, PartyId, RentalUid)
+    rid = RentalUid
+    if rid == -1:
+      rid = next(RentalCycle)
+    start_battle_process(StageId, PartyId, rid)
     log_info("Battle Ended")
-    uwait(1.5)
+    uwait(1)
     if Throttling:
       uwait(1)
     update_input()

@@ -189,9 +189,9 @@ def main():
       log_info("Last round")
     start()
     log_info(f"Today's progress: {CurrentEarnedBets}")
-    sleep(0.5)
+    uwait(0.5)
     if Throttling:
-      sleep(1)
+      uwait(1)
     CurrentEarnedBets = get_won_progress() 
 
 if __name__ == "__main__":
