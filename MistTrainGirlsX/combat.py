@@ -26,7 +26,13 @@ BattleStyle = [ # 0=通常 1=限制 2=全力 3=使用最低熟練度
   3,
   3,
 ]
-RecoveryUsage = 424 # 0=Use most, others=Use with that item id if exists
+
+RecoveryUsage = 1 # 0=Use most
+                  # 1=Use by the order list below, if item available
+RecoveryUsageOrder = [
+  424, 427, 5,
+  0 # use most
+]
 RecoveryBatchAmount = 5 # How many items to use once
 
 AutoSellItems = [
@@ -219,18 +225,24 @@ def process_defeat():
   return res['r']
 
 def recover_stamina():
-  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UItems/ApRecoveryItems')
-  items = res['r']
+  items = player.get_aprecovery_items()
   log_info("Recovery items:", pprint.pformat(items, indent=2), '-'*21, sep='\n')
   items = sorted(items, key=lambda i:i['Stock'])
   nidx  = -1
-  if RecoveryUsage != 0:
-    nidx = next((i for i,item in enumerate(items) if item["MItemId"] == RecoveryUsage), -1)
-    nidx = -1 if items[nidx]['Stock'] <= 0 else nidx
-  nid = items[nidx]['MItemId']
-  num = min(RecoveryBatchAmount, items[nidx]['Stock'])
-  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Users/recoverStamina/{nid}/{num}")
-  log_info(f"Recovey item@{nid} used, stock left: {items[nidx]['Stock']-num}")
+  if RecoveryUsage == 1:
+    for id in RecoveryUsageOrder:
+      nidx = next((i for i,item in enumerate(items) if item["MItemId"] == id), -1)
+      nidx = -1 if items[nidx]['Stock'] <= 0 else nidx
+      if nidx >= 0:
+        break
+    
+  item = items[nidx]
+  num  = min(RecoveryBatchAmount, item['Stock'])
+  res = player.use_aprecovery_item(item, num)
+  if not res:
+    log_error("Out of stamina, aborting")
+    exit()
+  log_info(f"Recovey {item} used, stock left: {item['Stock']-num}")
   log_info("Current stamina:", res['r']['CurrentStamina'])
 
 def log_battle_status(data, actions=[]):
