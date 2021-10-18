@@ -7,7 +7,6 @@ import json
 import os,sys
 from time import time
 import requests
-from requests.exceptions import ConnectTimeout,ReadTimeout
 from urllib.parse import quote_plus
 
 PostHeaders = {
@@ -73,7 +72,8 @@ def get_request(url, depth=1):
       break
   try:
     res = Session.get(url, timeout=NetworkTimeout)
-  except (ConnectTimeout, ReadTimeout) as err:
+  except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout) as err:
+    Session.close()
     if depth < NetworkMaxRetry:
       log_warning(f"Connection timeout for {url}, retry (depth={depth+1})")
       return get_request(url, depth=depth+1)
@@ -106,7 +106,8 @@ def post_request(url, data=None, depth=1):
       res = Session.post(url, json.dumps(data), headers=PostHeaders, timeout=NetworkTimeout)
     else:
       res = Session.post(url, timeout=NetworkTimeout)
-  except ConnectTimeout as err:
+  except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout) as err:
+    Session.close()
     if depth < NetworkMaxRetry:
       log_warning(f"Connection timeout for {url}, retry (depth={depth+1})")
       return post_request(url, data, depth=depth+1)
