@@ -548,7 +548,7 @@ def main():
   while FlagRunning:
     while FlagPaused:
       update_input()
-      if Input.trigger_key(win32con.VK_F6):
+      if Input.is_trigger(win32con.VK_F6):
         log_final_report()
       wait(0.1)
     if FlagRequestReEnter:
