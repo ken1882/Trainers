@@ -31,7 +31,7 @@ Session = None
 
 FlagAutoReauth  = False
 NetworkMaxRetry = 5
-NetworkTimeout  = 3
+NetworkTimeout  = 5
 
 def init():
   global Session,FlagAutoReauth,StarbrustStream
@@ -41,6 +41,7 @@ def init():
   }
   FlagAutoReauth = next((True for arg in sys.argv if arg=='-a' or arg=='--auto-reauth'), False)
   _G.StarbrustStream = next((True for arg in sys.argv if arg=='-s' or arg=='--star-brust-stream'), False)
+  _G.PersistCharacterCache = ('--no-persist-cache' not in sys.argv)
   load_database()
 
 def is_response_ok(res):

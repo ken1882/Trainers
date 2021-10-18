@@ -66,6 +66,7 @@ CVLocalDistance  = 10     # Template local maximum picking range
 
 Throttling = True
 StarbrustStream = False
+PersistCharacterCache = True
 
 STATIC_FILE_TTL = 60*60*24
 

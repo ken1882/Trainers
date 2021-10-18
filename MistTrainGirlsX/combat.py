@@ -327,7 +327,8 @@ def process_combat(data):
   LastBattleWon = False
   log_info("Battle started")
   log_battle_status(data)
-  player.clear_cache()
+  if not _G.PersistCharacterCache:
+    player.clear_cache()
   while not is_defeated(data) and data['BattleState']['BattleStatus'] != BATTLESTAT_VICTORY:
     actions = determine_actions(data)
     data = process_actions(actions)
