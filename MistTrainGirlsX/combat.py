@@ -75,6 +75,8 @@ ReportDetail = {
   'lose': 0,
 }
 
+LastStaminaAmount = 0
+
 def hash_item_id(item):
   return item['ItemType'] * 1000000 + item['ItemId']
 
@@ -270,6 +272,7 @@ def record_ap_recovery(item, n, ap_delta):
   ReportDetail['ap_recovery'][hid] += n
 
 def recover_stamina():
+  global LastStaminaAmount
   items = player.get_aprecovery_items()
   log_info("Recovery items:", pprint.pformat(items, indent=2), '-'*21, sep='\n')
   items = sorted(items, key=lambda i:i['Stock'])
@@ -291,7 +294,8 @@ def recover_stamina():
   ap2  = res['r']['CurrentStamina']
   item['ItemType'] = ITYPE_CONSUMABLE
   item['ItemId']   = item['MItemId']
-  record_ap_recovery(item, num, ap2-ap1)
+  record_ap_recovery(item, num, LastStaminaAmount-ap1)
+  LastStaminaAmount = ap2
   if not res:
     log_error("Out of stamina, aborting")
     exit()
@@ -480,7 +484,7 @@ def log_final_report():
     string += "Time elapsed: " + str(ReportDetail['end_t'] - ReportDetail['start_t']) + '\n'
     string += f"Combat status: {ReportDetail['times']} fights, Win/Lose={ReportDetail['win']}/{ReportDetail['lose']} ({int(ReportDetail['win'] / ReportDetail['times'] * 100)}%)\n"
     string += f"Average time spent per fight: {(ReportDetail['end_t'] - ReportDetail['start_t']) / ReportDetail['times']}\n"
-    string += f"Stamina recoverd: {ReportDetail['ap_recovery'][0]}\n"
+    string += f"Stamina used: {ReportDetail['ap_recovery'][0]}\n"
     keys = ['ap_recovery', 'loots', 'solds', 'sells']
     subtitles = ("Recovery items used", "Loots Gained", "Loots Sold", "Sell Earnings")
     for idx,key in enumerate(keys):
@@ -494,9 +498,7 @@ def log_final_report():
         item_info = {'ItemType': itype, 'ItemId': iid}
         name = game.get_item_name(item_info)
         string += '{:>10}x {}'.format(n, name)
-        if key == 'sells':
-          string += f" (Now have x{player.get_item_stock(item_info)['Stock']})"
-        string += '\n'
+        string += f" (Now have x{player.get_item_stock(item_info)['Stock']})\n"
     # end report category listings
   except Exception as err:
     log_error(f"An error occureed while logging final report: {err}")
@@ -527,11 +529,12 @@ def process_prepare_inputs():
 
 def main():
   global PartyId,StageId,RentalUid,AvailableFriendRentals,RentalCycle
-  global FlagRunning,FlagPaused,FlagRequestReEnter,ReportDetail
+  global FlagRunning,FlagPaused,FlagRequestReEnter,ReportDetail,LastStaminaAmount
   PartyId,StageId,RentalUid = process_prepare_inputs()
   discord.update_status(StageId)
   ReportDetail['start_t'] = datetime.now()
   cnt = 0
+  LastStaminaAmount = player.get_profile()['CurrentActionPoints']
   while FlagRunning:
     while FlagPaused:
       update_input()

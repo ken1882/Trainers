@@ -105,7 +105,10 @@ def get_item_stock(item):
   ret = None
   kit = 'ItemType'
   kid = 'ItemId'
-  if item[kit] == ITYPE_GEAR:
+  if item[kit] == ITYPE_GOLD:
+    ret = deepcopy(item)
+    ret['Stock'] = get_profile()['Money']
+  elif item[kit] == ITYPE_GEAR:
     ret = get_gear_stock(item[kid])
     ret[kit] = ITYPE_GEAR
   elif item[kit] == ITYPE_CONSUMABLE:
