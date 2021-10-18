@@ -58,7 +58,7 @@ def main():
     rpn = get_stage_weakness(sid)
     log_info(f"Floor#{cur_n-1} cleared")
     uwait(1)
-    if Throttling:
+    if _G.Throttling:
       uwait(1)
 
 

@@ -1,4 +1,5 @@
 import re
+import _G
 from _G import *
 from utils import localt2jpt
 from datetime import datetime
@@ -34,12 +35,13 @@ NetworkMaxRetry = 5
 NetworkTimeout  = 3
 
 def init():
-  global Session,FlagAutoReauth
+  global Session,FlagAutoReauth,StarbrustStream
   Session = requests.Session()
   Session.headers = {
     'Authorization': next((arg for arg in sys.argv if arg.startswith('Bearer')), '')
   }
   FlagAutoReauth = next((True for arg in sys.argv if arg=='-a' or arg=='--auto-reauth'), False)
+  _G.StarbrustStream = next((True for arg in sys.argv if arg=='-s' or arg=='--star-brust-stream'), False)
   load_database()
 
 def is_response_ok(res):

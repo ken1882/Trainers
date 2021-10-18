@@ -131,7 +131,7 @@ def process_doubleup():
   times = 0
   while bets < MaxEarnPerRound:
     times += 1
-    if Throttling:
+    if _G.Throttling:
       uwait(0.2)
     log_info(f"#{times}: card weight {cur}")
     param = 1
@@ -163,7 +163,7 @@ def start():
   for k in keeps:
     exchanges.remove(k)
   won = exchange_cards(exchanges)
-  if Throttling:
+  if _G.Throttling:
     uwait(0.5)
   if won == 0:
     log_info("GG")
@@ -190,7 +190,7 @@ def main():
     start()
     log_info(f"Today's progress: {CurrentEarnedBets}")
     uwait(0.5)
-    if Throttling:
+    if _G.Throttling:
       uwait(1)
     CurrentEarnedBets = get_won_progress() 
 

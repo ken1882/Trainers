@@ -64,8 +64,9 @@ CVMatchStdRate   = 1.22   # Similarity standard deviation ratio above average in
 CVMatchMinCount  = 1      # How many matched point need to pass
 CVLocalDistance  = 10     # Template local maximum picking range
 
-Throttling = False
-StarbrustStream = True
+Throttling = True
+StarbrustStream = False
+
 STATIC_FILE_TTL = 60*60*24
 
 CH_WIDTH = {

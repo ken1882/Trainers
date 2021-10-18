@@ -1,3 +1,4 @@
+import _G
 from _G import *
 import itertools
 import pprint
@@ -330,7 +331,7 @@ def process_combat(data):
     data = process_actions(actions)
     log_battle_status(data, actions)
     uwait(0.3)
-    if Throttling:
+    if _G.Throttling:
       uwait(1)
   if is_defeated(data):
     process_defeat()
@@ -447,7 +448,7 @@ def main():
     start_battle_process(StageId, PartyId, rid)
     log_info("Battle Ended")
     uwait(1)
-    if Throttling:
+    if _G.Throttling:
       uwait(1)
     update_input()
 
