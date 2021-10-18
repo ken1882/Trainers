@@ -485,6 +485,7 @@ def start_battle_process(sid, pid, rid):
 
 def log_final_report():
   global ReportDetail
+  print("Preparing report please wait...")
   ReportDetail['end_t'] = datetime.now()
   string  = f"\n{'='*30} Report {'='*30}\n"
   line_width = len(string.strip())

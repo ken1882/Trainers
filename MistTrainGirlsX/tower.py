@@ -1,3 +1,4 @@
+import _G
 from _G import *
 import combat, discord
 from stage import StageStatus

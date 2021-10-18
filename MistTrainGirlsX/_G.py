@@ -139,7 +139,7 @@ def resume(fiber):
   ret = None
   try:
     ret = next(fiber)
-    if ret and ret[0] == MsgPipeRet:
+    if ret and ret[0] == MSG_PIPE_RET:
       log_info("Fiber signaled return")
       FiberRet = ret[1]
       return False
