@@ -121,10 +121,11 @@ def sell_consumable(item, amount):
 def sell_gear(item, amount):
   uid = item['UCharacterPieceId']
   res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacterPieces/{uid}/trade/{amount}")
-  return res['r']
+  return res['r']['Items']
 
 def sell_item(item, amount=1):
   if item['ItemType'] == ITYPE_GEAR:
     return sell_gear(item, amount)
   elif item['ItemType'] == ITYPE_CONSUMABLE:
-    return sell_consumable(item, amount)
+    gain = sell_consumable(item, amount)
+    return [{'ItemType': ITYPE_GOLD, 'ItemId': 0, 'ItemQuantity': gain, 'Stock': gain}]

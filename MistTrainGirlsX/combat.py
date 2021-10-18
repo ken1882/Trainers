@@ -1,3 +1,4 @@
+import enum
 import _G
 from _G import *
 import itertools
@@ -11,6 +12,7 @@ import Input
 import game
 import win32con
 import utils
+from datetime import date, datetime
 from stage import StageAlias
 
 LOG_STATUS = True
@@ -60,6 +62,24 @@ Headers = {
   'Content-Type': 'application/json',
   'Accept-Encoding': 'gzip, deflate, br'
 }
+
+ReportDetail = {
+  'start_t': 0,
+  'end_t': 0,
+  'times': 0,
+  'loots': {},
+  'solds': {},
+  'sells': {},
+  'ap_recovery': {0:0},
+  'win': 0,
+  'lose': 0,
+}
+
+def hash_item_id(item):
+  return item['ItemType'] * 1000000 + item['ItemId']
+
+def dehash_item_id(id):
+  return (id // 1000000, id % 1000000)
 
 def start_battle(sid, pid, rid=0):
   log_info("Staring batlle")
@@ -190,6 +210,21 @@ def determine_actions(data):
     })
   return ret
 
+def record_loot_sell(item, n):
+  global ReportDetail
+  hid = hash_item_id(item)
+  if hid not in ReportDetail['solds']:
+    ReportDetail['solds'][hid] = 0
+  ReportDetail['solds'][hid] += n
+
+def record_sell_earns(items):
+  global ReportDetail
+  for item in items:
+    hid = hash_item_id(item)
+    if hid not in ReportDetail['sells']:
+      ReportDetail['sells'][hid] = 0
+    ReportDetail['sells'][hid] += item['ItemQuantity']
+
 def sell_surplus_loots(loots):
   global AutoSellItems
   for item in AutoSellItems:
@@ -206,22 +241,33 @@ def sell_surplus_loots(loots):
     curn = sitem['Stock']
     if curn <= maxn:
       continue
-    player.sell_item(sitem, curn-minn)
+    res = player.sell_item(sitem, curn-minn)
+    record_loot_sell(loot, curn-minn)
+    record_sell_earns(res)
     log_info(f"Sold item {game.get_item_name(loot)}, amount={curn-minn}")
 
 def process_victory():
-  global LastBattleWon
+  global LastBattleWon,ReportDetail
   log_info("Victory")
   LastBattleWon = True
   res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Battle/victory?isSimulation=false')
+  ReportDetail['win'] += 1
   return res['r']
 
 def process_defeat():
-  global LastBattleWon
+  global LastBattleWon,ReportDetail
   log_info("Defeat")
   LastBattleWon = False
   res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Battle/defeat?isSimulation=false')
+  ReportDetail['lose'] += 1
   return res['r']
+
+def record_ap_recovery(item, n, ap_delta):
+  hid = hash_item_id(item)
+  if hid not in ReportDetail['ap_recovery']:
+    ReportDetail['ap_recovery'][hid] = 0
+  ReportDetail['ap_recovery'][0]   += ap_delta
+  ReportDetail['ap_recovery'][hid] += n
 
 def recover_stamina():
   items = player.get_aprecovery_items()
@@ -240,12 +286,17 @@ def recover_stamina():
     
   item = items[nidx]
   num  = min(RecoveryBatchAmount, item['Stock'])
-  res = player.use_aprecovery_item(item, num)
+  ap1  = player.get_profile()['CurrentActionPoints']
+  res  = player.use_aprecovery_item(item, num)
+  ap2  = res['r']['CurrentStamina']
+  item['ItemType'] = ITYPE_CONSUMABLE
+  item['ItemId']   = item['MItemId']
+  record_ap_recovery(item, num, ap2-ap1)
   if not res:
     log_error("Out of stamina, aborting")
     exit()
   log_info(f"Recovey {item} used, stock left: {item['Stock']-num}")
-  log_info("Current stamina:", res['r']['CurrentStamina'])
+  log_info("Current stamina:", ap2)
 
 def log_battle_status(data, actions=[]):
   if not LOG_STATUS or VerboseLevel < 3:
@@ -321,9 +372,20 @@ def log_player_profile(data):
 def is_defeated(data):
   return len(get_alive_characters(data['BattleState']['Characters'])) == 0
 
+def record_loots(loots):
+  global ReportDetail
+  for loot in loots:
+    if loot['Sold']:
+      continue
+    hid = hash_item_id(loot)
+    if hid not in ReportDetail['loots']:
+      ReportDetail['loots'][hid] = 0
+    ReportDetail['loots'][hid] += loot['ItemQuantity']
+
 def process_combat(data):
-  global LastBattleWon
+  global LastBattleWon,ReportDetail
   LastBattleWon = False
+  ReportDetail['times'] += 1
   log_info("Battle started")
   log_battle_status(data)
   if not _G.PersistCharacterCache:
@@ -339,8 +401,10 @@ def process_combat(data):
     process_defeat()
   else:
     res = process_victory()
-    log_loots(res['QuestLoots']['Items'])
-    sell_surplus_loots(res['QuestLoots']['Items'])
+    loots = res['QuestLoots']['Items']
+    record_loots(loots)
+    log_loots(loots)
+    sell_surplus_loots(loots)
     log_player_profile(res['UUser'])
     discord.update_player_profile(res['UUserPreferences']['Name'], res['UUser']['Level'])
   return LastBattleWon
@@ -406,6 +470,40 @@ def start_battle_process(sid, pid, rid):
     LastErrorCode = data
     raise RuntimeError(f"Unable to start battle (ERRNO={data})")
 
+def log_final_report():
+  global ReportDetail
+  string  = f"\n{'='*30} Report {'='*30}\n"
+  line_width = len(string.strip())
+  try:
+    string += "Start time:   " + ReportDetail['start_t'].strftime('%Y-%m-%d %H:%M:%S') + '\n'
+    string += "End time:     " + ReportDetail['end_t'].strftime('%Y-%m-%d %H:%M:%S') + '\n'
+    string += "Time elapsed: " + str(ReportDetail['end_t'] - ReportDetail['start_t']) + '\n'
+    string += f"Combat status: {ReportDetail['times']} fights, Win/Lose={ReportDetail['win']}/{ReportDetail['lose']} ({int(ReportDetail['win'] / ReportDetail['times'] * 100)}%)\n"
+    string += f"Average time spent per fight: {(ReportDetail['end_t'] - ReportDetail['start_t']) / ReportDetail['times']}\n"
+    string += f"Stamina recoverd: {ReportDetail['ap_recovery'][0]}\n"
+    keys = ['ap_recovery', 'loots', 'solds', 'sells']
+    subtitles = ("Recovery items used", "Loots Gained", "Loots Sold", "Sell Earnings")
+    for idx,key in enumerate(keys):
+      subtitle = subtitles[idx]
+      spacing = (line_width - 2 - len(subtitle)) // 2
+      string += f"\n{'-'*spacing} {subtitle} {'-'*spacing}\n"
+      for hid,n in ReportDetail[key].items():
+        if hid == 0:
+          continue
+        itype,iid = dehash_item_id(hid)
+        item_info = {'ItemType': itype, 'ItemId': iid}
+        name = game.get_item_name(item_info)
+        string += '{:>10}x {}'.format(n, name)
+        if key == 'sells':
+          string += f" (Now have x{player.get_item_stock(item_info)['Stock']})"
+        string += '\n'
+    # end report category listings
+  except Exception as err:
+    log_error(f"An error occureed while logging final report: {err}")
+    handle_exception(err)
+  string += f"{'='*68}\n"
+  print(string)
+
 def update_input():
   global FlagRunning,FlagPaused,FlagRequestReEnter
   Input.update()
@@ -429,9 +527,10 @@ def process_prepare_inputs():
 
 def main():
   global PartyId,StageId,RentalUid,AvailableFriendRentals,RentalCycle
-  global FlagRunning,FlagPaused,FlagRequestReEnter
+  global FlagRunning,FlagPaused,FlagRequestReEnter,ReportDetail
   PartyId,StageId,RentalUid = process_prepare_inputs()
   discord.update_status(StageId)
+  ReportDetail['start_t'] = datetime.now()
   cnt = 0
   while FlagRunning:
     while FlagPaused:
@@ -453,6 +552,8 @@ def main():
     if _G.Throttling:
       uwait(1)
     update_input()
+  ReportDetail['end_t'] = datetime.now()
+  log_final_report()
 
 if __name__ == '__main__':
   try:
