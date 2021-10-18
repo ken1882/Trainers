@@ -297,10 +297,11 @@ def recover_stamina():
   record_ap_recovery(item, num, LastStaminaAmount-ap1)
   LastStaminaAmount = ap2
   if not res:
-    log_error("Out of stamina, aborting")
-    exit()
+    log_error("Out of stamina!")
+    return None
   log_info(f"Recovey {item} used, stock left: {item['Stock']-num}")
   log_info("Current stamina:", ap2)
+  return res
 
 def log_battle_status(data, actions=[]):
   if not LOG_STATUS or VerboseLevel < 3:
@@ -411,7 +412,7 @@ def process_combat(data):
     sell_surplus_loots(loots)
     log_player_profile(res['UUser'])
     discord.update_player_profile(res['UUserPreferences']['Name'], res['UUser']['Level'])
-  return LastBattleWon
+  return SIG_COMBAT_WON if LastBattleWon else SIG_COMBAT_LOST
 
 def process_partyid_input():
   pid = 0
@@ -465,8 +466,16 @@ def start_battle_process(sid, pid, rid):
   if type(data) == int:
     if data == ERROR_NOSTAMINA:
       log_info("Recover Stamina")
-      recover_stamina()
+      recovered = recover_stamina()
+      if not recovered:
+        return SIG_COMBAT_STOP
       data = start_battle(sid, pid, rid)
+      if data == ERROR_NOSTAMINA:
+        log_error("Out of stamina, abort combat")
+        return SIG_COMBAT_STOP
+    elif data == ERROR_LIMIT_REACHED:
+      log_info("Challenge limit reached")
+      return SIG_COMBAT_STOP 
   if type(data) == dict and 'BattleId' in data:
     BattleId = data['BattleId']
     return process_combat(data)
@@ -476,6 +485,7 @@ def start_battle_process(sid, pid, rid):
 
 def log_final_report():
   global ReportDetail
+  ReportDetail['end_t'] = datetime.now()
   string  = f"\n{'='*30} Report {'='*30}\n"
   line_width = len(string.strip())
   try:
@@ -538,6 +548,8 @@ def main():
   while FlagRunning:
     while FlagPaused:
       update_input()
+      if Input.trigger_key(win32con.VK_F6):
+        log_final_report()
       wait(0.1)
     if FlagRequestReEnter:
       PartyId,StageId,RentalUid = process_prepare_inputs()
@@ -549,13 +561,14 @@ def main():
     rid = RentalUid
     if rid == -1:
       rid = next(RentalCycle)
-    start_battle_process(StageId, PartyId, rid)
+    signal = start_battle_process(StageId, PartyId, rid)
     log_info("Battle Ended")
+    if signal == SIG_COMBAT_STOP:
+      break
     uwait(1)
     if _G.Throttling:
       uwait(1)
     update_input()
-  ReportDetail['end_t'] = datetime.now()
   log_final_report()
 
 if __name__ == '__main__':

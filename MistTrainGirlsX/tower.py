@@ -46,8 +46,8 @@ def main():
   while sid in StageStatus:
     log_info(f"Challenging floor#{cur_n}")
     log_info(f"Using team#{pids[rpn]} weakness: ({rpn})")
-    victory = combat.start_battle_process(sid, pids[rpn], rid)
-    if not victory:
+    signal = combat.start_battle_process(sid, pids[rpn], rid)
+    if signal != SIG_COMBAT_WON:
       log_info("Stop challenge due to defeated")
       break
     cur_n += 1

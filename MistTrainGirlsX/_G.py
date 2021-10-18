@@ -50,12 +50,12 @@ FlagRunning = True
 FlagPaused  = False
 FlagWorking = False
 
-MsgPipeContinue = '\x00\x50\x00CONTINUE\x00'
-MsgPipeStop  = "\x00\x50\x00STOP\x00"
-MsgPipeError = "\x00\x50\x00ERROR\x00"
-MsgPipeTerminated = "\x00\x50\x00TERMINATED\x00"
-MsgPipeRet = "\x00\x50\x00RET\x00"
-MsgPipeInfo = "\x00\x50\x00INFO\x00"
+MSG_PIPE_CONT   = '\x00\x50\x00CONTINUE\x00'
+MSG_PIPE_STOP   = "\x00\x50\x00STOP\x00"
+MSG_PIPE_ERROR  = "\x00\x50\x00ERROR\x00"
+MSG_PIPE_TERM   = "\x00\x50\x00TERMINATED\x00"
+MSG_PIPE_RET    = "\x00\x50\x00RET\x00"
+MSG_PIPE_INFO   = "\x00\x50\x00INFO\x00"
 
 ThreadPool = {}
 
@@ -67,6 +67,10 @@ CVLocalDistance  = 10     # Template local maximum picking range
 Throttling = True
 StarbrustStream = False
 PersistCharacterCache = True
+
+SIG_COMBAT_WON  = 0x1
+SIG_COMBAT_LOST = 0x2
+SIG_COMBAT_STOP = 0x3
 
 STATIC_FILE_TTL = 60*60*24
 
@@ -178,8 +182,9 @@ def handle_exception(err):
   log_error(msg)
 
 # Errnos
-ERROR_SUCCESS    = 0x0
-ERROR_NOSTAMINA  = 0x6
+ERROR_SUCCESS       = 0x0
+ERROR_LIMIT_REACHED = 0x3
+ERROR_NOSTAMINA     = 0x6
 
 # Battle contants
 BATTLESTAT_VICTORY = 0x2
