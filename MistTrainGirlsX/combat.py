@@ -31,8 +31,7 @@ BattleStyle = [ # 0=通常 1=限制 2=全力 3=使用最低熟練度
 RecoveryUsage = 1 # 0=Use most
                   # 1=Use by the order list below, if item available
 RecoveryUsageOrder = [
-  424, 427, 5,
-  0 # use most
+  424, 427, 0 # use most
 ]
 RecoveryBatchAmount = 5 # How many items to use once
 
