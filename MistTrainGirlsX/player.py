@@ -4,6 +4,8 @@ from copy import deepcopy
 
 __UCharacterCache = {}
 
+UNIVERSAL_GEAR_ID = 85
+
 def clear_cache():
   global __UCharacterCache
   __UCharacterCache = {}
@@ -96,12 +98,20 @@ def get_gear_stock(id):
     items = items['r']
   return next((it for it in items if it['MCharacterPieceId'] == id), None)
 
-def get_stock_item(item):
-  if item['ItemType'] == ITYPE_GEAR:
-    return get_gear_stock(item['ItemId'])
-  elif item['ItemType'] == ITYPE_CONSUMABLE:
-    return get_consumable_stock(item['ItemId'])
-  return None
+def get_universal_gear_stock():
+  return get_consumable_stock(UNIVERSAL_GEAR_ID)
+
+def get_item_stock(item):
+  ret = None
+  kit = 'ItemType'
+  kid = 'ItemId'
+  if item[kit] == ITYPE_GEAR:
+    ret = get_gear_stock(item[kid])
+    ret[kit] = ITYPE_GEAR
+  elif item[kit] == ITYPE_CONSUMABLE:
+    ret = get_consumable_stock(item[kid])
+    ret[kit] = ITYPE_CONSUMABLE
+  return ret
 
 def sell_consumable(item, amount):
   uid = item['Id']

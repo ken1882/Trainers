@@ -106,9 +106,9 @@ def post_request(url, data=None, depth=1):
   try:
     log_debug(f"[POST] {url} with payload:", data, sep='\n')
     if data:
-      res = Session.post(url, json.dumps(data), headers=PostHeaders, timeout=NetworkTimeout)
+      res = Session.post(url, json.dumps(data), headers=PostHeaders)
     else:
-      res = Session.post(url, timeout=NetworkTimeout)
+      res = Session.post(url)
   except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError) as err:
     Session.close()
     if depth < NetworkMaxRetry:

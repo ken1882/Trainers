@@ -200,10 +200,9 @@ def sell_surplus_loots(loots):
       continue
     maxn = item[2]
     minn = item[3]
-    sitem = player.get_stock_item(loot)
+    sitem = player.get_item_stock(loot)
     if not sitem:
       continue
-    sitem['ItemType'] = type
     curn = sitem['Stock']
     if curn <= maxn:
       continue
