@@ -232,6 +232,9 @@ def recover_stamina():
   nidx  = -1
   if RecoveryUsage == 1:
     for id in RecoveryUsageOrder:
+      if id == 0:
+        nidx = -1
+        break
       nidx = next((i for i,item in enumerate(items) if item["MItemId"] == id), -1)
       nidx = -1 if items[nidx]['Stock'] <= 0 else nidx
       if nidx >= 0:
