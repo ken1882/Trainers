@@ -13,6 +13,14 @@ def get_daily_shop():
   res = game.get_request('https://mist-train-east4.azurewebsites.net/api/Markets/DailyShop')
   return res['r']
 
+def get_event_shop():
+  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/TradeShops')
+  return [st for st in res['r'] if st['TradeShopType'] == SHOP_TYPE_EVENT]
+
+def get_tshop_goods(id):
+  res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/TradeShops/{id}/lineup")
+  return res['r']['Rewards']
+
 def log_profile(pdat):
   string  = '\n===== Currency Owned =====\n'
   string += f"Gold: {pdat['Money']}\n"
@@ -74,6 +82,41 @@ def log_invoice(goods):
   string += "{}: {}\n".format('ミストジュエル (有償)', pgcost)
   string += '========================\n'
   log_info(string)
+
+def trade_item(good_id, amount):
+  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/TradeRewards/{good_id}/trade/{amount}")
+  return res['r']
+
+def trade_all_event_goods():
+  stores = get_event_shop()
+  for st in stores:
+    currency = {it['MItemId']: it['Stock'] for it in st['CurrencyStocks']}
+    goods = get_tshop_goods(st['Id'])
+    goods = sorted(goods, key=lambda it:(it['Limit'] or 0)*it['RequiredMItemNum'])
+    log_info(f"Trade shop#{st['Id']} currency owned:", currency, sep='\n')
+    for good in reversed(goods):
+      price = good['RequiredMItemNum']
+      owned = currency[good['RequiredMItemId']]
+      name = game.get_item_name(good)
+      if good['Limit']:
+        stock = good['Limit'] - good['TradedCount']
+        if stock == 0:
+          log_info(f"{name} is out of stock!")
+          continue
+      n = 0
+      if price > owned:
+        log_info(f"Cannot afford to buy {name}, requires {price} but only have {owned}; Exit shop")
+        break
+      if not good['Limit']: # Good with infinite trade count, should be bought at last
+        if good['ItemType'] == ITYPE_GOLD:
+          continue
+        n = owned // price
+        trade_item(good['Id'], n)
+      else: # Limited goods, should be traded first
+        n = min(stock, owned // price)
+        trade_item(good['Id'], n)
+      currency[good['RequiredMItemId']] -= price * n
+      log_info(f"Traded good {name} x{n}, currency left:\n{currency}")
 
 def main():
   pdat = player.get_profile()

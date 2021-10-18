@@ -121,7 +121,7 @@ def post_request(url, data=None, depth=1):
       log_info("Attempting to reauth game")
       reauth_game()
       wait(1)
-      return get_request(url)
+      return post_request(url, data, depth=depth)
     else:
       exit()
   if not res.content:
@@ -345,6 +345,9 @@ def get_item(item):
     return get_accessory(id)
   elif item['ItemType'] == ITYPE_GEAR:
     return get_gear(id)
+  elif item['ItemType'] == ITYPE_GOLD:
+    item['Name'] = 'Gold'
+    return item
   else:
     log_warning(f"Unknown item type: {item['ItemType']} for {item}")
   return item

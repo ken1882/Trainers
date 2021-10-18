@@ -18,14 +18,16 @@ def get_characters():
   res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UCharacters')
   return res['r']
 
+def __cache_characters(chars):
+  global __UCharacterCache
+  for ch in chars:
+    __UCharacterCache[ch['Id']] = ch
+
 def get_character_by_uid(uid, flush=False):
   if not flush and uid in __UCharacterCache:
     return __UCharacterCache[uid]
-  chars = get_characters()
-  ret = next((ch for ch in chars if ch['Id'] == uid), None)
-  if ret:
-    __UCharacterCache[uid] = ret
-  return ret
+  __cache_characters(get_characters())
+  return __UCharacterCache[uid]
 
 def get_current_parties():
   upid = get_profile()['UPartyId']

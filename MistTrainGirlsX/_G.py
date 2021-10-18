@@ -197,6 +197,8 @@ ITYPE_CONSUMABLE  = 4
 ITYPE_GOLD        = 6
 ITYPE_GEAR        = 10
 
+SHOP_TYPE_EVENT = 1
+
 LastErrorCode = 0
 
 def make_lparam(x, y):

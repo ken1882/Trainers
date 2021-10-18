@@ -293,7 +293,7 @@ def log_battle_status(data, actions=[]):
     string += "===============================\n"
     log_info(string)
   except Exception as err:
-    log_error("Error occurred during loggin battle status:", handle_exception(err))
+    log_error("Error occurred during logging battle status:", handle_exception(err))
 
 def log_loots(data):
   if not LOG_STATUS or VerboseLevel < 3:
