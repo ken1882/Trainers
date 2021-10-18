@@ -71,8 +71,9 @@ def get_request(url, depth=1):
       reauth_game()
       break
   try:
+    log_debug(f"[GET] {url}")
     res = Session.get(url, timeout=NetworkTimeout)
-  except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout) as err:
+  except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError) as err:
     Session.close()
     if depth < NetworkMaxRetry:
       log_warning(f"Connection timeout for {url}, retry (depth={depth+1})")
@@ -102,11 +103,12 @@ def post_request(url, data=None, depth=1):
       break
   res = None
   try:
+    log_debug(f"[POST] {url} with payload:", data, sep='\n')
     if data:
       res = Session.post(url, json.dumps(data), headers=PostHeaders, timeout=NetworkTimeout)
     else:
       res = Session.post(url, timeout=NetworkTimeout)
-  except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout) as err:
+  except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError) as err:
     Session.close()
     if depth < NetworkMaxRetry:
       log_warning(f"Connection timeout for {url}, retry (depth={depth+1})")
