@@ -77,7 +77,7 @@ def get_aprecovery_items():
   return res['r']
 
 def use_aprecovery_item(item, amount=1):
-  if amount < item['Stock']:
+  if amount > item['Stock']:
     log_warning(f"Not enough items in stock for use: {item}")
     return None
   return game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Users/recoverStamina/{item['MItemId']}/{amount}")  
