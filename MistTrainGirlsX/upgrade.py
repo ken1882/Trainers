@@ -1,6 +1,7 @@
 from _G import *
 import game
 import player
+import math
 
 TagetGearLevel  = 15
 MinMistGearKeep = 1000000
@@ -86,17 +87,21 @@ def enhance_gear(character, target_lv):
   cur = character['TotalGearExperience']
   lgn = get_layer_gears(mchid)
   rarity = game.get_character_base(mchid)['CharacterRarity']
-  needed = game.GearProgressionTable[rarity][target_lv] - cur
-  if needed <= 0:
-    log_info("Needn't to enhance gear level")
-    return character['GearLevel']
+  if cur >= game.GearProgressionTable[rarity][MaxGearLevel]:
+    log_info("Max gear level reached")
+    return MaxGearLevel
+  needed_max    = game.GearProgressionTable[rarity][MaxGearLevel] - cur
+  needed_target = game.GearProgressionTable[rarity][target_lv] - cur
   lgxp = CharacterPieceExp[rarity]
-  needed = needed - min(lgn, needed // lgxp) * lgxp
-  mgn = 0 if MistGearStockCache - needed < MinMistGearKeep else needed
+  lgn = min(lgn, math.ceil(needed_max / lgxp))
+  needed_max = needed_max - lgn * lgxp
+  needed_target = max(needed_target - lgn * lgxp, 0)
+  mgn = 0 if MistGearStockCache - needed_target < MinMistGearKeep else needed_target
   if mgn + lgn == 0:
-    log_info("Insufficient gear to enhance")
+    log_info("Insufficient gear to enhance" if needed_target > 0 else 'Target gear level already reached')
     return character['GearLevel']
   MistGearStockCache -= mgn
+  log_info(f"Enhancing character with pieces x{lgn} and mist gear x{mgn}")
   res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/AddGearPoint/{character['Id']}/{lgn}/{mgn}")
   log_info("Gear level enhance done, mist gear left:", MistGearStockCache)
   return res['r']['CurrentGearLevel']
@@ -116,6 +121,8 @@ def do_enhance(character):
   if character['GearLevel'] < MaxGearLevel:
     res = enhance_gear(character, TagetGearLevel)
     log_info(f"Gear enhance complete, current level={res}")
+  else:
+    log_info("Character already reached max gear level")
   if kp:
     elv,glv,klv = bulk_enhance(chid, kp=kp)
     log_info(f"Enhance done; Level={elv}; Gear Level={glv}; Kizuna Level={klv}")
@@ -126,7 +133,7 @@ def enhance_all_characters():
     do_enhance(ch)
     log_info(f"Progress: {i+1}/{len(ar)}")
     uwait(0.3)
-  log_info("Upgrade completed")
+  log_info("Upgrade completed, mist gear left:", MistGearStockCache)
 
 def main():
   enhance_all_characters()

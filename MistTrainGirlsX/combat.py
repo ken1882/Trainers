@@ -558,7 +558,8 @@ def process_prepare_inputs():
 
 def main():
   global PartyId,StageId,RentalUid,AvailableFriendRentals,RentalCycle
-  global FlagRunning,FlagPaused,FlagRequestReEnter,ReportDetail
+  global FlagRunning,FlagPaused,FlagRequestReEnter,ReportDetail,LOG_STATUS
+  LOG_STATUS = not _G.ARGV.less
   PartyId,StageId,RentalUid = process_prepare_inputs()
   discord.update_status(StageId)
   cnt = 0

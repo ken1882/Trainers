@@ -1,4 +1,3 @@
-from numpy import string_
 from _G import *
 import game
 from copy import deepcopy
