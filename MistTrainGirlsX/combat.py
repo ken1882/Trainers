@@ -66,23 +66,32 @@ Headers = {
 }
 
 ReportDetail = {
-  'start_t': datetime.now(),
-  'end_t': 0,
-  'paused_t': timedelta(),
-  'times': 0,
-  'loots': {},
-  'solds': {},
-  'sells': {},
-  'ap_recovery': {},
+  'start_t': datetime.now(),  # start time
+  'end_t': 0,                 # end time (the time when report is presented)
+  'paused_t': timedelta(),    # paused duration
+  'times': 0,                 # how many times fighted
+  'loots': {},                # loots
+  'loot_n': {},               # times the loot dropped, used to calc drop rate
+  'solds': {},                # loots sold
+  'sells': {},                # stuff gained from selling loots
+  'ap_recovery': {},          # ap recovery option used
   'win': 0,
   'lose': 0,
 }
 
-def hash_item_id(item):
-  return item['ItemType'] * 1000000 + item['ItemId']
+W_TYPE = 10 ** 6
+W_QUANTITY = 10 ** 8
+
+def hash_item_id(item, q=None):
+  ret = item['ItemType'] * W_TYPE + item['ItemId']
+  if q:
+    ret += q * W_QUANTITY
+  return ret
 
 def dehash_item_id(id):
-  return (id // 1000000, id % 1000000)
+  if id < W_QUANTITY:
+    return (id // W_TYPE, id % W_TYPE)
+  return (id % W_QUANTITY // W_TYPE, id % W_TYPE, id // W_QUANTITY)
 
 def start_battle(sid, pid, rid=0):
   log_info("Staring batlle")
@@ -381,9 +390,13 @@ def record_loots(loots):
     if loot['Sold']:
       continue
     hid = hash_item_id(loot)
+    hid2= hash_item_id(loot, loot['ItemQuantity'])
     if hid not in ReportDetail['loots']:
       ReportDetail['loots'][hid] = 0
+    if hid2 not in ReportDetail['loot_n']:
+      ReportDetail['loot_n'][hid2] = 0
     ReportDetail['loots'][hid] += loot['ItemQuantity']
+    ReportDetail['loot_n'][hid2] += 1
 
 def process_combat(data):
   global LastBattleWon,ReportDetail
@@ -502,6 +515,7 @@ def reset_final_report():
   'paused_t': timedelta(),
   'times': 0,
   'loots': {},
+  'loot_n': {},
   'solds': {},
   'sells': {},
   'ap_recovery': {},
@@ -524,8 +538,8 @@ def log_final_report():
     string += f"Combat status: {ReportDetail['times']} fights, Win/Lose={ReportDetail['win']}/{ReportDetail['lose']} ({int(ReportDetail['win'] / ReportDetail['times'] * 100)}%)\n"
     string += f"Average time spent per fight: {elapsed / ReportDetail['times']}\n"
     string += f"Stamina used: {game.get_quest(StageId)['ActionPointsCost'] * ReportDetail['times']}\n"
-    keys = ['ap_recovery', 'loots', 'solds', 'sells']
-    subtitles = ("Recovery items used", "Loots Gained", "Loots Sold", "Sell Earnings")
+    keys = ['ap_recovery', 'loots', 'solds', 'sells', 'loot_n']
+    subtitles = ("Recovery items used", "Loots Gained", "Loots Sold", "Sell Earnings", "Loots Drop Rate")
     for idx,key in enumerate(keys):
       subtitle = subtitles[idx]
       spacing = (line_width - 2 - len(subtitle)) // 2
@@ -533,11 +547,19 @@ def log_final_report():
       for hid,n in ReportDetail[key].items():
         if hid == 0:
           continue
-        itype,iid = dehash_item_id(hid)
+        info = dehash_item_id(hid)
+        if len(info) == 2:
+          itype,iid = info
+        else:
+          itype,iid,qn = info
         item_info = {'ItemType': itype, 'ItemId': iid}
         name = game.get_item_name(item_info)
-        string += '{:>10}x {}'.format(n, name)
-        string += f" (Now have x{player.get_item_stock(item_info)['Stock']})\n"
+        if key != 'loot_n':
+          string += '{:>10}x {}'.format(n, name)
+          string += f" (Now have x{player.get_item_stock(item_info)['Stock']})\n"
+        else:
+          string += format_padded_utfstring((f"{qn}x{name}", 40, True))
+          string += ": {:.5f}%\n".format(n / ReportDetail['times'])
     # end report category listings
   except Exception as err:
     log_error(f"An error occureed while logging final report: {err}")
