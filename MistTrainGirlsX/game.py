@@ -1,6 +1,7 @@
 import re
 import _G
 from _G import *
+import argv_parse
 import utils
 from utils import localt2jpt
 from datetime import datetime
@@ -10,6 +11,7 @@ from time import time
 import requests
 from requests.exceptions import *
 from urllib.parse import quote_plus
+import pprint
 
 PostHeaders = {
   'Accept': 'application/json',
@@ -47,14 +49,20 @@ NetworkPostTimeout = 60
 
 def init():
   global Session,FlagAutoReauth,StarbrustStream
+  args = argv_parse.load()
+  log_info("Flags:", args, sep='\n')
   _G.SelfHwnd = utils.get_self_hwnd()
   Session = requests.Session()
   Session.headers = {
-    'Authorization': next((arg for arg in sys.argv if arg.startswith('Bearer')), '')
+    'Authorization': next((arg.strip() for arg in sys.argv if arg.strip().startswith('Bearer')), '')
   }
-  FlagAutoReauth = next((True for arg in sys.argv if arg=='-a' or arg=='--auto-reauth'), False)
-  _G.StarbrustStream = next((True for arg in sys.argv if arg=='-s' or arg=='--star-brust-stream'), False)
-  _G.PersistCharacterCache = ('--no-persist-cache' not in sys.argv)
+  FlagAutoReauth = True if args.auto_reauth else False
+  _G.StarbrustStream = True if args.star_brust_stream else False
+  _G.PersistCharacterCache = False if args.no_persist_cache else True
+  if args.user_agent:
+    Session.headers['User-Agent'] = args.user_agent
+  if not args.auto_reauth and not Session.headers['Authorization']:
+    raise RuntimeError("Game token is required to start game without reauthorize")
   load_database()
 
 def is_response_ok(res):
@@ -74,6 +82,10 @@ def is_response_ok(res):
 def is_day_changing():
   curt = localt2jpt(datetime.now())
   return (curt.hour == 4 and curt.minute >= 58) or (curt.hour == 5 and curt.minute < 10)
+
+def change_token(token):
+  global Session
+  Session.headers['Authorization'] = token
 
 def get_request(url, depth=1):
   global Session,LastErrorCode
@@ -191,7 +203,7 @@ def reauth_game():
   content = ''.join(res.content.decode('utf8').split('>')[1:])
   data = json.loads(content)
   res_json = json.loads(data[list(data.keys())[0]]['body'])
-  Session.headers['Authorization'] = f"Bearer {res_json['r']}"
+  change_token(f"Bearer {res_json['r']}")
   wait(1)
   log_info(f"New token retrieved:\n{Session.headers['Authorization']}")
   res = Session.post('https://mist-train-east4.azurewebsites.net/api/Login')
