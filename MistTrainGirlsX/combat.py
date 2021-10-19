@@ -532,6 +532,8 @@ def log_final_report():
 
 def update_input():
   global FlagRunning,FlagPaused,FlagRequestReEnter
+  if not utils.is_focused():
+    return
   Input.update()
   if Input.is_trigger(win32con.VK_F7):
     FlagPaused ^= True
@@ -574,6 +576,7 @@ def main():
       PartyId,StageId,RentalUid = process_prepare_inputs()
       discord.update_status(StageId)
       FlagRequestReEnter = False
+      log_final_report()
       reset_final_report()
       cnt = 0
       continue

@@ -19,6 +19,9 @@ AppChildHwnd = 0
 AppTargetHwnd   = 0
 AppTargetUseMsg = True
 
+SelfHwnd = 0
+SelfPid  = 0
+
 DCTmpFolder = ".tmp"
 DCSnapshotFile = "snapshot.png"
 STATIC_FILE_DIRECTORY = './static'

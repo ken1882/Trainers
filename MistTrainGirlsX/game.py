@@ -1,6 +1,7 @@
 import re
 import _G
 from _G import *
+import utils
 from utils import localt2jpt
 from datetime import datetime
 import json
@@ -39,6 +40,7 @@ NetworkTimeout  = 5
 
 def init():
   global Session,FlagAutoReauth,StarbrustStream
+  _G.SelfHwnd = utils.get_self_hwnd()
   Session = requests.Session()
   Session.headers = {
     'Authorization': next((arg for arg in sys.argv if arg.startswith('Bearer')), '')

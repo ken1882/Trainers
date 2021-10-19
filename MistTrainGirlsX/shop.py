@@ -13,7 +13,7 @@ def get_daily_shop():
   res = game.get_request('https://mist-train-east4.azurewebsites.net/api/Markets/DailyShop')
   return res['r']
 
-def get_event_shop():
+def get_event_shops():
   res = game.get_request('https://mist-train-east4.azurewebsites.net/api/TradeShops')
   return [st for st in res['r'] if st['TradeShopType'] == SHOP_TYPE_EVENT]
 
@@ -88,7 +88,7 @@ def trade_item(good_id, amount):
   return res['r']
 
 def trade_all_event_goods():
-  stores = get_event_shop()
+  stores = get_event_shops()
   for st in stores:
     currency = {it['MItemId']: it['Stock'] for it in st['CurrencyStocks']}
     goods = get_tshop_goods(st['Id'])
