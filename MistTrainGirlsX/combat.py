@@ -12,7 +12,7 @@ import Input
 import game
 import utils
 from datetime import date, datetime, timedelta
-from stage import StageAlias
+from stage import StageAlias, StageData
 
 if sys.platform == 'win32':
   import win32con
@@ -427,7 +427,20 @@ def process_partyid_input():
 def process_stageid_input():
   sid = 0
   while not sid:
-    sid = input("Stage id: ")
+    sid = input("Stage id (enter 0 to see stored data): ")
+    if utils.isdigit(sid) and int(sid) == 0:
+      string = format_padded_utfstring(('Id', 15, True), (' Alias', 10), ('Name', 50)) + '\n'
+      for id,name in StageData.items():
+        if id == 0:
+          continue
+        name = name[-1]
+        alias = next((k for k,v in StageAlias.items() if v == id), '')
+        string += format_padded_utfstring(
+          (id, 15, True), (' '+alias, 10), (name, 50)
+        ) + '\n'
+      print(string, '-'*42)
+      sid = ''
+      continue
     if not utils.isdigit(sid):
       if sid in StageAlias:
         sid = StageAlias[sid]
@@ -529,7 +542,7 @@ def log_final_report():
   except Exception as err:
     log_error(f"An error occureed while logging final report: {err}")
     handle_exception(err)
-  string += f"{'='*68}\n"
+  string += f"\n{'='*68}\n"
   print(string)
 
 def update_input():

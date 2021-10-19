@@ -1,6 +1,6 @@
 import os
 import configparser
-from stage import StageStatus
+from stage import StageData
 
 ConfigFilePath = os.getenv("MTGDiscordRPCConfigPath")
 ProfileCache = ''
@@ -20,9 +20,9 @@ def update_player_profile(name, level):
     config.write(fp, space_around_delimiters=False)
 
 def update_status(stage_id):
-  if stage_id not in StageStatus:
+  if stage_id not in StageData:
     return
-  detail,stat = StageStatus[stage_id]
+  detail,stat = StageData[stage_id]
   config = configparser.ConfigParser()
   config.optionxform = str
   config.read(ConfigFilePath)

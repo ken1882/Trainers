@@ -31,9 +31,9 @@ def get_character_by_uid(uid, flush=False):
   __cache_characters(get_characters())
   return __UCharacterCache[uid]
 
-def get_nonmastered_characters():
+def get_unmastered_characters():
   '''
-  Get characters that still has non-mastered skills
+  Get characters that still has unmastered skills
   '''
   chars = get_characters()
   sk_keys = ['USkill1','USkill2','USkill3']

@@ -70,6 +70,9 @@ def main():
     w = EnergyItemTable[item['MItemId']]
     if uses[w]:
       payload[item['Id']] = uses[w]
+  if sum([n for _,n in uses.items()]) == 0:
+    log_info("No need to charge")
+    return
   log_info("Charge item uses:", uses)
   res = charge_energy(uses[GoldCharge], payload)
   log_info("Charge completed:", res['r'])

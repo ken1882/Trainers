@@ -24,6 +24,10 @@ NetworkExcpetionRescues = (
   ConnectionResetError
 )
 
+TemporaryNetworkErrors = (
+  'Object reference not set',
+)
+
 CharacterDatabase = {}
 EnemyDatabase     = {}
 FormationDatabase = {}
@@ -61,15 +65,26 @@ def init():
   _G.PersistCharacterCache = False if args.no_persist_cache else True
   if args.user_agent:
     Session.headers['User-Agent'] = args.user_agent
+  else:
+    path = f"{DCTmpFolder}/useragent"
+    if os.path.exists(path):
+      with open(path, 'r') as fp:
+        Session.headers['User-Agent'] = fp.read()
+  log_info("User agent:", Session.headers['User-Agent'] )
   if not args.auto_reauth and not Session.headers['Authorization']:
     raise RuntimeError("Game token is required to start game without reauthorize")
   load_database()
 
 def is_response_ok(res):
-  global LastErrorCode
+  global LastErrorCode,LastErrorMessage
   log_debug(res)
   if res.status_code != 200:
     LastErrorCode = res.status_code
+    if res.content:
+      try:
+        LastErrorMessage = res.json()['r']['m']
+      except Exception:
+        pass
     if res.status_code == 403:
       log_error("Server is under maintenance!")
     else:
@@ -88,7 +103,7 @@ def change_token(token):
   Session.headers['Authorization'] = token
 
 def get_request(url, depth=1):
-  global Session,LastErrorCode
+  global Session
   while is_day_changing():
     log_warning("Server day changing, wait for 1 minute")
     wait(60)
@@ -107,7 +122,8 @@ def get_request(url, depth=1):
     else:
       raise err
   if not is_response_ok(res):
-    if FlagAutoReauth and LastErrorCode == 401:
+    errno,errmsg = get_last_error()
+    if FlagAutoReauth and errno == 401:
       log_info("Attempting to reauth game")
       reauth_game()
       return get_request(url)
@@ -118,7 +134,7 @@ def get_request(url, depth=1):
   return res.json()
 
 def post_request(url, data=None, depth=1):
-  global Session,LastErrorCode
+  global Session,TemporaryNetworkErrors
   while is_day_changing():
     log_warning("Server day changing, wait for 1 minute")
     wait(60)
@@ -142,7 +158,13 @@ def post_request(url, data=None, depth=1):
     else:
       raise err
   if not is_response_ok(res):
-    if FlagAutoReauth and LastErrorCode == 401:
+    errno,errmsg = get_last_error()
+    if errno == 500 and errmsg in TemporaryNetworkErrors:
+      log_warning("Temprorary server error occurred, waiting for 3 seconds")
+      wait(3)
+      log_warning(f"Retry connect to {url} (depth={depth+1})")
+      return post_request(url, data, depth=depth+1)
+    elif FlagAutoReauth and errno == 401:
       log_info("Attempting to reauth game")
       reauth_game()
       wait(1)
@@ -296,6 +318,10 @@ def get_character_base(id):
     if id not in CharacterDatabase:
       raise RuntimeError(f"Invalid character id: {id}")
   return CharacterDatabase[id]
+
+def get_character_name(id):
+  ch = get_character_base(id)
+  return f"{ch['Name']}{ch['MCharacterBase']['Name']}"
 
 def get_skill(id):
   if id not in SkillDatabase:

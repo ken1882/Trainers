@@ -234,9 +234,18 @@ RARITY_SS = 4
 RARITY_NAME = ['C','B','A','S','SS','US']
 
 LastErrorCode = 0
+LastErrorMessage = ''
 
 def make_lparam(x, y):
   return (y << 16) | x
 
 def get_lparam(val):
   return (val & 0xffff, val >> 16)
+
+def get_last_error():
+  global LastErrorCode,LastErrorMessage
+  retc = LastErrorCode
+  retm = LastErrorMessage
+  LastErrorCode = 0
+  LastErrorMessage = ''
+  return (retc, retm)

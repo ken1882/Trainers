@@ -108,7 +108,7 @@ def enhance_gear(character, target_lv):
 
 def do_enhance(character):
   chid  = character['Id']
-  log_info("Enhancing character of id", chid)
+  log_info("Enhancing ", game.get_character_name(character['MCharacterId']))
   kp  = determine_kizuna_usage(get_kizuna(chid))
   if kp:
     log_info("Kizuna usage:", kp)

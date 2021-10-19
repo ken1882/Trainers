@@ -1,7 +1,7 @@
 import _G
 from _G import *
 import combat, discord
-from stage import StageStatus
+from stage import StageData
 import game
 
 ATYPE_NONE     = 0
@@ -14,7 +14,7 @@ ATYPE_BLUDGEON_CHAR = '衝'
 
 def find_floor_sid(n):
   key = f"試練の塔 {n}"
-  return next((k for k,p in StageStatus.items() if key in p[1]), None)
+  return next((k for k,p in StageData.items() if key in p[1]), None)
 
 def get_stage_weakness(sid):
   data = game.get_quest(sid)
@@ -44,7 +44,7 @@ def main():
   sid = find_floor_sid(cur_n)
   rpn = get_stage_weakness(sid)
   discord.update_status(sid)
-  while sid in StageStatus:
+  while sid in StageData:
     log_info(f"Challenging floor#{cur_n}")
     log_info(f"Using team#{pids[rpn]} weakness: ({rpn})")
     signal = combat.start_battle_process(sid, pids[rpn], rid)

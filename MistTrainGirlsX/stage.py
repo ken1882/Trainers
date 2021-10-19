@@ -5,7 +5,7 @@ StageAlias = {
   'exp':  202001110,  # exp mat quest
 }
 
-StageStatus = {
+StageData = {
           0: ('Waiting for maintenance', 'メンテナンス中...'),
   304013106: ('Playing events', '入隊訓練：カラマチ/クインズウェイ (Inferno)'),
   302027505: ('Playing events', '熱烈歓迎！拳闘娘のシゴキ塾！ 1-5 (Very Hard)'),
