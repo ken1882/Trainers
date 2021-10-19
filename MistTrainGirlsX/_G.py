@@ -49,6 +49,9 @@ SnapshotCache = {}  # OCR snapshot cache for current frame
 VerboseLevel = 3
 VerboseLevel = 4 if ('-v' in sys.argv or '--verbose' in sys.argv) else VerboseLevel
 
+OriTerminalSettings = None
+InpTerminalSettings = None
+
 FlagRunning = True
 FlagPaused  = False
 FlagWorking = False

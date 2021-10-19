@@ -5,19 +5,56 @@ from time import sleep
 from threading import Thread
 from _G import (resume,wait,uwait,log_debug,log_error,log_info,log_warning,make_lparam,get_lparam)
 
-try:
+if sys.platform == 'win32':
   import win32api,win32con
-except Exception:
-  pass # import linux version
-
+elif sys.platform == 'linux':
+  import tty,termios
+  _G.OriTerminalSettings = termios.tcgetattr(sys.stdin)
+  tset = termios.tcgetattr(sys.stdin)
+  tset[3] = tset[3] & ~(termios.ECHO | termios.ICANON)
+  tset[6][termios.VMIN] = 0
+  tset[6][termios.VTIME] = 0
+  _G.InpTerminalSettings = tset
 
 ScrollTime  = 0.03
 ScrollDelta = [1,5]
 BG_THEAD_NAME = 'BASE_INPUT'
 keystate = [0 for _ in range(0xff)]
+VK_Table = {}
+
+def setup_keytable_win32():
+  VK_Table['VK_F1'] = win32con.VK_F1
+  VK_Table['VK_F2'] = win32con.VK_F2
+  VK_Table['VK_F3'] = win32con.VK_F3
+  VK_Table['VK_F4'] = win32con.VK_F4
+  VK_Table['VK_F5'] = win32con.VK_F5
+  VK_Table['VK_F6'] = win32con.VK_F6
+  VK_Table['VK_F7'] = win32con.VK_F7
+  VK_Table['VK_F8'] = win32con.VK_F8
+  VK_Table['VK_F9'] = win32con.VK_F9
+  VK_Table['VK_F10'] = win32con.VK_F10
+  VK_Table['VK_F11'] = win32con.VK_F11
+  VK_Table['VK_F12'] = win32con.VK_F12
+  
+
+def setup_keytable_unix():
+  VK_Table['VK_F1'] = b'\x1bOP'
+  VK_Table['VK_F2'] = b'\x1bOQ'
+  VK_Table['VK_F3'] = b'\x1bOR'
+  VK_Table['VK_F4'] = b'\x1bOS'
+  VK_Table['VK_F5'] = b'\x1b[15~'
+  VK_Table['VK_F6'] = b'\x1b[17~'
+  VK_Table['VK_F7'] = b'\x1b[18~'
+  VK_Table['VK_F8'] = b'\x1b[19~'
+  VK_Table['VK_F9'] = b'\x1b[20~'
+  VK_Table['VK_F10'] = b'\x1b[21~'
+  VK_Table['VK_F11'] = b'\x1b[23~'
+  VK_Table['VK_F12'] = b'\x1b[24~'
+
 
 def update():
   global keystate
+  # TODO: add linux versin
   for i in range(0xff):
     if win32api.GetAsyncKeyState(i):
       keystate[i] += 1
@@ -237,3 +274,8 @@ def start_bgkey_listener():
   _G.ThreadPool[BG_THEAD_NAME] = th
   th.start()
   return th
+
+if sys.platform == 'win32':
+  setup_keytable_win32()
+elif sys.platform == 'linux':
+  setup_keytable_unix()

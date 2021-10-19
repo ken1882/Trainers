@@ -1,4 +1,4 @@
-import enum
+import sys
 import _G
 from _G import *
 import itertools
@@ -10,10 +10,12 @@ import friend
 import discord
 import Input
 import game
-import win32con
 import utils
 from datetime import date, datetime, timedelta
 from stage import StageAlias
+
+if sys.platform == 'win32':
+  import win32con
 
 LOG_STATUS = True
 
@@ -535,13 +537,13 @@ def update_input():
   if not utils.is_focused():
     return
   Input.update()
-  if Input.is_trigger(win32con.VK_F7):
+  if Input.is_trigger(Input.VK_Table['VK_F7']):
     FlagPaused ^= True
     print("Worker", 'paused' if FlagPaused else 'unpaused')
-  elif Input.is_trigger(win32con.VK_F8):
+  elif Input.is_trigger(Input.VK_Table['VK_F8']):
     FlagRunning = False
     FlagPaused  = False
-  elif Input.is_trigger(win32con.VK_F5):
+  elif Input.is_trigger(Input.VK_Table['VK_F5']):
     FlagRequestReEnter = True
 
 def process_prepare_inputs():
@@ -566,7 +568,7 @@ def main():
       pt_s = datetime.now()
       while FlagPaused:
         update_input()
-        if Input.is_trigger(win32con.VK_F6):
+        if Input.is_trigger(Input.VK_Table['VK_F6']):
           log_final_report()
         if not FlagPaused:
           ReportDetail['paused_t'] += datetime.now() - pt_s

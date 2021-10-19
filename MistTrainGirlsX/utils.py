@@ -1,9 +1,9 @@
+import sys
 import pytesseract
 import _G
 from _G import log_error,log_debug,log_info,log_warning,resume,wait,uwait
 import numpy as np
 import os
-import win32gui, win32process, win32console
 from time import sleep
 from random import random
 import traceback
@@ -14,6 +14,11 @@ import json
 from difflib import SequenceMatcher
 from datetime import datetime,timedelta
 from time import sleep,gmtime,strftime
+
+if sys.platform == 'win32':
+  import win32gui, win32process, win32console
+elif sys.platform == 'linux':
+  pass
 
 def EnumWindowCallback(hwnd, lparam):
   if win32gui.IsWindowVisible(hwnd):
@@ -141,10 +146,13 @@ def EnumWindowSelfCB(hwnd, lparam):
   return True
 
 def get_self_hwnd():
-  _G.SelfHwnd = win32console.GetConsoleWindow()
-  if _G.SelfHwnd == 0:
-    win32gui.EnumWindows(EnumWindowSelfCB, None)
-  return _G.SelfHwnd
+  if sys.platform == 'win32':
+    _G.SelfHwnd = win32console.GetConsoleWindow()
+    if _G.SelfHwnd == 0:
+      win32gui.EnumWindows(EnumWindowSelfCB, None)
+    return _G.SelfHwnd
 
 def is_focused():
-  return win32gui.GetForegroundWindow() == _G.SelfHwnd
+  if sys.platform == 'win32':
+    return win32gui.GetForegroundWindow() == _G.SelfHwnd
+  return True

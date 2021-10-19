@@ -1,7 +1,6 @@
 import cv2
+import sys
 import numpy as np
-import win32gui
-from desktopmagic.screengrab_win32 import getRectAsImage
 from PIL import Image
 
 import _G
@@ -9,7 +8,13 @@ import Input
 from _G import log_debug, log_error, log_info, log_warning, resume, uwait, wait, flush
 from _G import (CVLocalDistance, CVMatchHardRate, CVMatchMinCount, CVMatchStdRate)
 
-_G.DesktopDC = win32gui.GetDC(0)
+
+if sys.platform == 'win32':
+  import win32gui
+  from desktopmagic.screengrab_win32 import getRectAsImage
+  _G.DesktopDC = win32gui.GetDC(0)
+elif sys.platform == 'linux':
+  pass
 
 def is_color_ok(cur, target):
   log_debug("=== Pixel Color Comparing ===")
