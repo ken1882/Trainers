@@ -41,7 +41,7 @@ AutoSellItems = [
   #             type     Id  Maximum keep  Minimum keep
   (       ITYPE_GEAR,   106,          500,          100), # Gear：[古の魔女の末裔]セイラム
   ( ITYPE_CONSUMABLE,     7,        99900,        99000), # Small cake
-  ( ITYPE_CONSUMABLE,    10,        99000,        99000), # A Weapon enhance material
+  ( ITYPE_CONSUMABLE,    10,        99900,        99000), # A Weapon enhance material
   ( ITYPE_CONSUMABLE,    11,        99900,        99000)  # S Weapon enhance material
 ]
 
@@ -295,7 +295,7 @@ def recover_stamina():
   if not res:
     log_error("Out of stamina!")
     return None
-  log_info(f"Recovey {item} used, stock left: {item['Stock']-num}")
+  log_info(f"Recovey {game.get_item_name(item)} used, stock left: {item['Stock']-num}")
   log_info("Current stamina:", ap2)
   return res
 

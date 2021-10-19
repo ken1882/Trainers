@@ -228,6 +228,7 @@ SHOP_TYPE_EVENT = 1
 RARITY_A  = 2
 RARITY_S  = 3
 RARITY_SS = 4
+RARITY_NAME = ['C','B','A','S','SS','US']
 
 LastErrorCode = 0
 

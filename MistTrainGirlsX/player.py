@@ -1,3 +1,4 @@
+from numpy import string_
 from _G import *
 import game
 from copy import deepcopy
@@ -31,12 +32,31 @@ def get_character_by_uid(uid, flush=False):
   __cache_characters(get_characters())
   return __UCharacterCache[uid]
 
+def get_nonmastered_characters():
+  '''
+  Get characters that still has non-mastered skills
+  '''
+  chars = get_characters()
+  sk_keys = ['USkill1','USkill2','USkill3']
+  ret = []
+  for ch in chars:
+    skills = [ch[sk] for sk in sk_keys]
+    if any([sk['Rank'] < 99 for sk in skills]):
+      ret.append(ch)
+  return ret
+
 def get_current_parties():
+  '''
+  Get 10 parties of current group
+  '''
   upid = get_profile()['UPartyId']
   res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/UParties/GetUPartiesFromUPartyId/{upid}")
   return res['r']
 
 def interpret_parties(data):
+  '''
+  Add comprehensive data to raw party data
+  '''
   ret = []
   for party in data:
     dat = deepcopy(party)
@@ -52,27 +72,43 @@ def interpret_parties(data):
 
   return ret
 
+def format_character_data(characters):
+  NAME_WIDTH  = 50
+  RARITY_WIDTH = 7
+  POWER_WIDTH = 8
+  HP_WIDTH    = 7
+  string = format_padded_utfstring(
+    ('名前', NAME_WIDTH), ('ランク', RARITY_WIDTH, True), ('戦力', POWER_WIDTH, True), ('HP', HP_WIDTH, True),
+  ) + '\n'
+  for ch in characters:
+    if 'UCharacterId' in ch and not ch['UCharacterId']:
+      continue
+    if 'MCharacter' not in ch:
+      chid = ch['MCharacterId'] if 'MCharacterId' in ch else 0
+      if 'UCharacter' in ch:
+        chid = ch['UCharacter']['MCharacterId']
+      if chid:
+        ch['MCharacter'] = game.get_character_base(chid)
+    if 'UCharacter' not in ch:
+      ch['UCharacter'] = ch
+    string += format_padded_utfstring(
+      (f"{ch['MCharacter']['Name']}{ch['MCharacter']['MCharacterBase']['Name']}", NAME_WIDTH),
+      (RARITY_NAME[ch['MCharacter']['CharacterRarity']], RARITY_WIDTH, True),
+      (ch['TotalStatus'], POWER_WIDTH, True),
+      (ch['UCharacter']['UCharacterBaseViewModel']['Status']['HP'], HP_WIDTH, True),
+    ) + '\n'
+  return string
+
 def log_party_status():
   if VerboseLevel < 3:
     return
-  NAME_WIDTH  = 50
-  POWER_WIDTH = 8
-  HP_WIDTH    = 7
   string  = '\n' + '='*30 + ' Parties ' + '='*30 + '\n'
   pdat = get_current_parties()
   ppd  = interpret_parties(pdat['UParties'])
   for party in ppd:
     string += f"Party#{party['PartyNo']} Id:{party['Id']} (Name: {party['Name'] or ''})\n"
     string += f"Formation: {party['Formation']['Name']}\n"
-    string += format_padded_utfstring(('名前', NAME_WIDTH), ('戦力', POWER_WIDTH, True), ('HP', HP_WIDTH, True)) + '\n'
-    for ch in party['UCharacterSlots']:
-      if not ch['UCharacterId']:
-        continue
-      string += format_padded_utfstring(
-        (f"{ch['MCharacter']['Name']}{ch['MCharacter']['MCharacterBase']['Name']}", NAME_WIDTH),
-        (ch['TotalStatus'], POWER_WIDTH, True),
-        (ch['UCharacter']['UCharacterBaseViewModel']['Status']['HP'], HP_WIDTH, True),
-      ) + '\n'
+    string += format_character_data(party['UCharacterSlots'])
     string += '-'*69+'\n'
   log_info(string)
 

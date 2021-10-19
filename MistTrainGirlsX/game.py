@@ -8,6 +8,7 @@ import json
 import os,sys
 from time import time
 import requests
+from requests.exceptions import *
 from urllib.parse import quote_plus
 
 PostHeaders = {
@@ -15,6 +16,11 @@ PostHeaders = {
   'Content-Type': 'application/json',
   'Accept-Encoding': 'gzip, deflate, br'
 }
+
+NetworkExcpetionRescues = (
+  ConnectTimeout, ReadTimeout, ConnectionError, ConnectionAbortedError,
+  ConnectionResetError
+)
 
 CharacterDatabase = {}
 EnemyDatabase     = {}
@@ -36,7 +42,8 @@ Session = None
 
 FlagAutoReauth  = False
 NetworkMaxRetry = 5
-NetworkTimeout  = 5
+NetworkGetTimeout = 5
+NetworkPostTimeout = 60
 
 def init():
   global Session,FlagAutoReauth,StarbrustStream
@@ -79,11 +86,11 @@ def get_request(url, depth=1):
       break
   try:
     log_debug(f"[GET] {url}")
-    res = Session.get(url, timeout=NetworkTimeout)
-  except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError) as err:
+    res = Session.get(url, timeout=NetworkGetTimeout)
+  except NetworkExcpetionRescues as err:
     Session.close()
     if depth < NetworkMaxRetry:
-      log_warning(f"Connection timeout for {url}, retry (depth={depth+1})")
+      log_warning(f"Connection errored for {url}, retry (depth={depth+1})")
       return get_request(url, depth=depth+1)
     else:
       raise err
@@ -112,13 +119,13 @@ def post_request(url, data=None, depth=1):
   try:
     log_debug(f"[POST] {url} with payload:", data, sep='\n')
     if data:
-      res = Session.post(url, json.dumps(data), headers=PostHeaders)
+      res = Session.post(url, json.dumps(data), headers=PostHeaders, timeout=NetworkPostTimeout)
     else:
-      res = Session.post(url)
-  except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError) as err:
+      res = Session.post(url, timeout=NetworkPostTimeout)
+  except NetworkExcpetionRescues as err:
     Session.close()
     if depth < NetworkMaxRetry:
-      log_warning(f"Connection timeout for {url}, retry (depth={depth+1})")
+      log_warning(f"Connection errored for {url}, retry (depth={depth+1})")
       return post_request(url, data, depth=depth+1)
     else:
       raise err
