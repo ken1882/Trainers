@@ -1,6 +1,8 @@
 StageAlias = {
-  'gg': 101002505,  # gear grinds
-  'hsr': 304013106, # high speed rail
+  'gg':   101002505,  # gear grinds
+  'hsr':  304013106,  # high speed rail
+  'gold': 201001110,  # gold mat quest
+  'exp':  202001110,  # exp mat quest
 }
 
 StageStatus = {

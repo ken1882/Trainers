@@ -1,3 +1,4 @@
+import _G
 from _G import *
 import game
 

@@ -27,6 +27,10 @@ AccessoryDatabase = {}
 GearDatabase      = {}
 FieldSkillDatabase= {}
 QuestDatabase     = {}
+
+__MAX_PROGRESSION_LEVEL = 50
+GearProgressionTable = {}
+
 Session = None
 
 FlagAutoReauth  = False
@@ -60,7 +64,7 @@ def is_response_ok(res):
 
 def is_day_changing():
   curt = localt2jpt(datetime.now())
-  return (curt.hour == 4 and curt.minute >= 58) or (curt.hour == 5 and curt.minute < 3)
+  return (curt.hour == 4 and curt.minute >= 58) or (curt.hour == 5 and curt.minute < 10)
 
 def get_request(url, depth=1):
   global Session,LastErrorCode
@@ -130,8 +134,8 @@ def post_request(url, data=None, depth=1):
 
 def reauth_game():
   global Session
-  session = requests.Session()
-  session.headers = {
+  _session = requests.Session()
+  _session.headers = {
     'Accept': '*/*',
     'Accept-Encoding': 'gzip, deflate, br',
     'Content-Type': 'application/x-www-form-urlencoded',
@@ -153,9 +157,9 @@ def reauth_game():
     seg = line.strip().split('=')
     k = seg[0]
     v = '='.join(seg[1:])
-    session.cookies.set(k, v)
+    _session.cookies.set(k, v)
 
-  res = session.post('https://pc-play.games.dmm.co.jp/play/MistTrainGirlsX/check/ajax-index/', raw_form.split('\n')[0])
+  res = _session.post('https://pc-play.games.dmm.co.jp/play/MistTrainGirlsX/check/ajax-index/', raw_form.split('\n')[0])
   if not is_response_ok(res):
     log_error("Unable to reauth game, abort")
     exit()
@@ -170,7 +174,7 @@ def reauth_game():
 
   log_debug("Request payload:", payload, sep='\n')
   # Start game
-  res = session.post('https://osapi.dmm.com/gadgets/makeRequest', payload)
+  res = _session.post('https://osapi.dmm.com/gadgets/makeRequest', payload)
   if not is_response_ok(res):
     log_error("Unable to reauth game, abort")
     exit()
@@ -180,8 +184,17 @@ def reauth_game():
   res_json = json.loads(data[list(data.keys())[0]]['body'])
   Session.headers['Authorization'] = f"Bearer {res_json['r']}"
   wait(1)
+  log_info(f"New token retrieved:\n{Session.headers['Authorization']}")
   res = Session.post('https://mist-train-east4.azurewebsites.net/api/Login')
   return res
+
+def load_progression_table(data):
+  global GearProgressionTable
+  for _,dat in data.items():
+    rarity = dat['CharacterRarity']
+    if rarity not in GearProgressionTable:
+      GearProgressionTable[rarity] = [0 for _ in range(__MAX_PROGRESSION_LEVEL+1)]
+    GearProgressionTable[rarity][dat['Level']] = dat['TotalExperience']
 
 def load_database(forced=False):
   global VerboseLevel
@@ -200,7 +213,8 @@ def load_database(forced=False):
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MAccessoryViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterPieceViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MFieldSkillViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MQuestViewModel.json'
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MQuestViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterGearLevelViewModel.json'
   ]
   for i,link in enumerate(links):
     path = f"{STATIC_FILE_DIRECTORY}/{link.split('/')[-1]}"
@@ -246,6 +260,8 @@ def load_database(forced=False):
       FieldSkillDatabase = db
     elif i == 11:
       QuestDatabase = db
+    elif i == 12:
+      load_progression_table(db)
 
 def __convert2indexdb(db):
   ret = {}

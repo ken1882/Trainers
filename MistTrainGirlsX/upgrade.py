@@ -2,6 +2,9 @@ from _G import *
 import game
 import player
 
+TagetGearLevel  = 15
+MinMistGearKeep = 1000000
+
 Headers = {
   'Accept': 'application/json',
   'Content-Type': 'application/json',
@@ -10,7 +13,14 @@ Headers = {
 MaxExpLevel  = 50
 MaxGearLevel = 20
 MaxKizunaPoint = 1300
+CharacterPieceExp = {
+  RARITY_A:   200,
+  RARITY_S:   600,
+  RARITY_SS: 1000,
+}
 TotalKizunaPoint = [0, 0, 100, 250, 400, 550, 700, 850, 1000, 1150, 1300]
+MistGearStockCache = -1
+
 
 def get_layer_gears(mchid):
   res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/LimitBreakPieces/{mchid}")
@@ -68,26 +78,47 @@ def level_up(chid,level=1):
     uwait(0.1)
   return level
 
+def enhance_gear(character, target_lv):
+  global MistGearStockCache
+  if MistGearStockCache == -1:
+    MistGearStockCache = player.get_mistgear_stock()['Stock']
+  mchid = character['MCharacterId']
+  cur = character['TotalGearExperience']
+  lgn = get_layer_gears(mchid)
+  rarity = game.get_character_base(mchid)['CharacterRarity']
+  needed = game.GearProgressionTable[rarity][target_lv] - cur
+  if needed <= 0:
+    log_info("Needn't to enhance gear level")
+    return character['GearLevel']
+  lgxp = CharacterPieceExp[rarity]
+  needed = needed - min(lgn, needed // lgxp) * lgxp
+  mgn = 0 if MistGearStockCache - needed < MinMistGearKeep else needed
+  if mgn + lgn == 0:
+    log_info("Insufficient gear to enhance")
+    return character['GearLevel']
+  MistGearStockCache -= mgn
+  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/AddGearPoint/{character['Id']}/{lgn}/{mgn}")
+  log_info("Gear level enhance done, mist gear left:", MistGearStockCache)
+  return res['r']['CurrentGearLevel']
+
 def do_enhance(character):
   chid  = character['Id']
-  mchid = character['MCharacterId']
   log_info("Enhancing character of id", chid)
-  lgn = get_layer_gears(mchid)
-  log_info("Layer gears:", lgn)
   kp  = determine_kizuna_usage(get_kizuna(chid))
   if kp:
     log_info("Kizuna usage:", kp)
     kp = {'MKizunaItemIdAmount': kp}
   else:
     kp = None
-  if kp or (lgn > 0 and character['GearLevel'] < MaxGearLevel):
-    if not lgn or character['GearLevel'] == MaxGearLevel:
-      lgn = None
-    elv,glv,klv = bulk_enhance(chid, lgn=lgn, kp=kp)
-    log_info(f"Enhance done; Gear Level={glv}; Kizuna Level={klv}")
   if character['CanLevelup']:
     lv = level_up(chid, character['Level'])
     log_info(f"Levelup complete, current level={lv}")
+  if character['GearLevel'] < MaxGearLevel:
+    res = enhance_gear(character, TagetGearLevel)
+    log_info(f"Gear enhance complete, current level={res}")
+  if kp:
+    elv,glv,klv = bulk_enhance(chid, kp=kp)
+    log_info(f"Enhance done; Level={elv}; Gear Level={glv}; Kizuna Level={klv}")
 
 def enhance_all_characters():
   ar = player.get_characters()

@@ -1,0 +1,422 @@
+[
+  {
+    "Id": 1,
+    "CharacterRarity": 2,
+    "Level": 1,
+    "TotalExperience": 0,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 2,
+    "CharacterRarity": 3,
+    "Level": 1,
+    "TotalExperience": 0,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 3,
+    "CharacterRarity": 4,
+    "Level": 1,
+    "TotalExperience": 0,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 4,
+    "CharacterRarity": 2,
+    "Level": 2,
+    "TotalExperience": 2000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 5,
+    "CharacterRarity": 3,
+    "Level": 2,
+    "TotalExperience": 6000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 6,
+    "CharacterRarity": 4,
+    "Level": 2,
+    "TotalExperience": 10000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 7,
+    "CharacterRarity": 2,
+    "Level": 3,
+    "TotalExperience": 4000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 8,
+    "CharacterRarity": 3,
+    "Level": 3,
+    "TotalExperience": 12000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 9,
+    "CharacterRarity": 4,
+    "Level": 3,
+    "TotalExperience": 20000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 10,
+    "CharacterRarity": 2,
+    "Level": 4,
+    "TotalExperience": 6000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 11,
+    "CharacterRarity": 3,
+    "Level": 4,
+    "TotalExperience": 18000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 12,
+    "CharacterRarity": 4,
+    "Level": 4,
+    "TotalExperience": 30000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 13,
+    "CharacterRarity": 2,
+    "Level": 5,
+    "TotalExperience": 8000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 14,
+    "CharacterRarity": 3,
+    "Level": 5,
+    "TotalExperience": 24000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 15,
+    "CharacterRarity": 4,
+    "Level": 5,
+    "TotalExperience": 40000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 16,
+    "CharacterRarity": 2,
+    "Level": 6,
+    "TotalExperience": 12000,
+    "OverDriveBonus": 10
+  },
+  {
+    "Id": 17,
+    "CharacterRarity": 3,
+    "Level": 6,
+    "TotalExperience": 36000,
+    "OverDriveBonus": 10
+  },
+  {
+    "Id": 18,
+    "CharacterRarity": 4,
+    "Level": 6,
+    "TotalExperience": 60000,
+    "OverDriveBonus": 10
+  },
+  {
+    "Id": 19,
+    "CharacterRarity": 2,
+    "Level": 7,
+    "TotalExperience": 16000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 20,
+    "CharacterRarity": 3,
+    "Level": 7,
+    "TotalExperience": 48000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 21,
+    "CharacterRarity": 4,
+    "Level": 7,
+    "TotalExperience": 80000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 22,
+    "CharacterRarity": 2,
+    "Level": 8,
+    "TotalExperience": 20000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 23,
+    "CharacterRarity": 3,
+    "Level": 8,
+    "TotalExperience": 60000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 24,
+    "CharacterRarity": 4,
+    "Level": 8,
+    "TotalExperience": 100000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 25,
+    "CharacterRarity": 2,
+    "Level": 9,
+    "TotalExperience": 24000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 26,
+    "CharacterRarity": 3,
+    "Level": 9,
+    "TotalExperience": 72000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 27,
+    "CharacterRarity": 4,
+    "Level": 9,
+    "TotalExperience": 120000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 28,
+    "CharacterRarity": 2,
+    "Level": 10,
+    "TotalExperience": 28000,
+    "OverDriveBonus": 10
+  },
+  {
+    "Id": 29,
+    "CharacterRarity": 3,
+    "Level": 10,
+    "TotalExperience": 84000,
+    "OverDriveBonus": 10
+  },
+  {
+    "Id": 30,
+    "CharacterRarity": 4,
+    "Level": 10,
+    "TotalExperience": 140000,
+    "OverDriveBonus": 10
+  },
+  {
+    "Id": 31,
+    "CharacterRarity": 2,
+    "Level": 11,
+    "TotalExperience": 34000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 32,
+    "CharacterRarity": 3,
+    "Level": 11,
+    "TotalExperience": 102000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 33,
+    "CharacterRarity": 4,
+    "Level": 11,
+    "TotalExperience": 170000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 34,
+    "CharacterRarity": 2,
+    "Level": 12,
+    "TotalExperience": 40000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 35,
+    "CharacterRarity": 3,
+    "Level": 12,
+    "TotalExperience": 120000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 36,
+    "CharacterRarity": 4,
+    "Level": 12,
+    "TotalExperience": 200000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 37,
+    "CharacterRarity": 2,
+    "Level": 13,
+    "TotalExperience": 46000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 38,
+    "CharacterRarity": 3,
+    "Level": 13,
+    "TotalExperience": 138000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 39,
+    "CharacterRarity": 4,
+    "Level": 13,
+    "TotalExperience": 230000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 40,
+    "CharacterRarity": 2,
+    "Level": 14,
+    "TotalExperience": 52000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 41,
+    "CharacterRarity": 3,
+    "Level": 14,
+    "TotalExperience": 156000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 42,
+    "CharacterRarity": 4,
+    "Level": 14,
+    "TotalExperience": 260000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 43,
+    "CharacterRarity": 2,
+    "Level": 15,
+    "TotalExperience": 58000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 44,
+    "CharacterRarity": 3,
+    "Level": 15,
+    "TotalExperience": 174000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 45,
+    "CharacterRarity": 4,
+    "Level": 15,
+    "TotalExperience": 290000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 46,
+    "CharacterRarity": 2,
+    "Level": 16,
+    "TotalExperience": 66000,
+    "OverDriveBonus": 20
+  },
+  {
+    "Id": 47,
+    "CharacterRarity": 3,
+    "Level": 16,
+    "TotalExperience": 198000,
+    "OverDriveBonus": 20
+  },
+  {
+    "Id": 48,
+    "CharacterRarity": 4,
+    "Level": 16,
+    "TotalExperience": 330000,
+    "OverDriveBonus": 20
+  },
+  {
+    "Id": 49,
+    "CharacterRarity": 2,
+    "Level": 17,
+    "TotalExperience": 74000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 50,
+    "CharacterRarity": 3,
+    "Level": 17,
+    "TotalExperience": 222000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 51,
+    "CharacterRarity": 4,
+    "Level": 17,
+    "TotalExperience": 370000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 52,
+    "CharacterRarity": 2,
+    "Level": 18,
+    "TotalExperience": 82000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 53,
+    "CharacterRarity": 3,
+    "Level": 18,
+    "TotalExperience": 246000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 54,
+    "CharacterRarity": 4,
+    "Level": 18,
+    "TotalExperience": 410000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 55,
+    "CharacterRarity": 2,
+    "Level": 19,
+    "TotalExperience": 90000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 56,
+    "CharacterRarity": 3,
+    "Level": 19,
+    "TotalExperience": 270000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 57,
+    "CharacterRarity": 4,
+    "Level": 19,
+    "TotalExperience": 450000,
+    "OverDriveBonus": 0
+  },
+  {
+    "Id": 58,
+    "CharacterRarity": 2,
+    "Level": 20,
+    "TotalExperience": 100000,
+    "OverDriveBonus": 20
+  },
+  {
+    "Id": 59,
+    "CharacterRarity": 3,
+    "Level": 20,
+    "TotalExperience": 300000,
+    "OverDriveBonus": 20
+  },
+  {
+    "Id": 60,
+    "CharacterRarity": 4,
+    "Level": 20,
+    "TotalExperience": 500000,
+    "OverDriveBonus": 20
+  }
+]

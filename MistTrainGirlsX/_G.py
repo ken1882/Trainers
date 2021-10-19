@@ -115,6 +115,24 @@ def format_padded_utfstring(*tuples):
       ret += (' ' * (width - w))+text if pad_right else text+(' ' * (width - w))
   return ret
 
+def format_timedelta(dt):
+  ret = ''
+  d  = dt.days
+  hr = dt.seconds // 3600
+  mn = (dt.seconds % 3600) // 60
+  se = dt.seconds % 60
+  ms = dt.microseconds // 1000 
+  ret += f"{d} day"
+  ret += 's ' if d != 1 else ' '
+  ret += f"{hr} hour"
+  ret += 's ' if hr != 1 else ' '
+  ret += f"{mn} minute"
+  ret += 's ' if mn != 1 else ' '
+  ret += f"{se} second"
+  ret += 's ' if se != 1 else ' '
+  ret += f"{ms}ms"
+  return ret
+
 def format_curtime():
   return datetime.strftime(datetime.now(), '%H:%M:%S')
 
@@ -203,6 +221,10 @@ ITYPE_GOLD        = 6
 ITYPE_GEAR        = 10
 
 SHOP_TYPE_EVENT = 1
+
+RARITY_A  = 2
+RARITY_S  = 3
+RARITY_SS = 4
 
 LastErrorCode = 0
 

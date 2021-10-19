@@ -4,7 +4,7 @@ from copy import deepcopy
 
 __UCharacterCache = {}
 
-UNIVERSAL_GEAR_ID = 85
+MIST_GEAR_ID = 85
 
 def clear_cache():
   global __UCharacterCache
@@ -98,8 +98,8 @@ def get_gear_stock(id):
     items = items['r']
   return next((it for it in items if it['MCharacterPieceId'] == id), None)
 
-def get_universal_gear_stock():
-  return get_consumable_stock(UNIVERSAL_GEAR_ID)
+def get_mistgear_stock():
+  return get_consumable_stock(MIST_GEAR_ID)
 
 def get_item_stock(item):
   ret = None

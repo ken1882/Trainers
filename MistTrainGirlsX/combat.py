@@ -12,7 +12,7 @@ import Input
 import game
 import win32con
 import utils
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from stage import StageAlias
 
 LOG_STATUS = True
@@ -64,18 +64,17 @@ Headers = {
 }
 
 ReportDetail = {
-  'start_t': 0,
+  'start_t': datetime.now(),
   'end_t': 0,
+  'paused_t': timedelta(),
   'times': 0,
   'loots': {},
   'solds': {},
   'sells': {},
-  'ap_recovery': {0:0},
+  'ap_recovery': {},
   'win': 0,
   'lose': 0,
 }
-
-LastStaminaAmount = 0
 
 def hash_item_id(item):
   return item['ItemType'] * 1000000 + item['ItemId']
@@ -264,15 +263,13 @@ def process_defeat():
   ReportDetail['lose'] += 1
   return res['r']
 
-def record_ap_recovery(item, n, ap_delta):
+def record_ap_recovery(item, n):
   hid = hash_item_id(item)
   if hid not in ReportDetail['ap_recovery']:
     ReportDetail['ap_recovery'][hid] = 0
-  ReportDetail['ap_recovery'][0]   += ap_delta
   ReportDetail['ap_recovery'][hid] += n
 
 def recover_stamina():
-  global LastStaminaAmount
   items = player.get_aprecovery_items()
   log_info("Recovery items:", pprint.pformat(items, indent=2), '-'*21, sep='\n')
   items = sorted(items, key=lambda i:i['Stock'])
@@ -294,8 +291,7 @@ def recover_stamina():
   ap2  = res['r']['CurrentStamina']
   item['ItemType'] = ITYPE_CONSUMABLE
   item['ItemId']   = item['MItemId']
-  record_ap_recovery(item, num, LastStaminaAmount-ap1)
-  LastStaminaAmount = ap2
+  record_ap_recovery(item, num)
   if not res:
     log_error("Out of stamina!")
     return None
@@ -483,19 +479,36 @@ def start_battle_process(sid, pid, rid):
     LastErrorCode = data
     raise RuntimeError(f"Unable to start battle (ERRNO={data})")
 
-def log_final_report():
+def reset_final_report():
   global ReportDetail
+  ReportDetail = {
+  'start_t': datetime.now(),
+  'end_t': 0,
+  'paused_t': timedelta(),
+  'times': 0,
+  'loots': {},
+  'solds': {},
+  'sells': {},
+  'ap_recovery': {},
+  'win': 0,
+  'lose': 0,
+}
+
+
+def log_final_report():
+  global ReportDetail,StageId
   print("Preparing report please wait...")
   ReportDetail['end_t'] = datetime.now()
   string  = f"\n{'='*30} Report {'='*30}\n"
   line_width = len(string.strip())
   try:
+    elapsed = ReportDetail['end_t'] - ReportDetail['start_t'] - ReportDetail['paused_t']
     string += "Start time:   " + ReportDetail['start_t'].strftime('%Y-%m-%d %H:%M:%S') + '\n'
     string += "End time:     " + ReportDetail['end_t'].strftime('%Y-%m-%d %H:%M:%S') + '\n'
-    string += "Time elapsed: " + str(ReportDetail['end_t'] - ReportDetail['start_t']) + '\n'
+    string += "Time elapsed: " + format_timedelta(elapsed) + f" ({ReportDetail['paused_t']} paused)" + '\n'
     string += f"Combat status: {ReportDetail['times']} fights, Win/Lose={ReportDetail['win']}/{ReportDetail['lose']} ({int(ReportDetail['win'] / ReportDetail['times'] * 100)}%)\n"
-    string += f"Average time spent per fight: {(ReportDetail['end_t'] - ReportDetail['start_t']) / ReportDetail['times']}\n"
-    string += f"Stamina used: {ReportDetail['ap_recovery'][0]}\n"
+    string += f"Average time spent per fight: {elapsed / ReportDetail['times']}\n"
+    string += f"Stamina used: {game.get_quest(StageId)['ActionPointsCost'] * ReportDetail['times']}\n"
     keys = ['ap_recovery', 'loots', 'solds', 'sells']
     subtitles = ("Recovery items used", "Loots Gained", "Loots Sold", "Sell Earnings")
     for idx,key in enumerate(keys):
@@ -525,12 +538,13 @@ def update_input():
     print("Worker", 'paused' if FlagPaused else 'unpaused')
   elif Input.is_trigger(win32con.VK_F8):
     FlagRunning = False
+    FlagPaused  = False
   elif Input.is_trigger(win32con.VK_F5):
     FlagRequestReEnter = True
 
 def process_prepare_inputs():
   pid = process_partyid_input()
-  log_info("Party Id:", PartyId)
+  log_info("Party Id:", pid)
   sid = process_stageid_input()
   rid = process_rentalid_input()
   log_info("Rental Id:", 'Round-Robin' if rid == -1 else rid)
@@ -540,23 +554,29 @@ def process_prepare_inputs():
 
 def main():
   global PartyId,StageId,RentalUid,AvailableFriendRentals,RentalCycle
-  global FlagRunning,FlagPaused,FlagRequestReEnter,ReportDetail,LastStaminaAmount
+  global FlagRunning,FlagPaused,FlagRequestReEnter,ReportDetail
   PartyId,StageId,RentalUid = process_prepare_inputs()
   discord.update_status(StageId)
-  ReportDetail['start_t'] = datetime.now()
   cnt = 0
-  LastStaminaAmount = player.get_profile()['CurrentActionPoints']
+  reset_final_report()
   while FlagRunning:
-    while FlagPaused:
-      update_input()
-      if Input.is_trigger(win32con.VK_F6):
-        log_final_report()
-      wait(0.1)
+    if FlagPaused:
+      pt_s = datetime.now()
+      while FlagPaused:
+        update_input()
+        if Input.is_trigger(win32con.VK_F6):
+          log_final_report()
+        if not FlagPaused:
+          ReportDetail['paused_t'] += datetime.now() - pt_s
+        wait(0.1)
+      continue
     if FlagRequestReEnter:
       PartyId,StageId,RentalUid = process_prepare_inputs()
       discord.update_status(StageId)
       FlagRequestReEnter = False
+      reset_final_report()
       cnt = 0
+      continue
     cnt += 1
     log_info(f"Running combat iteration#{cnt}")
     rid = RentalUid
