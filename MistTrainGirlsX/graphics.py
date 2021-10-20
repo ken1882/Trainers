@@ -9,11 +9,11 @@ from _G import log_debug, log_error, log_info, log_warning, resume, uwait, wait,
 from _G import (CVLocalDistance, CVMatchHardRate, CVMatchMinCount, CVMatchStdRate)
 
 
-if sys.platform == 'win32':
+if _G.IS_WIN32:
   import win32gui
   from desktopmagic.screengrab_win32 import getRectAsImage
   _G.DesktopDC = win32gui.GetDC(0)
-elif sys.platform == 'linux':
+elif _G.IS_LINUX:
   pass
 
 def is_color_ok(cur, target):

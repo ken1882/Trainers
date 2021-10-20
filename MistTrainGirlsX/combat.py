@@ -13,8 +13,9 @@ import game
 import utils
 from datetime import date, datetime, timedelta
 from stage import StageAlias, StageData
+from Input import input
 
-if sys.platform == 'win32':
+if _G.IS_WIN32:
   import win32con
 
 LOG_STATUS = True
@@ -575,10 +576,10 @@ def update_input():
   if Input.is_trigger(vktable.VK_F7):
     FlagPaused ^= True
     print("Worker", 'paused' if FlagPaused else 'unpaused')
-  elif Input.is_trigger(vktable.VK_F7):
+  elif Input.is_trigger(vktable.VK_F8):
     FlagRunning = False
     FlagPaused  = False
-  elif Input.is_trigger(vktable.VK_F7):
+  elif Input.is_trigger(vktable.VK_F5):
     FlagRequestReEnter = True
 
 def process_prepare_inputs():
@@ -595,6 +596,7 @@ def main():
   global PartyId,StageId,RentalUid,AvailableFriendRentals,RentalCycle
   global FlagRunning,FlagPaused,FlagRequestReEnter,ReportDetail,LOG_STATUS
   LOG_STATUS = not _G.ARGV.less
+  log_info("Program initialized")
   PartyId,StageId,RentalUid = process_prepare_inputs()
   discord.update_status(StageId)
   cnt = 0
@@ -604,7 +606,7 @@ def main():
       pt_s = datetime.now()
       while FlagPaused:
         update_input()
-        if Input.is_trigger(Input.VK_Table['VK_F6']):
+        if Input.is_trigger(vktable.VK_F6):
           log_final_report()
         if not FlagPaused:
           ReportDetail['paused_t'] += datetime.now() - pt_s
@@ -636,9 +638,12 @@ def main():
 if __name__ == '__main__':
   try:
     game.init()
+    Input.init()
     main()
     FlagRunning = False
   except (SystemExit, KeyboardInterrupt):
     if LastErrorCode == 403:
       discord.update_status(0)
+    if _G.IS_LINUX:
+      Input.restore_terminal_settings()
     exit()

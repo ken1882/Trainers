@@ -57,9 +57,7 @@ def init():
   log_info("Flags:", args, sep='\n')
   _G.SelfHwnd = utils.get_self_hwnd()
   Session = requests.Session()
-  Session.headers = {
-    'Authorization': next((arg.strip() for arg in sys.argv if arg.strip().startswith('Bearer')), '')
-  }
+  change_token(next((arg.strip() for arg in sys.argv if arg.strip().startswith('Bearer')), ''))
   FlagAutoReauth = True if args.auto_reauth else False
   _G.StarbrustStream = True if args.star_brust_stream else False
   _G.PersistCharacterCache = False if args.no_persist_cache else True

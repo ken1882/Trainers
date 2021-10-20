@@ -15,9 +15,9 @@ from difflib import SequenceMatcher
 from datetime import datetime,timedelta
 from time import sleep,gmtime,strftime
 
-if sys.platform == 'win32':
+if _G.IS_WIN32:
   import win32gui, win32process, win32console
-elif sys.platform == 'linux':
+elif _G.IS_LINUX:
   pass
 
 def EnumWindowCallback(hwnd, lparam):
@@ -146,13 +146,13 @@ def EnumWindowSelfCB(hwnd, lparam):
   return True
 
 def get_self_hwnd():
-  if sys.platform == 'win32':
+  if _G.IS_WIN32:
     _G.SelfHwnd = win32console.GetConsoleWindow()
     if _G.SelfHwnd == 0:
       win32gui.EnumWindows(EnumWindowSelfCB, None)
     return _G.SelfHwnd
 
 def is_focused():
-  if sys.platform == 'win32':
+  if _G.IS_WIN32:
     return win32gui.GetForegroundWindow() == _G.SelfHwnd
   return True

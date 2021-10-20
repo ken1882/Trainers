@@ -117,5 +117,17 @@ VK_BROWSER_BACK = 0xA6
 VK_BROWSER_FORWARD = 0xA7
 
 TTY_KEYMAP = {
-  
+  b'\x1bOP': VK_F1,
+  b'\x1bOQ': VK_F2,
+  b'\x1bOR': VK_F3,
+  b'\x1bOS': VK_F4,
+  b'\x1b[15~': VK_F5,
+  b'\x1b[17~': VK_F6,
+  b'\x1b[18~': VK_F7,
+  b'\x1b[19~': VK_F8,
+  b'\x1b[20~': VK_F9,
+  b'\x1b[21~': VK_F10,
+  b'\x1b[22~': VK_F11,
+  b'\x1b[23~': VK_F11,
+  b'\x1b[24~': VK_F12,
 }

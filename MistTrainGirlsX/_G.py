@@ -6,6 +6,14 @@ from copy import copy
 import traceback
 import unicodedata
 
+IS_WIN32 = False
+IS_LINUX = False
+
+if sys.platform == 'win32':
+  IS_WIN32 = True
+elif sys.platform == 'linux':
+  IS_LINUX = True
+
 ARGV = {}
 
 AppWindowName = "ミストトレインガールズ〜霧の世界の車窓から〜 X - FANZA GAMES - Google Chrome"
@@ -50,11 +58,12 @@ VerboseLevel = 3
 VerboseLevel = 4 if ('-v' in sys.argv or '--verbose' in sys.argv) else VerboseLevel
 
 OriTerminalSettings = None
-InpTerminalSettings = None
+BkgTerminalSettings = None
 
 FlagRunning = True
 FlagPaused  = False
 FlagWorking = False
+FlagProcessingUserInput = False
 
 MSG_PIPE_CONT   = '\x00\x50\x00CONTINUE\x00'
 MSG_PIPE_STOP   = "\x00\x50\x00STOP\x00"

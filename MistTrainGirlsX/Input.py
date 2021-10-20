@@ -1,45 +1,90 @@
 import _G, graphics
-import sys, importlib
+import sys, os
 import random, math
 from time import sleep
 from threading import Thread
 import vktable
+from copy import deepcopy
 from _G import (resume,wait,uwait,log_debug,log_error,log_info,log_warning,make_lparam,get_lparam)
 
-if sys.platform == 'win32':
+if _G.IS_WIN32:
   import win32api,win32con
-elif sys.platform == 'linux':
+elif _G.IS_LINUX:
   import tty,termios
-  _G.OriTerminalSettings = termios.tcgetattr(sys.stdin)
+  _G.OriTerminalSettings = deepcopy(termios.tcgetattr(sys.stdin))
   tset = termios.tcgetattr(sys.stdin)
   tset[3] = tset[3] & ~(termios.ECHO | termios.ICANON)
   tset[6][termios.VMIN] = 0
   tset[6][termios.VTIME] = 0
-  _G.InpTerminalSettings = tset
+  _G.BkgTerminalSettings = tset
 
 ScrollTime  = 0.03
 ScrollDelta = [1,5]
-BG_THEAD_NAME = 'BASE_INPUT'
-keystate = [0 for _ in range(0xff)]
-VK_Table = {}
+READ_BUFFER_LENGTH = 0x10
+TTYKEY_THEAD_NAME = 'TTY_INPUT'
+KeyState = [0 for _ in range(0xff)]
+StdinStream = []
+
+__ORI_INPUT = input
+def input(*args, **kwargs):
+  log_debug("Processing user input")
+  if _G.IS_LINUX:
+    os.read(sys.stdin.fileno(), READ_BUFFER_LENGTH*0x100) # clear input buffer
+    restore_terminal_settings()
+  _G.FlagProcessingUserInput = True
+  ret = __ORI_INPUT(*args, **kwargs)
+  _G.FlagProcessingUserInput = False
+  if _G.IS_LINUX:
+    termios.tcsetattr(sys.stdin, termios.TCSADRAIN, _G.BkgTerminalSettings)
+  return ret
+
+def restore_terminal_settings():
+  termios.tcsetattr(sys.stdin, termios.TCSADRAIN, _G.OriTerminalSettings)
+
+def read_terminal():
+  global StdinStream
+  try:
+    while _G.FlagRunning:
+      if _G.FlagProcessingUserInput:
+        continue
+      ss = os.read(sys.stdin.fileno(), READ_BUFFER_LENGTH)
+      if ss:
+        StdinStream.append(ss)
+  finally:
+    restore_terminal_settings()
+      
+def start_keybd_listener():
+  termios.tcsetattr(sys.stdin, termios.TCSADRAIN, _G.BkgTerminalSettings)
+  th = Thread(target=read_terminal, daemon=True)
+  _G.ThreadPool[TTYKEY_THEAD_NAME] = th
+  th.start()
 
 def update():
-  global keystate
-  # TODO: add linux versin
+  global KeyState,StdinStream
+  triggers = [0 for _ in range(0xff)]
+  if _G.IS_WIN32:
+    for i in range(0xff):
+      if win32api.GetAsyncKeyState(i):
+        triggers[i] = 1
+  elif _G.IS_LINUX:
+    for ss in StdinStream:
+      if ss in vktable.TTY_KEYMAP:
+        triggers[ vktable.TTY_KEYMAP[ss] ] = 1
+    StdinStream.clear()
   for i in range(0xff):
-    if win32api.GetAsyncKeyState(i):
-      keystate[i] += 1
+    if triggers[i]:
+      KeyState[i] += 1
     else:
-      keystate[i] = 0
+      KeyState[i] = 0
 
 def is_trigger(vk):
-  return keystate[vk] == 1
+  return KeyState[vk] == 1
 
 def is_pressed(vk):
-  return keystate[vk] > 0
+  return KeyState[vk] > 0
 
 def repeat(vk):
-  return keystate[vk]
+  return KeyState[vk]
 
 # app_offset: use DC pos instead of global pos
 def get_cursor_pos(app_offset=True):
@@ -230,18 +275,6 @@ def moveto(x,y,speed=10,max_steps=MaxMoveTimes,app_offset=True,aync=True,rand=Tr
 def rmoveto(x,y,rrange=10,**kwargs):
   moveto(x+random.randint(-rrange, rrange), y+random.randint(-rrange, rrange), **kwargs)
 
-def main_bgkey_loop():
-  while _G.FlagRunning:
-    wait(_G.FPS)
-    update()
-    if is_trigger(vktable.VK_F7):
-      _G.FlagPaused ^= True
-      print("Worker", 'paused' if _G.FlagPaused else 'unpaused')
-    elif is_trigger(vktable.VK_F8):
-      _G.FlagRunning = False
-
-def start_bgkey_listener():
-  th = Thread(target=main_bgkey_loop, daemon=True)
-  _G.ThreadPool[BG_THEAD_NAME] = th
-  th.start()
-  return th
+def init():
+  if _G.IS_LINUX:
+    start_keybd_listener()

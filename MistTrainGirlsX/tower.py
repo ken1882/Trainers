@@ -3,6 +3,7 @@ from _G import *
 import combat, discord
 from stage import StageData
 import game
+from Input import input
 
 ATYPE_NONE     = 0
 ATYPE_SLASH    = 1

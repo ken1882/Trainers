@@ -20,7 +20,7 @@ def update_player_profile(name, level):
     config.write(fp, space_around_delimiters=False)
 
 def update_status(stage_id):
-  if stage_id not in StageData:
+  if not ConfigFilePath or stage_id not in StageData:
     return
   detail,stat = StageData[stage_id]
   config = configparser.ConfigParser()
