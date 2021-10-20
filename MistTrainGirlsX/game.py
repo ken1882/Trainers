@@ -117,7 +117,8 @@ def get_request(url, depth=1):
   except NetworkExcpetionRescues as err:
     Session.close()
     if depth < NetworkMaxRetry:
-      log_warning(f"Connection errored for {url}, retry (depth={depth+1})")
+      log_warning(f"Connection errored for {url}, retry after 3 seconds...(depth={depth+1})")
+      wait(3)
       return get_request(url, depth=depth+1)
     else:
       raise err
@@ -153,7 +154,8 @@ def post_request(url, data=None, depth=1):
   except NetworkExcpetionRescues as err:
     Session.close()
     if depth < NetworkMaxRetry:
-      log_warning(f"Connection errored for {url}, retry (depth={depth+1})")
+      log_warning(f"Connection errored for {url}, retry after 3 seconds...(depth={depth+1})")
+      wait(3)
       return post_request(url, data, depth=depth+1)
     else:
       raise err
