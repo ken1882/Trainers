@@ -8,6 +8,11 @@ StageAlias = {
 StageData = {
           0: ('Waiting for maintenance', 'メンテナンス中...'),
   304013106: ('Playing events', '入隊訓練：カラマチ/クインズウェイ (Inferno)'),
+  302028505: ('Playing events', '熱烈歓迎！拳闘娘のシゴキ塾！ 2-5 (Very Hard)'),
+  302028504: ('Playing events', '熱烈歓迎！拳闘娘のシゴキ塾！ 2-4 (Very Hard)'),
+  302028503: ('Playing events', '熱烈歓迎！拳闘娘のシゴキ塾！ 2-3 (Very Hard)'),
+  302028502: ('Playing events', '熱烈歓迎！拳闘娘のシゴキ塾！ 2-2 (Very Hard)'),
+  302028501: ('Playing events', '熱烈歓迎！拳闘娘のシゴキ塾！ 2-1 (Very Hard)'),
   302027505: ('Playing events', '熱烈歓迎！拳闘娘のシゴキ塾！ 1-5 (Very Hard)'),
   302027504: ('Playing events', '熱烈歓迎！拳闘娘のシゴキ塾！ 1-4 (Very Hard)'),
   302027503: ('Playing events', '熱烈歓迎！拳闘娘のシゴキ塾！ 1-3 (Very Hard)'),

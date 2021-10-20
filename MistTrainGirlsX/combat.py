@@ -613,10 +613,10 @@ def main():
         wait(0.1)
       continue
     if FlagRequestReEnter:
+      log_final_report()
       PartyId,StageId,RentalUid = process_prepare_inputs()
       discord.update_status(StageId)
       FlagRequestReEnter = False
-      log_final_report()
       reset_final_report()
       cnt = 0
       continue
