@@ -128,14 +128,18 @@ def format_timedelta(dt):
   mn = (dt.seconds % 3600) // 60
   se = dt.seconds % 60
   ms = dt.microseconds // 1000 
-  ret += f"{d} day"
-  ret += 's ' if d != 1 else ' '
-  ret += f"{hr} hour"
-  ret += 's ' if hr != 1 else ' '
-  ret += f"{mn} minute"
-  ret += 's ' if mn != 1 else ' '
-  ret += f"{se} second"
-  ret += 's ' if se != 1 else ' '
+  if d:
+    ret += f"{d} day"
+    ret += 's ' if d != 1 else ' '
+  if ret or hr:
+    ret += f"{hr} hour"
+    ret += 's ' if hr != 1 else ' '
+  if ret or mn:
+    ret += f"{mn} minute"
+    ret += 's ' if mn != 1 else ' '
+  if ret or se:
+    ret += f"{se} second"
+    ret += 's ' if se != 1 else ' '
   ret += f"{ms}ms"
   return ret
 

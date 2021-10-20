@@ -8,7 +8,7 @@ pp = PrettyPrinter(indent=2)
 import player
 import friend
 import discord
-import Input
+import Input, vktable
 import game
 import utils
 from datetime import date, datetime, timedelta
@@ -534,9 +534,9 @@ def log_final_report():
     elapsed = ReportDetail['end_t'] - ReportDetail['start_t'] - ReportDetail['paused_t']
     string += "Start time:   " + ReportDetail['start_t'].strftime('%Y-%m-%d %H:%M:%S') + '\n'
     string += "End time:     " + ReportDetail['end_t'].strftime('%Y-%m-%d %H:%M:%S') + '\n'
-    string += "Time elapsed: " + format_timedelta(elapsed) + f" ({ReportDetail['paused_t']} paused)" + '\n'
+    string += "Time elapsed: " + format_timedelta(elapsed) + f" ({format_timedelta(ReportDetail['paused_t'])} paused)" + '\n'
     string += f"Combat status: {ReportDetail['times']} fights, Win/Lose={ReportDetail['win']}/{ReportDetail['lose']} ({int(ReportDetail['win'] / ReportDetail['times'] * 100)}%)\n"
-    string += f"Average time spent per fight: {elapsed / ReportDetail['times']}\n"
+    string += f"Average time spent per fight: {format_timedelta(elapsed / ReportDetail['times'])}\n"
     string += f"Stamina used: {game.get_quest(StageId)['ActionPointsCost'] * ReportDetail['times']}\n"
     keys = ['ap_recovery', 'loots', 'solds', 'sells', 'loot_n']
     subtitles = ("Recovery items used", "Loots Gained", "Loots Sold", "Sell Earnings", "Loots Drop Rate")
@@ -572,13 +572,13 @@ def update_input():
   if not utils.is_focused():
     return
   Input.update()
-  if Input.is_trigger(Input.VK_Table['VK_F7']):
+  if Input.is_trigger(vktable.VK_F7):
     FlagPaused ^= True
     print("Worker", 'paused' if FlagPaused else 'unpaused')
-  elif Input.is_trigger(Input.VK_Table['VK_F8']):
+  elif Input.is_trigger(vktable.VK_F7):
     FlagRunning = False
     FlagPaused  = False
-  elif Input.is_trigger(Input.VK_Table['VK_F5']):
+  elif Input.is_trigger(vktable.VK_F7):
     FlagRequestReEnter = True
 
 def process_prepare_inputs():
