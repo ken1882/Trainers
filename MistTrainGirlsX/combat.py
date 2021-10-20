@@ -440,7 +440,7 @@ def process_partyid_input():
 
 def process_stageid_input():
   sid = 0
-  while not sid:
+  while not sid or not utils.isdigit(sid):
     sid = input("Stage id (enter 0 to see stored data): ")
     if utils.isdigit(sid) and int(sid) == 0:
       string = format_padded_utfstring(('Id', 15, True), (' Alias', 10), ('Name', 50)) + '\n'
@@ -644,6 +644,7 @@ if __name__ == '__main__':
   except (SystemExit, KeyboardInterrupt):
     if LastErrorCode == 403:
       discord.update_status(0)
+    exit()
+  finally:
     if _G.IS_LINUX:
       Input.restore_terminal_settings()
-    exit()

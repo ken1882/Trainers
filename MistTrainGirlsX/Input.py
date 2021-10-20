@@ -1,3 +1,4 @@
+import readline
 import _G, graphics
 import sys, os
 import random, math
@@ -47,7 +48,10 @@ def read_terminal():
     while _G.FlagRunning:
       if _G.FlagProcessingUserInput:
         continue
-      ss = os.read(sys.stdin.fileno(), READ_BUFFER_LENGTH)
+      try:
+        ss = os.read(sys.stdin.fileno(), READ_BUFFER_LENGTH)
+      except ValueError:
+        break
       if ss:
         StdinStream.append(ss)
   finally:
