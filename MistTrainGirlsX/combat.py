@@ -559,7 +559,7 @@ def log_final_report():
           string += f" (Now have x{player.get_item_stock(item_info)['Stock']})\n"
         else:
           string += format_padded_utfstring((f"{qn}x{name}", 40, True))
-          string += ": {:.5f}%\n".format(n / ReportDetail['times'])
+          string += ": {:.5f}%\n".format(n / ReportDetail['times'] * 100)
     # end report category listings
   except Exception as err:
     log_error(f"An error occureed while logging final report: {err}")
