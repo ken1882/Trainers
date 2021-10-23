@@ -1,3 +1,4 @@
+from re import M
 from _G import *
 import game
 from copy import deepcopy
@@ -30,6 +31,54 @@ def get_character_by_uid(uid, flush=False):
     return __UCharacterCache[uid]
   __cache_characters(get_characters())
   return __UCharacterCache[uid]
+
+def get_consumables():
+  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UItems')
+  return res['r']
+
+def get_weapons():
+  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UWeapons')
+  return res['r']
+
+def get_armors():
+  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UArmors')
+  return res['r']
+
+def get_accessories():
+  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UAccessories')
+  return res['r']
+
+def get_abstones():
+  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UAbilityStones')
+  return res['r']
+
+def get_gears():
+  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UCharacterPieces')
+  res = res['r']
+  # key = 'MCharacterId'
+  # for idx,item in enumerate(res):
+  #   res[idx][key] = game.get_gear(item['MCharacterPieceId'])[key]
+  return res
+
+def get_all_items(flatten=False):
+  '''
+  If `flatten=True`, return list instead of dict
+  '''
+  ret = {
+    ITYPE_WEAPON: [{**{'ItemId': item['MWeaponId'], 'ItemType': ITYPE_WEAPON}, **item} for item in get_weapons()],
+    ITYPE_ARMOR: [{**{'ItemId': item['MArmorId'], 'ItemType': ITYPE_ARMOR}, **item} for item in get_armors()],
+    ITYPE_ACCESORY: [{**{'ItemId': item['MAccessoryId'], 'ItemType': ITYPE_ACCESORY}, **item} for item in get_accessories()],
+    ITYPE_CONSUMABLE: [{**{'ItemId': item['MItemId'], 'ItemType': ITYPE_CONSUMABLE}, **item} for item in get_consumables()],
+    ITYPE_ABSTONE: [{**{'ItemId': item['MAbilityStoneId'], 'ItemType': ITYPE_ABSTONE}, **item} for item in get_abstones()],
+    ITYPE_GEAR: [{**{'ItemId': item['MCharacterPieceId'],'ItemType': ITYPE_GEAR}, **item} for item in get_gears()],
+  }
+  if flatten:
+    ar = []
+    for _,a in ret.items():
+      ar += a
+    return ar
+  return ret
+
 
 def get_unmastered_characters():
   '''
@@ -98,6 +147,31 @@ def format_character_data(characters):
     ) + '\n'
   return string
 
+def format_item_data(items):
+  NAME_WIDTH  = 50
+  ITYPE_WIDTH = 10
+  STOCK_WIDTH = 10
+  string = format_padded_utfstring(
+    ('種類', ITYPE_WIDTH), ('名前', NAME_WIDTH), ('所持数', STOCK_WIDTH)
+  ) + '\n'
+  item_dict = {}
+  for item in items:
+    name = game.get_item_name(item)
+    stock = item['Stock'] if 'Stock' in item else 1
+    if stock <= 0:
+      continue
+    if name not in item_dict:
+      item_dict[name] = [item['ItemType'], 0]
+    item_dict[name][1] += stock
+  
+  for name,item in item_dict.items():
+    string += format_padded_utfstring(
+      (ITYPE_NAMES[item[0]], ITYPE_WIDTH),
+      (name, NAME_WIDTH),
+      (item[1], STOCK_WIDTH),
+    ) + '\n'
+  return string
+
 def log_party_status():
   if VerboseLevel < 3:
     return
@@ -122,21 +196,21 @@ def use_aprecovery_item(item, amount=1):
   return game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Users/recoverStamina/{item['MItemId']}/{amount}")  
 
 def get_consumable_stock(id):
-  items = game.get_request('https://mist-train-east4.azurewebsites.net/api/UItems')
-  if items:
-    items = items['r']
+  items = get_consumables()
   return next((it for it in items if it['MItemId'] == id), None)
 
 def get_gear_stock(id):
-  items = game.get_request('https://mist-train-east4.azurewebsites.net/api/UCharacterPieces')
-  if items:
-    items = items['r']
+  items = get_gears()
   return next((it for it in items if it['MCharacterPieceId'] == id), None)
 
-def get_mistgear_stock():
-  return get_consumable_stock(MIST_GEAR_ID)
+def get_mistgear_stock(num_only=False):
+  ret = get_consumable_stock(MIST_GEAR_ID)
+  return ret['Stock'] if num_only else ret
 
-def get_item_stock(item):
+def get_item_stock(item, num_only=False):
+  '''
+  If `num_only=True`, will only return an `int` that indicates the amount possessed 
+  '''
   ret = None
   kit = 'ItemType'
   kid = 'ItemId'
@@ -149,7 +223,7 @@ def get_item_stock(item):
   elif item[kit] == ITYPE_CONSUMABLE:
     ret = get_consumable_stock(item[kid])
     ret[kit] = ITYPE_CONSUMABLE
-  return ret
+  return ret['Stock'] if num_only else ret
 
 def sell_consumable(item, amount):
   uid = item['Id']

@@ -42,13 +42,12 @@ RecoveryBatchAmount = 5 # How many items to use once
 
 AutoSellItems = [
   #             type     Id  Maximum keep  Minimum keep
-  (       ITYPE_GEAR,   106,          500,          100), # Gear：[古の魔女の末裔]セイラム
-  ( ITYPE_CONSUMABLE,     7,        99900,        99000), # Small cake
-  ( ITYPE_CONSUMABLE,    10,        99900,        99000), # A Weapon enhance material
-  ( ITYPE_CONSUMABLE,    11,        99900,        99000)  # S Weapon enhance material
+  (       ITYPE_GEAR,   106,          500,         100), # Gear：[古の魔女の末裔]セイラム
 ]
 
 
+ConsumableMaxKeepRatio = 0.995
+ConsumableMinKeepRatio = 0.95
 UnmovableEffects = [22,23]
 MaxSP = 20
 MaxOP = 100
@@ -76,6 +75,7 @@ ReportDetail = {
   'solds': {},                # loots sold
   'sells': {},                # stuff gained from selling loots
   'ap_recovery': {},          # ap recovery option used
+  'stamina_cost': 0,          # stamina cost of current stage
   'win': 0,
   'lose': 0,
 }
@@ -240,18 +240,27 @@ def record_sell_earns(items):
 
 def sell_surplus_loots(loots):
   global AutoSellItems
-  for item in AutoSellItems:
-    type = item[0]
-    id   = item[1]
-    loot = next((it for it in loots if not it['Sold'] and it['ItemType'] == type and id == it['ItemId']), None)
-    if not loot:
+  for loot in loots:
+    if loot['Sold']:
       continue
-    maxn = item[2]
-    minn = item[3]
+    maxn,minn = 0,0
+    for it in AutoSellItems:
+      if it[0] == loot['ItemType'] and it[1] == loot['ItemId']:
+        maxn,minn = it[2],it[3]
+        break
+    else:
+      if loot['ItemType'] == ITYPE_CONSUMABLE:
+        maxn = game.get_consumable(loot['ItemId'])['PossesionLimit']
+        minn = maxn * ConsumableMinKeepRatio
+        maxn = maxn * ConsumableMaxKeepRatio
+      else:
+        continue
     sitem = player.get_item_stock(loot)
     if not sitem:
       continue
     curn = sitem['Stock']
+    maxn = int(maxn)
+    minn = int(minn)
     if curn <= maxn:
       continue
     res = player.sell_item(sitem, curn-minn)
@@ -520,6 +529,7 @@ def reset_final_report():
   'solds': {},
   'sells': {},
   'ap_recovery': {},
+  'stamina_cost': 0,
   'win': 0,
   'lose': 0,
 }
@@ -538,7 +548,7 @@ def log_final_report():
     string += "Time elapsed: " + format_timedelta(elapsed) + f" ({format_timedelta(ReportDetail['paused_t'])} paused)" + '\n'
     string += f"Combat status: {ReportDetail['times']} fights, Win/Lose={ReportDetail['win']}/{ReportDetail['lose']} ({int(ReportDetail['win'] / ReportDetail['times'] * 100)}%)\n"
     string += f"Average time spent per fight: {format_timedelta(elapsed / ReportDetail['times'])}\n"
-    string += f"Stamina used: {game.get_quest(StageId)['ActionPointsCost'] * ReportDetail['times']}\n"
+    string += f"Stamina used: {ReportDetail['stamina_cost'] * ReportDetail['times']}\n"
     keys = ['ap_recovery', 'loots', 'solds', 'sells', 'loot_n']
     subtitles = ("Recovery items used", "Loots Gained", "Loots Sold", "Sell Earnings", "Loots Drop Rate")
     for idx,key in enumerate(keys):
@@ -557,7 +567,12 @@ def log_final_report():
         name = game.get_item_name(item_info)
         if key != 'loot_n':
           string += '{:>10}x {}'.format(n, name)
-          string += f" (Now have x{player.get_item_stock(item_info)['Stock']})\n"
+          try:
+            stock = player.get_item_stock(item_info, True)
+            string += f" (Now have x{stock})"
+          except (Exception, SystemExit, InterruptedError) as err:
+            log_error("Unable to get item stock:", err, '\nSkip stock logging.')
+          string += '\n'
         else:
           string += format_padded_utfstring((f"{qn}x{name}", 40, True))
           string += ": {:.5f}%\n".format(n / ReportDetail['times'] * 100)
@@ -569,23 +584,23 @@ def log_final_report():
   print(string)
 
 def update_input():
-  global FlagRunning,FlagPaused,FlagRequestReEnter
+  global FlagRequestReEnter
   if not utils.is_focused():
     return
   Input.update()
   if Input.is_trigger(vktable.VK_F7):
-    FlagPaused ^= True
-    print("Worker", 'paused' if FlagPaused else 'unpaused')
+    _G.FlagPaused ^= True
+    print("Worker", 'paused' if _G.FlagPaused else 'unpaused')
   elif Input.is_trigger(vktable.VK_F8):
-    FlagRunning = False
-    FlagPaused  = False
+    _G.FlagRunning = False
+    _G.FlagPaused  = False
   elif Input.is_trigger(vktable.VK_F5):
     FlagRequestReEnter = True
 
 def process_prepare_inputs():
+  sid = process_stageid_input()
   pid = process_partyid_input()
   log_info("Party Id:", pid)
-  sid = process_stageid_input()
   rid = process_rentalid_input()
   log_info("Rental Id:", 'Round-Robin' if rid == -1 else rid)
   if rid != -1 and rid <= 0:
@@ -594,21 +609,22 @@ def process_prepare_inputs():
 
 def main():
   global PartyId,StageId,RentalUid,AvailableFriendRentals,RentalCycle
-  global FlagRunning,FlagPaused,FlagRequestReEnter,ReportDetail,LOG_STATUS
+  global FlagRequestReEnter,ReportDetail,LOG_STATUS
   LOG_STATUS = not _G.ARGV.less
   log_info("Program initialized")
   PartyId,StageId,RentalUid = process_prepare_inputs()
   discord.update_status(StageId)
   cnt = 0
   reset_final_report()
-  while FlagRunning:
-    if FlagPaused:
+  ReportDetail['stamina_cost'] = game.get_quest(StageId)['ActionPointsCost']
+  while _G.FlagRunning:
+    if _G.FlagPaused:
       pt_s = datetime.now()
-      while FlagPaused:
+      while _G.FlagPaused:
         update_input()
         if Input.is_trigger(vktable.VK_F6):
           log_final_report()
-        if not FlagPaused:
+        if not _G.FlagPaused:
           ReportDetail['paused_t'] += datetime.now() - pt_s
         wait(0.1)
       continue
@@ -640,8 +656,9 @@ if __name__ == '__main__':
     game.init()
     Input.init()
     main()
-    FlagRunning = False
+    _G.FlagRunning = False
   except (SystemExit, KeyboardInterrupt):
+    log_final_report()
     if LastErrorCode == 403:
       discord.update_status(0)
     exit()

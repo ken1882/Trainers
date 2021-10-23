@@ -82,7 +82,7 @@ def level_up(chid,level=1):
 def enhance_gear(character, target_lv):
   global MistGearStockCache
   if MistGearStockCache == -1:
-    MistGearStockCache = player.get_mistgear_stock()['Stock']
+    MistGearStockCache = player.get_mistgear_stock(True)
   mchid = character['MCharacterId']
   cur = character['TotalGearExperience']
   lgn = get_layer_gears(mchid)

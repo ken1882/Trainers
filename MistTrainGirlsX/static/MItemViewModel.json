@@ -5816,6 +5816,17 @@
     "DropQuestIds": []
   },
   {
+    "Id": 430,
+    "Name": "\u30d7\u30c3\u30c4\u30f3\u4e0d\u52d5\u30ac\u30c1\u30e3\u30e1\u30c0\u30eb",
+    "Description": "\u7279\u5b9a\u306e\u30ac\u30c1\u30e3\u3092\u5f15\u304f\u3053\u3068\u3067\r\n\u7372\u5f97\u3067\u304d\u308b\u30a2\u30a4\u30c6\u30e0\u3002\r\n\u5c02\u7528\u306e\u4ea4\u63db\u6240\u3067\r\n\u30a2\u30a4\u30c6\u30e0\u3084\u30ec\u30a4\u30e4\u30fc\u3068\u4ea4\u63db\u3059\u308b\u3053\u3068\u304c\u3067\u304d\u308b\u3002",
+    "ItemCategory": 11,
+    "Rarity": 1,
+    "SellPrice": 0,
+    "Viewable": true,
+    "PossesionLimit": 9999999,
+    "DropQuestIds": []
+  },
+  {
     "Id": 100001,
     "Name": "\u30ea\u30ea\u30fc\u30b9\u8a18\u5ff5\u30ac\u30c1\u30e3_ticket",
     "Description": "\u30ea\u30ea\u30fc\u30b9\u8a18\u5ff5\u30ac\u30c1\u30e3_ticket",
@@ -10912,6 +10923,94 @@
     "Id": 100464,
     "Name": "\u65b0\u30ec\u30a4\u30e4\u30fcPickup\u30ac\u30c1\u30e3\u3010\u71b1\u70c8\u6b53\u8fce\uff01\u62f3\u95d8\u5a18\u306e\u30b7\u30b4\u30ad\u587e\uff01\u3011_ticket",
     "Description": "\u65b0\u30ec\u30a4\u30e4\u30fcPickup\u30ac\u30c1\u30e3\u3010\u71b1\u70c8\u6b53\u8fce\uff01\u62f3\u95d8\u5a18\u306e\u30b7\u30b4\u30ad\u587e\uff01\u3011_ticket",
+    "ItemCategory": 0,
+    "Rarity": 0,
+    "SellPrice": 1,
+    "Viewable": false,
+    "PossesionLimit": null,
+    "DropQuestIds": []
+  },
+  {
+    "Id": 100465,
+    "Name": "Limited\u30ac\u30c1\u30e3\u3010\u30d7\u30c3\u30c4\u30f3\u304a\u5b22\u3068\u4e0d\u52d5\u306e\u546a\u8853\u5e2b\u3011_ticket",
+    "Description": "Limited\u30ac\u30c1\u30e3\u3010\u30d7\u30c3\u30c4\u30f3\u304a\u5b22\u3068\u4e0d\u52d5\u306e\u546a\u8853\u5e2b\u3011_ticket",
+    "ItemCategory": 0,
+    "Rarity": 0,
+    "SellPrice": 1,
+    "Viewable": false,
+    "PossesionLimit": null,
+    "DropQuestIds": []
+  },
+  {
+    "Id": 100466,
+    "Name": "Limited\u30ac\u30c1\u30e3\u3010\u30d7\u30c3\u30c4\u30f3\u304a\u5b22\u3068\u4e0d\u52d5\u306e\u546a\u8853\u5e2b\u3011_ticket",
+    "Description": "Limited\u30ac\u30c1\u30e3\u3010\u30d7\u30c3\u30c4\u30f3\u304a\u5b22\u3068\u4e0d\u52d5\u306e\u546a\u8853\u5e2b\u3011_ticket",
+    "ItemCategory": 0,
+    "Rarity": 0,
+    "SellPrice": 1,
+    "Viewable": false,
+    "PossesionLimit": null,
+    "DropQuestIds": []
+  },
+  {
+    "Id": 100467,
+    "Name": "Limited\u30ac\u30c1\u30e3\u3010\u30d7\u30c3\u30c4\u30f3\u304a\u5b22\u3068\u4e0d\u52d5\u306e\u546a\u8853\u5e2b\u3011_ticket",
+    "Description": "Limited\u30ac\u30c1\u30e3\u3010\u30d7\u30c3\u30c4\u30f3\u304a\u5b22\u3068\u4e0d\u52d5\u306e\u546a\u8853\u5e2b\u3011_ticket",
+    "ItemCategory": 0,
+    "Rarity": 0,
+    "SellPrice": 1,
+    "Viewable": false,
+    "PossesionLimit": null,
+    "DropQuestIds": []
+  },
+  {
+    "Id": 100468,
+    "Name": "Limited\u30ac\u30c1\u30e3\u3010\u30d7\u30c3\u30c4\u30f3\u304a\u5b22\u3068\u4e0d\u52d5\u306e\u546a\u8853\u5e2b\u3011_ticket",
+    "Description": "Limited\u30ac\u30c1\u30e3\u3010\u30d7\u30c3\u30c4\u30f3\u304a\u5b22\u3068\u4e0d\u52d5\u306e\u546a\u8853\u5e2b\u3011_ticket",
+    "ItemCategory": 0,
+    "Rarity": 0,
+    "SellPrice": 1,
+    "Viewable": false,
+    "PossesionLimit": null,
+    "DropQuestIds": []
+  },
+  {
+    "Id": 100469,
+    "Name": "\u8cab\u5c5e\u6027\u30bb\u30ec\u30af\u30b7\u30e7\u30f3\u30ac\u30c1\u30e3_ticket",
+    "Description": "\u8cab\u5c5e\u6027\u30bb\u30ec\u30af\u30b7\u30e7\u30f3\u30ac\u30c1\u30e3_ticket",
+    "ItemCategory": 0,
+    "Rarity": 0,
+    "SellPrice": 1,
+    "Viewable": false,
+    "PossesionLimit": null,
+    "DropQuestIds": []
+  },
+  {
+    "Id": 100470,
+    "Name": "\u8cab\u5c5e\u6027\u30bb\u30ec\u30af\u30b7\u30e7\u30f3\u30ac\u30c1\u30e3_ticket",
+    "Description": "\u8cab\u5c5e\u6027\u30bb\u30ec\u30af\u30b7\u30e7\u30f3\u30ac\u30c1\u30e3_ticket",
+    "ItemCategory": 0,
+    "Rarity": 0,
+    "SellPrice": 1,
+    "Viewable": false,
+    "PossesionLimit": null,
+    "DropQuestIds": []
+  },
+  {
+    "Id": 100471,
+    "Name": "\u8cab\u5c5e\u6027\u30bb\u30ec\u30af\u30b7\u30e7\u30f3\u30ac\u30c1\u30e3_ticket",
+    "Description": "\u8cab\u5c5e\u6027\u30bb\u30ec\u30af\u30b7\u30e7\u30f3\u30ac\u30c1\u30e3_ticket",
+    "ItemCategory": 0,
+    "Rarity": 0,
+    "SellPrice": 1,
+    "Viewable": false,
+    "PossesionLimit": null,
+    "DropQuestIds": []
+  },
+  {
+    "Id": 100472,
+    "Name": "\u8cab\u5c5e\u6027\u30bb\u30ec\u30af\u30b7\u30e7\u30f3\u30ac\u30c1\u30e3_ticket",
+    "Description": "\u8cab\u5c5e\u6027\u30bb\u30ec\u30af\u30b7\u30e7\u30f3\u30ac\u30c1\u30e3_ticket",
     "ItemCategory": 0,
     "Rarity": 0,
     "SellPrice": 1,

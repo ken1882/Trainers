@@ -1,4 +1,3 @@
-import readline
 import _G, graphics
 import sys, os
 import random, math
@@ -11,7 +10,7 @@ from _G import (resume,wait,uwait,log_debug,log_error,log_info,log_warning,make_
 if _G.IS_WIN32:
   import win32api,win32con
 elif _G.IS_LINUX:
-  import tty,termios
+  import tty,termios,readline
   _G.OriTerminalSettings = deepcopy(termios.tcgetattr(sys.stdin))
   tset = termios.tcgetattr(sys.stdin)
   tset[3] = tset[3] & ~(termios.ECHO | termios.ICANON)

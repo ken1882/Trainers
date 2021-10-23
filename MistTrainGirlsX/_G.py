@@ -95,9 +95,8 @@ CH_WIDTH = {
 }
 
 SYMBOL_WIDTH = {
-  '♪': 1,
-  '★': 2,
-  '☆': 2,
+  1: '♪',
+  2: '★☆【】ⅠⅡⅢ：',
 }
 
 def format_padded_utfstring(*tuples):
@@ -121,7 +120,12 @@ def format_padded_utfstring(*tuples):
     for ch in text:
       sym = unicodedata.east_asian_width(ch)
       if sym == 'A':
-        w += SYMBOL_WIDTH[ch] if ch in SYMBOL_WIDTH else CH_WIDTH[sym]
+        for cw,chars in SYMBOL_WIDTH.items():
+          if ch in chars:
+            w += cw
+            break
+        else:
+          w += CH_WIDTH[sym]
       else:
         w += CH_WIDTH[sym]
     if width <= w:
@@ -220,6 +224,7 @@ def handle_exception(err):
 
 # Errnos
 ERROR_SUCCESS       = 0x0
+ERROR_LOCKED        = 0x1
 ERROR_LIMIT_REACHED = 0x3
 ERROR_NOSTAMINA     = 0x6
 
@@ -236,8 +241,22 @@ ITYPE_WEAPON      = 1
 ITYPE_ARMOR       = 2
 ITYPE_ACCESORY    = 3
 ITYPE_CONSUMABLE  = 4
+ITYPE_ABSTONE     = 5   # ability stone
 ITYPE_GOLD        = 6
-ITYPE_GEAR        = 10
+ITYPE_FREEGEM     = 7
+ITYPE_GEM         = 8
+ITYPE_GEAR        = 10  # aka character pieces
+ITYPE_ABSTONE2    = 12
+
+ITYPE_NAMES = {
+  ITYPE_WEAPON: '武器',
+  ITYPE_ARMOR: '防具',
+  ITYPE_ACCESORY: '装飾',
+  ITYPE_CONSUMABLE: 'アイテム',
+  ITYPE_ABSTONE: '宝珠',
+  ITYPE_GOLD: 'ゴルード',
+  ITYPE_GEAR: 'ギヤ'
+}
 
 SHOP_TYPE_EVENT = 1
 

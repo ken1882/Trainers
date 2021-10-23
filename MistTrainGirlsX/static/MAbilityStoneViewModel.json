@@ -1,0 +1,701 @@
+[
+  {
+    "Id": 1,
+    "Name": "\u6226\u58eb\u306e\u5b9d\u73e0\u3010SS\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      1,
+      59,
+      60,
+      61,
+      58,
+      80,
+      79,
+      78,
+      45,
+      44,
+      43,
+      42,
+      41,
+      40,
+      81,
+      38,
+      2,
+      3,
+      4,
+      39,
+      5,
+      6,
+      57,
+      8,
+      9,
+      37,
+      12,
+      11,
+      10,
+      7
+    ]
+  },
+  {
+    "Id": 2,
+    "Name": "\u6226\u58eb\u306e\u5b9d\u73e0\u3010S\u3011",
+    "Rarity": 3,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      13,
+      14,
+      15,
+      16,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      54,
+      17,
+      46,
+      82,
+      83,
+      84,
+      85
+    ]
+  },
+  {
+    "Id": 3,
+    "Name": "\u6226\u58eb\u306e\u5b9d\u73e0\u3010A\u3011",
+    "Rarity": 2,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      29,
+      34,
+      33,
+      32,
+      31,
+      30,
+      86,
+      28,
+      27,
+      25,
+      35,
+      87,
+      88,
+      89,
+      26,
+      36
+    ]
+  },
+  {
+    "Id": 4,
+    "Name": "\u5b88\u4eba\u306e\u5b9d\u73e0\u3010SS\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 2,
+    "MLevelUpSkillGroupIds": [
+      106,
+      107,
+      108,
+      112,
+      213,
+      214,
+      215,
+      216,
+      111,
+      218,
+      109,
+      110,
+      217,
+      159,
+      160,
+      161,
+      156,
+      155,
+      154,
+      145,
+      157,
+      144,
+      142,
+      117,
+      116,
+      115,
+      114,
+      113,
+      143,
+      158
+    ]
+  },
+  {
+    "Id": 5,
+    "Name": "\u5b88\u4eba\u306e\u5b9d\u73e0\u3010S\u3011",
+    "Rarity": 3,
+    "AbilityStoneEquipType": 2,
+    "MLevelUpSkillGroupIds": [
+      149,
+      118,
+      119,
+      147,
+      146,
+      129,
+      128,
+      127,
+      120,
+      126,
+      125,
+      124,
+      123,
+      122,
+      148,
+      121,
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169
+    ]
+  },
+  {
+    "Id": 6,
+    "Name": "\u5b88\u4eba\u306e\u5b9d\u73e0\u3010A\u3011",
+    "Rarity": 2,
+    "AbilityStoneEquipType": 2,
+    "MLevelUpSkillGroupIds": [
+      151,
+      153,
+      141,
+      140,
+      139,
+      138,
+      137,
+      132,
+      135,
+      134,
+      133,
+      152,
+      131,
+      130,
+      136,
+      150
+    ]
+  },
+  {
+    "Id": 7,
+    "Name": "\u546a\u5e2b\u306e\u5b9d\u73e0\u3010SS\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 3,
+    "MLevelUpSkillGroupIds": [
+      220,
+      226,
+      104,
+      103,
+      102,
+      101,
+      100,
+      221,
+      98,
+      97,
+      96,
+      95,
+      94,
+      93,
+      92,
+      91,
+      90,
+      222,
+      223,
+      224,
+      225,
+      219,
+      99,
+      105,
+      188,
+      189,
+      190,
+      191,
+      192,
+      193,
+      186,
+      187
+    ]
+  },
+  {
+    "Id": 8,
+    "Name": "\u546a\u5e2b\u306e\u5b9d\u73e0\u3010S\u3011",
+    "Rarity": 3,
+    "AbilityStoneEquipType": 3,
+    "MLevelUpSkillGroupIds": [
+      196,
+      178,
+      179,
+      180,
+      181,
+      182,
+      183,
+      184,
+      185,
+      194,
+      195,
+      197,
+      198,
+      200,
+      201,
+      199
+    ]
+  },
+  {
+    "Id": 9,
+    "Name": "\u546a\u5e2b\u306e\u5b9d\u73e0\u3010A\u3011",
+    "Rarity": 2,
+    "AbilityStoneEquipType": 3,
+    "MLevelUpSkillGroupIds": [
+      206,
+      209,
+      208,
+      207,
+      203,
+      202,
+      177,
+      176,
+      174,
+      173,
+      172,
+      171,
+      170,
+      205,
+      175,
+      204
+    ]
+  },
+  {
+    "Id": 10,
+    "Name": "\u7d46\u306e\u5b9d\u73e0\u3010\u6b66\u5668\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      210
+    ]
+  },
+  {
+    "Id": 11,
+    "Name": "\u7d46\u306e\u5b9d\u73e0\u3010\u9632\u5177\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 2,
+    "MLevelUpSkillGroupIds": [
+      211
+    ]
+  },
+  {
+    "Id": 12,
+    "Name": "\u7d46\u306e\u5b9d\u73e0\u3010\u88c5\u98fe\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 3,
+    "MLevelUpSkillGroupIds": [
+      212
+    ]
+  },
+  {
+    "Id": 13,
+    "Name": "\u5203\u30de\u30b9\u30bf\u30fc\u3010\u2161\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      227
+    ]
+  },
+  {
+    "Id": 14,
+    "Name": "\u885d\u30de\u30b9\u30bf\u30fc\u3010\u2161\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      228
+    ]
+  },
+  {
+    "Id": 15,
+    "Name": "\u8cab\u30de\u30b9\u30bf\u30fc\u3010\u2161\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      229
+    ]
+  },
+  {
+    "Id": 16,
+    "Name": "5\u5c5e\u6027\u5f37\u5316\u3010\u2161\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      230
+    ]
+  },
+  {
+    "Id": 17,
+    "Name": "\t\u5263\u30de\u30b9\u30bf\u30fc\u3010\u2161\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      38
+    ]
+  },
+  {
+    "Id": 18,
+    "Name": "\t\u65a7\u30de\u30b9\u30bf\u30fc\u3010\u2161\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      39
+    ]
+  },
+  {
+    "Id": 19,
+    "Name": "\t\u9b54\u5177\u30de\u30b9\u30bf\u30fc\u3010\u2161\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      42
+    ]
+  },
+  {
+    "Id": 20,
+    "Name": "\t\u62f3\u30de\u30b9\u30bf\u30fc\u3010\u2161\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      37
+    ]
+  },
+  {
+    "Id": 21,
+    "Name": "\t\u97ad\u30de\u30b9\u30bf\u30fc\u3010\u2161\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      41
+    ]
+  },
+  {
+    "Id": 22,
+    "Name": "\t\u6756\u30de\u30b9\u30bf\u30fc\u3010\u2161\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      44
+    ]
+  },
+  {
+    "Id": 23,
+    "Name": "\t\u69cd\u30de\u30b9\u30bf\u30fc\u3010\u2161\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      40
+    ]
+  },
+  {
+    "Id": 24,
+    "Name": "\t\u9283\u30de\u30b9\u30bf\u30fc\u3010\u2161\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      45
+    ]
+  },
+  {
+    "Id": 25,
+    "Name": "\t\u5f13\u30de\u30b9\u30bf\u30fc\u3010\u2161\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      43
+    ]
+  },
+  {
+    "Id": 26,
+    "Name": "\u5358\u4f53\u3078\u306e\u79d8\u7b56",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 2,
+    "MLevelUpSkillGroupIds": [
+      213
+    ]
+  },
+  {
+    "Id": 27,
+    "Name": "\u5168\u4f53\u3078\u306e\u79d8\u7b56",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 2,
+    "MLevelUpSkillGroupIds": [
+      214
+    ]
+  },
+  {
+    "Id": 28,
+    "Name": "\u30e9\u30f3\u30c0\u30e0\u3078\u306e\u79d8\u7b56",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 2,
+    "MLevelUpSkillGroupIds": [
+      215
+    ]
+  },
+  {
+    "Id": 29,
+    "Name": "\u5b8c\u5168\u9632\u5fa1\u3010\u2162\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 2,
+    "MLevelUpSkillGroupIds": [
+      216
+    ]
+  },
+  {
+    "Id": 30,
+    "Name": "\u4e07\u5168\u5b88\u52e2\u3010\u2162\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 2,
+    "MLevelUpSkillGroupIds": [
+      217
+    ]
+  },
+  {
+    "Id": 31,
+    "Name": "\u7aae\u5730\u5b88\u52e2\u3010\u2162\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 2,
+    "MLevelUpSkillGroupIds": [
+      218
+    ]
+  },
+  {
+    "Id": 32,
+    "Name": "\u6bd2\u5316\u8010\u6027\u5f37\u5316\u3010\u2162\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 3,
+    "MLevelUpSkillGroupIds": [
+      186
+    ]
+  },
+  {
+    "Id": 33,
+    "Name": "\u6c17\u7d76\u8010\u6027\u5f37\u5316\u3010\u2162\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 3,
+    "MLevelUpSkillGroupIds": [
+      187
+    ]
+  },
+  {
+    "Id": 34,
+    "Name": "\u7761\u7720\u8010\u6027\u5f37\u5316\u3010\u2162\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 3,
+    "MLevelUpSkillGroupIds": [
+      188
+    ]
+  },
+  {
+    "Id": 35,
+    "Name": "\u6df7\u4e71\u8010\u6027\u5f37\u5316\u3010\u2162\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 3,
+    "MLevelUpSkillGroupIds": [
+      189
+    ]
+  },
+  {
+    "Id": 36,
+    "Name": "\u6697\u95c7\u8010\u6027\u5f37\u5316\u3010\u2162\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 3,
+    "MLevelUpSkillGroupIds": [
+      190
+    ]
+  },
+  {
+    "Id": 37,
+    "Name": "\u9ebb\u75fa\u8010\u6027\u5f37\u5316\u3010\u2162\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 3,
+    "MLevelUpSkillGroupIds": [
+      191
+    ]
+  },
+  {
+    "Id": 38,
+    "Name": "\u6c88\u9ed9\u8010\u6027\u5f37\u5316\u3010\u2162\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 3,
+    "MLevelUpSkillGroupIds": [
+      192
+    ]
+  },
+  {
+    "Id": 39,
+    "Name": "\u9b45\u4e86\u8010\u6027\u5f37\u5316\u3010\u2162\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 3,
+    "MLevelUpSkillGroupIds": [
+      193
+    ]
+  },
+  {
+    "Id": 40,
+    "Name": "\u5f31\u70b9\u653b\u52e2",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      231
+    ]
+  },
+  {
+    "Id": 41,
+    "Name": "\u30c0\u30e1\u30fc\u30b8\u5909\u63db\uff1a\u901f\u3055",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      232
+    ]
+  },
+  {
+    "Id": 42,
+    "Name": "\u5f97\u610f\u5b88\u52e2",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 2,
+    "MLevelUpSkillGroupIds": [
+      233
+    ]
+  },
+  {
+    "Id": 43,
+    "Name": "\u6226\u4eba\u306e\u5b9d\u73e0\u3010SS\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      251,
+      250,
+      249,
+      248,
+      247,
+      246,
+      245,
+      244,
+      243,
+      235,
+      241,
+      240,
+      239,
+      238,
+      237,
+      236,
+      242,
+      234
+    ]
+  },
+  {
+    "Id": 44,
+    "Name": "\u6226\u4eba\u306e\u5b9d\u73e0\u3010S\u3011",
+    "Rarity": 3,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      260,
+      259,
+      258,
+      257,
+      256,
+      255,
+      254,
+      253,
+      252
+    ]
+  },
+  {
+    "Id": 45,
+    "Name": "\u5b88\u8b77\u8005\u306e\u5b9d\u73e0\u3010SS\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 2,
+    "MLevelUpSkillGroupIds": [
+      276,
+      275,
+      274,
+      273,
+      272,
+      271,
+      270,
+      269,
+      277,
+      267,
+      266,
+      265,
+      264,
+      263,
+      262,
+      261,
+      268
+    ]
+  },
+  {
+    "Id": 46,
+    "Name": "\u5b88\u8b77\u8005\u306e\u5b9d\u73e0\u3010S\u3011",
+    "Rarity": 3,
+    "AbilityStoneEquipType": 2,
+    "MLevelUpSkillGroupIds": [
+      286,
+      285,
+      284,
+      283,
+      282,
+      281,
+      280,
+      279,
+      278
+    ]
+  },
+  {
+    "Id": 47,
+    "Name": "\u546a\u8a5b\u306e\u5b9d\u73e0\u3010SS\u3011",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 3,
+    "MLevelUpSkillGroupIds": [
+      301,
+      300,
+      299,
+      302,
+      298,
+      297,
+      296,
+      295,
+      290,
+      293,
+      292,
+      291,
+      289,
+      288,
+      287,
+      294
+    ]
+  },
+  {
+    "Id": 48,
+    "Name": "\u546a\u8a5b\u306e\u5b9d\u73e0\u3010S\u3011",
+    "Rarity": 3,
+    "AbilityStoneEquipType": 3,
+    "MLevelUpSkillGroupIds": [
+      309,
+      303,
+      304,
+      305,
+      306,
+      307,
+      308,
+      310
+    ]
+  }
+]
