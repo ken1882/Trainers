@@ -2,7 +2,7 @@ from numpy import gradient
 from win32gui import ExtCreatePen
 import _G,stage
 from _G import resume, resume_from, pop_fiber_ret, wait, uwait
-import Input, position, heuristics, training
+import Input, position, heuristics, training, tourment
 from random import randint
 
 def start_test_fiber():
@@ -50,3 +50,7 @@ def start_test_fiber():
 
 def start_train_fiber():
   yield from resume_from(training.start())
+
+
+def start_tourment_fiber():
+  yield from tourment.start()
