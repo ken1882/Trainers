@@ -11,6 +11,8 @@ parser.add_argument('--no-persist-cache', action="store_true", help='Disable som
 parser.add_argument('--user-agent', help="Use specified user agent instead of python request's")
 parser.add_argument('-l', '--less', action="store_true", help='Less information logging')
 parser.add_argument('-v', '--verbose', action="store_true", help='Debug verbose logging')
+parser.add_argument('-o', '--output', help="Output combat statics to specified file")
+
 def load():
   args = parser.parse_args()
   if args.verbose:

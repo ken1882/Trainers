@@ -1,4 +1,6 @@
 import sys
+
+from requests import exceptions
 import _G
 from _G import *
 import itertools
@@ -397,15 +399,14 @@ def is_defeated(data):
 def record_loots(loots):
   global ReportDetail
   for loot in loots:
-    if loot['Sold']:
-      continue
     hid = hash_item_id(loot)
     hid2= hash_item_id(loot, loot['ItemQuantity'])
     if hid not in ReportDetail['loots']:
       ReportDetail['loots'][hid] = 0
     if hid2 not in ReportDetail['loot_n']:
       ReportDetail['loot_n'][hid2] = 0
-    ReportDetail['loots'][hid] += loot['ItemQuantity']
+    if not loot['Sold']:
+      ReportDetail['loots'][hid] += loot['ItemQuantity']
     ReportDetail['loot_n'][hid2] += 1
 
 def process_combat(data):
@@ -494,7 +495,8 @@ def process_rentalid_input():
   return rid
 
 def start_battle_process(sid, pid, rid):
-  global BattleId,LastErrorCode
+  global BattleId,LastErrorCode,LOG_STATUS
+  LOG_STATUS = not _G.ARGV.less
   log_info("Stage/Party/Rental IDs:", sid, pid, rid)
   data = start_battle(sid, pid, rid)
   if type(data) == int:
@@ -520,19 +522,19 @@ def start_battle_process(sid, pid, rid):
 def reset_final_report():
   global ReportDetail
   ReportDetail = {
-  'start_t': datetime.now(),
-  'end_t': 0,
-  'paused_t': timedelta(),
-  'times': 0,
-  'loots': {},
-  'loot_n': {},
-  'solds': {},
-  'sells': {},
-  'ap_recovery': {},
-  'stamina_cost': 0,
-  'win': 0,
-  'lose': 0,
-}
+    'start_t': datetime.now(),
+    'end_t': 0,
+    'paused_t': timedelta(),
+    'times': 0,
+    'loots': {},
+    'loot_n': {},
+    'solds': {},
+    'sells': {},
+    'ap_recovery': {},
+    'stamina_cost': 0,
+    'win': 0,
+    'lose': 0,
+  }
 
 
 def log_final_report():
@@ -542,6 +544,7 @@ def log_final_report():
   string  = f"\n{'='*30} Report {'='*30}\n"
   line_width = len(string.strip())
   try:
+    string += f"{StageData[StageId][-1]}\n" if StageId in StageData else ''
     elapsed = ReportDetail['end_t'] - ReportDetail['start_t'] - ReportDetail['paused_t']
     string += "Start time:   " + ReportDetail['start_t'].strftime('%Y-%m-%d %H:%M:%S') + '\n'
     string += "End time:     " + ReportDetail['end_t'].strftime('%Y-%m-%d %H:%M:%S') + '\n'
@@ -575,12 +578,20 @@ def log_final_report():
           string += '\n'
         else:
           string += format_padded_utfstring((f"{qn}x{name}", 40, True))
-          string += ": {:.5f}%\n".format(n / ReportDetail['times'] * 100)
+          string += ": {:.5f}%".format(n / ReportDetail['win'] * 100)
+          string += f" dropped {n} time(s)\n"
     # end report category listings
   except Exception as err:
-    log_error(f"An error occureed while logging final report: {err}")
+    log_error(f"An error occured while logging final report: {err}")
     handle_exception(err)
   string += f"\n{'='*68}\n"
+  if _G.ARGV.output:
+    try:
+      with open(_G.ARGV.output, 'a') as fp:
+        fp.write(string)
+    except Exception as err:
+      log_error(f"An error occured while writing result file: {err}")
+      handle_exception(err)
   print(string)
 
 def update_input():
@@ -598,6 +609,7 @@ def update_input():
     FlagRequestReEnter = True
 
 def process_prepare_inputs():
+  global ReportDetail
   sid = process_stageid_input()
   pid = process_partyid_input()
   log_info("Party Id:", pid)
@@ -605,18 +617,17 @@ def process_prepare_inputs():
   log_info("Rental Id:", 'Round-Robin' if rid == -1 else rid)
   if rid != -1 and rid <= 0:
     rid = 'null'
+  ReportDetail['stamina_cost'] = game.get_quest(sid)['ActionPointsCost']
   return (pid, sid, rid)
 
 def main():
   global PartyId,StageId,RentalUid,AvailableFriendRentals,RentalCycle
-  global FlagRequestReEnter,ReportDetail,LOG_STATUS
-  LOG_STATUS = not _G.ARGV.less
+  global FlagRequestReEnter,ReportDetail
   log_info("Program initialized")
+  reset_final_report()
   PartyId,StageId,RentalUid = process_prepare_inputs()
   discord.update_status(StageId)
   cnt = 0
-  reset_final_report()
-  ReportDetail['stamina_cost'] = game.get_quest(StageId)['ActionPointsCost']
   while _G.FlagRunning:
     if _G.FlagPaused:
       pt_s = datetime.now()
@@ -630,10 +641,10 @@ def main():
       continue
     if FlagRequestReEnter:
       log_final_report()
+      reset_final_report()
       PartyId,StageId,RentalUid = process_prepare_inputs()
       discord.update_status(StageId)
       FlagRequestReEnter = False
-      reset_final_report()
       cnt = 0
       continue
     cnt += 1

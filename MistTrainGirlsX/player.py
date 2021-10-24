@@ -82,7 +82,7 @@ def get_all_items(flatten=False):
 
 def get_unmastered_characters():
   '''
-  Get characters that still has unmastered skills
+  Get characters that still has unmastered skills or status
   '''
   chars = get_characters()
   sk_keys = ['USkill1','USkill2','USkill3']
@@ -91,6 +91,13 @@ def get_unmastered_characters():
     skills = [ch[sk] for sk in sk_keys]
     if any([sk['Rank'] < 99 for sk in skills]):
       ret.append(ch)
+    else:
+      res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/{ch['UCharacterBaseId']}/BaseStatusUp")
+      mstatus = res['r']['MaxStatuses'][0]
+      for k,v in ch['UCharacterBaseViewModel']['Status'].items():
+        if v < mstatus[k]:
+          ret.append(ch)
+          break
   return ret
 
 def get_current_parties():
@@ -219,9 +226,13 @@ def get_item_stock(item, num_only=False):
     ret['Stock'] = get_profile()['Money']
   elif item[kit] == ITYPE_GEAR:
     ret = get_gear_stock(item[kid])
+    if not ret:
+      return None
     ret[kit] = ITYPE_GEAR
   elif item[kit] == ITYPE_CONSUMABLE:
     ret = get_consumable_stock(item[kid])
+    if not ret:
+      return None
     ret[kit] = ITYPE_CONSUMABLE
   return ret['Stock'] if num_only else ret
 
