@@ -224,7 +224,7 @@ def get_item_stock(item, num_only=False):
   if item[kit] == ITYPE_GOLD:
     ret = deepcopy(item)
     ret['Stock'] = get_profile()['Money']
-  elif item[kit] == ITYPE_GEAR:
+  elif item[kit] in [ITYPE_GEAR, ITYPE_GEAR2]:
     ret = get_gear_stock(item[kid])
     if not ret:
       return None
@@ -247,7 +247,7 @@ def sell_gear(item, amount):
   return res['r']['Items']
 
 def sell_item(item, amount=1):
-  if item['ItemType'] == ITYPE_GEAR:
+  if item['ItemType'] in [ITYPE_GEAR, ITYPE_GEAR2]:
     return sell_gear(item, amount)
   elif item['ItemType'] == ITYPE_CONSUMABLE:
     gain = sell_consumable(item, amount)

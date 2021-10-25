@@ -421,7 +421,7 @@ def get_item(item):
     return get_accessory(id)
   elif item['ItemType'] in [ITYPE_ABSTONE, ITYPE_ABSTONE2]:
     return get_abstone(id)
-  elif item['ItemType'] == ITYPE_GEAR:
+  elif item['ItemType'] in [ITYPE_GEAR, ITYPE_GEAR2]:
     return get_gear(id)
   elif item['ItemType'] == ITYPE_GOLD:
     item['Name'] = 'ゴルト'

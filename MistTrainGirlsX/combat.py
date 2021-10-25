@@ -45,6 +45,7 @@ RecoveryBatchAmount = 5 # How many items to use once
 AutoSellItems = [
   #             type     Id  Maximum keep  Minimum keep
   (       ITYPE_GEAR,   106,          500,         100), # Gear：[古の魔女の末裔]セイラム
+  (      ITYPE_GEAR2,   106,          500,         100), # Gear：[古の魔女の末裔]セイラム
 ]
 
 
@@ -668,10 +669,11 @@ if __name__ == '__main__':
     Input.init()
     main()
     _G.FlagRunning = False
-  except (SystemExit, KeyboardInterrupt):
+  except (Exception, SystemExit, KeyboardInterrupt) as err:
     log_final_report()
     if LastErrorCode == 403:
       discord.update_status(0)
+    handle_exception(err)
     exit()
   finally:
     if _G.IS_LINUX:

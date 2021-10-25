@@ -246,6 +246,7 @@ ITYPE_GOLD        = 6
 ITYPE_FREEGEM     = 7
 ITYPE_GEM         = 8
 ITYPE_GEAR        = 10  # aka character pieces
+ITYPE_GEAR2       = 11
 ITYPE_ABSTONE2    = 12
 
 ITYPE_NAMES = {
@@ -254,8 +255,10 @@ ITYPE_NAMES = {
   ITYPE_ACCESORY: '装飾',
   ITYPE_CONSUMABLE: 'アイテム',
   ITYPE_ABSTONE: '宝珠',
+  ITYPE_ABSTONE2: '宝珠',
   ITYPE_GOLD: 'ゴルード',
-  ITYPE_GEAR: 'ギヤ'
+  ITYPE_GEAR: 'ギヤ',
+  ITYPE_GEAR2: 'ギヤ',
 }
 
 SHOP_TYPE_EVENT = 1
