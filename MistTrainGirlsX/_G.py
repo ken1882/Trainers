@@ -286,18 +286,30 @@ DERPY_TYPE_GRASS      = 0 # 芝
 DERPY_TYPE_DIRT       = 1 # ダート
 DERPY_RANGE_1200      = 0
 DERPY_RANGE_2400      = 1
+DERPY_RANGE_3600      = 2
 DERPY_UMA_REPORT      = '_・×▲○◎' # first one is reserved
-DERPY_TACTIC_TABLE = {
-  1: '逃げ', 2: '先行', 3: '差し', 4: '追い込み'
-}
+DERPY_TACTIC_LIST = [
+  '', '逃げ', '先行', '差し', '追い込み'
+]
 DERPY_STAT_TABLE = {
-  'F': 100,
-  'E': 200,
-  'D': 300,
-  'C': 400,
-  'B': 600,
-  'A': 800,
+  'F': 1,
+  'E': 2,
+  'D': 3,
+  'C': 4,
+  'B': 6,
+  'A': 8,
 }
+DERPY_CONDITION_LIST = [
+  '_________', # reserved
+  'ケガなどし',
+  '心配ですね',
+  '大丈夫でし',
+  '少し元気が',
+  'やる気を感',
+  '調子は良さ',
+  '凄い意気込',
+  '絶好調のよ',  
+]
 
 def make_lparam(x, y):
   return (y << 16) | x
