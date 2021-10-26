@@ -3,7 +3,7 @@ import game
 import player
 import math
 
-TagetGearLevel  = 19
+TagetGearLevel  = 15
 MinMistGearKeep = 1000000
 
 Headers = {

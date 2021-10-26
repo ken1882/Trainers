@@ -1,4 +1,3 @@
-from requests.packages.urllib3 import connection_from_url
 import _G
 from _G import *
 import game

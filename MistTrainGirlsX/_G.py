@@ -271,6 +271,34 @@ RARITY_NAME = ['C','B','A','S','SS','US']
 LastErrorCode = 0
 LastErrorMessage = ''
 
+DERPY_WAREHOUSE_HAEDER_PATH   = '.tmp/derpy_header.dat'
+DERPY_WAREHOUSE_CONTENT_PATH  = '.tmp/derpy_warehouse.dat'
+
+DERPY_TACTIC_NIGE     = 1 # 逃げ
+DERPY_TACTIC_SENKO    = 2 # 先行
+DERPY_TACTIC_SASHI    = 3 # 差し
+DERPY_TACTIC_OI       = 4 # 追い
+DERPY_DIRECTION_RIGHT = 0 # 右回り 
+DERPY_DIRECTION_LEFT  = 1 # 左回り
+DERPY_WEATHER_SUNNY   = 0 # 晴
+DERPY_WEATHER_RAIN    = 1 # 雨
+DERPY_TYPE_GRASS      = 0 # 芝
+DERPY_TYPE_DIRT       = 1 # ダート
+DERPY_RANGE_1200      = 0
+DERPY_RANGE_2400      = 1
+DERPY_UMA_REPORT      = '_・×▲○◎' # first one is reserved
+DERPY_TACTIC_TABLE = {
+  1: '逃げ', 2: '先行', 3: '差し', 4: '追い込み'
+}
+DERPY_STAT_TABLE = {
+  'F': 100,
+  'E': 200,
+  'D': 300,
+  'C': 400,
+  'B': 600,
+  'A': 800,
+}
+
 def make_lparam(x, y):
   return (y << 16) | x
 
