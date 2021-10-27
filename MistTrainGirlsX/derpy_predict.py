@@ -15,7 +15,7 @@ def get_upcoming_race():
 
 def predict_race(race):
   x_train = []
-  data = race['schedule']
+  data = race['schedule'] if 'schedule' in race else race
   n_uma = len(race['character'])
   for ch in race['character']:
     features = [
@@ -34,17 +34,18 @@ def predict_race(race):
     ]
     x_train.append(features)
   
-  with open(_G.DERPY_MODEL_NAME, 'rb') as fp:
+  with open(_G.DERPY_RFR_MODEL_NAME, 'rb') as fp:
     clsier = pickle.load(fp)
 
   result = clsier.predict(x_train)
   return result
 
 def format_derpy_data(data, predict):
+  race = data['schedule'] if 'schedule' in data else data
   string = '='*69 + '\n'
-  string += f"{data['schedule']['name']}\n"
-  string += f"{_G.DERPY_RANGE_LIST[data['schedule']['range']]} {_G.DERPY_GROUND_TYPE[data['schedule']['type']]} "
-  string += f"{_G.DERPY_DIRECTION_TYPE[data['schedule']['direction']]} {_G.DERPY_WEATHER_TYPE[data['schedule']['weather']]}\n"
+  string += f"{data['name']}\n"
+  string += f"{_G.DERPY_RANGE_LIST[race['range']]} {_G.DERPY_GROUND_TYPE[race['type']]} "
+  string += f"{_G.DERPY_DIRECTION_TYPE[race['direction']]} {_G.DERPY_WEATHER_TYPE[race['weather']]}\n"
   string += '-' * 42 + '\n'
   SCORE_WIDTH = 8
   PRED_WIDTH  = 8

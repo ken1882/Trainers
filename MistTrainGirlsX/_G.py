@@ -312,9 +312,11 @@ DERPY_CONDITION_LIST = [
 ]
 DERPY_GROUND_TYPE = ['芝', 'ダート']
 DERPY_WEATHER_TYPE = ['晴', '雨']
-DERPY_MODEL_NAME = '.tmp/mtgderpy_rfr.mod'
 DERPY_DIRECTION_TYPE = ['右回り', '左回り']
 DERPY_RANGE_LIST = ['1200m', '2400m', '3600m']
+
+DERPY_RFR_MODEL_NAME = '.tmp/mtgderpy_rfr.mod'
+DERPY_RFC_MODEL_NAME = '.tmp/mtgderpy_rfc.mod'
 
 def make_lparam(x, y):
   return (y << 16) | x

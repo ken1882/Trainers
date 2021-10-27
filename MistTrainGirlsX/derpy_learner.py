@@ -6,7 +6,7 @@ matplotlib.use('Agg')
 from matplotlib import get_backend
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestRegressor,RandomForestClassifier
 from sklearn.model_selection import GridSearchCV, StratifiedKFold, cross_val_score
 from sklearn.preprocessing import MultiLabelBinarizer
 from iterstrat.ml_stratifiers import MultilabelStratifiedKFold
@@ -17,10 +17,12 @@ N_JOBS  = -1
 GRID_CV = 5
 VERBOSE = any([k for k in ['-v', '--verbose'] if k in sys.argv])
 
-OUTPUT_NAME = _G.DERPY_MODEL_NAME
+OUTPUT_NAME = _G.DERPY_RFR_MODEL_NAME
 
 K_FOLD = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
 MSK_FOLD = MultilabelStratifiedKFold(n_splits=3, shuffle=True, random_state=42)
+
+FIT_ORDER = False # if false, try to predict the time needed to goal
 
 PARAM_RFR = {
   'n_estimators':[50,75,100,150,200],
@@ -61,13 +63,18 @@ def load_data():
         times.append(res['time'])
         sample_n += 1
       # end each uma
-      std, avg = np.std(times), np.average(times)
       ori_y.extend(deepcopy(times))
-      efdn = 3 # effective decimal n
-      times = [(n - avg) / std for n in times]
-      times = [10**(efdn+1) - n*(10**(efdn)) for n in times]
-      times = [n*n // (10**(efdn+2)) for n in times]
-      y_train.extend(times)
+      if not FIT_ORDER:
+        std, avg = np.std(times), np.average(times)
+        efdn = 3 # effective decimal n
+        times = [(n - avg) / std for n in times]
+        times = [10**(efdn+1) - n*(10**(efdn)) for n in times]
+        times = [n*n // (10**(efdn+2)) for n in times]
+        y_train.extend(times)
+      else:
+        otimes = sorted(times)
+        for t in times:
+          y_train.append( next((i+1 for i,n in enumerate(otimes) if n == t), 0) )
     # end each race
   x_train = np.array(x_train)
   y_train = np.array(y_train, dtype=np.int32)
@@ -78,31 +85,35 @@ def main():
   global x_train, y_train
   
   load_data()
-  
-  clsier_rfr = GridSearchCV(
-    estimator=RandomForestRegressor(), param_grid=PARAM_RFR,
-    scoring='explained_variance', 
-    cv=GRID_CV, verbose=VERBOSE, n_jobs=N_JOBS
-  )
+  clsier = None
+  if FIT_ORDER:
+    pass
+  else:
+    cls_scoring = 'scoring'
+    clsier = GridSearchCV(
+      estimator=RandomForestRegressor(), param_grid=PARAM_RFR,
+      scoring=cls_scoring, 
+      cv=GRID_CV, verbose=VERBOSE, n_jobs=N_JOBS
+    )
   
   print("Training Random Forest, samples=", y_train.shape)
   
-  clsier_rfr.fit(x_train, y_train)
+  clsier.fit(x_train, y_train)
   
-  print("Best params: ", clsier_rfr.best_params_)
+  print("Best params: ", clsier.best_params_)
   print("Result:")
-  print(clsier_rfr.cv_results_)
+  print(clsier.cv_results_)
   
   with open(OUTPUT_NAME, 'wb') as fp:
-    pickle.dump(clsier_rfr, fp)
+    pickle.dump(clsier, fp)
   
   # with open(OUTPUT_NAME, 'rb') as fp:
   #   clsier_rfr = pickle.load(fp)
 
   print("===== Start Cross-Vaildating =====")
 
-  score_rfr = cross_val_score(clsier_rfr, x_train, y_train, scoring='explained_variance', cv=K_FOLD, verbose=VERBOSE,n_jobs=N_JOBS)
-  print("Random Forest Regressor score: ", score_rfr)
+  scores = cross_val_score(clsier, x_train, y_train, scoring=cls_scoring, cv=K_FOLD, verbose=VERBOSE,n_jobs=N_JOBS)
+  print("cross_val_score: ", scores)
 
 if __name__ == '__main__':
   main()
