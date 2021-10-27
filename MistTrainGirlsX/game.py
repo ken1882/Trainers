@@ -205,6 +205,7 @@ def reauth_game():
     v = '='.join(seg[1:])
     _session.cookies.set(k, v)
 
+  log_info("Updating token")
   res = _session.post('https://pc-play.games.dmm.co.jp/play/MistTrainGirlsX/check/ajax-index/', raw_form.split('\n')[0])
   if not is_response_ok(res):
     log_error("Unable to reauth game, abort")

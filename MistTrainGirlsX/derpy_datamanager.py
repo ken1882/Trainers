@@ -4,6 +4,7 @@ import fileinput
 from copy import deepcopy
 from pprint import PrettyPrinter
 pp = PrettyPrinter(indent=2)
+from _G import log_error,log_info
 
 def load_header():
   if not os.path.exists(_G.DERPY_WAREHOUSE_HAEDER_PATH):
@@ -48,7 +49,7 @@ def save_database(dat, append=True):
 
 def get_race_replay(id):
   res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/Casino/Race/GetReplay/{id}")
-  return json.loads(res['r'])['data']
+  return json.loads(res['r'])
 
 def get_past_racedata():
   res = game.get_request('https://mist-train-east4.azurewebsites.net/api/Casino/Race/GetPastSchedules')  
@@ -82,6 +83,31 @@ def interpret_race_replay(data):
     ret.append(obj)
   return ret
 
+def sweep_race_replays():
+  exists = load_header()
+  error = 0
+  for i in range(0x7fffffff):
+    if error > 3:
+      log_info("Stopping sweeping race due to successive error (>3)")
+      break
+    if i in exists:
+      print(f"Race#{i} already saved, skip")
+      continue
+    try:
+      res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/Casino/Race/GetSchedule/{i}")
+      race = res['r']['schedule']
+    except (SystemExit,Exception) as err:
+      log_error("Error sweeping race:", err)
+      error += 1
+      continue
+    error = 0
+    data = interpret_race_data(race)
+    result = get_race_replay(data['id'])['data']
+    data['result'] = interpret_race_replay(result)
+    save_header(data['id'])
+    save_database(data)
+    print(f"Race#{race['id']} data saved")
+
 def main():
   exists = load_header()
   races = get_past_racedata()
@@ -90,7 +116,7 @@ def main():
       print(f"Race#{race['id']} already saved, skip")
       continue
     obj = interpret_race_data(race)
-    result = get_race_replay(obj['id'])
+    result = get_race_replay(obj['id'])['data']
     obj['result'] = interpret_race_replay(result)
     save_header(obj['id'])
     save_database(obj)
