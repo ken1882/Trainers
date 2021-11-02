@@ -2,7 +2,7 @@ import sys
 from datetime import datetime
 from time import sleep
 from random import randint
-from copy import copy
+from copy import copy, deepcopy
 import traceback
 import unicodedata
 
@@ -310,13 +310,29 @@ DERPY_CONDITION_LIST = [
   '凄い意気込',
   '絶好調のよ',  
 ]
+DERPY_CONDITION_NAME = [
+  '',
+  '絕不調',
+  '悪そう',
+  '不調',
+  '微不調',
+  '微好調',
+  '好調',
+  '凄い'
+  '絶好調',
+]
 DERPY_GROUND_TYPE = ['芝', 'ダート']
 DERPY_WEATHER_TYPE = ['晴', '雨']
 DERPY_DIRECTION_TYPE = ['右回り', '左回り']
 DERPY_RANGE_LIST = ['1200m', '2400m', '3600m']
-
-DERPY_RFR_MODEL_NAME = '.tmp/mtgderpy_rfr.mod'
-DERPY_RFC_MODEL_NAME = '.tmp/mtgderpy_rfc.mod'
+DERPY_CHARACTER_COUNTRY = [
+  '',
+  'セントイリス',
+  'ニシキ',
+  'アイゼングラート',
+  'ヴェルフォレット',
+  'フレイマリン'
+]
 
 def make_lparam(x, y):
   return (y << 16) | x
@@ -331,3 +347,68 @@ def get_last_error():
   LastErrorCode = 0
   LastErrorMessage = ''
   return (retc, retm)
+
+
+DERPY_TRAINING_LIST = [
+  {'fit_order': False, 'model': 'rfr', 'feats': 'all'},
+  {'fit_order': True, 'model': 'rfr', 'feats': 'all'},
+  {'fit_order': True, 'model': 'rfc', 'feats': 'all'},
+  {'fit_order': True, 'model': 'knn', 'feats': 'all'},
+  {'fit_order': False, 'model': 'rfr', 'feats': 'noreport'},
+  {'fit_order': True, 'model': 'rfr', 'feats': 'noreport'},
+  {'fit_order': True, 'model': 'rfc', 'feats': 'noreport'},
+  {'fit_order': True, 'model': 'knn', 'feats': 'noreport'},
+  # {'fit_order': True, 'model': 'svc', 'dim_red': ''},
+  # {'fit_order': True, 'model': 'svr', 'dim_red': ''},
+  # {'fit_order': False, 'model': 'svr', 'dim_red': ''},
+]
+
+def make_model_name(opts):
+  opts = deepcopy(opts)
+  ret = f"{opts.pop('model')}_"
+  ret += str(opts).translate(str.maketrans(":,(){}'",'_-     ')).replace(' ','')
+  ret += ".mod"
+  return ret
+
+def extract_derpy_features(race, character, feats='all'):
+  n_uma = len(race['result'])
+  if feats == 'all':
+    return [
+      race['raceId'],
+      race['direction'],
+      race['grade'],
+      n_uma,
+      character['range'],
+      abs(race['type'] - character['forte']),
+      race['weather'],
+      character['weather'],
+      character['tactics'],
+      character['report'],
+      character['condition'],
+      character['speed'],
+      character['stamina'],
+      character['number'],
+      character['waku'],
+      character['mCharacterBaseId'],
+      character['country']
+    ]
+  elif feats == 'noreport':
+    return [
+      race['raceId'],
+      race['direction'],
+      race['grade'],
+      n_uma,
+      character['range'],
+      abs(race['type'] - character['forte']),
+      race['weather'],
+      character['weather'],
+      character['tactics'],
+      character['condition'],
+      character['speed'],
+      character['stamina'],
+      character['number'],
+      character['waku'],
+      character['mCharacterBaseId'],
+      character['country']
+    ]
+  raise RuntimeError(f"Don't know how to extract features of {feats}")

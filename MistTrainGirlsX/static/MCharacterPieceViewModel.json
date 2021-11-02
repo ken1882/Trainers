@@ -1048,6 +1048,14 @@
     "MCharacterId": 98201
   },
   {
+    "Id": 299,
+    "MCharacterId": 99401
+  },
+  {
+    "Id": 300,
+    "MCharacterId": 99301
+  },
+  {
     "Id": 308,
     "MCharacterId": 49402
   },
@@ -1122,6 +1130,18 @@
   {
     "Id": 327,
     "MCharacterId": 21402
+  },
+  {
+    "Id": 328,
+    "MCharacterId": 54402
+  },
+  {
+    "Id": 329,
+    "MCharacterId": 19302
+  },
+  {
+    "Id": 330,
+    "MCharacterId": 9302
   },
   {
     "Id": 331,

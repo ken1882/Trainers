@@ -14,7 +14,7 @@ import Input, vktable
 import game
 import utils
 from datetime import date, datetime, timedelta
-from stage import StageAlias, StageData
+from stage import StageAlias, StageData, RaidStages
 from Input import input
 
 if _G.IS_WIN32:
@@ -38,14 +38,15 @@ BattleStyle = [ # 0=通常 1=限制 2=全力 3=使用最低熟練度
 RecoveryUsage = 1 # 0=Use most
                   # 1=Use by the order list below, if item available
 RecoveryUsageOrder = [
-  424, 427, 0 # use most
+  438, 424, 427, 
+  0 # use most
 ]
 RecoveryBatchAmount = 5 # How many items to use once
 
 AutoSellItems = [
   #             type     Id  Maximum keep  Minimum keep
-  (       ITYPE_GEAR,   106,          500,         100), # Gear：[古の魔女の末裔]セイラム
-  (      ITYPE_GEAR2,   106,          500,         100), # Gear：[古の魔女の末裔]セイラム
+  (       ITYPE_GEAR,   106,         9900,         10), # Gear：[古の魔女の末裔]セイラム
+  (      ITYPE_GEAR2,   106,         9900,         10), # Gear：[古の魔女の末裔]セイラム
 ]
 
 
@@ -98,7 +99,7 @@ def dehash_item_id(id):
   return (id % W_QUANTITY // W_TYPE, id % W_TYPE, id // W_QUANTITY)
 
 def start_battle(sid, pid, rid=0):
-  log_info("Staring batlle")
+  log_info("Starting batlle")
   rid = rid if rid else 'null'
   res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/canstart/{sid}?uPartyId={pid}")
   if res['r']['FaildReason'] != ERROR_SUCCESS:
@@ -106,12 +107,31 @@ def start_battle(sid, pid, rid=0):
   res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=null&uRaidId=null&raidParticipationMode=null")
   return res['r']
 
-def process_actions(commands):
+def start_raid(sid, pid, rid=0):
+  log_info("Starting raid")
+  rid = rid if rid else 'null'
+  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/canstartRaid/{sid}?uPartyId={pid}&isFriend=false&isHost=true&uRaidId=null")
+  if res['r']['FaildReason'] != ERROR_SUCCESS:
+    return res['r']['FaildReason']
+  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=0")
+  return res['r']
+
+def join_raid(sid, pid, rid=0, scope=3):
+  log_info("Join raid")
+  rid = rid if rid else 'null'
+  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/canstartRaid/{sid}?uPartyId={pid}&isFriend=false&isHost=true&uRaidId=null")
+  if res['r']['FaildReason'] != ERROR_SUCCESS:
+    return res['r']['FaildReason']
+  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=0")
+  return res['r']
+
+def process_actions(commands, verion):
   log_info("Process actions")
   res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/attack/{BattleId}",
     {
       "Type":1,
       "IsSimulation": False,
+      "Version": verion,
       "BattleSettings": {
         "BattleAutoSetting":3,
         "BattleSpeed":2,
@@ -420,7 +440,7 @@ def process_combat(data):
     player.clear_cache()
   while not is_defeated(data) and data['BattleState']['BattleStatus'] != BATTLESTAT_VICTORY:
     actions = determine_actions(data)
-    data = process_actions(actions)
+    data = process_actions(actions, data['Version'])
     log_battle_status(data, actions)
     uwait(0.3)
     if _G.Throttling:
@@ -452,7 +472,10 @@ def process_partyid_input():
 def process_stageid_input():
   sid = 0
   while not sid or not utils.isdigit(sid):
-    sid = input("Stage id (enter 0 to see stored data): ")
+    inp = input("Stage id (enter 0 to see stored data): ")
+    inp = inp.split()
+    sid = inp[0]
+    ser = inp[1] if len(inp) > 1 else ''
     if utils.isdigit(sid) and int(sid) == 0:
       string = format_padded_utfstring(('Id', 15, True), (' Alias', 10), ('Name', 50)) + '\n'
       for id,name in StageData.items():
@@ -460,9 +483,10 @@ def process_stageid_input():
           continue
         name = name[-1]
         alias = next((k for k,v in StageAlias.items() if v == id), '')
-        string += format_padded_utfstring(
-          (id, 15, True), (' '+alias, 10), (name, 50)
-        ) + '\n'
+        if ser in alias or ser in name:
+          string += format_padded_utfstring(
+            (id, 15, True), (' '+alias, 10), (name, 50)
+          ) + '\n'
       print(string, '-'*42)
       sid = ''
       continue
@@ -499,14 +523,20 @@ def start_battle_process(sid, pid, rid):
   global BattleId,LastErrorCode,LOG_STATUS
   LOG_STATUS = not _G.ARGV.less
   log_info("Stage/Party/Rental IDs:", sid, pid, rid)
-  data = start_battle(sid, pid, rid)
+  if sid in RaidStages:
+    data = start_raid(sid, pid, rid)
+  else:
+    data = start_battle(sid, pid, rid)
   if type(data) == int:
     if data == ERROR_NOSTAMINA:
       log_info("Recover Stamina")
       recovered = recover_stamina()
       if not recovered:
         return SIG_COMBAT_STOP
-      data = start_battle(sid, pid, rid)
+      if sid in RaidStages:
+        data = start_raid(sid, pid, rid)
+      else:
+        data = start_battle(sid, pid, rid)
       if data == ERROR_NOSTAMINA:
         log_error("Out of stamina, abort combat")
         return SIG_COMBAT_STOP

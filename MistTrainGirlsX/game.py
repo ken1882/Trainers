@@ -148,10 +148,10 @@ def post_request(url, data=None, depth=1):
   res = None
   try:
     log_debug(f"[POST] {url} with payload:", data, sep='\n')
-    if data:
+    if data != None:
       res = Session.post(url, json.dumps(data), headers=PostHeaders, timeout=NetworkPostTimeout)
     else:
-      res = Session.post(url, timeout=NetworkPostTimeout)
+      res = Session.post(url, headers=PostHeaders, timeout=NetworkPostTimeout)
   except NetworkExcpetionRescues as err:
     Session.close()
     if depth < NetworkMaxRetry:
@@ -205,19 +205,18 @@ def reauth_game():
     v = '='.join(seg[1:])
     _session.cookies.set(k, v)
 
+  payload = raw_form.split('\n')[1]
   log_info("Updating token")
   res = _session.post('https://pc-play.games.dmm.co.jp/play/MistTrainGirlsX/check/ajax-index/', raw_form.split('\n')[0])
   if not is_response_ok(res):
-    log_error("Unable to reauth game, abort")
-    exit()
-  
-  # Replace old token with new one
-  token = res.json()['result']
-  log_debug("New token:", token)
-  payload = raw_form.split('\n')[1]
-  rep = re.search(r"st=(.+?)&", payload).group(0)
-  rep = rep.split('=')[1][:-1]
-  payload = payload.replace(rep, quote_plus(token))
+    log_error("Unable to get new token, attempt to reauth using old one")
+  else:
+    # Replace old token with new one
+    token = res.json()['result']
+    log_debug("New token:", token)
+    rep = re.search(r"st=(.+?)&", payload).group(0)
+    rep = rep.split('=')[1][:-1]
+    payload = payload.replace(rep, quote_plus(token))
 
   log_debug("Request payload:", payload, sep='\n')
   # Start game
