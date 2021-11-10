@@ -1,4 +1,6 @@
 import sys
+
+from requests import exceptions
 import _G
 from _G import *
 import itertools
@@ -12,7 +14,7 @@ import Input, vktable
 import game
 import utils
 from datetime import date, datetime, timedelta
-from stage import StageAlias, StageData
+from stage import StageAlias, StageData, RaidStages
 from Input import input
 
 if _G.IS_WIN32:
@@ -36,19 +38,20 @@ BattleStyle = [ # 0=通常 1=限制 2=全力 3=使用最低熟練度
 RecoveryUsage = 1 # 0=Use most
                   # 1=Use by the order list below, if item available
 RecoveryUsageOrder = [
-  424, 427, 0 # use most
+  441, 438, 424, 427, 
+  0 # use most
 ]
 RecoveryBatchAmount = 5 # How many items to use once
 
 AutoSellItems = [
   #             type     Id  Maximum keep  Minimum keep
-  (       ITYPE_GEAR,   106,          500,          100), # Gear：[古の魔女の末裔]セイラム
-  ( ITYPE_CONSUMABLE,     7,        99900,        99000), # Small cake
-  ( ITYPE_CONSUMABLE,    10,        99900,        99000), # A Weapon enhance material
-  ( ITYPE_CONSUMABLE,    11,        99900,        99000)  # S Weapon enhance material
+  (       ITYPE_GEAR,   106,         9900,         10), # Gear：[古の魔女の末裔]セイラム
+  (      ITYPE_GEAR2,   106,         9900,         10), # Gear：[古の魔女の末裔]セイラム
 ]
 
 
+ConsumableMaxKeepRatio = 0.995
+ConsumableMinKeepRatio = 0.95
 UnmovableEffects = [22,23]
 MaxSP = 20
 MaxOP = 100
@@ -76,6 +79,7 @@ ReportDetail = {
   'solds': {},                # loots sold
   'sells': {},                # stuff gained from selling loots
   'ap_recovery': {},          # ap recovery option used
+  'stamina_cost': 0,          # stamina cost of current stage
   'win': 0,
   'lose': 0,
 }
@@ -95,7 +99,7 @@ def dehash_item_id(id):
   return (id % W_QUANTITY // W_TYPE, id % W_TYPE, id // W_QUANTITY)
 
 def start_battle(sid, pid, rid=0):
-  log_info("Staring batlle")
+  log_info("Starting batlle")
   rid = rid if rid else 'null'
   res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/canstart/{sid}?uPartyId={pid}")
   if res['r']['FaildReason'] != ERROR_SUCCESS:
@@ -103,12 +107,31 @@ def start_battle(sid, pid, rid=0):
   res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=null&uRaidId=null&raidParticipationMode=null")
   return res['r']
 
-def process_actions(commands):
+def start_raid(sid, pid, rid=0):
+  log_info("Starting raid")
+  rid = rid if rid else 'null'
+  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/canstartRaid/{sid}?uPartyId={pid}&isFriend=false&isHost=true&uRaidId=null")
+  if res['r']['FaildReason'] != ERROR_SUCCESS:
+    return res['r']['FaildReason']
+  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=0")
+  return res['r']
+
+def join_raid(sid, pid, rid=0, scope=3):
+  log_info("Join raid")
+  rid = rid if rid else 'null'
+  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/canstartRaid/{sid}?uPartyId={pid}&isFriend=false&isHost=true&uRaidId=null")
+  if res['r']['FaildReason'] != ERROR_SUCCESS:
+    return res['r']['FaildReason']
+  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=0")
+  return res['r']
+
+def process_actions(commands, verion):
   log_info("Process actions")
   res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/attack/{BattleId}",
     {
       "Type":1,
       "IsSimulation": False,
+      "Version": verion,
       "BattleSettings": {
         "BattleAutoSetting":3,
         "BattleSpeed":2,
@@ -240,18 +263,27 @@ def record_sell_earns(items):
 
 def sell_surplus_loots(loots):
   global AutoSellItems
-  for item in AutoSellItems:
-    type = item[0]
-    id   = item[1]
-    loot = next((it for it in loots if not it['Sold'] and it['ItemType'] == type and id == it['ItemId']), None)
-    if not loot:
+  for loot in loots:
+    if loot['Sold']:
       continue
-    maxn = item[2]
-    minn = item[3]
+    maxn,minn = 0,0
+    for it in AutoSellItems:
+      if it[0] == loot['ItemType'] and it[1] == loot['ItemId']:
+        maxn,minn = it[2],it[3]
+        break
+    else:
+      if loot['ItemType'] == ITYPE_CONSUMABLE:
+        maxn = game.get_consumable(loot['ItemId'])['PossesionLimit']
+        minn = maxn * ConsumableMinKeepRatio
+        maxn = maxn * ConsumableMaxKeepRatio
+      else:
+        continue
     sitem = player.get_item_stock(loot)
     if not sitem:
       continue
     curn = sitem['Stock']
+    maxn = int(maxn)
+    minn = int(minn)
     if curn <= maxn:
       continue
     res = player.sell_item(sitem, curn-minn)
@@ -388,15 +420,14 @@ def is_defeated(data):
 def record_loots(loots):
   global ReportDetail
   for loot in loots:
-    if loot['Sold']:
-      continue
     hid = hash_item_id(loot)
     hid2= hash_item_id(loot, loot['ItemQuantity'])
     if hid not in ReportDetail['loots']:
       ReportDetail['loots'][hid] = 0
     if hid2 not in ReportDetail['loot_n']:
       ReportDetail['loot_n'][hid2] = 0
-    ReportDetail['loots'][hid] += loot['ItemQuantity']
+    if not loot['Sold']:
+      ReportDetail['loots'][hid] += loot['ItemQuantity']
     ReportDetail['loot_n'][hid2] += 1
 
 def process_combat(data):
@@ -409,7 +440,7 @@ def process_combat(data):
     player.clear_cache()
   while not is_defeated(data) and data['BattleState']['BattleStatus'] != BATTLESTAT_VICTORY:
     actions = determine_actions(data)
-    data = process_actions(actions)
+    data = process_actions(actions, data['Version'])
     log_battle_status(data, actions)
     uwait(0.3)
     if _G.Throttling:
@@ -441,7 +472,10 @@ def process_partyid_input():
 def process_stageid_input():
   sid = 0
   while not sid or not utils.isdigit(sid):
-    sid = input("Stage id (enter 0 to see stored data): ")
+    inp = input("Stage id (enter 0 to see stored data): ")
+    inp = inp.split()
+    sid = inp[0]
+    ser = inp[1] if len(inp) > 1 else ''
     if utils.isdigit(sid) and int(sid) == 0:
       string = format_padded_utfstring(('Id', 15, True), (' Alias', 10), ('Name', 50)) + '\n'
       for id,name in StageData.items():
@@ -449,9 +483,10 @@ def process_stageid_input():
           continue
         name = name[-1]
         alias = next((k for k,v in StageAlias.items() if v == id), '')
-        string += format_padded_utfstring(
-          (id, 15, True), (' '+alias, 10), (name, 50)
-        ) + '\n'
+        if ser in alias or ser in name:
+          string += format_padded_utfstring(
+            (id, 15, True), (' '+alias, 10), (name, 50)
+          ) + '\n'
       print(string, '-'*42)
       sid = ''
       continue
@@ -485,16 +520,23 @@ def process_rentalid_input():
   return rid
 
 def start_battle_process(sid, pid, rid):
-  global BattleId,LastErrorCode
+  global BattleId,LastErrorCode,LOG_STATUS
+  LOG_STATUS = not _G.ARGV.less
   log_info("Stage/Party/Rental IDs:", sid, pid, rid)
-  data = start_battle(sid, pid, rid)
+  if sid in RaidStages:
+    data = start_raid(sid, pid, rid)
+  else:
+    data = start_battle(sid, pid, rid)
   if type(data) == int:
     if data == ERROR_NOSTAMINA:
       log_info("Recover Stamina")
       recovered = recover_stamina()
       if not recovered:
         return SIG_COMBAT_STOP
-      data = start_battle(sid, pid, rid)
+      if sid in RaidStages:
+        data = start_raid(sid, pid, rid)
+      else:
+        data = start_battle(sid, pid, rid)
       if data == ERROR_NOSTAMINA:
         log_error("Out of stamina, abort combat")
         return SIG_COMBAT_STOP
@@ -511,18 +553,19 @@ def start_battle_process(sid, pid, rid):
 def reset_final_report():
   global ReportDetail
   ReportDetail = {
-  'start_t': datetime.now(),
-  'end_t': 0,
-  'paused_t': timedelta(),
-  'times': 0,
-  'loots': {},
-  'loot_n': {},
-  'solds': {},
-  'sells': {},
-  'ap_recovery': {},
-  'win': 0,
-  'lose': 0,
-}
+    'start_t': datetime.now(),
+    'end_t': 0,
+    'paused_t': timedelta(),
+    'times': 0,
+    'loots': {},
+    'loot_n': {},
+    'solds': {},
+    'sells': {},
+    'ap_recovery': {},
+    'stamina_cost': 0,
+    'win': 0,
+    'lose': 0,
+  }
 
 
 def log_final_report():
@@ -532,13 +575,14 @@ def log_final_report():
   string  = f"\n{'='*30} Report {'='*30}\n"
   line_width = len(string.strip())
   try:
+    string += f"{StageData[StageId][-1]}\n" if StageId in StageData else ''
     elapsed = ReportDetail['end_t'] - ReportDetail['start_t'] - ReportDetail['paused_t']
     string += "Start time:   " + ReportDetail['start_t'].strftime('%Y-%m-%d %H:%M:%S') + '\n'
     string += "End time:     " + ReportDetail['end_t'].strftime('%Y-%m-%d %H:%M:%S') + '\n'
     string += "Time elapsed: " + format_timedelta(elapsed) + f" ({format_timedelta(ReportDetail['paused_t'])} paused)" + '\n'
     string += f"Combat status: {ReportDetail['times']} fights, Win/Lose={ReportDetail['win']}/{ReportDetail['lose']} ({int(ReportDetail['win'] / ReportDetail['times'] * 100)}%)\n"
     string += f"Average time spent per fight: {format_timedelta(elapsed / ReportDetail['times'])}\n"
-    string += f"Stamina used: {game.get_quest(StageId)['ActionPointsCost'] * ReportDetail['times']}\n"
+    string += f"Stamina used: {ReportDetail['stamina_cost'] * ReportDetail['times']}\n"
     keys = ['ap_recovery', 'loots', 'solds', 'sells', 'loot_n']
     subtitles = ("Recovery items used", "Loots Gained", "Loots Sold", "Sell Earnings", "Loots Drop Rate")
     for idx,key in enumerate(keys):
@@ -557,67 +601,81 @@ def log_final_report():
         name = game.get_item_name(item_info)
         if key != 'loot_n':
           string += '{:>10}x {}'.format(n, name)
-          string += f" (Now have x{player.get_item_stock(item_info)['Stock']})\n"
+          try:
+            stock = player.get_item_stock(item_info, True)
+            string += f" (Now have x{stock})"
+          except (Exception, SystemExit, InterruptedError) as err:
+            log_error("Unable to get item stock:", err, '\nSkip stock logging.')
+          string += '\n'
         else:
           string += format_padded_utfstring((f"{qn}x{name}", 40, True))
-          string += ": {:.5f}%\n".format(n / ReportDetail['times'] * 100)
+          string += ": {:.5f}%".format(n / ReportDetail['win'] * 100)
+          string += f" dropped {n} time(s)\n"
     # end report category listings
   except Exception as err:
-    log_error(f"An error occureed while logging final report: {err}")
+    log_error(f"An error occured while logging final report: {err}")
     handle_exception(err)
   string += f"\n{'='*68}\n"
+  if _G.ARGV.output:
+    try:
+      with open(_G.ARGV.output, 'a') as fp:
+        fp.write(string)
+    except Exception as err:
+      log_error(f"An error occured while writing result file: {err}")
+      handle_exception(err)
   print(string)
 
 def update_input():
-  global FlagRunning,FlagPaused,FlagRequestReEnter
+  global FlagRequestReEnter
   if not utils.is_focused():
     return
   Input.update()
   if Input.is_trigger(vktable.VK_F7):
-    FlagPaused ^= True
-    print("Worker", 'paused' if FlagPaused else 'unpaused')
+    _G.FlagPaused ^= True
+    print("Worker", 'paused' if _G.FlagPaused else 'unpaused')
   elif Input.is_trigger(vktable.VK_F8):
-    FlagRunning = False
-    FlagPaused  = False
+    _G.FlagRunning = False
+    _G.FlagPaused  = False
   elif Input.is_trigger(vktable.VK_F5):
     FlagRequestReEnter = True
 
 def process_prepare_inputs():
+  global ReportDetail
+  sid = process_stageid_input()
   pid = process_partyid_input()
   log_info("Party Id:", pid)
-  sid = process_stageid_input()
   rid = process_rentalid_input()
   log_info("Rental Id:", 'Round-Robin' if rid == -1 else rid)
   if rid != -1 and rid <= 0:
     rid = 'null'
+  ReportDetail['stamina_cost'] = game.get_quest(sid)['ActionPointsCost']
   return (pid, sid, rid)
 
 def main():
   global PartyId,StageId,RentalUid,AvailableFriendRentals,RentalCycle
-  global FlagRunning,FlagPaused,FlagRequestReEnter,ReportDetail,LOG_STATUS
-  LOG_STATUS = not _G.ARGV.less
+  global FlagRequestReEnter,ReportDetail
   log_info("Program initialized")
+  reset_final_report()
   PartyId,StageId,RentalUid = process_prepare_inputs()
   discord.update_status(StageId)
   cnt = 0
-  reset_final_report()
-  while FlagRunning:
-    if FlagPaused:
+  while _G.FlagRunning:
+    if _G.FlagPaused:
       pt_s = datetime.now()
-      while FlagPaused:
+      while _G.FlagPaused:
         update_input()
         if Input.is_trigger(vktable.VK_F6):
           log_final_report()
-        if not FlagPaused:
+        if not _G.FlagPaused:
           ReportDetail['paused_t'] += datetime.now() - pt_s
         wait(0.1)
       continue
     if FlagRequestReEnter:
       log_final_report()
+      reset_final_report()
       PartyId,StageId,RentalUid = process_prepare_inputs()
       discord.update_status(StageId)
       FlagRequestReEnter = False
-      reset_final_report()
       cnt = 0
       continue
     cnt += 1
@@ -640,10 +698,12 @@ if __name__ == '__main__':
     game.init()
     Input.init()
     main()
-    FlagRunning = False
-  except (SystemExit, KeyboardInterrupt):
+    _G.FlagRunning = False
+  except (Exception, SystemExit, KeyboardInterrupt) as err:
+    log_final_report()
     if LastErrorCode == 403:
       discord.update_status(0)
+    handle_exception(err)
     exit()
   finally:
     if _G.IS_LINUX:

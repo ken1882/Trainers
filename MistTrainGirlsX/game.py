@@ -1,4 +1,6 @@
 import re
+
+from urllib3.exceptions import ProtocolError
 import _G
 from _G import *
 import argv_parse
@@ -21,11 +23,12 @@ PostHeaders = {
 
 NetworkExcpetionRescues = (
   ConnectTimeout, ReadTimeout, ConnectionError, ConnectionAbortedError,
-  ConnectionResetError
+  ConnectionResetError, TimeoutError, ProtocolError
 )
 
 TemporaryNetworkErrors = (
   'Object reference not set',
+  'Data may have been modified or deleted since entities were loaded'
 )
 
 CharacterDatabase = {}
@@ -40,6 +43,7 @@ AccessoryDatabase = {}
 GearDatabase      = {}
 FieldSkillDatabase= {}
 QuestDatabase     = {}
+ABStoneDatabase   = {}
 
 __MAX_PROGRESSION_LEVEL = 50
 GearProgressionTable = {}
@@ -74,13 +78,12 @@ def init():
   load_database()
 
 def is_response_ok(res):
-  global LastErrorCode,LastErrorMessage
   log_debug(res)
   if res.status_code != 200:
-    LastErrorCode = res.status_code
+    _G.LastErrorCode = res.status_code
     if res.content:
       try:
-        LastErrorMessage = res.json()['r']['m']
+        _G.LastErrorMessage = res.json()['r']['m']
       except Exception:
         pass
     if res.status_code == 403:
@@ -145,10 +148,10 @@ def post_request(url, data=None, depth=1):
   res = None
   try:
     log_debug(f"[POST] {url} with payload:", data, sep='\n')
-    if data:
+    if data != None:
       res = Session.post(url, json.dumps(data), headers=PostHeaders, timeout=NetworkPostTimeout)
     else:
-      res = Session.post(url, timeout=NetworkPostTimeout)
+      res = Session.post(url, headers=PostHeaders, timeout=NetworkPostTimeout)
   except NetworkExcpetionRescues as err:
     Session.close()
     if depth < NetworkMaxRetry:
@@ -159,7 +162,7 @@ def post_request(url, data=None, depth=1):
       raise err
   if not is_response_ok(res):
     errno,errmsg = get_last_error()
-    if errno == 500 and errmsg in TemporaryNetworkErrors:
+    if errno == 500 and any((msg in errmsg for msg in TemporaryNetworkErrors)):
       log_warning("Temprorary server error occurred, waiting for 3 seconds")
       wait(3)
       log_warning(f"Retry connect to {url} (depth={depth+1})")
@@ -202,18 +205,18 @@ def reauth_game():
     v = '='.join(seg[1:])
     _session.cookies.set(k, v)
 
+  payload = raw_form.split('\n')[1]
+  log_info("Updating token")
   res = _session.post('https://pc-play.games.dmm.co.jp/play/MistTrainGirlsX/check/ajax-index/', raw_form.split('\n')[0])
   if not is_response_ok(res):
-    log_error("Unable to reauth game, abort")
-    exit()
-  
-  # Replace old token with new one
-  token = res.json()['result']
-  log_debug("New token:", token)
-  payload = raw_form.split('\n')[1]
-  rep = re.search(r"st=(.+?)&", payload).group(0)
-  rep = rep.split('=')[1][:-1]
-  payload = payload.replace(rep, quote_plus(token))
+    log_error("Unable to get new token, attempt to reauth using old one")
+  else:
+    # Replace old token with new one
+    token = res.json()['result']
+    log_debug("New token:", token)
+    rep = re.search(r"st=(.+?)&", payload).group(0)
+    rep = rep.split('=')[1][:-1]
+    payload = payload.replace(rep, quote_plus(token))
 
   log_debug("Request payload:", payload, sep='\n')
   # Start game
@@ -231,7 +234,7 @@ def reauth_game():
   res = Session.post('https://mist-train-east4.azurewebsites.net/api/Login')
   return res
 
-def load_progression_table(data):
+def load_gearprogression_table(data):
   global GearProgressionTable
   for _,dat in data.items():
     rarity = dat['CharacterRarity']
@@ -243,7 +246,7 @@ def load_database(forced=False):
   global VerboseLevel
   global CharacterDatabase,EnemyDatabase,FormationDatabase,SkillDatabase,LinkSkillDatabase
   global ConsumableDatabase,WeaponDatabase,ArmorDatabase,AccessoryDatabase,GearDatabase
-  global FieldSkillDatabase,QuestDatabase
+  global FieldSkillDatabase,QuestDatabase,ABStoneDatabase
   links = [
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MEnemyViewModel.json',
@@ -257,7 +260,8 @@ def load_database(forced=False):
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterPieceViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MFieldSkillViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MQuestViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterGearLevelViewModel.json'
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterGearLevelViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MAbilityStoneViewModel.json'
   ]
   for i,link in enumerate(links):
     path = f"{STATIC_FILE_DIRECTORY}/{link.split('/')[-1]}"
@@ -304,7 +308,9 @@ def load_database(forced=False):
     elif i == 11:
       QuestDatabase = db
     elif i == 12:
-      load_progression_table(db)
+      load_gearprogression_table(db)
+    elif i == 13:
+      ABStoneDatabase = db
 
 def __convert2indexdb(db):
   ret = {}
@@ -393,6 +399,13 @@ def get_quest(id):
       raise RuntimeError(f"Invalid quest id: {id}")
   return QuestDatabase[id]
 
+def get_abstone(id):
+  if id not in ABStoneDatabase:
+    load_database(True)
+    if id not in ABStoneDatabase:
+      raise RuntimeError(f"Invalid ability stone id: {id}")
+  return ABStoneDatabase[id]
+
 def get_item(item):
   if 'ItemType' not in item or 'ItemId' not in item:
     log_warning("Invalid item object: ", item)
@@ -406,19 +419,31 @@ def get_item(item):
     return get_armor(id)
   elif item['ItemType'] == ITYPE_ACCESORY:
     return get_accessory(id)
-  elif item['ItemType'] == ITYPE_GEAR:
+  elif item['ItemType'] in [ITYPE_ABSTONE, ITYPE_ABSTONE2]:
+    return get_abstone(id)
+  elif item['ItemType'] in [ITYPE_GEAR, ITYPE_GEAR2]:
     return get_gear(id)
   elif item['ItemType'] == ITYPE_GOLD:
-    item['Name'] = 'Gold'
+    item['Name'] = 'ゴルト'
     return item
+  elif item['ItemType'] == ITYPE_FREEGEM:
+    item['Name'] = 'ミストジュエル (無償)'
+  elif item['ItemType'] == ITYPE_GEM:
+    item['Name'] = 'ミストジュエル (有償)'
   else:
     log_warning(f"Unknown item type: {item['ItemType']} for {item}")
   return item
 
-def get_item_name(item):
+def get_item_name(item, desc=False):
+  '''
+  If `desc=True`, item's description will followed by a `^` in return value
+  '''
   item = get_item(item)
   if 'Name' in item:
-    return item['Name']
+    ret = item['Name']
+    if desc and 'Description' in item:
+      ret += '^' + item['Description']
+    return ret
   elif 'MCharacterId' in item:
     ch = get_character_base(item['MCharacterId'])
     return f"ギヤ：{ch['Name']}{ch['MCharacterBase']['Name']}"

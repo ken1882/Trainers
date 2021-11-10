@@ -748,6 +748,10 @@
     "MCharacterId": 66401
   },
   {
+    "Id": 200,
+    "MCharacterId": 66301
+  },
+  {
     "Id": 201,
     "MCharacterId": 66201
   },
@@ -1028,8 +1032,32 @@
     "MCharacterId": 96301
   },
   {
+    "Id": 292,
+    "MCharacterId": 96201
+  },
+  {
     "Id": 295,
     "MCharacterId": 97201
+  },
+  {
+    "Id": 296,
+    "MCharacterId": 98401
+  },
+  {
+    "Id": 298,
+    "MCharacterId": 98201
+  },
+  {
+    "Id": 299,
+    "MCharacterId": 99401
+  },
+  {
+    "Id": 300,
+    "MCharacterId": 99301
+  },
+  {
+    "Id": 301,
+    "MCharacterId": 99201
   },
   {
     "Id": 308,
@@ -1102,6 +1130,22 @@
   {
     "Id": 326,
     "MCharacterId": 1402
+  },
+  {
+    "Id": 327,
+    "MCharacterId": 21402
+  },
+  {
+    "Id": 328,
+    "MCharacterId": 54402
+  },
+  {
+    "Id": 329,
+    "MCharacterId": 19302
+  },
+  {
+    "Id": 330,
+    "MCharacterId": 9302
   },
   {
     "Id": 331,

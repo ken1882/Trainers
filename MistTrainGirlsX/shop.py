@@ -87,6 +87,27 @@ def trade_item(good_id, amount):
   res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/TradeRewards/{good_id}/trade/{amount}")
   return res['r']
 
+def trade_all_event_potions():
+  stores = get_event_shops()
+  for st in stores:
+    currency = {it['MItemId']: it['Stock'] for it in st['CurrencyStocks']}
+    goods = get_tshop_goods(st['Id'])
+    goods = sorted(goods, key=lambda it:(it['Limit'] or 0)*it['RequiredMItemNum'])
+    for good in goods:
+      name = game.get_item_name(good)
+      if 'ポーション' in name:
+        price   = good['RequiredMItemNum']
+        balance = currency[good['RequiredMItemId']]
+        if price < 200:
+          continue # probaby costs limited currency
+        if balance < price:
+          log_info(f"Insufficient balance to buy {name}, costs {price} but only have {balance}")
+          continue
+        n = balance // price
+        trade_item(good['Id'], n)
+        currency[good['RequiredMItemId']] -= price * n
+        log_info(f"Traded potion {name} x{n}, now have {player.get_item_stock(good, True)}; currency left: {currency}")
+  
 def trade_all_event_goods():
   stores = get_event_shops()
   for st in stores:
@@ -96,7 +117,7 @@ def trade_all_event_goods():
     log_info(f"Trade shop#{st['Id']} currency owned:", currency, sep='\n')
     for good in reversed(goods):
       price = good['RequiredMItemNum']
-      owned = currency[good['RequiredMItemId']]
+      balance = currency[good['RequiredMItemId']]
       name = game.get_item_name(good)
       if good['Limit']:
         stock = good['Limit'] - good['TradedCount']
@@ -104,19 +125,19 @@ def trade_all_event_goods():
           log_info(f"{name} is out of stock!")
           continue
       n = 0
-      if price > owned:
-        log_info(f"Cannot afford to buy {name}, requires {price} but only have {owned}; Exit shop")
+      if price > balance:
+        log_info(f"Cannot afford to buy {name}, requires {price} but only have {balance}; Exit shop")
         break
       if not good['Limit']: # Good with infinite trade count, should be bought at last
         if good['ItemType'] == ITYPE_GOLD:
           continue
-        n = owned // price
+        n = balance // price
         trade_item(good['Id'], n)
       else: # Limited goods, should be traded first
-        n = min(stock, owned // price)
+        n = min(stock, balance // price)
         trade_item(good['Id'], n)
       currency[good['RequiredMItemId']] -= price * n
-      log_info(f"Traded good {name} x{n}, currency left:\n{currency}")
+      log_info(f"Traded good {name} x{n}, currency left: {currency}")
 
 def main():
   pdat = player.get_profile()

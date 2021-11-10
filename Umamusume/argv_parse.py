@@ -5,10 +5,16 @@ parser = ArgumentParser()
 parser.add_argument("job",nargs='?')
 parser.add_argument('-u', '--uma', nargs='?', help='Specified Umamusume for training')
 parser.add_argument('-i', '--ignore-stats', action='store_true', help='Ignore stats when determine race')
+parser.add_argument('-m', '--skill-pt-mul', type=float, help='Multiplier to min/max points to get skills')
 
 def load():
   args = parser.parse_args()
+ 
   if args.ignore_stats:
     _G.IgnoreStatLimit = True
     _G.log_info("Ignore stats when determine races")
+
+  if args.skill_pt_mul:
+    _G.MinGetSkillPoints *= args.skill_pt_mul
+    _G.MaxGetSkillPoints *= args.skill_pt_mul
   return args

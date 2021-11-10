@@ -76,16 +76,23 @@ def determine_card_keep(cards):
     ret.append(colors.index(JokerColor))
   except Exception:
     pass
-  # Straight, skip joker check due to the low chance
-  st = sorted(numbers)[0]
-  for i,n in enumerate(sorted(numbers)):
-    if i == 0:
-      continue
-    if n == st+1:
+  # Straight, but noes not check royal ones
+  num_ascend = sorted(numbers)
+  st = num_ascend[0]
+  _i = 0
+  while _i < len(num_ascend):
+    n = num_ascend[_i]
+    if _i == 0:
+      if n == 0:
+        st = num_ascend[1]
+        _i = 2
+    elif n == st+1:
       st += 1
     else:
       st = -1
       break
+    _i += 1
+
   if st == sorted(numbers)[-1]:
     return list(range(len(numbers))) # no card need to exchange
   # Pick 4 same color

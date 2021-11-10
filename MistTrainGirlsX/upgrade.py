@@ -3,7 +3,7 @@ import game
 import player
 import math
 
-TagetGearLevel  = 15
+TagetGearLevel  = 20
 MinMistGearKeep = 1000000
 
 Headers = {
@@ -82,7 +82,7 @@ def level_up(chid,level=1):
 def enhance_gear(character, target_lv):
   global MistGearStockCache
   if MistGearStockCache == -1:
-    MistGearStockCache = player.get_mistgear_stock()['Stock']
+    MistGearStockCache = player.get_mistgear_stock(True)
   mchid = character['MCharacterId']
   cur = character['TotalGearExperience']
   lgn = get_layer_gears(mchid)

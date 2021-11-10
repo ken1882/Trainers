@@ -2,8 +2,8 @@ from copy import deepcopy
 from _G import *
 import player, game
 
-ChargeUseGold     = False
-ChargeUseLesser   = True  # マナドリンクミニ, 自主練時間を1時間チャージできる。
+ChargeUseGold     = True
+ChargeUseLesser   = False  # マナドリンクミニ, 自主練時間を1時間チャージできる。
 ChargeUseMedium   = False # マナドリンク, 自主練時間を2時間チャージできる。
 ChargeUseGreater  = False # マナドリンクメガ, 自主練時間を4時間チャージできる。
 
@@ -44,7 +44,11 @@ def determine_charge_usage(cur, items):
   return ret
 
 def charge_energy(goldcnt, payload):
-  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Training/chargeEnergy?useMoneyCount={goldcnt}", payload)
+  url = f"https://mist-train-east4.azurewebsites.net/api/Training/chargeEnergy?useMoneyCount={goldcnt}"
+  if sum([v for _,v in payload.items()]) == 0:
+    payload = {}
+  print(payload)
+  res = game.post_request(url, payload)
   return res
 
 def main():

@@ -2,7 +2,7 @@ import sys
 from datetime import datetime
 from time import sleep
 from random import randint
-from copy import copy
+from copy import copy, deepcopy
 import traceback
 import unicodedata
 
@@ -95,9 +95,8 @@ CH_WIDTH = {
 }
 
 SYMBOL_WIDTH = {
-  '♪': 1,
-  '★': 2,
-  '☆': 2,
+  1: '♪',
+  2: '★☆【】ⅠⅡⅢ：',
 }
 
 def format_padded_utfstring(*tuples):
@@ -121,7 +120,12 @@ def format_padded_utfstring(*tuples):
     for ch in text:
       sym = unicodedata.east_asian_width(ch)
       if sym == 'A':
-        w += SYMBOL_WIDTH[ch] if ch in SYMBOL_WIDTH else CH_WIDTH[sym]
+        for cw,chars in SYMBOL_WIDTH.items():
+          if ch in chars:
+            w += cw
+            break
+        else:
+          w += CH_WIDTH[sym]
       else:
         w += CH_WIDTH[sym]
     if width <= w:
@@ -220,6 +224,7 @@ def handle_exception(err):
 
 # Errnos
 ERROR_SUCCESS       = 0x0
+ERROR_LOCKED        = 0x1
 ERROR_LIMIT_REACHED = 0x3
 ERROR_NOSTAMINA     = 0x6
 
@@ -236,8 +241,25 @@ ITYPE_WEAPON      = 1
 ITYPE_ARMOR       = 2
 ITYPE_ACCESORY    = 3
 ITYPE_CONSUMABLE  = 4
+ITYPE_ABSTONE     = 5   # ability stone
 ITYPE_GOLD        = 6
-ITYPE_GEAR        = 10
+ITYPE_FREEGEM     = 7
+ITYPE_GEM         = 8
+ITYPE_GEAR        = 10  # aka character pieces
+ITYPE_GEAR2       = 11
+ITYPE_ABSTONE2    = 12
+
+ITYPE_NAMES = {
+  ITYPE_WEAPON: '武器',
+  ITYPE_ARMOR: '防具',
+  ITYPE_ACCESORY: '装飾',
+  ITYPE_CONSUMABLE: 'アイテム',
+  ITYPE_ABSTONE: '宝珠',
+  ITYPE_ABSTONE2: '宝珠',
+  ITYPE_GOLD: 'ゴルード',
+  ITYPE_GEAR: 'ギヤ',
+  ITYPE_GEAR2: 'ギヤ',
+}
 
 SHOP_TYPE_EVENT = 1
 
@@ -248,6 +270,69 @@ RARITY_NAME = ['C','B','A','S','SS','US']
 
 LastErrorCode = 0
 LastErrorMessage = ''
+
+DERPY_WAREHOUSE_HAEDER_PATH   = '.tmp/derpy_header.dat'
+DERPY_WAREHOUSE_CONTENT_PATH  = '.tmp/derpy_warehouse.dat'
+
+DERPY_TACTIC_NIGE     = 1 # 逃げ
+DERPY_TACTIC_SENKO    = 2 # 先行
+DERPY_TACTIC_SASHI    = 3 # 差し
+DERPY_TACTIC_OI       = 4 # 追い
+DERPY_DIRECTION_RIGHT = 0 # 右回り 
+DERPY_DIRECTION_LEFT  = 1 # 左回り
+DERPY_WEATHER_SUNNY   = 0 # 晴
+DERPY_WEATHER_RAIN    = 1 # 雨
+DERPY_TYPE_GRASS      = 0 # 芝
+DERPY_TYPE_DIRT       = 1 # ダート
+DERPY_RANGE_1200      = 0
+DERPY_RANGE_2400      = 1
+DERPY_RANGE_3600      = 2
+DERPY_UMA_REPORT      = '_・×▲○◎' # first one is reserved
+DERPY_TACTIC_LIST = [
+  '', '逃げ', '先行', '差し', '追い込み'
+]
+DERPY_STAT_TABLE = {
+  'F': 1,
+  'E': 2,
+  'D': 3,
+  'C': 4,
+  'B': 6,
+  'A': 8,
+}
+DERPY_CONDITION_LIST = [
+  '_________', # reserved
+  'ケガなどし',
+  '心配ですね',
+  '大丈夫でし',
+  '少し元気が',
+  'やる気を感',
+  '調子は良さ',
+  '凄い意気込',
+  '絶好調のよ',  
+]
+DERPY_CONDITION_NAME = [
+  '',
+  '絕不調',
+  '悪そう',
+  '不調',
+  '微不調',
+  '微好調',
+  '好調',
+  '凄い'
+  '絶好調',
+]
+DERPY_GROUND_TYPE = ['芝', 'ダート']
+DERPY_WEATHER_TYPE = ['晴', '雨']
+DERPY_DIRECTION_TYPE = ['右回り', '左回り']
+DERPY_RANGE_LIST = ['1200m', '2400m', '3600m']
+DERPY_CHARACTER_COUNTRY = [
+  '',
+  'セントイリス',
+  'ニシキ',
+  'アイゼングラート',
+  'ヴェルフォレット',
+  'フレイマリン'
+]
 
 def make_lparam(x, y):
   return (y << 16) | x
@@ -262,3 +347,68 @@ def get_last_error():
   LastErrorCode = 0
   LastErrorMessage = ''
   return (retc, retm)
+
+
+DERPY_TRAINING_LIST = [
+  {'fit_order': False, 'model': 'rfr', 'feats': 'all'},
+  {'fit_order': True, 'model': 'rfr', 'feats': 'all'},
+  {'fit_order': True, 'model': 'rfc', 'feats': 'all'},
+  {'fit_order': True, 'model': 'knn', 'feats': 'all'},
+  {'fit_order': False, 'model': 'rfr', 'feats': 'noreport'},
+  {'fit_order': True, 'model': 'rfr', 'feats': 'noreport'},
+  {'fit_order': True, 'model': 'rfc', 'feats': 'noreport'},
+  {'fit_order': True, 'model': 'knn', 'feats': 'noreport'},
+  # {'fit_order': True, 'model': 'svc', 'dim_red': ''},
+  # {'fit_order': True, 'model': 'svr', 'dim_red': ''},
+  # {'fit_order': False, 'model': 'svr', 'dim_red': ''},
+]
+
+def make_model_name(opts):
+  opts = deepcopy(opts)
+  ret = f"{opts.pop('model')}_"
+  ret += str(opts).translate(str.maketrans(":,(){}'",'_-     ')).replace(' ','')
+  ret += ".mod"
+  return ret
+
+def extract_derpy_features(race, character, feats='all'):
+  n_uma = len(race['character'])
+  if feats == 'all':
+    return [
+      race['raceId'],
+      race['direction'],
+      race['grade'],
+      n_uma,
+      character['range'],
+      abs(race['type'] - character['forte']),
+      race['weather'],
+      character['weather'],
+      character['tactics'],
+      character['report'],
+      character['condition'],
+      character['speed'],
+      character['stamina'],
+      character['number'],
+      character['waku'],
+      character['mCharacterBaseId'],
+      character['country']
+    ]
+  elif feats == 'noreport':
+    return [
+      race['raceId'],
+      race['direction'],
+      race['grade'],
+      n_uma,
+      character['range'],
+      abs(race['type'] - character['forte']),
+      race['weather'],
+      character['weather'],
+      character['tactics'],
+      character['condition'],
+      character['speed'],
+      character['stamina'],
+      character['number'],
+      character['waku'],
+      character['mCharacterBaseId'],
+      character['country']
+    ]
+  raise RuntimeError(f"Don't know how to extract features of {feats}")
