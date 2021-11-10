@@ -371,7 +371,7 @@ def make_model_name(opts):
   return ret
 
 def extract_derpy_features(race, character, feats='all'):
-  n_uma = len(race['result'])
+  n_uma = len(race['character'])
   if feats == 'all':
     return [
       race['raceId'],

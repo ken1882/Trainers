@@ -114,7 +114,7 @@ def make_predictions(race):
     f'{_G.DCTmpFolder}/knn_fit_order_True-feats_noreport.mod': rfc_ord_scorerank,
   }
   ret = []
-  ranks = [np.array(range(1,len(race['character'])+1))]
+  ranks = [ list(range(1,len(race['character'])+1)) ]
   for model in ESTIMATORS:
     predict = predict_race(model, race)
     ret.append(predict)
@@ -123,6 +123,8 @@ def make_predictions(race):
     print(predict)
     print(format_derpy_data(race, predict, score_proc[model]))
   for r in ranks:
+    r = list(r)
+    r.append(99)
     print(np.array(r))
   return ret
   

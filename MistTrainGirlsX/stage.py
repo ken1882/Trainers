@@ -1,6 +1,6 @@
 StageAlias = {
   'gg':   101002309,  # gear grinds
-  'hsr':  304013106,  # high speed rail
+  'hsr':  304014106,  # high speed rail
   'gold': 201001110,  # gold Mat quest
   'exp':  202001110,  # exp Mat quest
 }
@@ -11,7 +11,8 @@ RaidStages = [
 
 StageData = {
           0: ('Waiting for maintenance', 'メンテナンス中...'),
-  301054504: ('Playing Raid', 'ハロウィンカボチャは反抗期'),
+  304014106: ('Playing Events', '入隊訓練：サンディエゴ (Inferno)'),
+  301054504: ('Playing Raid', 'ハロウィンカボチャは反抗期 Raid (Very Hard)'),
   301053505: ('Playing Events', 'ハロウィンカボチャは反抗期 2-5 (Very Hard)'),
   304013106: ('Playing Events', '入隊訓練：カラマチ/クインズウェイ (Inferno)'),
   302028505: ('Playing Events', '熱烈歓迎！拳闘娘のシゴキ塾！ 2-5 (Very Hard)'),
