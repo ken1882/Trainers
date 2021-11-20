@@ -129,7 +129,7 @@ def determine_next_main_action():
       if _G.CurrentAttributes[idx] < w:
         _flag_ok = False
         break
-    if _flag_ok:
+    if _flag_ok or _G.IgnoreStatLimit:
       return (_G.ActionRace, race)
 
   if sicked:

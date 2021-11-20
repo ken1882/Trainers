@@ -138,6 +138,8 @@ OptionalRace = [
   '有馬記念',
   '京都記念',
   'フェブラリーS',
+  '金鯱賞',
+  # '毎日王冠'
 ]
 
 # Optional race specified by date

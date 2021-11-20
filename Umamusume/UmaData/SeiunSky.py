@@ -139,6 +139,7 @@ OptionalRace = [
   'エリザベス女王杯',
   'ジャパンカップ',
   '金鯱賞',
+  # '毎日王冠'
 ]
 
 # Optional race specified by date
