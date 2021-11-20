@@ -770,6 +770,20 @@
     "AbilityMSkill3Id": null
   },
   {
+    "Id": 7030036,
+    "Name": "\u5727\u5012\u7684\u306a\u529b",
+    "Description": "",
+    "Rarity": 4,
+    "MFieldSkillRarity": {
+      "Rarity": 4,
+      "LevelLimit": 5
+    },
+    "Cost": 50,
+    "AbilityMSkill1Id": 3010002,
+    "AbilityMSkill2Id": 3030076,
+    "AbilityMSkill3Id": 3070047
+  },
+  {
     "Id": 7040001,
     "Name": "\u30aa\u30aa\u30a8\u305f\u3061\u306e\u591c",
     "Description": "",

@@ -11,6 +11,8 @@ RaidStages = [
 
 StageData = {
           0: ('Waiting for maintenance', 'メンテナンス中...'),
+  302029505: ('Playing Events', '真剣で列車は全速前進！激闘の川神学園 1-5 (Very Hard)'),
+  302029504: ('Playing Events', '真剣で列車は全速前進！激闘の川神学園 1-4 (Very Hard)'),
   304014106: ('Playing Events', '入隊訓練：サンディエゴ (Inferno)'),
   301054504: ('Playing Raid', 'ハロウィンカボチャは反抗期 Raid (Very Hard)'),
   301053505: ('Playing Events', 'ハロウィンカボチャは反抗期 2-5 (Very Hard)'),

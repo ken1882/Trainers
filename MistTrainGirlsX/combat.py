@@ -16,6 +16,7 @@ import utils
 from datetime import date, datetime, timedelta
 from stage import StageAlias, StageData, RaidStages
 from Input import input
+import battle_analyzer
 
 if _G.IS_WIN32:
   import win32con
@@ -38,7 +39,7 @@ BattleStyle = [ # 0=通常 1=限制 2=全力 3=使用最低熟練度
 RecoveryUsage = 1 # 0=Use most
                   # 1=Use by the order list below, if item available
 RecoveryUsageOrder = [
-  441, 438, 424, 427, 
+  -1, # use event potions (id > 400) 
   0 # use most
 ]
 RecoveryBatchAmount = 5 # How many items to use once
@@ -143,7 +144,9 @@ def process_actions(commands, verion):
       "Commands": commands
     }
   )
-  return res['r']
+  result = res['r']
+  battle_analyzer.analyze_action_result(commands, result)
+  return result
 
 def surrender():
   log_info("Abort battle")
@@ -317,17 +320,24 @@ def recover_stamina():
   items = player.get_aprecovery_items()
   log_info("Recovery items:", pprint.pformat(items, indent=2), '-'*21, sep='\n')
   items = sorted(items, key=lambda i:i['Stock'])
-  nidx  = -1
+  nidx  = None
   if RecoveryUsage == 1:
     for id in RecoveryUsageOrder:
       if id == 0:
         nidx = -1
         break
-      nidx = next((i for i,item in enumerate(items) if item["MItemId"] == id), -1)
+      elif id == -1:
+        nidx = next((i for i,item in enumerate(items) if item["MItemId"] in range(400,9999)), -1)
+      else:
+        nidx = next((i for i,item in enumerate(items) if item["MItemId"] == id), -1)
       nidx = -1 if items[nidx]['Stock'] <= 0 else nidx
       if nidx >= 0:
         break
-    
+  elif RecoveryUsage == 0:
+    nidx = -1
+  if nidx == None:
+    log_error("No enough potions!")
+    return None
   item = items[nidx]
   num  = min(RecoveryBatchAmount, item['Stock'])
   ap1  = player.get_profile()['CurrentActionPoints']
@@ -434,8 +444,10 @@ def process_combat(data):
   global LastBattleWon,ReportDetail
   LastBattleWon = False
   ReportDetail['times'] += 1
+  battle_analyzer.setup_battlers(data)
   log_info("Battle started")
   log_battle_status(data)
+  battle_analyzer.setup_battlers(data)
   if not _G.PersistCharacterCache:
     player.clear_cache()
   while not is_defeated(data) and data['BattleState']['BattleStatus'] != BATTLESTAT_VICTORY:
@@ -624,6 +636,7 @@ def log_final_report():
       log_error(f"An error occured while writing result file: {err}")
       handle_exception(err)
   print(string)
+  print(battle_analyzer.format_analyze_result())
 
 def update_input():
   global FlagRequestReEnter
@@ -656,6 +669,7 @@ def main():
   global FlagRequestReEnter,ReportDetail
   log_info("Program initialized")
   reset_final_report()
+  battle_analyzer.reset()
   PartyId,StageId,RentalUid = process_prepare_inputs()
   discord.update_status(StageId)
   cnt = 0
@@ -673,6 +687,7 @@ def main():
     if FlagRequestReEnter:
       log_final_report()
       reset_final_report()
+      battle_analyzer.reset()
       PartyId,StageId,RentalUid = process_prepare_inputs()
       discord.update_status(StageId)
       FlagRequestReEnter = False

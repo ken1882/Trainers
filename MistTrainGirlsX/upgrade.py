@@ -3,7 +3,7 @@ import game
 import player
 import math
 
-TagetGearLevel  = 20
+TargetGearLevel  = 20
 MinMistGearKeep = 1000000
 
 Headers = {
@@ -106,7 +106,10 @@ def enhance_gear(character, target_lv):
   log_info("Gear level enhance done, mist gear left:", MistGearStockCache)
   return res['r']['CurrentGearLevel']
 
-def do_enhance(character):
+def do_enhance(character, target_lv=None):
+  global TargetGearLevel
+  if not target_lv:
+    target_lv = TargetGearLevel
   chid  = character['Id']
   log_info("Enhancing ", game.get_character_name(character['MCharacterId']))
   kp  = determine_kizuna_usage(get_kizuna(chid))
@@ -119,7 +122,7 @@ def do_enhance(character):
     lv = level_up(chid, character['Level'])
     log_info(f"Levelup complete, current level={lv}")
   if character['GearLevel'] < MaxGearLevel:
-    res = enhance_gear(character, TagetGearLevel)
+    res = enhance_gear(character, target_lv)
     log_info(f"Gear enhance complete, current level={res}")
   else:
     log_info("Character already reached max gear level")
@@ -127,10 +130,10 @@ def do_enhance(character):
     elv,glv,klv = bulk_enhance(chid, kp=kp)
     log_info(f"Enhance done; Level={elv}; Gear Level={glv}; Kizuna Level={klv}")
 
-def enhance_all_characters():
+def enhance_all_characters(glv=0):
   ar = player.get_characters()
   for i,ch in enumerate(ar):
-    do_enhance(ch)
+    do_enhance(ch, glv)
     log_info(f"Progress: {i+1}/{len(ar)}")
     uwait(0.3)
   log_info("Upgrade completed, mist gear left:", MistGearStockCache)
