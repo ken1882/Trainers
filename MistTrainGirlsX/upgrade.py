@@ -22,6 +22,57 @@ CharacterPieceExp = {
 TotalKizunaPoint = [0, 0, 100, 250, 400, 550, 700, 850, 1000, 1150, 1300]
 MistGearStockCache = -1
 
+WEAPON_BULK_MATERIALS = [
+  {},
+  {},
+  {},
+  {
+    "EvolutionUpCount":3,
+    "BulkEnhanceOrders":[
+      {
+        "Order":3,
+        "EnhanceMItemIdAmounts":[{"MItemId":11,"Amount":13}]
+      },
+      {
+        "Order":2,
+        "EnhanceMItemIdAmounts":[{"MItemId":11,"Amount":9}]
+      },
+      {
+        "Order":1,
+        "EnhanceMItemIdAmounts":[{"MItemId":11,"Amount":6}]
+      },
+      {
+        "Order":0,
+        "EnhanceMItemIdAmounts":[{"MItemId":11,"Amount":5}]
+      }
+    ]
+  },
+  {
+    "EvolutionUpCount":4,
+    "BulkEnhanceOrders":[
+      {
+        "Order":4,
+        "EnhanceMItemIdAmounts":[{"MItemId":11,"Amount":26}]
+      },
+      {
+        "Order":3,
+        "EnhanceMItemIdAmounts":[{"MItemId":11,"Amount":13}]
+      },
+      {
+        "Order":2,
+        "EnhanceMItemIdAmounts":[{"MItemId":11,"Amount":9}]
+      },
+      {
+        "Order":1,
+        "EnhanceMItemIdAmounts":[{"MItemId":11,"Amount":6}]
+      },
+      {
+        "Order":0,
+        "EnhanceMItemIdAmounts":[{"MItemId":11,"Amount":5}]
+      }
+    ]
+  }
+]
 
 def get_layer_gears(mchid):
   res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/LimitBreakPieces/{mchid}")
@@ -137,6 +188,56 @@ def enhance_all_characters(glv=0):
     log_info(f"Progress: {i+1}/{len(ar)}")
     uwait(0.3)
   log_info("Upgrade completed, mist gear left:", MistGearStockCache)
+
+
+def enhance_all_abstone(na, ns, nss=0):
+  inventory = player.get_all_items()
+  items = inventory[ITYPE_ABSTONE]
+  resources = {10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0}
+  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UItems/WeaponEnhanceItems')
+  for i in res['r']:
+    resources[i['MItemId']] = i['Stock']
+  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UItems/ArmorEnhanceItems')
+  for i in res['r']:
+    resources[i['MItemId']] = i['Stock']
+  for item in items:
+    if not item['CanLevelUp'] or item['Level'] >= 5:
+      continue
+    name = game.get_item_name(item)
+    log_info("Enhancing", name)
+    if '戦' in name:
+      if 'SS' in name:
+        if resources[10] < na or resources[11] < ns or resources[12] < nss:
+          log_warning("Insufficient resources to enhance weapon, skipped")
+          continue
+        print(player.enhance_abstone_atk(item['Id'], na, ns, nss))
+        resources[10] -= na
+        resources[11] -= ns
+        resources[12] -= nss
+    elif '守'in name:
+      if 'SS' in name:
+        if resources[13] < na or resources[14] < ns or resources[15] < nss:
+          log_warning("Insufficient resources to enhance armor, skipped")
+          continue
+        print(player.enhance_abstone_def(item['Id'], na, ns, nss))
+        resources[13] -= na
+        resources[14] -= ns
+        resources[15] -= nss
+
+def enhance_all_weapons():
+  items = player.get_all_items()[ITYPE_WEAPON]
+  for item in items:
+    if item['TotalExperience'] > 0 or not item['CanLevelup']:
+      continue
+    bitem = game.get_item(item)
+    log_info("Enhancing", bitem['Name'])
+    rarity = bitem['EquipmentRarity']
+    data = WEAPON_BULK_MATERIALS[rarity]
+    try:
+      print(game.post_request(f"https://mist-train-east4.azurewebsites.net/api/UWeapons/{item['Id']}/bulkEnhance", data))
+    except (Exception,SystemExit) as err:
+      log_error(err)
+      break
 
 def main():
   enhance_all_characters()

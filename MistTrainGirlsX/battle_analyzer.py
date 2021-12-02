@@ -13,6 +13,8 @@ SkillStruct = {
   'damage': 0,  # damage dealt
   'times': 0,   # times used
   'kills': 0,
+  'maxn': 0,
+  'minn': 0x7fffffff,
 }
 
 # command id to skill id
@@ -79,7 +81,11 @@ def analyze_action_result(commands, result):
       if skill_id not in BattlerPool[mchid]['actions']:
         BattlerPool[mchid]['actions'][skill_id] = deepcopy(SkillStruct)
         BattlerPool[mchid]['actions'][skill_id]['id'] = skill_id
-      BattlerPool[mchid]['actions'][skill_id]['damage'] += action['Value']
+      dmg = action['Value']
+      BattlerPool[mchid]['actions'][skill_id]['damage'] += dmg
+      BattlerPool[mchid]['actions'][skill_id]['maxn'] = max(dmg, BattlerPool[mchid]['actions'][skill_id]['maxn'])
+      BattlerPool[mchid]['actions'][skill_id]['minn'] = min(dmg, BattlerPool[mchid]['actions'][skill_id]['minn'])
+
       if action['TargetCurrentHPPercent'] == 0:
         BattlerPool[mchid]['actions'][skill_id]['kills'] += 1
       # save counted to prevent recalculation of repeat skills
@@ -98,6 +104,8 @@ def format_analyze_result():
       string += f"  - Total Damage: {action['damage']}\n"
       string += f"  -   Times used: {action['times']}\n"
       string += f"  -  Avg. Damage: {action['damage'] / action['times']}\n"
+      string += f"  -  Max. Damage: {action['maxn']}\n"
+      string += f"  -  Min. Damage: {action['minn']}\n"
       string += f"  -        Kills: {action['kills']}\n"
     string += '-'*42+'\n'
   return string

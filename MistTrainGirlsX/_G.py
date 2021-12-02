@@ -64,6 +64,7 @@ FlagRunning = True
 FlagPaused  = False
 FlagWorking = False
 FlagProcessingUserInput = False
+FlagTrainSwap = False
 
 MSG_PIPE_CONT   = '\x00\x50\x00CONTINUE\x00'
 MSG_PIPE_STOP   = "\x00\x50\x00STOP\x00"
@@ -239,7 +240,7 @@ STYPE_NORMAL_ATTACK = 5
 # Item constants
 ITYPE_WEAPON      = 1
 ITYPE_ARMOR       = 2
-ITYPE_ACCESORY    = 3
+ITYPE_ACCESSORY   = 3
 ITYPE_CONSUMABLE  = 4
 ITYPE_ABSTONE     = 5   # ability stone
 ITYPE_GOLD        = 6
@@ -252,7 +253,7 @@ ITYPE_ABSTONE2    = 12
 ITYPE_NAMES = {
   ITYPE_WEAPON: '武器',
   ITYPE_ARMOR: '防具',
-  ITYPE_ACCESORY: '装飾',
+  ITYPE_ACCESSORY: '装飾',
   ITYPE_CONSUMABLE: 'アイテム',
   ITYPE_ABSTONE: '宝珠',
   ITYPE_ABSTONE2: '宝珠',
@@ -260,6 +261,28 @@ ITYPE_NAMES = {
   ITYPE_GEAR: 'ギヤ',
   ITYPE_GEAR2: 'ギヤ',
 }
+
+WTYPE_NAMES =  [
+  "",
+  "拳",
+  "剣",
+  "斧",
+  "槍",
+  "鞭",
+  "魔具",
+  "弓",
+  "杖",
+  "銃"
+]
+WTYPE_FIST    = 1
+WTYPE_SWORD   = 2
+WTYPE_AXE     = 3
+WTYPE_SPEAR   = 4
+WTYPE_WHIP    = 5
+WTYPE_TAILSMAN= 6
+WTYPE_BOW     = 7
+WTYPE_STAFF   = 8
+WTYPW_GUN     = 9
 
 SHOP_TYPE_EVENT = 1
 

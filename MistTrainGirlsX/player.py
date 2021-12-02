@@ -4,8 +4,48 @@ import game
 from copy import deepcopy
 
 __UCharacterCache = {}
+__UCharacterStats = {}
+__UStatsUnchangedTimes = {}
+USTAT_UNCHANGE_THRESHOLD = 20
 
 MIST_GEAR_ID = 85
+SWAP_GEAR_ID = [
+  {},
+  {},
+  {},
+  {
+    'weapon': [
+      0,
+      177034637,  # エクリプスクロウ改
+      177034612,  # エクリプスブレイド改
+      177034629,  # エクリプスエッジ改
+      177034694,  # エクリプスグレイブ改
+      177034649,  # エクリプスウィップ改
+      177034621,  # エクリプスオーブ改
+      177034679,  # エクリプスボウ改
+      177034664,  # エクリプスケーン改
+      177034702,  # エクリプスファイア改
+    ],
+    'armor': 26147276,  # エクリプスジャケット改
+    'accessory': 33128722,  # エクリプスリング改
+  },
+  {
+    'weapon': [
+      0,
+      159692763,  # エクリプスクロウ
+      155914420,  # エクリプスブレイド
+      157535430,  # エクリプスエッジ
+      157062821,  # エクリプスグレイブ
+      159692821,  # エクリプスウィップ
+      159692732,  # エクリプスオーブ
+      159974094,  # エクリプスボウ
+      159974066,  # エクリプスケーン
+      159067214,  # エクリプスファイア
+    ],
+    'armor': 26147275,  # エクリプスプレート改
+    'accessory': 33128720,  # エクリプスネック改
+  }
+]
 
 def clear_cache():
   global __UCharacterCache
@@ -67,7 +107,7 @@ def get_all_items(flatten=False):
   ret = {
     ITYPE_WEAPON: [{**{'ItemId': item['MWeaponId'], 'ItemType': ITYPE_WEAPON}, **item} for item in get_weapons()],
     ITYPE_ARMOR: [{**{'ItemId': item['MArmorId'], 'ItemType': ITYPE_ARMOR}, **item} for item in get_armors()],
-    ITYPE_ACCESORY: [{**{'ItemId': item['MAccessoryId'], 'ItemType': ITYPE_ACCESORY}, **item} for item in get_accessories()],
+    ITYPE_ACCESSORY: [{**{'ItemId': item['MAccessoryId'], 'ItemType': ITYPE_ACCESSORY}, **item} for item in get_accessories()],
     ITYPE_CONSUMABLE: [{**{'ItemId': item['MItemId'], 'ItemType': ITYPE_CONSUMABLE}, **item} for item in get_consumables()],
     ITYPE_ABSTONE: [{**{'ItemId': item['MAbilityStoneId'], 'ItemType': ITYPE_ABSTONE}, **item} for item in get_abstones()],
     ITYPE_GEAR: [{**{'ItemId': item['MCharacterPieceId'],'ItemType': ITYPE_GEAR}, **item} for item in get_gears()],
@@ -79,25 +119,46 @@ def get_all_items(flatten=False):
     return ar
   return ret
 
+def is_character_mastered(ch, accumulate=False):
+  global __UCharacterStats,__UStatsUnchangedTimes
+  sk_keys = ['USkill1','USkill2','USkill3']
+  skills = [ch[sk] for sk in sk_keys]
+  if any([sk['Rank'] < 99 for sk in skills]):
+    return False
+  res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/{ch['UCharacterBaseId']}/BaseStatusUp")
+  mstatus = res['r']['MaxStatuses'][0]
+  sstats = 0
+  flag_maxed = True
+  for k,v in ch['UCharacterBaseViewModel']['Status'].items():
+    sstats += v
+    if v < mstatus[k]:
+      flag_maxed = False
+  if accumulate:
+    log_info("Checking skin maxed")
+    mid = ch['MCharacterId']
+    if mid not in __UCharacterStats:
+      __UCharacterStats[mid] = sstats
+      __UStatsUnchangedTimes[mid] = 0
+      return flag_maxed
+    log_info(f"{game.get_character_name(mid)}: {sstats} {__UStatsUnchangedTimes[mid]}")
+    if __UCharacterStats[mid] == sstats:
+      if __UStatsUnchangedTimes[mid] > USTAT_UNCHANGE_THRESHOLD:
+        return True
+      __UStatsUnchangedTimes[mid] += 1
+    else:
+      __UCharacterStats[mid] = sstats
+      __UStatsUnchangedTimes[mid] = 0
+  return flag_maxed
 
 def get_unmastered_characters():
   '''
   Get characters that still has unmastered skills or status
   '''
   chars = get_characters()
-  sk_keys = ['USkill1','USkill2','USkill3']
   ret = []
   for ch in chars:
-    skills = [ch[sk] for sk in sk_keys]
-    if any([sk['Rank'] < 99 for sk in skills]):
+    if not is_character_mastered(ch):
       ret.append(ch)
-    else:
-      res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/{ch['UCharacterBaseId']}/BaseStatusUp")
-      mstatus = res['r']['MaxStatuses'][0]
-      for k,v in ch['UCharacterBaseViewModel']['Status'].items():
-        if v < mstatus[k]:
-          ret.append(ch)
-          break
   return ret
 
 def get_current_parties():
@@ -107,6 +168,10 @@ def get_current_parties():
   upid = get_profile()['UPartyId']
   res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/UParties/GetUPartiesFromUPartyId/{upid}")
   return res['r']
+
+def get_party_by_pid(pid):
+  res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/Quests/208001101/prepare/{pid}?rentalUUserId=null")
+  return res['r']['UPartyViewModel']
 
 def interpret_parties(data):
   '''
@@ -252,3 +317,102 @@ def sell_item(item, amount=1):
   elif item['ItemType'] == ITYPE_CONSUMABLE:
     gain = sell_consumable(item, amount)
     return [{'ItemType': ITYPE_GOLD, 'ItemId': 0, 'ItemQuantity': gain, 'Stock': gain}]
+
+def exchange_bets(amount=0, budget=0):
+  '''
+  amount: Bets amount to exchange
+  budget: Gold amount to exchange bets (20:1)
+  '''
+  if budget:
+    amount = budget // 20
+  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Casino/ExchangeCoin?exchangeGolds={amount}")
+  return res['r']
+
+def get_suitable_equpiments(character, slot_idx):
+  global SWAP_GEAR_ID
+  key_chb = 'MCharacterBase'
+  key_wp  = 'WeaponEquipType'
+  if key_chb in character:
+    wtype = character[key_chb][key_wp]
+  elif 'MCharacter' in character:
+    wtype = character['MCharacter'][key_chb][key_wp]
+  else:
+    return get_suitable_equpiments(game.get_character_base(character['MCharacterId']), slot_idx)
+  ret_wp = None
+  ret_ar = None
+  ret_ac = None
+  equips = SWAP_GEAR_ID[slot_idx]
+  ret_wp = equips['weapon'][wtype]
+  ret_ar = equips['armor']
+  ret_ac = equips['accessory']
+  return [ret_wp, ret_ar, ret_ac]
+
+def swap_party_character(pid, sidx, cid, **kwargs):
+  '''
+  Arguments:
+  `pid`: Party id
+  `sidx`: Slot index
+  `cid`: (U)Character id to swap (to the given index)
+ 
+  Kwargs:
+  `pidx=int`: Party index, will use this if pid is not given
+  `wid=None`: Weapon id
+  `aid=None`: Armor id
+  `did=None`: Decoration(Accessory) id
+  `eid=None`: Extra skill id
+  '''
+  wid = kwargs.get('wid')
+  aid = kwargs.get('aid')
+  did = kwargs.get('did')
+  eid = kwargs.get('eid')
+  pidx = kwargs.get('pidx')
+  if not eid:
+    eid = 'null'
+  
+  parties = get_current_parties()['UParties']
+  if not pidx:
+    pidx = next((p['PartyNo']-1 for p in parties if p['Id'] == pid), None)
+  party = get_current_parties()['UParties'][pidx]
+  sid = party['UCharacterSlots'][sidx]['Id']
+  char = get_character_by_uid(cid)
+  equips = get_suitable_equpiments(char, sidx)
+  if not wid:
+    wid = equips[0]
+  if not aid:
+    aid = equips[1]
+  if not did:
+    did = equips[2]
+  return game.post_request(f"https://mist-train-east4.azurewebsites.net/api/UParties/{pid}/CharacterSlots/{sid}?uCharacterId={cid}&uWeaponId={wid}&uArmorId={aid}&uAccessoryId={did}&uSkillId={eid}")
+
+def get_character_party_index(pid, mchid):
+  party = get_party_by_pid(pid)
+  ch_bname = game.get_character_name(mchid).split(']')[-1]
+  for s in party['UCharacterSlots']:
+    mid = s['UCharacter']['MCharacterId']
+    if game.get_character_name(mid).split(']')[-1] == ch_bname:
+      return s['SlotNo'] - 1
+  return None
+
+def enhance_abstone_def(id, n1=0, n2=0, n3=0):
+  data = {
+    'MItemIdAmount': {}
+  }
+  if n1:
+    data['MItemIdAmount'][13] = n1
+  if n2:
+    data['MItemIdAmount'][14] = n2
+  if n3:
+    data['MItemIdAmount'][15] = n3
+  return game.post_request(f"https://mist-train-east4.azurewebsites.net/api/UAbilityStones/{id}/enhance", data)
+
+def enhance_abstone_atk(id, n1=0, n2=0, n3=0):
+  data = {
+    'MItemIdAmount': {}
+  }
+  if n1:
+    data['MItemIdAmount'][10] = n1
+  if n2:
+    data['MItemIdAmount'][11] = n2
+  if n3:
+    data['MItemIdAmount'][12] = n3
+  return game.post_request(f"https://mist-train-east4.azurewebsites.net/api/UAbilityStones/{id}/enhance", data)

@@ -12,10 +12,13 @@ parser.add_argument('--user-agent', help="Use specified user agent instead of py
 parser.add_argument('-l', '--less', action="store_true", help='Less information logging')
 parser.add_argument('-v', '--verbose', action="store_true", help='Debug verbose logging')
 parser.add_argument('-o', '--output', help="Output combat statics to specified file")
+parser.add_argument('-t', '--train-swap', action="store_true", help='Train unmastered characters, persist cache will be disabled.')
 
 def load():
   args = parser.parse_args()
   if args.verbose:
     _G.VerboseLevel = 4
+  if args.train_swap:
+    _G.FlagTrainSwap = True
   _G.ARGV = args
   return args

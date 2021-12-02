@@ -27,7 +27,7 @@ PartyId  = 0
 StageId  = 0
 BattleId = 0
 RentalUid = 0
-BattleStyle = [ # 0=通常 1=限制 2=全力 3=使用最低熟練度
+BattleStyle = [ # 0=通常 1=限制 2=全力 3=使用最低熟練度, other=skill id
   0, # reserved, don't touch
   3,
   3,
@@ -40,7 +40,7 @@ RecoveryUsage = 1 # 0=Use most
                   # 1=Use by the order list below, if item available
 RecoveryUsageOrder = [
   -1, # use event potions (id > 400) 
-  0 # use most
+  0   # use most
 ]
 RecoveryBatchAmount = 5 # How many items to use once
 
@@ -63,6 +63,9 @@ FlagRequestReEnter = False
 
 AvailableFriendRentals = []
 RentalCycle = None
+
+UnmasteredCharacters = []
+UnmasteredSwapIndex  = [3, 4]
 
 Headers = {
   'Accept': 'application/json',
@@ -220,6 +223,14 @@ def determine_skill(character):
       if is_skill_usable(character, game.get_skill(skill['SkillRefId'])):
         return skill
       return skills[0]
+  elif bstyle > 10:
+    for sk in skills:
+      if sk['SkillRefId'] == bstyle:
+        if is_skill_usable(character, game.get_skill(sk['SkillRefId'])):
+          return sk
+        else:
+          return skills[0]
+    
   for sk in reversed(skills):
     mskill = game.get_skill(sk['SkillRefId'])
     if not is_offensive_skill(mskill):
@@ -327,9 +338,11 @@ def recover_stamina():
         nidx = -1
         break
       elif id == -1:
-        nidx = next((i for i,item in enumerate(items) if item["MItemId"] in range(400,9999)), -1)
+        candidates = [item for item in items if item['MItemId'] in range(400,9999) and item['Stock'] > 0]
+        potion = max(candidates, key=lambda i: i['MItemId'])
+        nidx = items.index(potion)
       else:
-        nidx = next((i for i,item in enumerate(items) if item["MItemId"] == id), -1)
+        nidx = next((i for i,item in enumerate(items) if item['MItemId'] == id), -1)
       nidx = -1 if items[nidx]['Stock'] <= 0 else nidx
       if nidx >= 0:
         break
@@ -448,8 +461,6 @@ def process_combat(data):
   log_info("Battle started")
   log_battle_status(data)
   battle_analyzer.setup_battlers(data)
-  if not _G.PersistCharacterCache:
-    player.clear_cache()
   while not is_defeated(data) and data['BattleState']['BattleStatus'] != BATTLESTAT_VICTORY:
     actions = determine_actions(data)
     data = process_actions(actions, data['Version'])
@@ -521,14 +532,16 @@ def process_rentalid_input():
     AvailableFriendRentals.append(uid)
   for dat in odat:
     valids.append(dat['UUserId'])
-  while rid not in valids and rid != -1:
+  while rid not in valids and rid not in [-1,-2]:
     try:
-      rid = int(input("Rental friend's id (0 for list availables, -1 for round-robin): "))
+      rid = int(input("Rental friend's id (0 for list availables, -1 for round-robin, -2 for none): "))
     except Exception:
       rid = 0
     if not rid:
       friend.log_rentals(True)
   RentalCycle = itertools.cycle(AvailableFriendRentals)
+  if rid == -2:
+    return None
   return rid
 
 def start_battle_process(sid, pid, rid):
@@ -658,22 +671,60 @@ def process_prepare_inputs():
   pid = process_partyid_input()
   log_info("Party Id:", pid)
   rid = process_rentalid_input()
-  log_info("Rental Id:", 'Round-Robin' if rid == -1 else rid)
-  if rid != -1 and rid <= 0:
+  if rid == None:
     rid = 'null'
+    log_info("Rental Id: None")
+  else:
+    log_info("Rental Id: Round-Robin", '' if rid == -1 else rid)
   ReportDetail['stamina_cost'] = game.get_quest(sid)['ActionPointsCost']
   return (pid, sid, rid)
 
+def swap_mastered_trains():
+  global PartyId,UnmasteredCharacters,UnmasteredCharacters
+  player.clear_cache()
+  parties = player.get_current_parties()['UParties']
+  party = None
+  for p in parties:
+    if p['Id'] == PartyId:
+      party = p
+      break
+  slots = party['UCharacterSlots']
+  for idx in UnmasteredSwapIndex:
+    och = slots[idx]['UCharacter']
+    if not player.is_character_mastered(och, True):
+      continue
+    if not UnmasteredCharacters:
+      log_warning("No unmastered characters left to train")
+      break
+    schar = UnmasteredCharacters.pop()
+    pcidx = player.get_character_party_index(PartyId, schar['MCharacterId'])
+    print(f"[{idx}]: {game.get_character_name(schar['MCharacterId'])} pidx: {pcidx}")
+    if pcidx != None and idx != pcidx:
+      log_info(f"Character {game.get_character_name(schar['MCharacterId'])} already in party, requeued")
+      UnmasteredCharacters.insert(0, schar)
+      continue
+    log_info(f"Swapping mastered character: {game.get_character_name(och['MCharacterId'])} => {game.get_character_name(schar['MCharacterId'])}")
+    player.swap_party_character(PartyId, idx, schar['Id'])
+    log_info("Charcaters in queue:")
+    print(player.format_character_data(UnmasteredCharacters))
+
 def main():
   global PartyId,StageId,RentalUid,AvailableFriendRentals,RentalCycle
-  global FlagRequestReEnter,ReportDetail
+  global FlagRequestReEnter,ReportDetail,UnmasteredCharacters
+  FlagRequestReEnter = False
   log_info("Program initialized")
   reset_final_report()
   battle_analyzer.reset()
   PartyId,StageId,RentalUid = process_prepare_inputs()
   discord.update_status(StageId)
   cnt = 0
+  if _G.FlagTrainSwap:
+    log_info("Getting unmastered characters...")
+    UnmasteredCharacters = player.get_unmastered_characters()
+    print(player.format_character_data(UnmasteredCharacters))
   while _G.FlagRunning:
+    if not _G.PersistCharacterCache:
+      player.clear_cache()
     if _G.FlagPaused:
       pt_s = datetime.now()
       while _G.FlagPaused:
@@ -702,6 +753,8 @@ def main():
     log_info("Battle Ended")
     if signal == SIG_COMBAT_STOP:
       break
+    if _G.FlagTrainSwap and signal == SIG_COMBAT_WON:
+      swap_mastered_trains()
     uwait(1)
     if _G.Throttling:
       uwait(1)
