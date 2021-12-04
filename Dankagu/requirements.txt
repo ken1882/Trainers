@@ -1,0 +1,7 @@
+Pillow
+pywin32
+Desktopmagic
+opencv-python
+numpy
+pytesseract
+requests
