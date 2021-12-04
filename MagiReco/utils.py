@@ -40,6 +40,7 @@ def move_window(x=None,y=None,w=None,h=None):
   update_app_rect()
 
 def resize_app_window():
+  update_app_rect()
   move_window(_G.AppRect[0], 0, _G.WindowWidth, _G.WindowHeight)
   sleep(0.1)
   update_app_rect()
