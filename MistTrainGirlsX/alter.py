@@ -8,7 +8,7 @@ from combat import update_input
 
 def main():
   sid = combat.process_stageid_input()
-  end_n   = int(input("Enter ending stage id (0 means util complete or defeat): "))
+  end_n = int(input("Enter ending stage id (0 means util complete or defeat): "))
   pid = combat.process_partyid_input()
   rid = combat.process_rentalid_input()
   cur_n   = sid

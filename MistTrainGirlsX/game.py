@@ -417,7 +417,7 @@ def get_item(item):
     return get_weapon(id)
   elif item['ItemType'] == ITYPE_ARMOR:
     return get_armor(id)
-  elif item['ItemType'] == ITYPE_ACCESORY:
+  elif item['ItemType'] == ITYPE_ACCESSORY:
     return get_accessory(id)
   elif item['ItemType'] in [ITYPE_ABSTONE, ITYPE_ABSTONE2]:
     return get_abstone(id)
