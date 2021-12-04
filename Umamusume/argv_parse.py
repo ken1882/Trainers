@@ -17,4 +17,7 @@ def load():
   if args.skill_pt_mul:
     _G.MinGetSkillPoints *= args.skill_pt_mul
     _G.MaxGetSkillPoints *= args.skill_pt_mul
+    _G.MinGetSkillPoints = int(_G.MinGetSkillPoints)
+    _G.MaxGetSkillPoints = int(_G.MaxGetSkillPoints)
+    _G.log_info("Skill min/max pts: ", _G.MinGetSkillPoints, _G.MaxGetSkillPoints)
   return args
