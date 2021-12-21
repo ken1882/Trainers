@@ -1,4 +1,3 @@
-from win32gui import ExtCreatePen
 import _G,stage
 from _G import resume, resume_from, pop_fiber_ret, wait, uwait, log_info
 import Input, position, graphics
@@ -11,10 +10,12 @@ def __start_autosong():
     yield
     stg = stage.get_current_stage()
     uwait(0.5)
-    if stg == 'SongSelect':
+    if not stg:
+      continue
+    if 'SongSelect' in stg:
       log_info("Select song")
       Input.click(*position.SongSelect)
-    elif stg == 'PartySelect':
+    elif 'PartySelect' in stg:
       log_info("Select party")
       Input.click(*position.SongStart)
       uwait(2)
@@ -23,7 +24,7 @@ def __start_autosong():
       for _ in range(8):
         yield
         uwait(0.5)
-    elif stg == 'SongClear':
+    elif 'SongClear' in stg:
       log_info("Song cleared")
       while True:
         stg = stage.get_current_stage()
@@ -31,7 +32,10 @@ def __start_autosong():
           log_info("Stage completed")
           break
         Input.rclick(*position.ClearedOK)
-        wait(0.5)
+        uwait(0.2)
+        yield
+        Input.rclick(*position.StoryUnlockNext)
+        uwait(0.2)
         yield
 
 def start_auto_song_fiber():

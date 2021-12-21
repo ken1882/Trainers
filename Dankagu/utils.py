@@ -3,7 +3,7 @@ import _G
 from _G import log_error,log_debug,log_info,log_warning,resume,wait,uwait
 import numpy as np
 import os
-import win32gui, win32process
+import win32gui, win32process, win32console
 from time import sleep
 from random import random
 import traceback
@@ -116,3 +116,22 @@ def ensure_dir_exist(path):
     pwd += f"{dir}/"
     if not os.path.exists(pwd):
       os.mkdir(pwd)
+
+def EnumWindowSelfCB(hwnd, lparam):
+  _G.SelfPid = win32process.GetCurrentProcessId()
+  if win32process.GetWindowThreadProcessId(hwnd) == _G.SelfPid:
+    _G.SelfHwnd = hwnd
+    return False
+  return True
+
+def get_self_hwnd():
+  if _G.IS_WIN32:
+    _G.SelfHwnd = win32console.GetConsoleWindow()
+    if _G.SelfHwnd == 0:
+      win32gui.EnumWindows(EnumWindowSelfCB, None)
+    return _G.SelfHwnd
+
+def is_focused():
+  if _G.IS_WIN32:
+    return win32gui.GetForegroundWindow() == _G.SelfHwnd
+  return True

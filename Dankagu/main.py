@@ -47,12 +47,15 @@ def update_detector():
       last_tick = _G.FrameCount
 
 def detect_app_window():
+  utils.get_self_hwnd()
   utils.find_app_window()
   utils.find_child_window()
   _G.AppInputHwnd = _G.AppChildHwnd
 
 def update_input():
   Input.update()
+  if not utils.is_focused():
+    return
   if Input.is_trigger(win32con.VK_F5):
     print("Redetecting app window")
     detect_app_window()
@@ -87,6 +90,7 @@ def main_loop():
 def start_main():
   _th = Thread(target=update_detector)
   _th.start()
+  print(f"Stage:", stage.get_current_stage())
   try:
     while _G.FlagRunning:
       _G.FrameCount += 1

@@ -1,9 +1,17 @@
 from datetime import datetime
-from os import get_exec_path
 from time import sleep
 from random import random
 from copy import copy
+import sys
 import json
+
+IS_WIN32 = False
+IS_LINUX = False
+
+if sys.platform == 'win32':
+  IS_WIN32 = True
+elif sys.platform == 'linux':
+  IS_LINUX = True
 
 AppWindowName = "umamusume"
 AppHwnd = 0

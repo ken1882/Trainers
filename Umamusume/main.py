@@ -49,6 +49,8 @@ def update_detector():
 
 def update_input():
   Input.update()
+  if not util.is_focused():
+    return
   if Input.is_trigger(win32con.VK_F5):
     print("Redetecting app window")
     util.find_app_window()
@@ -94,6 +96,7 @@ def start_main():
     _G.FlagRunning = False
 
 if __name__ == "__main__":
+  util.get_self_hwnd()
   util.find_app_window()
   util.resize_app_window()
   util.move_window(x=1,y=1)
