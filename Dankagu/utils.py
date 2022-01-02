@@ -20,6 +20,15 @@ def EnumWindowCallback(hwnd, lparam):
       print(f"App found with HWND {hwnd} ({_G.AppWindowName}), pid={_G.AppPid}")
       update_app_rect()
 
+def EnumChildWindowCB(hwnd, lparam):
+  clsname = win32gui.GetClassName(hwnd)
+  title   = win32gui.GetWindowText(hwnd)
+  print(hwnd, clsname, title)
+  if title == _G.AppChildWindowName:
+    _G.AppChildHwnd = hwnd
+    print("Target child found")
+    return False
+
 def update_app_rect():
   _G.AppRect = list(win32gui.GetWindowRect(_G.AppHwnd))
   _G.AppRect[2] -= _G.AppRect[0]
@@ -29,6 +38,11 @@ def update_app_rect():
 
 def find_app_window():
   win32gui.EnumWindows(EnumWindowCallback, None)
+
+def find_child_window():
+  log_info("Child windows:")
+  win32gui.EnumChildWindows(_G.AppHwnd, EnumChildWindowCB, None)
+  print("\n\n")
 
 def move_window(x=None,y=None,w=None,h=None):
   x = x if x else _G.AppRect[0]
