@@ -294,6 +294,20 @@
     "AbilityMSkill3Id": null
   },
   {
+    "Id": 7020022,
+    "Name": "\u4ea4\u308f\u3059\u60f3\u3044\u3068\u62b1\u64c1",
+    "Description": "",
+    "Rarity": 3,
+    "MFieldSkillRarity": {
+      "Rarity": 3,
+      "LevelLimit": 4
+    },
+    "Cost": 35,
+    "AbilityMSkill1Id": 3070001,
+    "AbilityMSkill2Id": 3030074,
+    "AbilityMSkill3Id": null
+  },
+  {
     "Id": 7030001,
     "Name": "\u9577\u3044\u65c5\u306e\u9014\u4e2d\u3067",
     "Description": "",
@@ -812,6 +826,34 @@
     "AbilityMSkill3Id": null
   },
   {
+    "Id": 7030038,
+    "Name": "\u5e73\u548c\u3067\u5e78\u305b\u306a\u6642\u9593",
+    "Description": "",
+    "Rarity": 3,
+    "MFieldSkillRarity": {
+      "Rarity": 3,
+      "LevelLimit": 4
+    },
+    "Cost": 25,
+    "AbilityMSkill1Id": 3070020,
+    "AbilityMSkill2Id": 3010038,
+    "AbilityMSkill3Id": null
+  },
+  {
+    "Id": 7030039,
+    "Name": "\u304d\u3000\u307c\u3000\u3046",
+    "Description": "",
+    "Rarity": 3,
+    "MFieldSkillRarity": {
+      "Rarity": 3,
+      "LevelLimit": 4
+    },
+    "Cost": 18,
+    "AbilityMSkill1Id": 3020103,
+    "AbilityMSkill2Id": 3020005,
+    "AbilityMSkill3Id": null
+  },
+  {
     "Id": 7040001,
     "Name": "\u30aa\u30aa\u30a8\u305f\u3061\u306e\u591c",
     "Description": "",
@@ -1076,5 +1118,33 @@
     "AbilityMSkill1Id": 3010008,
     "AbilityMSkill2Id": 3020049,
     "AbilityMSkill3Id": 3030047
+  },
+  {
+    "Id": 7040020,
+    "Name": "\u3044\u3064\u3067\u3082\u30b9\u30de\u30a4\u30eb\u30b9\u30de\u30a4\u30eb\u266a",
+    "Description": "",
+    "Rarity": 4,
+    "MFieldSkillRarity": {
+      "Rarity": 4,
+      "LevelLimit": 5
+    },
+    "Cost": 41,
+    "AbilityMSkill1Id": 3010002,
+    "AbilityMSkill2Id": 3020032,
+    "AbilityMSkill3Id": 3030026
+  },
+  {
+    "Id": 7040021,
+    "Name": "\u65b0\u3057\u30441\u5e74\u306b\u5e78\u305b\u3092",
+    "Description": "",
+    "Rarity": 4,
+    "MFieldSkillRarity": {
+      "Rarity": 4,
+      "LevelLimit": 5
+    },
+    "Cost": 60,
+    "AbilityMSkill1Id": 3070002,
+    "AbilityMSkill2Id": 3010003,
+    "AbilityMSkill3Id": 3010015
   }
 ]

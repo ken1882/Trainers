@@ -2,6 +2,8 @@ from re import M
 from _G import *
 import game
 from copy import deepcopy
+import json
+import os
 
 __UCharacterCache = {}
 __UCharacterStats = {}
@@ -52,13 +54,13 @@ def clear_cache():
   __UCharacterCache = {}
   
 def get_profile():
-  res  = game.get_request('https://mist-train-east4.azurewebsites.net/api/Users/Me')['r']
-  res2 = game.get_request('https://mist-train-east4.azurewebsites.net/api/Users/MyPreferences')['r']
+  res  = game.get_request('/api/Users/Me')['r']
+  res2 = game.get_request('/api/Users/MyPreferences')['r']
   ret = {**res, **res2}
   return ret
 
 def get_characters():
-  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UCharacters')
+  res = game.get_request('/api/UCharacters')
   return res['r']
 
 def __cache_characters(chars):
@@ -73,27 +75,27 @@ def get_character_by_uid(uid, flush=False):
   return __UCharacterCache[uid]
 
 def get_consumables():
-  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UItems')
+  res = game.get_request('/api/UItems')
   return res['r']
 
 def get_weapons():
-  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UWeapons')
+  res = game.get_request('/api/UWeapons')
   return res['r']
 
 def get_armors():
-  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UArmors')
+  res = game.get_request('/api/UArmors')
   return res['r']
 
 def get_accessories():
-  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UAccessories')
+  res = game.get_request('/api/UAccessories')
   return res['r']
 
 def get_abstones():
-  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UAbilityStones')
+  res = game.get_request('/api/UAbilityStones')
   return res['r']
 
 def get_gears():
-  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UCharacterPieces')
+  res = game.get_request('/api/UCharacterPieces')
   res = res['r']
   # key = 'MCharacterId'
   # for idx,item in enumerate(res):
@@ -125,8 +127,8 @@ def is_character_mastered(ch, accumulate=False):
   skills = [ch[sk] for sk in sk_keys]
   if any([sk['Rank'] < 99 for sk in skills]):
     return False
-  res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/{ch['UCharacterBaseId']}/BaseStatusUp")
-  mstatus = res['r']['MaxStatuses'][0]
+  res = game.get_request(f"/api/UCharacters/{ch['UCharacterBaseId']}/BaseStatusUp")
+  mstatus = res['r']['MaxStatuses'][-1]
   sstats = 0
   flag_maxed = True
   for k,v in ch['UCharacterBaseViewModel']['Status'].items():
@@ -166,11 +168,11 @@ def get_current_parties():
   Get 10 parties of current group
   '''
   upid = get_profile()['UPartyId']
-  res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/UParties/GetUPartiesFromUPartyId/{upid}")
+  res = game.get_request(f"/api/UParties/GetUPartiesFromUPartyId/{upid}")
   return res['r']
 
 def get_party_by_pid(pid):
-  res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/Quests/208001101/prepare/{pid}?rentalUUserId=null")
+  res = game.get_request(f"/api/Quests/208001101/prepare/{pid}?rentalUUserId=null")
   return res['r']['UPartyViewModel']
 
 def interpret_parties(data):
@@ -258,14 +260,14 @@ def log_party_status():
   log_info(string)
 
 def get_aprecovery_items():
-  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UItems/ApRecoveryItems')
+  res = game.get_request('/api/UItems/ApRecoveryItems')
   return res['r']
 
 def use_aprecovery_item(item, amount=1):
   if amount > item['Stock']:
     log_warning(f"Not enough items in stock for use: {item}")
     return None
-  return game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Users/recoverStamina/{item['MItemId']}/{amount}")  
+  return game.post_request(f"/api/Users/recoverStamina/{item['MItemId']}/{amount}")  
 
 def get_consumable_stock(id):
   items = get_consumables()
@@ -303,12 +305,12 @@ def get_item_stock(item, num_only=False):
 
 def sell_consumable(item, amount):
   uid = item['Id']
-  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/UItems/{uid}/sell/{amount}")
+  res = game.post_request(f"/api/UItems/{uid}/sell/{amount}")
   return res['r']
 
 def sell_gear(item, amount):
   uid = item['UCharacterPieceId']
-  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacterPieces/{uid}/trade/{amount}")
+  res = game.post_request(f"/api/UCharacterPieces/{uid}/trade/{amount}")
   return res['r']['Items']
 
 def sell_item(item, amount=1):
@@ -325,7 +327,7 @@ def exchange_bets(amount=0, budget=0):
   '''
   if budget:
     amount = budget // 20
-  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Casino/ExchangeCoin?exchangeGolds={amount}")
+  res = game.post_request(f"/api/Casino/ExchangeCoin?exchangeGolds={amount}")
   return res['r']
 
 def get_suitable_equpiments(character, slot_idx):
@@ -382,7 +384,7 @@ def swap_party_character(pid, sidx, cid, **kwargs):
     aid = equips[1]
   if not did:
     did = equips[2]
-  return game.post_request(f"https://mist-train-east4.azurewebsites.net/api/UParties/{pid}/CharacterSlots/{sid}?uCharacterId={cid}&uWeaponId={wid}&uArmorId={aid}&uAccessoryId={did}&uSkillId={eid}")
+  return game.post_request(f"/api/UParties/{pid}/CharacterSlots/{sid}?uCharacterId={cid}&uWeaponId={wid}&uArmorId={aid}&uAccessoryId={did}&uSkillId={eid}")
 
 def get_character_party_index(pid, mchid):
   party = get_party_by_pid(pid)
@@ -403,7 +405,7 @@ def enhance_abstone_def(id, n1=0, n2=0, n3=0):
     data['MItemIdAmount'][14] = n2
   if n3:
     data['MItemIdAmount'][15] = n3
-  return game.post_request(f"https://mist-train-east4.azurewebsites.net/api/UAbilityStones/{id}/enhance", data)
+  return game.post_request(f"/api/UAbilityStones/{id}/enhance", data)
 
 def enhance_abstone_atk(id, n1=0, n2=0, n3=0):
   data = {
@@ -415,4 +417,36 @@ def enhance_abstone_atk(id, n1=0, n2=0, n3=0):
     data['MItemIdAmount'][11] = n2
   if n3:
     data['MItemIdAmount'][12] = n3
-  return game.post_request(f"https://mist-train-east4.azurewebsites.net/api/UAbilityStones/{id}/enhance", data)
+  return game.post_request(f"/api/UAbilityStones/{id}/enhance", data)
+
+def dump_scene_metadata():
+  uris = {
+    'main': 'https://mist-train-east5.azurewebsites.net/api/UScenes/MainScenes',
+    'event': 'https://mist-train-east5.azurewebsites.net/api/UScenes/EventScenes',
+  }
+  ret = {}
+  for key,uri in uris.items():
+    res = game.get_request(uri)
+    data = res['r']
+    with open(f"{DCTmpFolder}/{SCENE_METAS[key]}", 'w') as fp:
+      json.dump(data, fp, indent=2)
+      ret[key] = data
+    log_info(f"{key} scene meta saved")
+  return ret
+
+def dump_all_available_scenes(meta):
+  for inf in meta['Scenes']:
+    id = inf['MSceneId']
+    if not inf['Status']:
+      log_warning(f"Scene#{id} {game.get_scene(id)['Title']} not unlocked yet, skip")
+      continue
+    path = f"{DCTmpFolder}/scenes/{id}.json"
+    if os.path.exists(path):
+      log_info(f"Scene#{id} {game.get_scene(id)['Title']} already saved, skip")
+      continue
+    res = game.get_request(f"https://mist-train-east5.azurewebsites.net/api/UScenes/{id}")
+    data = res['r']['MSceneDetailViewModel']
+    data = sorted(data, key=lambda o:o['GroupOrder'])
+    with open(path, 'w') as fp:
+      json.dump(data, fp)
+    log_info(f"Scene#{id} {game.get_scene(id)['Title']} saved")

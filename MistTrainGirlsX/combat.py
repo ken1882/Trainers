@@ -86,6 +86,7 @@ ReportDetail = {
   'stamina_cost': 0,          # stamina cost of current stage
   'win': 0,
   'lose': 0,
+  'exp': 0,
 }
 
 W_TYPE = 10 ** 6
@@ -105,33 +106,33 @@ def dehash_item_id(id):
 def start_battle(sid, pid, rid=0):
   log_info("Starting batlle")
   rid = rid if rid else 'null'
-  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/canstart/{sid}?uPartyId={pid}")
+  res = game.post_request(f"/api/Battle/canstart/{sid}?uPartyId={pid}")
   if res['r']['FaildReason'] != ERROR_SUCCESS:
     return res['r']['FaildReason']
-  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=null&uRaidId=null&raidParticipationMode=null")
+  res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=null&uRaidId=null&raidParticipationMode=null")
   return res['r']
 
 def start_raid(sid, pid, rid=0):
   log_info("Starting raid")
   rid = rid if rid else 'null'
-  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/canstartRaid/{sid}?uPartyId={pid}&isFriend=false&isHost=true&uRaidId=null")
+  res = game.post_request(f"/api/Battle/canstartRaid/{sid}?uPartyId={pid}&isFriend=false&isHost=true&uRaidId=null")
   if res['r']['FaildReason'] != ERROR_SUCCESS:
     return res['r']['FaildReason']
-  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=0")
+  res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=0")
   return res['r']
 
 def join_raid(sid, pid, rid=0, scope=3):
   log_info("Join raid")
   rid = rid if rid else 'null'
-  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/canstartRaid/{sid}?uPartyId={pid}&isFriend=false&isHost=true&uRaidId=null")
+  res = game.post_request(f"/api/Battle/canstartRaid/{sid}?uPartyId={pid}&isFriend=false&isHost=true&uRaidId=null")
   if res['r']['FaildReason'] != ERROR_SUCCESS:
     return res['r']['FaildReason']
-  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=0")
+  res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=0")
   return res['r']
 
 def process_actions(commands, verion):
   log_info("Process actions")
-  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/attack/{BattleId}",
+  res = game.post_request(f"/api/Battle/attack/{BattleId}",
     {
       "Type":1,
       "IsSimulation": False,
@@ -153,7 +154,7 @@ def process_actions(commands, verion):
 
 def surrender():
   log_info("Abort battle")
-  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Battle/surrender",
+  res = game.post_request(f"/api/Battle/surrender",
     {
       "Type":1,
       "IsSimulation": False,
@@ -309,7 +310,7 @@ def process_victory():
   global LastBattleWon,ReportDetail
   log_info("Victory")
   LastBattleWon = True
-  res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Battle/victory?isSimulation=false')
+  res = game.post_request('/api/Battle/victory?isSimulation=false')
   ReportDetail['win'] += 1
   return res['r']
 
@@ -317,7 +318,7 @@ def process_defeat():
   global LastBattleWon,ReportDetail
   log_info("Defeat")
   LastBattleWon = False
-  res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Battle/defeat?isSimulation=false')
+  res = game.post_request('/api/Battle/defeat?isSimulation=false')
   ReportDetail['lose'] += 1
   return res['r']
 
@@ -472,6 +473,7 @@ def process_combat(data):
     process_defeat()
   else:
     res = process_victory()
+    ReportDetail['exp'] += res['PlayerLevel']['PlayerExperienceReword']
     loots = res['QuestLoots']['Items']
     record_loots(loots)
     log_loots(loots)
@@ -590,6 +592,7 @@ def reset_final_report():
     'stamina_cost': 0,
     'win': 0,
     'lose': 0,
+    'exp': 0,
   }
 
 
@@ -608,6 +611,7 @@ def log_final_report():
     string += f"Combat status: {ReportDetail['times']} fights, Win/Lose={ReportDetail['win']}/{ReportDetail['lose']} ({int(ReportDetail['win'] / ReportDetail['times'] * 100)}%)\n"
     string += f"Average time spent per fight: {format_timedelta(elapsed / ReportDetail['times'])}\n"
     string += f"Stamina used: {ReportDetail['stamina_cost'] * ReportDetail['times']}\n"
+    string += f"Experience gained: {ReportDetail['exp']} (avg: {ReportDetail['exp'] / ReportDetail['times']})"
     keys = ['ap_recovery', 'loots', 'solds', 'sells', 'loot_n']
     subtitles = ("Recovery items used", "Loots Gained", "Loots Sold", "Sell Earnings", "Loots Drop Rate")
     for idx,key in enumerate(keys):
@@ -662,7 +666,7 @@ def update_input():
   elif Input.is_trigger(vktable.VK_F8):
     _G.FlagRunning = False
     _G.FlagPaused  = False
-  elif Input.is_trigger(vktable.VK_F5):
+  elif Input.is_pressed(vktable.VK_F5):
     FlagRequestReEnter = True
 
 def process_prepare_inputs():

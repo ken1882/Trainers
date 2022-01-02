@@ -24,11 +24,11 @@ EnergyItemTable = {
 }
 
 def checkout():
-  res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Training/updateCheckPoint')
+  res = game.post_request('/api/Training/updateCheckPoint')
   return res['r']
 
 def get_charge_items():
-  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/Training/Items')
+  res = game.get_request('/api/Training/Items')
   return res['r']
 
 # Uses greedy instead of DP due to items are divisible
@@ -44,7 +44,7 @@ def determine_charge_usage(cur, items):
   return ret
 
 def charge_energy(goldcnt, payload):
-  url = f"https://mist-train-east4.azurewebsites.net/api/Training/chargeEnergy?useMoneyCount={goldcnt}"
+  url = f"/api/Training/chargeEnergy?useMoneyCount={goldcnt}"
   if sum([v for _,v in payload.items()]) == 0:
     payload = {}
   print(payload)

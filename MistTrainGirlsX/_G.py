@@ -229,6 +229,12 @@ ERROR_LOCKED        = 0x1
 ERROR_LIMIT_REACHED = 0x3
 ERROR_NOSTAMINA     = 0x6
 
+ERRNO_OK          = 0x0
+ERRNO_MAINTENANCE = 0x10
+ERRNO_DAYCHANGING = 0x11
+ERRNO_FAILED      = 0xfe
+ERRNO_UNAVAILABLE = 0xff
+
 # Battle contants
 BATTLESTAT_VICTORY = 0x2
 
@@ -296,6 +302,26 @@ LastErrorMessage = ''
 
 DERPY_WAREHOUSE_HAEDER_PATH   = '.tmp/derpy_header.dat'
 DERPY_WAREHOUSE_CONTENT_PATH  = '.tmp/derpy_warehouse.dat'
+CLOUD_ROOT_FOLDERNAME = 'MistTrainDB'
+SCENE_CLOUD_FOLDERNAME = 'Scene'
+DERPY_CLOUD_FOLDERNAME = 'Derpy'
+DERPY_CLOUD_ESTIMATORS = [
+  'rfr_fit_order_False-feats_all.mod',
+  'rfr_fit_order_True-feats_all.mod',
+  'rfc_fit_order_True-feats_all.mod',
+  'knn_fit_order_True-feats_all.mod',
+  'rfr_fit_order_False-feats_noreport.mod',
+  'rfr_fit_order_True-feats_noreport.mod',
+  'rfc_fit_order_True-feats_noreport.mod',
+  'knn_fit_order_True-feats_noreport.mod',
+]
+
+SCENE_METAS = {
+  'main': 'main_scene.json',
+  'event': 'event_scene.json',
+  'character': 'character_scene.json'
+}
+
 
 DERPY_TACTIC_NIGE     = 1 # 逃げ
 DERPY_TACTIC_SENKO    = 2 # 先行

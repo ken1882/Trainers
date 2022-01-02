@@ -1,3 +1,4 @@
+from requests import exceptions
 from _G import *
 import game
 import player
@@ -75,11 +76,11 @@ WEAPON_BULK_MATERIALS = [
 ]
 
 def get_layer_gears(mchid):
-  res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/LimitBreakPieces/{mchid}")
+  res = game.get_request(f"/api/UCharacters/LimitBreakPieces/{mchid}")
   return res['r']['CurrentPieces']
 
 def get_kizuna(uid):
-  res = game.get_request(F"https://mist-train-east4.azurewebsites.net/api/Kizuna/{uid}")
+  res = game.get_request(F"/api/Kizuna/{uid}")
   return res['r']
 
 def determine_kizuna_usage(kdat):
@@ -113,7 +114,7 @@ def bulk_enhance(chid, lv=None, lgn=None, mgn=None, kp=None):
     "KizunaPointAddModel": kp,
   }
   log_debug("Request payload:\n", payload)
-  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/BulkEnhance/{chid}", payload)
+  res = game.post_request(f"/api/UCharacters/BulkEnhance/{chid}", payload)
   if not res:
     return (None,None,None)
   rjs = res['r']['UCharacterViewModel']
@@ -123,7 +124,7 @@ def level_up(chid,level=1):
   can_lvup = True
   while can_lvup and level < MaxExpLevel:
     level += 1
-    res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/Levelup/{chid}/{level}")
+    res = game.post_request(f"/api/UCharacters/Levelup/{chid}/{level}")
     if not res:
       break
     can_lvup = res['r']['UCharacterViewModel']['CanLevelup']
@@ -153,7 +154,7 @@ def enhance_gear(character, target_lv):
     return character['GearLevel']
   MistGearStockCache -= mgn
   log_info(f"Enhancing character with pieces x{lgn} and mist gear x{mgn}")
-  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/UCharacters/AddGearPoint/{character['Id']}/{lgn}/{mgn}")
+  res = game.post_request(f"/api/UCharacters/AddGearPoint/{character['Id']}/{lgn}/{mgn}")
   log_info("Gear level enhance done, mist gear left:", MistGearStockCache)
   return res['r']['CurrentGearLevel']
 
@@ -194,10 +195,10 @@ def enhance_all_abstone(na, ns, nss=0):
   inventory = player.get_all_items()
   items = inventory[ITYPE_ABSTONE]
   resources = {10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0}
-  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UItems/WeaponEnhanceItems')
+  res = game.get_request('/api/UItems/WeaponEnhanceItems')
   for i in res['r']:
     resources[i['MItemId']] = i['Stock']
-  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/UItems/ArmorEnhanceItems')
+  res = game.get_request('/api/UItems/ArmorEnhanceItems')
   for i in res['r']:
     resources[i['MItemId']] = i['Stock']
   for item in items:
@@ -234,10 +235,22 @@ def enhance_all_weapons():
     rarity = bitem['EquipmentRarity']
     data = WEAPON_BULK_MATERIALS[rarity]
     try:
-      print(game.post_request(f"https://mist-train-east4.azurewebsites.net/api/UWeapons/{item['Id']}/bulkEnhance", data))
+      print(game.post_request(f"/api/UWeapons/{item['Id']}/bulkEnhance", data))
     except (Exception,SystemExit) as err:
       log_error(err)
       break
+
+def enhance_pt(uid, insurance=False, itype=0):
+  if itype == 0:
+    itype = 64
+  try:
+    return game.post_request(
+      f"https://mist-train-east5.azurewebsites.net/api/UFieldSkills/{uid}/enhance", 
+      {"UseInsurance": insurance, "MItemId": itype}
+    )
+  except (Exception, SystemExit) as err:
+    handle_exception(err)
+    return False
 
 def main():
   enhance_all_characters()

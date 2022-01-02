@@ -13,9 +13,13 @@ def main():
   rid = combat.process_rentalid_input()
   cur_n   = sid
   discord.update_status(sid)
-  while _G.FlagRunning and sid in StageData:
+  while _G.FlagRunning:
     log_info(f"Challenging floor#{cur_n%100}")
-    signal = combat.start_battle_process(sid, pid, rid)
+    try:
+      signal = combat.start_battle_process(sid, pid, rid)
+    except (SystemExit, Exception) as err:
+      handle_exception(err)
+      break
     if signal != SIG_COMBAT_WON:
       log_info("Stop challenge due to defeated")
       break

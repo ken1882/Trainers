@@ -48,11 +48,11 @@ def save_database(dat, append=True):
       fp.write(f"{json.dumps(dat)}\n")
 
 def get_race_replay(id):
-  res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/Casino/Race/GetReplay/{id}")
+  res = game.get_request(f"/api/Casino/Race/GetReplay/{id}")
   return json.loads(res['r'])
 
 def get_past_racedata():
-  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/Casino/Race/GetPastSchedules')  
+  res = game.get_request('/api/Casino/Race/GetPastSchedules')  
   return res['r']['list']
 
 def interpret_race_data(race):
@@ -97,7 +97,7 @@ def sweep_race_replays():
       print(f"Race#{i} already saved, skip")
       continue
     try:
-      res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/Casino/Race/GetSchedule/{i}")
+      res = game.get_request(f"/api/Casino/Race/GetSchedule/{i}")
       race = res['r']['schedule']
     except (SystemExit,Exception) as err:
       log_error("Error sweeping race:", err)

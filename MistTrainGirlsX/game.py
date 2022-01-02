@@ -1,5 +1,4 @@
 import re
-
 from urllib3.exceptions import ProtocolError
 import _G
 from _G import *
@@ -13,6 +12,7 @@ from time import time
 import requests
 from requests.exceptions import *
 from urllib.parse import quote_plus
+from ast import literal_eval
 import pprint
 
 PostHeaders = {
@@ -28,8 +28,23 @@ NetworkExcpetionRescues = (
 
 TemporaryNetworkErrors = (
   'Object reference not set',
-  'Data may have been modified or deleted since entities were loaded'
+  'Data may have been modified or deleted since entities were loaded',
+  'transient failure'
 )
+
+ServerList = (
+  'https://mist-train-east4.azurewebsites.net',
+  'https://mist-train-east5.azurewebsites.net',
+  'https://mist-train-east6.azurewebsites.net',
+  'https://mist-train-east7.azurewebsites.net',
+  'https://mist-train-east8.azurewebsites.net',
+  'https://mist-train-east9.azurewebsites.net',
+  'https://mist-train-east1.azurewebsites.net',
+  'https://mist-train-east2.azurewebsites.net',
+  'https://mist-train-east3.azurewebsites.net',
+)
+
+ServerLocation = ''
 
 CharacterDatabase = {}
 EnemyDatabase     = {}
@@ -44,6 +59,7 @@ GearDatabase      = {}
 FieldSkillDatabase= {}
 QuestDatabase     = {}
 ABStoneDatabase   = {}
+SceneDatabase     = {}
 
 __MAX_PROGRESSION_LEVEL = 50
 GearProgressionTable = {}
@@ -75,7 +91,24 @@ def init():
   log_info("User agent:", Session.headers['User-Agent'] )
   if not args.auto_reauth and not Session.headers['Authorization']:
     raise RuntimeError("Game token is required to start game without reauthorize")
+  determine_server()
   load_database()
+
+def determine_server():
+  global Session,ServerList,ServerLocation
+  for uri in ServerList:
+    try:
+      log_info("Trying to connect to server", uri)
+      res = requests.post(f"{uri}/api/Login")
+      if res.status_code == 401:
+        ServerLocation = uri
+        log_info("Server location set to", uri)
+        return ServerLocation
+      log_info("Failed with", res, res.content)
+    except Exception as res:
+      log_error(res)
+  log_warning("Unable to get a live server")
+  return _G.ERRNO_MAINTENANCE
 
 def is_response_ok(res):
   log_debug(res)
@@ -104,7 +137,7 @@ def change_token(token):
   Session.headers['Authorization'] = token
 
 def get_request(url, depth=1):
-  global Session
+  global Session,ServerLocation
   while is_day_changing():
     log_warning("Server day changing, wait for 1 minute")
     wait(60)
@@ -112,6 +145,8 @@ def get_request(url, depth=1):
       log_info("Server day changed, attempting to reauth game")
       reauth_game()
       break
+  if not url.startswith('http'):
+    url = ServerLocation + url
   try:
     log_debug(f"[GET] {url}")
     res = Session.get(url, timeout=NetworkGetTimeout)
@@ -136,7 +171,7 @@ def get_request(url, depth=1):
   return res.json()
 
 def post_request(url, data=None, depth=1):
-  global Session,TemporaryNetworkErrors
+  global Session,TemporaryNetworkErrors,ServerLocation
   while is_day_changing():
     log_warning("Server day changing, wait for 1 minute")
     wait(60)
@@ -146,6 +181,8 @@ def post_request(url, data=None, depth=1):
       wait(1)
       break
   res = None
+  if not url.startswith('http'):
+    url = ServerLocation + url
   try:
     log_debug(f"[POST] {url} with payload:", data, sep='\n')
     if data != None:
@@ -179,59 +216,69 @@ def post_request(url, data=None, depth=1):
   return res.json()
 
 def reauth_game():
-  global Session
-  _session = requests.Session()
-  _session.headers = {
-    'Accept': '*/*',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Content-Type': 'application/x-www-form-urlencoded',
-  }
+  global Session,ServerLocation
+  new_token = ''
+
   cookie_path = f"{DCTmpFolder}/dmmcookies.key"
   form_path   = f"{DCTmpFolder}/dmmform.key"
   if not os.path.exists(form_path) or not os.path.exists(cookie_path):
     log_error("Missing re-auth file info, abort program")
     exit()
-  
+
   with open(cookie_path, 'r') as fp:
     raw_cookies = fp.read()
-
   with open(form_path, 'r') as fp:
     raw_form = fp.read()
 
-  # Update token
-  for line in raw_cookies.split('\n')[0].split(';'):
-    seg = line.strip().split('=')
-    k = seg[0]
-    v = '='.join(seg[1:])
-    _session.cookies.set(k, v)
-
-  payload = raw_form.split('\n')[1]
-  log_info("Updating token")
-  res = _session.post('https://pc-play.games.dmm.co.jp/play/MistTrainGirlsX/check/ajax-index/', raw_form.split('\n')[0])
-  if not is_response_ok(res):
-    log_error("Unable to get new token, attempt to reauth using old one")
-  else:
-    # Replace old token with new one
-    token = res.json()['result']
-    log_debug("New token:", token)
+  if not ServerLocation:
+    res = determine_server()
+    if res == _G.ERRNO_MAINTENANCE:
+      return _G.ERRNO_MAINTENANCE
+  try:
+    Session.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    for line in raw_cookies.split(';'):
+      seg = line.strip().split('=')
+      k = seg[0]
+      v = '='.join(seg[1:])
+      Session.cookies.set(k, v)
+    res = Session.get('https://pc-play.games.dmm.co.jp/play/MistTrainGirlsX/')
+    page = res.content.decode('utf8')
+    st = ''
+    for line in page.split('\n'):
+      if re.match(r"(\s+)ST(\s+):", line):
+        st = literal_eval(line.strip().split(':')[-1][:-1].strip())
+        break
+    payload = raw_form.split('\n')[1]
+    rep = re.search(r"mist-train-east(\d)", payload).span()
+    rep = payload[rep[0]:rep[1]]
+    payload = payload.replace(rep, ServerLocation.split('//')[1].split('.')[0])
     rep = re.search(r"st=(.+?)&", payload).group(0)
     rep = rep.split('=')[1][:-1]
-    payload = payload.replace(rep, quote_plus(token))
-
-  log_debug("Request payload:", payload, sep='\n')
-  # Start game
-  res = _session.post('https://osapi.dmm.com/gadgets/makeRequest', payload)
-  if not is_response_ok(res):
-    log_error("Unable to reauth game, abort")
-    exit()
-  
-  content = ''.join(res.content.decode('utf8').split('>')[1:])
-  data = json.loads(content)
-  res_json = json.loads(data[list(data.keys())[0]]['body'])
-  change_token(f"Bearer {res_json['r']}")
-  wait(1)
-  log_info(f"New token retrieved:\n{Session.headers['Authorization']}")
-  res = Session.post('https://mist-train-east4.azurewebsites.net/api/Login')
+    payload = payload.replace(rep, st)
+    res = Session.post('https://osapi.dmm.com/gadgets/makeRequest', payload)
+    log_debug("Response:", res)
+    content = ''.join(res.content.decode('utf8').split('>')[1:])
+    data = json.loads(content)
+    log_debug(data)
+    if "'rc': 403" in str(data):
+      return _G.ERRNO_MAINTENANCE
+    new_token = json.loads(data[list(data.keys())[0]]['body'])
+    change_token(f"Bearer {new_token['r']}")
+  except Exception as err:
+    log_error("Unable to reauth game:", err)
+    handle_exception(err)
+  finally:
+    Session.headers['Content-Type'] = 'application/json'
+  if new_token:
+    log_info("Game connected")
+    res = determine_server()
+    if res == _G.ERRNO_MAINTENANCE:
+      return _G.ERRNO_MAINTENANCE
+    res = get_request('/api/Home')
+  else:
+    log_warning("Game session revoked")
+    Session = None
+    return None
   return res
 
 def load_gearprogression_table(data):
@@ -246,7 +293,7 @@ def load_database(forced=False):
   global VerboseLevel
   global CharacterDatabase,EnemyDatabase,FormationDatabase,SkillDatabase,LinkSkillDatabase
   global ConsumableDatabase,WeaponDatabase,ArmorDatabase,AccessoryDatabase,GearDatabase
-  global FieldSkillDatabase,QuestDatabase,ABStoneDatabase
+  global FieldSkillDatabase,QuestDatabase,ABStoneDatabase,SceneDatabase
   links = [
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MEnemyViewModel.json',
@@ -261,7 +308,8 @@ def load_database(forced=False):
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MFieldSkillViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MQuestViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterGearLevelViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MAbilityStoneViewModel.json'
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MAbilityStoneViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MSceneViewModel.json',
   ]
   for i,link in enumerate(links):
     path = f"{STATIC_FILE_DIRECTORY}/{link.split('/')[-1]}"
@@ -311,6 +359,8 @@ def load_database(forced=False):
       load_gearprogression_table(db)
     elif i == 13:
       ABStoneDatabase = db
+    elif i == 14:
+      SceneDatabase = db
 
 def __convert2indexdb(db):
   ret = {}
@@ -405,6 +455,13 @@ def get_abstone(id):
     if id not in ABStoneDatabase:
       raise RuntimeError(f"Invalid ability stone id: {id}")
   return ABStoneDatabase[id]
+
+def get_scene(id):
+  if id not in SceneDatabase:
+    load_database(True)
+    if id not in SceneDatabase:
+      raise RuntimeError(f"Invalid scene id: {id}")
+  return SceneDatabase[id]
 
 def get_item(item):
   if 'ItemType' not in item or 'ItemId' not in item:

@@ -10,7 +10,7 @@ Headers = {
 }
 
 def get_expeditions():
-  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/Expeditions')
+  res = game.get_request('/api/Expeditions')
   if not res:
     return []
   ret = []
@@ -25,7 +25,7 @@ def get_expeditions():
   return ret
 
 def complete_expeditions(ids):
-  res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Expeditions/completeAll', 
+  res = game.post_request('/api/Expeditions/completeAll', 
     {'uExpeditionIds': ids}
   )
   if not res:
@@ -34,7 +34,7 @@ def complete_expeditions(ids):
 
 def start_expeditions(ids):
   for id in ids:
-    res = game.post_request(f'https://mist-train-east4.azurewebsites.net/api/Expeditions/{id}/depart')
+    res = game.post_request(f'/api/Expeditions/{id}/depart')
     if not res:
       return False
   return True

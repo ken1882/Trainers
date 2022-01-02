@@ -1,17 +1,26 @@
 StageAlias = {
   'gg':   101002309,  # gear grinds
-  'hsr':  304014106,  # high speed rail
+  'hsr':  304015106,  # high speed rail
   'gold': 201001110,  # gold Mat quest
   'exp':  202001110,  # exp Mat quest
 }
 
 RaidStages = [
+  301062504,
   301058504,
   301054504,
 ]
 
 StageData = {
           0: ('Waiting for maintenance', 'メンテナンス中...'),
+  301062504: ('Playing Raid', '新春捕物！トラを捕らえてやりタイガー！ Raid (Very Hard)'),
+  301061505: ('Playing Events', '新春捕物！トラを捕らえてやりタイガー！ 2-5 (Very Hard)'),
+  301061504: ('Playing Events', '新春捕物！トラを捕らえてやりタイガー！ 2-4 (Very Hard)'),
+  302032505: ('Playing Events', '冥府に響くジングルベル 2-5 (Very Hard)'),
+  302032504: ('Playing Events', '冥府に響くジングルベル 2-4 (Very Hard)'),
+  302031505: ('Playing Events', '冥府に響くジングルベル 1-5 (Very Hard)'),
+  302031504: ('Playing Events', '冥府に響くジングルベル 1-4 (Very Hard)'),
+  304015106: ('Playing Events', '入隊訓練：ナポリ (Inferno)'),
   301058504: ('Playing Raid', '灰の町でのマジカル修学旅行 Raid (Very Hard)'),
   301057505: ('Playing Events', '灰の町でのマジカル修学旅行 2-5 (Very Hard)'),
   301057504: ('Playing Events', '灰の町でのマジカル修学旅行 2-4 (Very Hard)'),
@@ -54,6 +63,36 @@ StageData = {
   212002106: ('Playing Material Quest', '狭霧の洞穴【防具】6 階層'),
   212003106: ('Playing Material Quest', '狭霧の洞穴【裝飾】6 階層'),
   212003104: ('Playing Material Quest', '狭霧の洞穴【裝飾】4 階層'),
+  122044505: ('Playing Main Story', 'クエスト 44-5 (Very Hard)'),
+  122044504: ('Playing Main Story', 'クエスト 44-4 (Very Hard)'),
+  122044503: ('Playing Main Story', 'クエスト 44-3 (Very Hard)'),
+  122044502: ('Playing Main Story', 'クエスト 44-2 (Very Hard)'),
+  122044501: ('Playing Main Story', 'クエスト 44-1 (Very Hard)'),
+  122044405: ('Playing Main Story', 'クエスト 44-5 (Hard)'),
+  122044404: ('Playing Main Story', 'クエスト 44-4 (Hard)'),
+  122044403: ('Playing Main Story', 'クエスト 44-3 (Hard)'),
+  122044402: ('Playing Main Story', 'クエスト 44-2 (Hard)'),
+  122044401: ('Playing Main Story', 'クエスト 44-1 (Hard)'),
+  122044309: ('Playing Main Story', 'クエスト 44-5 (Normal)'),
+  122044307: ('Playing Main Story', 'クエスト 44-4 (Normal)'),
+  122044305: ('Playing Main Story', 'クエスト 44-3 (Normal)'),
+  122044304: ('Playing Main Story', 'クエスト 44-2 (Normal)'),
+  122044302: ('Playing Main Story', 'クエスト 44-1 (Normal)'),
+  122043505: ('Playing Main Story', 'クエスト 43-5 (Very Hard)'),
+  122043504: ('Playing Main Story', 'クエスト 43-4 (Very Hard)'),
+  122043503: ('Playing Main Story', 'クエスト 43-3 (Very Hard)'),
+  122043502: ('Playing Main Story', 'クエスト 43-2 (Very Hard)'),
+  122043501: ('Playing Main Story', 'クエスト 43-1 (Very Hard)'),
+  122043405: ('Playing Main Story', 'クエスト 43-5 (Hard)'),
+  122043404: ('Playing Main Story', 'クエスト 43-4 (Hard)'),
+  122043403: ('Playing Main Story', 'クエスト 43-3 (Hard)'),
+  122043402: ('Playing Main Story', 'クエスト 43-2 (Hard)'),
+  122043401: ('Playing Main Story', 'クエスト 43-1 (Hard)'),
+  122043309: ('Playing Main Story', 'クエスト 43-5 (Normal)'),
+  122043307: ('Playing Main Story', 'クエスト 43-4 (Normal)'),
+  122043305: ('Playing Main Story', 'クエスト 43-3 (Normal)'),
+  122043304: ('Playing Main Story', 'クエスト 43-2 (Normal)'),
+  122043302: ('Playing Main Story', 'クエスト 43-1 (Normal)'),
   121042505: ('Playing Main Story', 'クエスト 42-5 (Very Hard)'),
   121042504: ('Playing Main Story', 'クエスト 42-4 (Very Hard)'),
   121042503: ('Playing Main Story', 'クエスト 42-3 (Very Hard)'),
