@@ -233,7 +233,7 @@ def determine_skill(character):
           return skills[0]
     
   for sk in reversed(skills):
-    mskill = game.get_skill(sk['SkillRefId'])
+    mskill = interupt_skill(sk)
     if not is_offensive_skill(mskill):
       continue
     elif is_skill_usable(character, mskill):
@@ -241,6 +241,11 @@ def determine_skill(character):
     elif bstyle == 1:
       break # only use most powerful offensive skill
   return skills[0] # normal attack
+
+def interupt_skill(skill):
+  mskill = game.get_skill(skill['SkillRefId'])
+  mskill['SPCost'] = skill['SP']
+  return mskill
 
 def determine_target(skill, enemies, characters):
   mskill = game.get_skill(skill['SkillRefId'])
@@ -302,9 +307,10 @@ def sell_surplus_loots(loots):
     if curn <= maxn:
       continue
     res = player.sell_item(sitem, curn-minn)
-    record_loot_sell(loot, curn-minn)
-    record_sell_earns(res)
-    log_info(f"Sold item {game.get_item_name(loot)}, amount={curn-minn}")
+    if res:
+      record_loot_sell(loot, curn-minn)
+      record_sell_earns(res)
+      log_info(f"Sold item {game.get_item_name(loot)}, amount={curn-minn}")
 
 def process_victory():
   global LastBattleWon,ReportDetail

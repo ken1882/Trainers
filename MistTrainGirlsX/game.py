@@ -164,6 +164,8 @@ def get_request(url, depth=1):
       log_info("Attempting to reauth game")
       reauth_game()
       return get_request(url)
+    elif errno == 500:
+      return None
     else:
       exit()
   if not res.content:
@@ -209,6 +211,8 @@ def post_request(url, data=None, depth=1):
       reauth_game()
       wait(1)
       return post_request(url, data, depth=depth)
+    elif errno == 500:
+      return None
     else:
       exit()
   if not res.content:

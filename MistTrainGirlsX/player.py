@@ -8,6 +8,7 @@ import os
 __UCharacterCache = {}
 __UCharacterStats = {}
 __UStatsUnchangedTimes = {}
+__UnsellableItems = set()
 USTAT_UNCHANGE_THRESHOLD = 20
 
 MIST_GEAR_ID = 85
@@ -304,8 +305,15 @@ def get_item_stock(item, num_only=False):
   return ret['Stock'] if num_only else ret
 
 def sell_consumable(item, amount):
+  global __UnsellableItems
   uid = item['Id']
+  if uid in __UnsellableItems:
+    return None
   res = game.post_request(f"/api/UItems/{uid}/sell/{amount}")
+  if not res:
+    log_warning(f"Unsellable {item}")
+    __UnsellableItems.add(uid)
+    return None
   return res['r']
 
 def sell_gear(item, amount):
@@ -318,6 +326,8 @@ def sell_item(item, amount=1):
     return sell_gear(item, amount)
   elif item['ItemType'] == ITYPE_CONSUMABLE:
     gain = sell_consumable(item, amount)
+    if not gain:
+      return None
     return [{'ItemType': ITYPE_GOLD, 'ItemId': 0, 'ItemQuantity': gain, 'Stock': gain}]
 
 def exchange_bets(amount=0, budget=0):
