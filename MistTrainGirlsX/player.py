@@ -445,18 +445,19 @@ def dump_scene_metadata():
   return ret
 
 def dump_all_available_scenes(meta):
-  for inf in meta['Scenes']:
-    id = inf['MSceneId']
-    if not inf['Status']:
-      log_warning(f"Scene#{id} {game.get_scene(id)['Title']} not unlocked yet, skip")
-      continue
-    path = f"{DCTmpFolder}/scenes/{id}.json"
-    if os.path.exists(path):
-      log_info(f"Scene#{id} {game.get_scene(id)['Title']} already saved, skip")
-      continue
-    res = game.get_request(f"https://mist-train-east5.azurewebsites.net/api/UScenes/{id}")
-    data = res['r']['MSceneDetailViewModel']
-    data = sorted(data, key=lambda o:o['GroupOrder'])
-    with open(path, 'w') as fp:
-      json.dump(data, fp)
-    log_info(f"Scene#{id} {game.get_scene(id)['Title']} saved")
+  for chapter in meta:
+    for inf in chapter['Scenes']:
+      id = inf['MSceneId']
+      if not inf['Status']:
+        log_warning(f"Scene#{id} {game.get_scene(id)['Title']} not unlocked yet, skip")
+        continue
+      path = f"{DCTmpFolder}/scenes/{id}.json"
+      if os.path.exists(path):
+        log_info(f"Scene#{id} {game.get_scene(id)['Title']} already saved, skip")
+        continue
+      res = game.get_request(f"https://mist-train-east5.azurewebsites.net/api/UScenes/{id}")
+      data = res['r']
+      data['MSceneDetailViewModel'] = sorted(data['MSceneDetailViewModel'], key=lambda o:o['GroupOrder'])
+      with open(path, 'w') as fp:
+        json.dump(data, fp)
+      log_info(f"Scene#{id} {game.get_scene(id)['Title']} saved")

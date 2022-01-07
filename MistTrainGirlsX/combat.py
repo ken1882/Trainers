@@ -338,6 +338,7 @@ def recover_stamina():
   items = player.get_aprecovery_items()
   log_info("Recovery items:", pprint.pformat(items, indent=2), '-'*21, sep='\n')
   items = sorted(items, key=lambda i:i['Stock'])
+  items = [i for i in items if i['Stock'] > 0 and not game.is_potion_expired(i['MItemId'])]
   nidx  = None
   if RecoveryUsage == 1:
     for id in RecoveryUsageOrder:
@@ -345,8 +346,11 @@ def recover_stamina():
         nidx = -1
         break
       elif id == -1:
-        candidates = [item for item in items if item['MItemId'] in range(400,9999) and item['Stock'] > 0]
-        potion = max(candidates, key=lambda i: i['MItemId'])
+        candidates = [item for item in items if item['MItemId'] in range(400,9999)]
+        if not candidates:
+          log_warning("No event potion available!")
+          continue
+        potion = min(candidates, key=lambda i: i['MItemId'])
         nidx = items.index(potion)
       else:
         nidx = next((i for i,item in enumerate(items) if item['MItemId'] == id), -1)

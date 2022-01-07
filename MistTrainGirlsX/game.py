@@ -13,7 +13,9 @@ import requests
 from requests.exceptions import *
 from urllib.parse import quote_plus
 from ast import literal_eval
+from time import strptime
 import pprint
+import pytz
 
 PostHeaders = {
   'Accept': 'application/json',
@@ -60,6 +62,7 @@ FieldSkillDatabase= {}
 QuestDatabase     = {}
 ABStoneDatabase   = {}
 SceneDatabase     = {}
+PotionExpiration  = {}
 
 __MAX_PROGRESSION_LEVEL = 50
 GearProgressionTable = {}
@@ -297,7 +300,7 @@ def load_database(forced=False):
   global VerboseLevel
   global CharacterDatabase,EnemyDatabase,FormationDatabase,SkillDatabase,LinkSkillDatabase
   global ConsumableDatabase,WeaponDatabase,ArmorDatabase,AccessoryDatabase,GearDatabase
-  global FieldSkillDatabase,QuestDatabase,ABStoneDatabase,SceneDatabase
+  global FieldSkillDatabase,QuestDatabase,ABStoneDatabase,SceneDatabase,PotionExpiration
   links = [
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MEnemyViewModel.json',
@@ -314,6 +317,7 @@ def load_database(forced=False):
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterGearLevelViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MAbilityStoneViewModel.json',
     'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MSceneViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MApRecoveryItemViewModel.json',
   ]
   for i,link in enumerate(links):
     path = f"{STATIC_FILE_DIRECTORY}/{link.split('/')[-1]}"
@@ -365,6 +369,10 @@ def load_database(forced=False):
       ABStoneDatabase = db
     elif i == 14:
       SceneDatabase = db
+    elif i == 15:
+      PotionExpiration = {}
+      for _,potion in db.items():
+        PotionExpiration[potion['MItemId']] = potion
 
 def __convert2indexdb(db):
   ret = {}
@@ -511,3 +519,17 @@ def get_item_name(item, desc=False):
   if 'ItemType' in item and 'ItemId' in item:
     return f"Item type {item['ItemType']} id:{item['ItemId']}"
   return str(item)
+
+def is_potion_expired(mitem_id):
+  global PotionExpiration
+  if mitem_id not in PotionExpiration:
+    return False
+  edate = PotionExpiration[mitem_id]['EndDate']
+  if not edate:
+    return False
+  stime = strptime(edate, '%Y-%m-%dT%H:%M:%S')
+  jptime = datetime(*stime[:6], tzinfo=pytz.timezone('Asia/Tokyo')).timestamp()
+  curt = localt2jpt(datetime.now()).timestamp()
+  if curt < jptime or curt >= jptime:
+    return True
+  return False
