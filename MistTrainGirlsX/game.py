@@ -335,6 +335,7 @@ def load_database(forced=False):
       with open(path, 'r') as fp:
         db = json.load(fp)
     try:
+      ori_res = deepcopy(db)
       _tmp = __convert2indexdb(db)
       db = _tmp
     except Exception:
@@ -349,7 +350,7 @@ def load_database(forced=False):
       SkillDatabase = db
     elif i == 4:
       LinkSkillDatabase = {}
-      for _,skill in db.items():
+      for skill in ori_res:
         LinkSkillDatabase[skill['OriginMSkillId']] = skill
     elif i == 5:
       ConsumableDatabase = db

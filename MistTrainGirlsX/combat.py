@@ -2,12 +2,11 @@ from tkinter import E
 
 from itsdangerous import exc
 from markupsafe import re
+from numpy import character
 import _G
 from _G import *
 import itertools
-import pprint
-from pprint import PrettyPrinter
-pp = PrettyPrinter(indent=2)
+from pprint import pprint,pformat
 import player
 import friend
 import discord
@@ -80,96 +79,96 @@ UnmasteredSwapIndex  = [3, 4]
 STATUS_MODIFIER_INC = 1
 STATUS_MODIFIER_DEC = 2
 STATUS_AILMENT = {
-  0: 'None',
-  1: 'Strength',
-  2: 'Defence',
-  3: 'Dexterity',
-  4: 'Speed',
-  5: 'Intelligence',
-  6: 'MindDefence',
-  7: 'Mind',
-  8: 'Luck',
-  9: 'PoisonResist',
-  10: 'StunResist',
-  11: 'SleepResist',
-  12: 'ConfusionResist',
-  13: 'BlindResist',
-  14: 'ParalysisResist',
-  15: 'SilentResist',
-  16: 'CharmResist',
-  17: 'PoisonControl',
-  18: 'StunControl',
-  19: 'SleepControl',
-  20: 'ConfusionControl',
-  21: 'BlindControl',
-  22: 'ParalysisControl',
-  23: 'SilentControl',
-  24: 'CharmControl',
-  25: 'DamageHalve',
-  26: 'DamageInvalid',
-  27: 'DamageAbsorb',
-  28: 'Counter',
-  29: 'DamageReflection',
-  30: 'Screen',
-  31: 'FirstStrike',
-  32: 'DelayedAttack',
-  33: 'Hate',
-  34: 'PlayerExperienceBonus',
-  35: 'CharacterExperienceBonus',
-  36: 'MoneyBonus',
-  37: 'Heal',
-  38: 'SPHeal',
-  39: 'OverDriveUp',
-  40: 'ConditionClear',
-  41: 'CheatDeath',
-  42: 'DamageUpBuff',
-  43: 'DamageDownBuff',
-  44: 'SpecialSkillCharge',
-  45: 'DeathControl',
-  46: 'ReferenceDexterity',
-  47: 'ReferenceSpeed',
-  48: 'StatusupRateBuff',
-  49: 'SkillRankupRateBuff',
-  50: 'BladeResist',
-  51: 'ImpactResist',
-  52: 'PierceResist',
-  53: 'FireResist',
-  54: 'WaterResist',
-  55: 'WindResist',
-  56: 'LightResist',
-  57: 'DarkResist',
-  58: 'FireWeapon',
-  59: 'WaterWeapon',
-  60: 'WindWeapon',
-  61: 'LightWeapon',
-  62: 'DarkWeapon',
-  63: 'MaxHP',
-  64: 'ExtraAttack',
-  65: 'BuffAdditionalTurn',
-  66: 'ControlEffectAdditionalTurn',
-  67: 'MaxRP',
-  68: 'ParalysisControlProbability',
-  71: 'HealUpBuff',
-  72: 'ReferenceStrength',
-  73: 'ReferenceDefence',
-  74: 'ReferenceIntelligence',
-  75: 'ReferenceMindDefence',
-  76: 'ReferenceMind',
-  77: 'ReferenceLuck',
-  78: 'StatusGrowBuff',
-  79: 'SkillGrowBuff',
-  80: 'SPHealBuff',
-  81: 'PoisonControlProbability',
-  82: 'StunControlProbability',
-  83: 'SleepControlProbability',
-  84: 'ConfusionControlProbability',
-  85: 'BlindControlProbability',
-  86: 'SilentControlProbability',
-  87: 'CharmControlProbability',
+  0: 'その他',
+  1: '物攻',
+  2: '物防',
+  3: '命中',
+  4: '速さ',
+  5: '魔攻',
+  6: '魔防',
+  7: '回復力',
+  8: '幸運',
+  9: '毒化耐性',
+  10: '気絶耐性',
+  11: '睡眠耐性',
+  12: '混乱耐性',
+  13: '暗闇耐性',
+  14: '麻痺耐性',
+  15: '沈黙耐性',
+  16: '魅了耐性',
+  17: '毒化付与',
+  18: '気絶付与',
+  19: '睡眠付与',
+  20: '混乱付与',
+  21: '暗闇付与',
+  22: '麻痺付与',
+  23: '沈黙付与',
+  24: '魅了付与',
+  25: 'ダメージ半減',
+  26: 'ダメージ無効',
+  27: 'ダメージ吸収',
+  28: '特定攻撃被弾時にカウンター',
+  29: '特定攻撃被弾時のみ反射',
+  30: 'かばう',
+  31: '先制攻撃',
+  32: '遅延攻撃',
+  33: 'ヘイト',
+  34: '取得ユーザー経験値UP',
+  35: '取得キャラ経験値UP',
+  36: '取得金額UP',
+  37: '回復',
+  38: 'SP回復',
+  39: 'OD上昇率アップ',
+  40: '異常状態回復',
+  41: 'ふんばり',
+  42: '相手へのダメージをアップするバフ',
+  43: '相手からのダメージをダウンするバフ',
+  44: 'スペシャルスキルチャージ',
+  45: '即死付与',
+  46: 'ダメージUP：命中変換',
+  47: 'ダメージUP：素早さ変換',
+  48: 'ステータス上昇確率加算',
+  49: '熟練度上昇確率加算',
+  50: '刃属性耐性',
+  51: '衝属性耐性',
+  52: '貫属性耐性',
+  53: '火属性耐性',
+  54: '水属性耐性',
+  55: '風属性耐性',
+  56: '光属性耐性',
+  57: '闇属性耐性',
+  58: '火属性付与（攻撃）',
+  59: '水属性付与（攻撃）',
+  60: '風属性付与（攻撃）',
+  61: '光属性付与（攻撃）',
+  62: '闇属性付与（攻撃）',
+  63: '最大HP',
+  64: '追加攻撃',
+  65: 'バフ効果ターン延長',
+  66: '状態異常効果ターン延長',
+  67: '最大RP',
+  68: '麻痺付与率アップ',
+  71: '回復量',
+  72: 'ダメージUP：物攻変換',
+  73: 'ダメージUP：物防変換',
+  74: 'ダメージUP：魔攻変換',
+  75: 'ダメージUP：魔防変換',
+  76: 'ダメージUP：回復力変換',
+  77: 'ダメージUP：運変換',
+  78: '能力上昇の上昇量増加',
+  79: 'スキル上昇の上昇量増加',
+  80: 'ダメージ計算時SP回復するバフ',
+  81: '毒付与率アップ',
+  82: '気絶付与率アップ',
+  83: '睡眠付与率アップ',
+  84: '混乱付与率アップ',
+  85: '暗闇付与率アップ',
+  86: '沈黙付与率アップ',
+  87: '誘惑付与率アップ',
   88: 'CombatPriorityControl',
-  89: 'IncreaseExtraAttack',
+  89: '攻撃回数アップ',
   90: 'IgnoreDefenceByRate',
-  91: 'GrantAbility',
+  91: 'GrantAbility'
 }
 
 Headers = {
@@ -331,10 +330,12 @@ def get_movable_characters(characters):
     ret.append(ch)
   return ret
 
-def is_skill_usable(character, skill):
+def is_skill_usable(character, skill, sp_cost=0):
+  if sp_cost <= 0:
+    sp_cost = skill['SPCost']
   sp = character['SP']
   rp = character['RP']
-  if sp < skill['SPCost'] or rp < skill['RPCost']:
+  if sp < sp_cost or rp < skill['RPCost']:
     return False
   return True
 
@@ -364,20 +365,20 @@ def determine_skill(character):
   if bstyle == 3:
     skill = get_least_proficient_skill(character, skills)
     if skill: # Act like BattleStyle=2 if all skills are mastered
-      if is_skill_usable(character, game.get_skill(skill['SkillRefId'])):
+      if is_skill_usable(character, game.get_skill(skill['SkillRefId']), skill['SP']):
         return skill
       return skills[0]
   elif bstyle > 10:
     for sk in skills:
       if sk['SkillRefId'] == bstyle:
-        if is_skill_usable(character, game.get_skill(sk['SkillRefId'])):
+        if is_skill_usable(character, game.get_skill(sk['SkillRefId']), sk['SP']):
           return sk
         else:
           return skills[0]
     
   for sk in reversed(skills):
     mskill = interpret_skill(sk)
-    if not is_offensive_skill(mskill):
+    if not is_offensive_skill(mskill) or mskill['RPCost'] > 0:
       continue
     elif is_skill_usable(character, mskill):
       return sk
@@ -399,16 +400,15 @@ def determine_target(skill, user, enemies, allies):
   return sorted(allies, key=lambda ch:ch['HP'])[0]['ID']
 
 def determine_actions(data):
-  charcaters = get_movable_characters(data['BattleState']['Characters'])
-  inp = input("Enter action:")
+  characters = get_movable_characters(data['BattleState']['Characters'])
   ret = []
-  for ch in charcaters:
+  for i,ch in enumerate(characters):
     skill = determine_skill(ch)
     ret.append({
       'UnitSerialId': ch['ID'],
-      'TargetId': determine_target(skill, ch, data['BattleState']['Enemies'], charcaters),
+      'TargetId': determine_target(skill, ch, data['BattleState']['Enemies'], characters),
       'CommandId': skill['Id'],
-      'IsOverDrive': ch['OP'] >= 100
+      'IsOverDrive': skill['Id'] > 0 and BattleStyle[i] > 0 and ch['OP'] >= 100
     })
   return ret
 
@@ -482,7 +482,7 @@ def record_ap_recovery(item, n):
 
 def recover_stamina():
   items = player.get_aprecovery_items()
-  log_info("Recovery items:", pprint.pformat(items, indent=2), '-'*21, sep='\n')
+  log_info("Recovery items:", pformat(items, indent=2), '-'*21, sep='\n')
   items = sorted(items, key=lambda i:i['Stock'])
   items = [i for i in items if i['Stock'] > 0 and not game.is_potion_expired(i['MItemId'])]
   nidx  = None
@@ -533,12 +533,19 @@ def log_battle_status(data, actions=[]):
     for idx,ch in enumerate(data['BattleState']['Characters']):
       actor = player.get_character_by_uid(ch['CID'])
       bchar = game.get_character_base(actor['MCharacterId'])
-      string += f"[{ch['ID']}] {bchar['Name']} {bchar['MCharacterBase']['Name']}\n"
+      string += f"[{ch['ID']}] {bchar['Name']} {bchar['MCharacterBase']['Name']} "
+      for stat in ch['Auras']:
+        se_type = stat['SkillEffectType']
+        se_turn = stat['TurnLeft']
+        if stat['SkillEffectType'] in UnmovableEffects:
+          string += f"| {STATUS_AILMENT[se_type]}: {se_turn} "
+      string += '\n'
       hps = f"HP: {ch['HP']}/{actor['UCharacterBaseViewModel']['Status']['HP']}"
       sps = f"SP: {ch['SP']}/{MaxSP}"
       ops = f"OP: {ch['OP']}/{MaxOP}"
       rps = f"RP: {ch['RP']}/{ch['MaxRP']}"
-      string += "{:15} {:8} {:10} {:8}\n".format(hps, sps, ops, rps)
+      cps = f"CP: {ch['CP']}"
+      string += "{:15} {:8} {:10} {:8} {}\n".format(hps, sps, ops, rps, cps)
       action  = next((act for act in actions if act['UnitSerialId'] == ch['ID']), None)
       if action:
         act = action['CommandId']
@@ -558,6 +565,11 @@ def log_battle_status(data, actions=[]):
     for ch in data['BattleState']['Enemies']:
       name = game.get_enemy(ch['EID'])['Name']
       string += f"[{ch['ID']}] {name} (HP:{ch['CurrentHPPercent']}%)"
+      for stat in ch['Auras']:
+        se_type = stat['SkillEffectType']
+        se_turn = stat['TurnLeft']
+        if stat['SkillEffectType'] in UnmovableEffects:
+          string += f"| {STATUS_AILMENT[se_type]}: {se_turn} "
       if 'BattleActions' in data:
         action = next((act for act in data['BattleActions'] if act['ActorId'] == ch['ID']), None)
         if action and action['SkillId']:
@@ -618,17 +630,25 @@ def process_combat(data):
   log_info("Battle started")
   log_battle_status(data)
   battle_analyzer.setup_battlers(data)
-  if FLAG_INTERACTIVE:
-    print_interactive_hint()
   while not is_defeated(data) and data['BattleState']['BattleStatus'] != BATTLESTAT_VICTORY:
     BattleVersion = data['Version']
     if FLAG_INTERACTIVE:
       actions = process_action_input(data)
+      pprint(actions)
     else:
       actions = determine_actions(data)
     if actions == BATTLESTAT_VICTORY:
       break
-    data = process_actions(actions, BattleVersion)
+    if FLAG_INTERACTIVE:
+      odat = deepcopy(data)
+      try:
+        data = process_actions(actions, BattleVersion)
+      except (Exception,SystemExit) as err:
+        data = odat
+        handle_exception(err)
+        print("Please check your inputs are correct and try again")
+    else:
+      data = process_actions(actions, BattleVersion)
     log_battle_status(data, actions)
     uwait(0.3)
     if _G.Throttling:
@@ -647,16 +667,16 @@ def process_combat(data):
   return SIG_COMBAT_WON if LastBattleWon else SIG_COMBAT_LOST
 
 def print_interactive_hint():
-  ss = "=" * 20 + "Interactive Guide" + "=" * 20
+  ss = "=" * 20 + "Interactive Guide" + "=" * 20 + '\n'
   ss += "Input action id of each character that seprated by space,\n"
-  ss += "and followed by ':' and the target id, you can enter '0' for auto-target. E.g. '1:6', '2:0' (without quote)\n"
+  ss += "and followed by '-' and the target id, you can enter '0' for auto-target. E.g. '1-6', '2-0' (without quote)\n"
   ss += "if the character is unmovable, the action entered will be ignored.\n"
   ss += "Add a preceding '*' without space to overdrive.\n"
   ss += "Type 'SS N:<target_id>' to use special skill of charaber ID N.\n"
   ss += "Type 'auto N' to automatically handle the turn, which 'N' is the strategy type.\n"
   ss += "Type 'status' to see detail status of combatants. (Ailments, resistances etc.)\n"
-  ss += "Type '?' to show this again."
-  ss += "=" * 20 + "Interactive Guide" + "=" * 20
+  ss += "Type '?' to show this again.\n"
+  ss += "=" * 57 + '\n'
   print(ss)
 
 def get_available_actions(data, do_print=None):
@@ -672,16 +692,18 @@ def get_available_actions(data, do_print=None):
     actor = player.get_character_by_uid(ch['CID'])
     bchar = game.get_character_base(actor['MCharacterId'])
     string += f"[{ch['ID']}] {bchar['Name']} {bchar['MCharacterBase']['Name']}"
+    string += f" HP: {round(ch['HP']*100 / actor['UCharacterBaseViewModel']['Status']['HP'], 2)}%"
+    string += f" SP: {ch['SP']}/{MaxSP}"
     if ch not in movables:
-      string += '行動不能'
+      string += ' 行動不能'
     string += '\n'
     # Charge and normal attack
+    charge_skill = get_character_charge_skill(ch)
     if 'CP' in ch and ch['CP'] < 5 and ch['CP'] >= 0:
-      charge_skill = get_character_charge_skill(ch)
-      string += f"[0] チャージ#{ch['CP']+1} ({charge_skill['SP']})"
-      acts.append(charge_skill)
-    string += '[1] 通常攻撃 '
-    acts.append(next((sk for sk in ch['Skills'] if sk['SkillType' == STYPE_NORMAL_ATTACK]), 0))
+      string += f"[0]チャージ#{ch['CP']+1} ({charge_skill['SP']}) "
+    acts.append(charge_skill)
+    string += '[1]通常攻撃 '
+    acts.append(next((sk for sk in ch['Skills'] if sk['SkillType']  == STYPE_NORMAL_ATTACK), 0))
     
     sk_idx = 2
     # skills
@@ -692,12 +714,12 @@ def get_available_actions(data, do_print=None):
       # skip normal attack and charge
       if sk['Id'] <= 0 or sk['SP'] <= 0:
         continue
-      skill = game.get_skill(skill['SkillRefId'])
-      string += f"[{sk_idx}] {skill['Name']}({skill['SPCost']}{'/'+str(skill['RPCost']) if skill['RPCost'] > 0 else ''}) "
+      skill = game.get_skill(sk['SkillRefId'])
+      string += f"[{sk_idx}]{skill['Name']}({sk['SP']}{'/'+str(skill['RPCost']) if skill['RPCost'] > 0 else ''}) "
       sk_idx += 1
-      acts.append(skill)
+      acts.append(sk)
     ret.append(acts)
-    string += '\n'
+    string += '\n.\n'
   if do_print:
     print(string)
   return ret
@@ -710,13 +732,13 @@ def get_character_charge_skill(ch):
   return next((sk for sk in ch['Skills'] if sk['SkillRefId'] == skid), None)
 
 def process_action_input(data):
-  global BattleVersion
-  actions  = get_available_actions(data)
-  battlers = data['BattleState']['Characters']
-  movables = get_movable_characters(battlers)
+  global BattleVersion,BattleStyle
   flag_ok = False
   ret = []
   while not flag_ok:
+    actions  = get_available_actions(data)
+    battlers = data['BattleState']['Characters']
+    movables = get_movable_characters(battlers)
     BattleVersion = data['Version']
     ret = []
     ovd = False
@@ -726,19 +748,29 @@ def process_action_input(data):
       print_interactive_hint()
       continue
     elif ins.startswith('auto'):
-      continue
+      amod = 3
+      try:
+        amod = ins.split()[-1]
+        amod = int(amod)
+      except Exception:
+        print("Invalid auto combat type")
+      for i in range(1,len(BattleStyle)):
+        BattleStyle[i] = amod
+      return determine_actions(data)
     elif ins.startswith('status'):
+      log_detail_status(data)
       continue
     elif ins.startswith('SS') or ins.startswith('*SS'):
       if ins[0] == '*':
         ovd = True
         iid = iid[1:]
       try:
-        sid,tid = ins.split()[-1].split(':')
+        sid,tid = ins.split()[-1].split('-')
         sid = int(sid)
         tid = int(tid)
       except Exception:
         print("Invalid instruction")
+        continue
       ch = next((ch for ch in battlers if ch['ID'] == sid), None)
       if not ch:
         print("Invalid character")
@@ -747,9 +779,6 @@ def process_action_input(data):
       log_battle_status(data)
       if data['BattleState']['BattleStatus'] == BATTLESTAT_VICTORY:
         return BATTLESTAT_VICTORY
-      actions  = get_available_actions(data)
-      battlers = data['BattleState']['Characters']
-      movables = get_movable_characters(battlers)
       continue
     # process instruction
     ins = ins.split()
@@ -757,7 +786,7 @@ def process_action_input(data):
       if len(ins) != len(battlers):
         print("Instruction size does not match party size")
         continue
-      seq = seq.split(':')
+      seq = seq.split('-')
       iid = seq[0]        # action/instruction index
       ovd = False         # overdrive
       ch  = battlers[idx] # character
@@ -778,12 +807,12 @@ def process_action_input(data):
         print(f"Instruction {iid} is unavailable")
         break
       # check action target
-      if iid > 0 and len(iid) < 2:
+      if iid > 0 and len(seq) < 2:
         print(f"Instruction {iid} missing target")
         break
       act = actions[idx][iid]
       if tid == 0:
-        tid = determine_target()
+        tid = determine_target(act, battlers[idx], data['BattleState']['Enemies'], battlers)
       if act and ch in movables:
         ret.append({
           'UnitSerialId': ch['ID'],
@@ -797,8 +826,9 @@ def process_action_input(data):
   return ret
 
 def log_detail_status(data):
+  global STATUS_AILMENT
   try:
-    actions = get_available_actions(data)
+    actions = get_available_actions(data, False)
     string  = '\n========== Status ==========\n'
     string += f"Wave#{data['BattleState']['WaveNumber']} Turn#{data['BattleState']['TurnNumber']}\n"
     string += "***** Players *****\n"
@@ -817,44 +847,86 @@ def log_detail_status(data):
       sps = f"SP: {ch['SP']}/{MaxSP}"
       ops = f"OP: {ch['OP']}/{MaxOP}"
       rps = f"RP: {ch['RP']}/{ch['MaxRP']}"
-      string += "{:15} {:8} {:10} {:8}\n".format(hps, sps, ops, rps)
-      string += "<<<< Buffs >>>>\n"
+      cps = f"CP: {ch['CP']}"
+      string += "{:15} {:8} {:10} {:8} {}\n".format(hps, sps, ops, rps, cps)
+      string += "\n<<<< Buffs >>>>\n"
       # Ailments / (de)buffs
       ailments = set()
       for buf in ch['Auras']:
-        hid = buf['SkillEffectModifier'] * 10000 + buf['SkillEffectType']
+        se_type = buf['SkillEffectType']
+        se_mod  = buf['SkillEffectModifier']
+        hid = se_mod * 10000 + se_type
         if hid in ailments:
           continue
         ailments.add(hid)
-        aname = STATUS_AILMENT[hid] if hid in STATUS_AILMENT else str(buf['SkillEffectType'])
-        string += f"{aname}{'↑' if buf['SkillEffectModifier'] == STATUS_MODIFIER_INC else '↓'}"
+        aname = STATUS_AILMENT[se_type] if se_type in STATUS_AILMENT else str(se_type)
+        string += f"{aname}{'↑' if se_mod == STATUS_MODIFIER_INC else '↓'}"
         if buf['Count']:
           string += f"x{buf['Count']}"
         if buf['TurnLeft']:
           string += f" (Turn Left: {buf['TurnLeft']})"
         string += '\n'
       # Skills
-      string += "<<<< Skills >>>>\n"
+      string += "\n<<<< Skills >>>>\n"
       for act in actions[idx]:
+        if not act:
+          continue
         skill = game.get_skill(act['SkillRefId'])
-        string += f"{skill['Name']} (SP: {skill['SPCost']}{'/'+str(skill['RPCost']) if skill['RPCost'] > 0 else ''})\n"
-        string += skill['Description'] + '\n'
-        string += f"Power: {SKILL_POWER[skill['SkillPowerRank']]} "
-        string += f"Target: {SKILL_TARGET[skill['TargetTypes']]} "
+        string += f"{skill['Name']} (SP: {act['SP']}{'/'+str(skill['RPCost']) if skill['RPCost'] > 0 else ''})\n"
+        string += f"Power: {SKILL_POWER[skill['SkillPowerRank']]} | "
+        string += f"Target: {SKILL_RANGE[skill['EffectTargetRange']]},{SKILL_TARGET[skill['TargetTypes']]} | "
         string += f"Distance: {SKILL_DISTANCE[skill['TargetDistance']]}\n"
-        # TODO: Add Link skill info
-      string += '-' * 20
+        string += skill['Description'] + '\n'
+        if skill['Id'] in game.LinkSkillDatabase:
+          lskill = game.LinkSkillDatabase[skill['Id']]
+          string += '~~ Link Skill ~~\n'
+          string += 'Condition:\n' + lskill['ConditionDescription']
+          string += 'Effect:\n' + game.get_skill(lskill['ActivateMSkillId'])['Description'] + '\n'
+        string += '.\n'
+      string += '-' * 20 + '\n'
+    # end each ally
     string += "\n***** Enemies *****\n"
     for ch in data['BattleState']['Enemies']:
       name = game.get_enemy(ch['EID'])['Name']
       string += f"[{ch['ID']}] {name} (HP:{ch['CurrentHPPercent']}%)"
-      # if 'BattleActions' in data:
-      #   action = next((act for act in data['BattleActions'] if act['ActorId'] == ch['ID']), None)
-      #   if action and action['SkillId']:
-      #     action = game.get_skill(action['SkillId'])
-      #     string += f" Action: {action['Name']}"
+      if any([ stat["SkillEffectType"] in UnmovableEffects for stat in ch["Auras"] ]):
+        string += '(行動不能)'
       string += '\n'
-      # string +='-----\n'
+      string += "<<< Attribute Resistance >>>\n"
+      args = []
+      for i,k in enumerate(ch['AttributeResistGroup']):
+        args.append((f"{k}: {ch['AttributeResistGroup'][k]}% ", 20))
+        if (i+1) % 4 == 0:
+          string += format_padded_utfstring(*args)
+          string += '\n'
+          args = []
+      string += "<<< Ailment Resistance >>>\n"
+      args = []
+      for i,k in enumerate(ch['ConditionResistGroup']):
+        args.append((f"{k}: {ch['ConditionResistGroup'][k]}% ", 20))
+        if (i+1) % 4 == 0:
+          string += format_padded_utfstring(*args)
+          string += '\n'
+          args = []
+      # Ailments / (de)buffs
+      ailments = set()
+      for buf in ch['Auras']:
+        se_type = buf['SkillEffectType']
+        se_mod  = buf['SkillEffectModifier']
+        hid = se_mod * 10000 + se_type
+        if hid in ailments:
+          continue
+        ailments.add(hid)
+        aname = STATUS_AILMENT[se_type] if se_type in STATUS_AILMENT else str(se_type)
+        string += f"{aname}{'↑' if se_mod == STATUS_MODIFIER_INC else '↓'}"
+        if buf['Count']:
+          string += f"x{buf['Count']}"
+        if buf['TurnLeft']:
+          string += f" (Turn Left: {buf['TurnLeft']})"
+        string += '\n'
+      string += '\n'
+      string += '-' * 20 + '\n'
+    # end each enemy
     string += "===============================\n"
     log_info(string)
   except Exception as err:
@@ -1092,18 +1164,40 @@ def swap_mastered_trains():
 
 def main():
   global PartyId,StageId,RentalUid,AvailableFriendRentals,RentalCycle
-  global FlagRequestReEnter,ReportDetail,UnmasteredCharacters
+  global FlagRequestReEnter,ReportDetail,UnmasteredCharacters,FLAG_INTERACTIVE
   FlagRequestReEnter = False
   log_info("Program initialized")
   reset_final_report()
   battle_analyzer.reset()
-  PartyId,StageId,RentalUid = process_prepare_inputs()
+  last_battle = player.get_unfinished_combat()
+  flag_resume_battle = False
+  if last_battle:
+    while True:
+      string = "You have unfinished battle!"
+      qid = last_battle['MQuestId']
+      if qid in StageData:
+        string += f" ({StageData[qid][-1]})\n"
+      string += "Would you like to resume? (Y/N): "
+      yn = input(string).strip().lower()
+      if yn == 'y':
+        flag_resume_battle = True
+        StageId = last_battle['MQuestId']
+        PartyId = last_battle['UPartyId']
+        RentalUid = process_rentalid_input()
+        break
+      elif yn == 'n':
+        surrender()
+        break
+  if not flag_resume_battle:
+    PartyId,StageId,RentalUid = process_prepare_inputs()
   discord.update_status(StageId)
   cnt = 0
   if _G.FlagTrainSwap:
     log_info("Getting unmastered characters...")
     UnmasteredCharacters = player.get_unmastered_characters()
     print(player.format_character_data(UnmasteredCharacters))
+  if FLAG_INTERACTIVE:
+    print_interactive_hint()
   while _G.FlagRunning:
     if not _G.PersistCharacterCache:
       player.clear_cache()
@@ -1142,6 +1236,10 @@ def main():
     if _G.Throttling:
       uwait(1)
     update_input()
+    if FLAG_INTERACTIVE:
+      yn = input("\nRestart battle? (Y/N): ")
+      if yn.strip().lower() == 'n':
+        break
   log_final_report()
 
 if __name__ == '__main__':

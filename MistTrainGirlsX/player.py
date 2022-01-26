@@ -61,7 +61,13 @@ def get_profile():
   return ret
 
 def get_unfinished_combat():
-  return get_profile()['MQuestId']
+  pf = get_profile()
+  if not pf['InCombat']:
+    return None
+  return {
+    'MQuestId': pf['MQuestId'],
+    'UPartyId': pf['UPartyId'],
+  }
 
 def get_characters():
   res = game.get_request('/api/UCharacters')
