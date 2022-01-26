@@ -35,8 +35,8 @@ TemporaryNetworkErrors = (
 )
 
 ServerList = (
-  'https://mist-train-east4.azurewebsites.net',
   'https://mist-train-east5.azurewebsites.net',
+  'https://mist-train-east4.azurewebsites.net',
   'https://mist-train-east6.azurewebsites.net',
   'https://mist-train-east7.azurewebsites.net',
   'https://mist-train-east8.azurewebsites.net',
@@ -348,7 +348,9 @@ def load_database(forced=False):
     elif i == 3:
       SkillDatabase = db
     elif i == 4:
-      LinkSkillDatabase = db
+      LinkSkillDatabase = {}
+      for _,skill in db.items():
+        LinkSkillDatabase[skill['OriginMSkillId']] = skill
     elif i == 5:
       ConsumableDatabase = db
     elif i == 6:
@@ -523,13 +525,13 @@ def get_item_name(item, desc=False):
 def is_potion_expired(mitem_id):
   global PotionExpiration
   if mitem_id not in PotionExpiration:
-    return False
+    return True
   edate = PotionExpiration[mitem_id]['EndDate']
   if not edate:
     return False
-  stime = strptime(edate, '%Y-%m-%dT%H:%M:%S')
-  jptime = datetime(*stime[:6], tzinfo=pytz.timezone('Asia/Tokyo')).timestamp()
+  edate = strptime(edate, '%Y-%m-%dT%H:%M:%S')
+  edate = datetime(*edate[:6], tzinfo=pytz.timezone('Asia/Tokyo')).timestamp()
   curt = localt2jpt(datetime.now()).timestamp()
-  if curt < jptime or curt >= jptime:
+  if curt >= edate:
     return True
   return False

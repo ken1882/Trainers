@@ -60,6 +60,9 @@ def get_profile():
   ret = {**res, **res2}
   return ret
 
+def get_unfinished_combat():
+  return get_profile()['MQuestId']
+
 def get_characters():
   res = game.get_request('/api/UCharacters')
   return res['r']
@@ -137,7 +140,6 @@ def is_character_mastered(ch, accumulate=False):
     if v < mstatus[k]:
       flag_maxed = False
   if accumulate:
-    log_info("Checking skin maxed")
     mid = ch['MCharacterId']
     if mid not in __UCharacterStats:
       __UCharacterStats[mid] = sstats

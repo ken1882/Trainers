@@ -1,8 +1,9 @@
 StageAlias = {
   'gg':   101002309,  # gear grinds
-  'hsr':  304015106,  # high speed rail
+  'hsr':  304016106,  # high speed rail
   'gold': 201001110,  # gold Mat quest
   'exp':  202001110,  # exp Mat quest
+  'inf': 306002101,   # Infinite quest
 }
 
 RaidStages = [
@@ -13,6 +14,9 @@ RaidStages = [
 
 StageData = {
           0: ('Waiting for maintenance', 'メンテナンス中...'),
+  306002101: ('Playing Events', '無限クエスト'),
+  302033505: ('Playing Events', 'オシャレデパート大戦争 1-5 (Very Hard)'),
+  304016106: ('Playing Events', '入隊訓練：ユーストン (Inferno)'),
   301062504: ('Playing Raid', '新春捕物！トラを捕らえてやりタイガー！ Raid (Very Hard)'),
   301061505: ('Playing Events', '新春捕物！トラを捕らえてやりタイガー！ 2-5 (Very Hard)'),
   301061504: ('Playing Events', '新春捕物！トラを捕らえてやりタイガー！ 2-4 (Very Hard)'),
@@ -881,4 +885,14 @@ StageData = {
   209001178: ('Playing Challenge','試練の塔 78 階'),
   209001179: ('Playing Challenge','試練の塔 79 階'),
   209001180: ('Playing Challenge','試練の塔 80 階'), 
+  209001181: ('Playing Challenge','試練の塔 81 階'), 
+  209001182: ('Playing Challenge','試練の塔 82 階'), 
+  209001183: ('Playing Challenge','試練の塔 83 階'), 
+  209001184: ('Playing Challenge','試練の塔 84 階'), 
+  209001185: ('Playing Challenge','試練の塔 85 階'), 
+  209001186: ('Playing Challenge','試練の塔 86 階'), 
+  209001187: ('Playing Challenge','試練の塔 87 階'), 
+  209001188: ('Playing Challenge','試練の塔 88 階'), 
+  209001189: ('Playing Challenge','試練の塔 89 階'), 
+  209001190: ('Playing Challenge','試練の塔 90 階'), 
 }

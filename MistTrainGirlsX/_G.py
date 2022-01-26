@@ -241,7 +241,33 @@ BATTLESTAT_VICTORY = 0x2
 # Skill constants
 SSCOPE_ENEMY = 1
 SSCOPE_ALLY  = 2
+STYPE_SPECIAL_SKILL = 2
 STYPE_NORMAL_ATTACK = 5
+STYPE_CHARGE_SKILL  = 6
+
+SKILL_POWER = [
+  '-', 'E', 'D', 'C', 'B', 'A', 'S', 'SS', 'SSS', 'US'
+]
+SKILL_DISTANCE = [
+  'none',
+  'close',
+  'medium',
+  'long'
+]
+SKILL_TARGET = [
+  'none',
+  'enemy',
+  'ally',
+  'self'
+]
+SKILL_RANGE = [
+  'none',
+  'one',
+  'all',
+  'random',
+  'row',
+  'col',
+]
 
 # Item constants
 ITYPE_WEAPON      = 1

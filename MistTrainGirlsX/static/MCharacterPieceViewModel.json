@@ -832,6 +832,10 @@
     "MCharacterId": 73401
   },
   {
+    "Id": 222,
+    "MCharacterId": 73301
+  },
+  {
     "Id": 223,
     "MCharacterId": 73201
   },
@@ -920,6 +924,10 @@
     "MCharacterId": 82401
   },
   {
+    "Id": 249,
+    "MCharacterId": 82301
+  },
+  {
     "Id": 250,
     "MCharacterId": 82201
   },
@@ -996,6 +1004,10 @@
     "MCharacterId": 91201
   },
   {
+    "Id": 278,
+    "MCharacterId": 92401
+  },
+  {
     "Id": 279,
     "MCharacterId": 92301
   },
@@ -1066,6 +1078,10 @@
   {
     "Id": 301,
     "MCharacterId": 99201
+  },
+  {
+    "Id": 302,
+    "MCharacterId": 100401
   },
   {
     "Id": 304,
@@ -1298,5 +1314,45 @@
   {
     "Id": 363,
     "MCharacterId": 104301
+  },
+  {
+    "Id": 364,
+    "MCharacterId": 104201
+  },
+  {
+    "Id": 365,
+    "MCharacterId": 110201
+  },
+  {
+    "Id": 366,
+    "MCharacterId": 110301
+  },
+  {
+    "Id": 367,
+    "MCharacterId": 13403
+  },
+  {
+    "Id": 368,
+    "MCharacterId": 10403
+  },
+  {
+    "Id": 369,
+    "MCharacterId": 5402
+  },
+  {
+    "Id": 387,
+    "MCharacterId": 105401
+  },
+  {
+    "Id": 389,
+    "MCharacterId": 105201
+  },
+  {
+    "Id": 390,
+    "MCharacterId": 40302
+  },
+  {
+    "Id": 391,
+    "MCharacterId": 46302
   }
 ]
