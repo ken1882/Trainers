@@ -20,21 +20,18 @@ def start_mirror_fiber():
       ar = [int(ocr_rect(rect,f'opow{i}',num_only=True)) for i,rect in enumerate(position.OpponentPowerRect)]
       log_info("Opponent power:", ar)
       idx = ar.index(min(ar))
-      Input.rmoveto(*position.MirrorOpponentSelect[idx])
       uwait(0.3)
-      Input.click()
+      Input.click(*position.MirrorOpponentSelect[idx])
       for _ in range(10):
         uwait(0.05)
         yield
-      Input.rmoveto(*position.MirrorBattleStart)
       uwait(0.3)
-      Input.click()
+      Input.click(*position.MirrorBattleStart)
       yield from combat.start_combat()
       uwait(0.3)
       for _ in range(3):
-        Input.rmoveto(*position.GeneralNext)
         uwait(0.5)
-        Input.click()
+        Input.click(*position.GeneralNext)
     for _ in range(10):
       uwait(0.05)
       yield

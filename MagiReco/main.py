@@ -24,6 +24,11 @@ def print_cache():
   print('-'*42)
   print(f"({col})")
 
+def detect_app_window():
+  utils.find_app_window()
+  utils.find_child_window()
+  _G.AppInputHwnd = _G.AppChildHwnd
+
 def update_detector():
   last_tick = 0
   while _G.FlagRunning:
@@ -50,7 +55,7 @@ def update_input():
   Input.update()
   if Input.is_trigger(win32con.VK_F5):
     print("Redetecting app window")
-    utils.find_app_window()
+    detect_app_window()
   elif Input.is_trigger(win32con.VK_F6):
     res = graphics.get_mouse_pixel()
     if not _G.SelectedFiber:
@@ -91,7 +96,7 @@ def start_main():
     _G.FlagRunning = False
 
 if __name__ == "__main__":
-  utils.find_app_window()
+  detect_app_window()
   utils.resize_app_window()
   args = argv_parse.load()
   if args.job:

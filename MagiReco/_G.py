@@ -8,10 +8,18 @@ import json
 ARGV = {}
 
 AppWindowName = "BlueStacks"
+AppChildWindowName = "BlueStacks Android PluginAndroid"
 AppHwnd = 0
 AppRect = [0,0,0,0]
 AppPid  = 0
 AppTid  = 0 
+AppChildHwnd = 0
+
+AppInputHwnd   = 0
+AppInputUseMsg = True
+
+SelfHwnd = 0
+SelfPid  = 0
 
 DCTmpFolder = ".tmp"
 DCSnapshotFile = "snapshot.png"
@@ -115,5 +123,10 @@ def wait(sec):
 def uwait(sec):
   sleep(sec + max(random() / 2, sec * random() / 5))
 
+def make_lparam(x, y):
+  return (y << 16) | x
+
+def get_lparam(val):
+  return (val & 0xffff, val >> 16)
 
 ### Loading process
