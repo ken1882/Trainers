@@ -13,7 +13,7 @@ ESTIMATORS = [f"{_G.DCTmpFolder}/{_G.make_model_name(d)}" for d in _G.DERPY_TRAI
 
 def get_upcoming_race():
   game.init()
-  res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Casino/Race/GetPaddock')
+  res = game.post_request('/api/Casino/Race/GetPaddock')
   return res['r']['data']
 
 def predict_race(estimator, race):
