@@ -13,6 +13,8 @@ if sys.platform == 'win32':
 elif sys.platform == 'linux':
   IS_LINUX = True
 
+ARGV = {}
+
 AppWindowName = "umamusume"
 AppHwnd = 0
 AppRect = [0,0,0,0]

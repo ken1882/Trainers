@@ -119,6 +119,7 @@ if __name__ == "__main__":
         _G.CurrentUmaName = umamusume
         mxrat = rate
   log_info(f"Umamusume selected: {_G.CurrentUmaName}")
+  log_info("Stage:", stage.get_current_stage())
   try:
     start_main()
   except (KeyboardInterrupt, SystemExit):

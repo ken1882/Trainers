@@ -54,8 +54,6 @@ def detect_app_window():
 
 def update_input():
   Input.update()
-  if not utils.is_focused():
-    return
   if Input.is_trigger(win32con.VK_F5):
     print("Redetecting app window")
     detect_app_window()
@@ -64,7 +62,10 @@ def update_input():
     if not _G.SelectedFiber:
       output_cache.extend(res)
     print(Input.get_cursor_pos(), res) 
-  elif Input.is_trigger(win32con.VK_F7):
+  
+  if not utils.is_focused():
+    return
+  if Input.is_trigger(win32con.VK_F7):
     log_info("Worker unpaused" if _G.FlagPaused else "Worker paused")
     _G.FlagPaused ^= True
   elif Input.is_trigger(win32con.VK_F8):

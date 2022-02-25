@@ -164,10 +164,13 @@ PreferredEventOption = {
 # regardless any situation (by prior knowledge)
 ImmediateSkills = [
   '汝、皇帝の神威を見よ',
+  '先頭の景色は譲らない…！',
+  '勝利の鼓動',
   '良バ場◎',
   '道悪◎',
   '晴れの日◎',
   '徹底マーク◎',
+  '地固め',
   '円弧のマエストロ',
   'コーナー回復○',
   '好転一息',
