@@ -54,6 +54,8 @@ def detect_app_window():
 
 def update_input():
   Input.update()
+  if not utils.is_focused():
+    return
   if Input.is_trigger(win32con.VK_F5):
     print("Redetecting app window")
     detect_app_window()
@@ -101,6 +103,7 @@ def start_main():
     _G.FlagRunning = False
 
 if __name__ == "__main__":
+  _G.SelfHwnd = utils.get_self_hwnd()
   detect_app_window()
   utils.resize_app_window()
   args = argv_parse.load()

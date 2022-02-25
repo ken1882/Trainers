@@ -58,10 +58,10 @@ Yorozu            = Skill('Yorozu', 1800, None)                           # 萬�
 Izuna             = Skill('Izuna', 1800, None)                            # 泉奈的祈禱
 Ibaraki           = Skill('Ibaraki', 1800, None)                          # 棘鬼
 
-CelestialBreath   = Skill('CelestialBreath', 60, _G.MAPLE_KEYCODE['X'])     # 天上的氣息
+BreathOfDivinity  = Skill('CelestialBreath', 60, _G.MAPLE_KEYCODE['Z'])     # 天上的氣息
 MasterOfNightmare = Skill('MasterOfNightmare', 150, _G.MAPLE_KEYCODE['`'])  # 惡夢的支配者
 
-DecentHolySymbol = Skill('DecentHolySymbol', 180, _G.MAPLE_KEYCODE['9'])    # 實用的祈禱
+DecentHolySymbol = Skill('DecentHolySymbol', 180, _G.MAPLE_KEYCODE['M'])    # 實用的祈禱
 ManaOverload     = Skill('ManaOverload', 60, _G.MAPLE_KEYCODE['O'])         # 超載魔力
 EtherealForm     = Skill('EtherealForm', 60, _G.MAPLE_KEYCODE['9'])         # 虛無型態
 DecentAdvancedBlessing = Skill('DecentAdvancedBlessing', 180, _G.MAPLE_KEYCODE['K']) # 實用的進階祝福

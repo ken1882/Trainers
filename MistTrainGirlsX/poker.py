@@ -42,24 +42,24 @@ def uwait(sec):
 
 def start_game():
   log_info("Start game")
-  res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Casino/Poker')
+  res = game.post_request('/api/Casino/Poker')
   print(res)
 
 def game_over(submit_result):
   log_info("Game Over")
-  res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Casino/Poker')
+  res = game.post_request('/api/Casino/Poker')
   rjs = res['r']
   print(rjs)
   won,have = rjs['WinCoinCount'],rjs['UserCoinCount']
   if submit_result:
-    res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Casino/Poker/Result')
+    res = game.post_request('/api/Casino/Poker/Result')
     print(res)
   log_info(f"Won bets {won}; Now have {have}")
 
 def place_bet():
   log_info("Place Bet")
   bets = FinalBets if FlagLastRound else InitBets
-  res = game.post_request(f'https://mist-train-east4.azurewebsites.net/api/Casino/Poker/Bet?type={BetRate}&betCoin={bets}')
+  res = game.post_request(f'/api/Casino/Poker/Bet?type={BetRate}&betCoin={bets}')
   print(res)
   cards = res['r']
   log_info("Drew cards:", cards)
@@ -111,7 +111,7 @@ def determine_card_keep(cards):
   return []
 
 def exchange_cards(indicies):
-  url = 'https://mist-train-east4.azurewebsites.net/api/Casino/Poker/ChangeHand?'
+  url = '/api/Casino/Poker/ChangeHand?'
   params = []
   for i in indicies:
     params.append(f"changeIndexes={i}")
@@ -120,14 +120,14 @@ def exchange_cards(indicies):
   return res['r']['RewardCoinCount']
 
 def start_doubleup():
-  res = game.post_request('https://mist-train-east4.azurewebsites.net/api/Casino/Poker/DoubleUp/Start')
+  res = game.post_request('/api/Casino/Poker/DoubleUp/Start')
   print(res)
   return PokerWeight[res['r'][1]]
 
 def continue_doubleup(ch):
   # 1=higher 2=lower
   log_info(f"Double up guessed {'higher' if ch == 1 else 'lower'}")
-  res = game.post_request(f'https://mist-train-east4.azurewebsites.net/api/Casino/Poker/DoubleUp/Choose?choice={ch}')
+  res = game.post_request(f'/api/Casino/Poker/DoubleUp/Choose?choice={ch}')
   print(res)
   rjs = res['r']
   return (rjs['Result'] == 3, PokerWeight[rjs['DrawCard'][1]], rjs['RewardCoinCount'])
@@ -182,7 +182,7 @@ def start():
     game_over(submit)
 
 def get_won_progress():
-  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/Casino/GetCasinoTop')
+  res = game.get_request('/api/Casino/GetCasinoTop')
   print(res)
   return res['r']['TodayCasinoCoinStatus']['GetCoinValueToday']
 

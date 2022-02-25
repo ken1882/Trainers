@@ -1,4 +1,3 @@
-import pytesseract
 import _G
 from _G import log_error,log_debug,log_info,log_warning,resume,wait,uwait
 import numpy as np
@@ -12,9 +11,17 @@ from PIL import Image
 import graphics
 from difflib import SequenceMatcher
 
+try:
+  import pytesseract
+except Exception:
+  log_warning("Pytesseract not available, OCRs won't be available")
+
 def EnumWindowCallback(hwnd, lparam):
+  log_info("Enumerating windows")
   if win32gui.IsWindowVisible(hwnd):
-    if win32gui.GetWindowText(hwnd) == _G.AppWindowName:
+    title = win32gui.GetWindowText(hwnd)
+    print(hwnd, title)
+    if title == _G.AppWindowName:
       _G.AppHwnd = hwnd
       _G.AppTid,_G.AppPid  = win32process.GetWindowThreadProcessId(hwnd)
       print(f"App found with HWND {hwnd} ({_G.AppWindowName}), pid={_G.AppPid}")

@@ -1,9 +1,8 @@
-import pytesseract
 import _G
 from _G import log_error,log_debug,log_info,log_warning,resume,wait,uwait
 import numpy as np
 import os
-import win32gui, win32process
+import win32gui, win32process, win32console
 from time import sleep
 from random import random
 import traceback
@@ -12,13 +11,28 @@ from PIL import Image
 import graphics
 from difflib import SequenceMatcher
 
+try:
+  import pytesseract
+except Exception:
+  log_warning("Pytesseract not available, OCRs won't be available")
+
 def EnumWindowCallback(hwnd, lparam):
   if win32gui.IsWindowVisible(hwnd):
-    if win32gui.GetWindowText(hwnd) == _G.AppWindowName:
+    title = win32gui.GetWindowText(hwnd)
+    if title == _G.AppWindowName:
       _G.AppHwnd = hwnd
       _G.AppTid,_G.AppPid  = win32process.GetWindowThreadProcessId(hwnd)
       print(f"App found with HWND {hwnd} ({_G.AppWindowName}), pid={_G.AppPid}")
       update_app_rect()
+
+def EnumChildWindowCB(hwnd, lparam):
+  clsname = win32gui.GetClassName(hwnd)
+  title   = win32gui.GetWindowText(hwnd)
+  print(hwnd, clsname, title)
+  if title == _G.AppChildWindowName:
+    _G.AppChildHwnd = hwnd
+    print("Target child found")
+    return False
 
 def update_app_rect():
   _G.AppRect = list(win32gui.GetWindowRect(_G.AppHwnd))
@@ -29,6 +43,11 @@ def update_app_rect():
 
 def find_app_window():
   win32gui.EnumWindows(EnumWindowCallback, None)
+
+def find_child_window():
+  log_info("Child windows:")
+  win32gui.EnumChildWindows(_G.AppHwnd, EnumChildWindowCB, None)
+  print("\n\n")
 
 def move_window(x=None,y=None,w=None,h=None):
   x = x if x else _G.AppRect[0]
@@ -102,3 +121,22 @@ def ensure_dir_exist(path):
     pwd += f"{dir}/"
     if not os.path.exists(pwd):
       os.mkdir(pwd)
+
+def EnumWindowSelfCB(hwnd, lparam):
+  _G.SelfPid = win32process.GetCurrentProcessId()
+  if win32process.GetWindowThreadProcessId(hwnd) == _G.SelfPid:
+    _G.SelfHwnd = hwnd
+    return False
+  return True
+
+def get_self_hwnd():
+  if _G.IS_WIN32:
+    _G.SelfHwnd = win32console.GetConsoleWindow()
+    if _G.SelfHwnd == 0:
+      win32gui.EnumWindows(EnumWindowSelfCB, None)
+    return _G.SelfHwnd
+
+def is_focused():
+  if _G.IS_WIN32:
+    return win32gui.GetForegroundWindow() == _G.SelfHwnd
+  return True

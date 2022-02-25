@@ -2,16 +2,16 @@ from _G import *
 import game
 
 def get_friends():
-  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/Friends')
+  res = game.get_request('/api/Friends')
   return res['r']
 
 def get_rentals():
-  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/Friends/Rental')
+  res = game.get_request('/api/Friends/Rental')
   return [res['r']['FriendUsers'], res['r']['OtherUsers']]
 
 def send_request(duid):
-  res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/Friends/Search/{duid}")
-  res = game.post_request("https://mist-train-east4.azurewebsites.net/api/Friends/SendRequests", [res['r']['UUserId']])
+  res = game.get_request(f"/api/Friends/Search/{duid}")
+  res = game.post_request("/api/Friends/SendRequests", [res['r']['UUserId']])
   return res
 
 

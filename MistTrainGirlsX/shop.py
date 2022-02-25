@@ -10,15 +10,15 @@ PurchaseItemTypes = [
 ]
 
 def get_daily_shop():
-  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/Markets/DailyShop')
+  res = game.get_request('/api/Markets/DailyShop')
   return res['r']
 
 def get_event_shops():
-  res = game.get_request('https://mist-train-east4.azurewebsites.net/api/TradeShops')
+  res = game.get_request('/api/TradeShops')
   return [st for st in res['r'] if st['TradeShopType'] == SHOP_TYPE_EVENT]
 
 def get_tshop_goods(id):
-  res = game.get_request(f"https://mist-train-east4.azurewebsites.net/api/TradeShops/{id}/lineup")
+  res = game.get_request(f"/api/TradeShops/{id}/lineup")
   return res['r']['Rewards']
 
 def log_profile(pdat):
@@ -45,7 +45,7 @@ def determine_goods2buy(goods, gold, gem=0):
 
 def purchase_goods(goods):
   for good in goods:
-    res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/Markets/DailyShopItems/{good['Id']}/purchase")
+    res = game.post_request(f"/api/Markets/DailyShopItems/{good['Id']}/purchase")
     if res:
       log_info(f"Purchased item#{good['Id']} ({get_readable_item_detail(good).split()[0]})")
 
@@ -84,7 +84,7 @@ def log_invoice(goods):
   log_info(string)
 
 def trade_item(good_id, amount):
-  res = game.post_request(f"https://mist-train-east4.azurewebsites.net/api/TradeRewards/{good_id}/trade/{amount}")
+  res = game.post_request(f"/api/TradeRewards/{good_id}/trade/{amount}")
   return res['r']
 
 def trade_all_event_potions():

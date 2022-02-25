@@ -9,9 +9,8 @@ def is_battle_ended():
   stg = stage.get_current_stage()
   if stg == 'MirrorDefeat' or stg == 'MirrorVicotry':
     mx,my = position.GeneralNext
-    Input.rmoveto(mx, my-300, rrange=30)
-    uwait(0.1)
-    Input.click()
+    uwait(0.2)
+    Input.rclick(mx, my-300)
   elif stg and 'BattleEnd' in stg:
     log_info("Battle ended")
     return True
@@ -89,9 +88,8 @@ def process_actions():
     _type, _arg = action
     print(_type, _arg)
     if _type == 'disk':
-      Input.rmoveto(*position.DiskIcons[_arg])
       uwait(0.1)
-      Input.click()
+      Input.click(*position.DiskIcons[_arg])
       uwait(0.1)
       yield
     else:
@@ -110,14 +108,13 @@ def determine_connection():
   if not availble:
     return
   for index in availble:
-    Input.rmoveto(*position.DiskIcons[index])
     uwait(0.3)
     yield
-    Input.mouse_down(app_offset=False)
+    Input.mouse_down(*position.DiskIcons[index], app_offset=False)
     uwait(0.3)
     companions = stage.get_connection_targets()
     log_info("Connection companions:", companions)
-    Input.mouse_up(app_offset=False)
+    Input.mouse_up(*position.DiskIcons[index], app_offset=False)
     ActionQueue.append(('connection', index, companions))
     uwait(0.3)
     yield
