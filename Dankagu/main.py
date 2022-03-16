@@ -47,12 +47,15 @@ def update_detector():
       last_tick = _G.FrameCount
 
 def detect_app_window():
+  utils.get_self_hwnd()
   utils.find_app_window()
   utils.find_child_window()
   _G.AppInputHwnd = _G.AppChildHwnd
 
 def update_input():
   Input.update()
+  if not utils.is_focused():
+    return
   if Input.is_trigger(win32con.VK_F5):
     print("Redetecting app window")
     detect_app_window()
@@ -61,7 +64,10 @@ def update_input():
     if not _G.SelectedFiber:
       output_cache.extend(res)
     print(Input.get_cursor_pos(), res) 
-  elif Input.is_trigger(win32con.VK_F7):
+  
+  if not utils.is_focused():
+    return
+  if Input.is_trigger(win32con.VK_F7):
     log_info("Worker unpaused" if _G.FlagPaused else "Worker paused")
     _G.FlagPaused ^= True
   elif Input.is_trigger(win32con.VK_F8):
@@ -87,6 +93,7 @@ def main_loop():
 def start_main():
   _th = Thread(target=update_detector)
   _th.start()
+  print(f"Stage:", stage.get_current_stage())
   try:
     while _G.FlagRunning:
       _G.FrameCount += 1
@@ -96,6 +103,7 @@ def start_main():
     _G.FlagRunning = False
 
 if __name__ == "__main__":
+  _G.SelfHwnd = utils.get_self_hwnd()
   detect_app_window()
   utils.resize_app_window()
   args = argv_parse.load()

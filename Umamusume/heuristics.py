@@ -4,10 +4,14 @@ import UmaData.common
 from random import randint
 from _G import log_debug, log_error, log_info, log_warning
 from UmaData.common import get_skill_rstyle
-import UmaData.MihonoBorubon
-import UmaData.OguriCap
-import UmaData.SeiunSky
+from glob import glob
+import importlib
 
+files = glob("UmaData/*.py")
+for file in files:
+  lib = file.replace('/', '.').replace('\\', '.')[:-3]
+  log_info(f"Import {lib}")
+  importlib.import_module(lib)
 
 def init():
   for module in dir(UmaData):

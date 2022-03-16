@@ -33,40 +33,44 @@ def update_detector():
     sleep(_G.FPS*2)
     if _G.FrameCount == last_tick:
       continue
-    if Input.is_trigger(win32con.VK_F5):
+    if not Input.is_pressed(win32con.VK_TAB):
+      return
+    if Input.is_trigger(win32con.VK_NUMPAD0):
       print("Received redetect signal",flush=True)
       last_tick = _G.FrameCount
-    elif Input.is_trigger(win32con.VK_F6):
+    elif Input.is_trigger(win32con.VK_NUMPAD1):
       print("Received position signal",flush=True)
       last_tick = _G.FrameCount
-    elif Input.is_trigger(win32con.VK_F7):
+    elif Input.is_trigger(win32con.VK_NUMPAD2):
       print("Received pause signal",flush=True)
       last_tick = _G.FrameCount
-    elif Input.is_trigger(win32con.VK_F8):
+    elif Input.is_trigger(win32con.VK_NUMPAD3):
       print("Received worker signal",flush=True)
       last_tick = _G.FrameCount
-    elif Input.is_trigger(win32con.VK_F9):
+    elif Input.is_trigger(win32con.VK_NUMPAD4):
       print("Received termination signal",flush=True)
       last_tick = _G.FrameCount
 
 def update_input():
   Input.update()
-  if Input.is_trigger(win32con.VK_F5):
+  if not Input.is_pressed(win32con.VK_TAB):
+    return
+  if Input.is_trigger(win32con.VK_NUMPAD0):
     print("Redetecting app window")
     utils.find_app_window()
-  elif Input.is_trigger(win32con.VK_F6):
+  elif Input.is_trigger(win32con.VK_NUMPAD1):
     res = graphics.get_mouse_pixel()
     if not _G.SelectedFiber:
       output_cache.extend(res)
     print(Input.get_cursor_pos(), res) 
-  elif Input.is_trigger(win32con.VK_F7):
+  elif Input.is_trigger(win32con.VK_NUMPAD2):
     log_info("Worker unpaused" if _G.FlagPaused else "Worker paused")
     _G.FlagPaused ^= True
     if _G.FlagPaused:
       utils.message_child(_G.MsgPipePause)
     else:
       utils.message_child(_G.MsgPipeContinue)
-  elif Input.is_trigger(win32con.VK_F8):
+  elif Input.is_trigger(win32con.VK_NUMPAD3):
     log_info("Worker terminated" if _G.FlagWorking else "Worker started")
     log_info(f"Frame count: {_G.FrameCount} / {_G.LastFrameCount}")
     _G.FlagWorking ^= True
@@ -77,7 +81,7 @@ def update_input():
         log_info("No job assigned")
     elif _G.MainChild:
       stop_main_child()
-  elif Input.is_trigger(win32con.VK_F9):
+  elif Input.is_trigger(win32con.VK_NUMPAD4):
     log_info("Stop program requested") 
     _G.FlagWorking = False
     _G.FlagRunning = False

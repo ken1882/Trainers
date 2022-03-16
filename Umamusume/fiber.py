@@ -54,3 +54,68 @@ def start_train_fiber():
 
 def start_tourment_fiber():
   yield from tourment.start()
+
+def start_teamrace_fiber():
+  times = int(_G.ARGV.repeats)
+  while True:
+    uwait(0.3)
+    stg = stage.get_current_stage()
+    yield
+    if not stg:
+      continue
+    if 'TeamRaceTitle' in stg:
+      Input.rmoveto(*position.TeamRaceEnter)
+      uwait(0.3)
+      Input.click()
+      yield
+    elif 'TeamRaceOpponent' in stg:
+      Input.rmoveto(*position.TeamRaceOpponent)
+      uwait(0.3)
+      Input.click()
+    elif 'TeamRaceList' in stg:
+      Input.rmoveto(*position.TeamRaceStart)
+      uwait(0.3)
+      Input.click()
+      for _ in range(5):
+        uwait(0.1)
+        yield
+      Input.rmoveto(*position.TeamRaceConfirm)
+      uwait(0.3)
+      Input.click()
+    elif 'TeamRaceSkipAll' in stg:
+      Input.rmoveto(*position.TeamRaceNext)
+      uwait(0.3)
+      Input.click()
+      for _ in range(3):
+        uwait(0.5)
+        Input.rmoveto(*position.TeamRaceSkipResult)
+        uwait(0.3)
+        Input.click()
+    elif 'TeamRaceAllResult' in stg:
+      Input.rmoveto(*position.TeamRaceAllResultOk)
+      uwait(0.3)
+      Input.click()
+    elif 'TeamRaceSchedule' in stg:
+      while stg and ('TeamRaceAward' not in stg or 'TeamRaceResult' not in stg):
+        yield
+        stg = stage.get_current_stage()
+        Input.rmoveto(*position.TeamRaceSkip)
+        uwait(0.3)
+        Input.click()
+    elif 'TeamRaceAward' in stg:
+      Input.rmoveto(*position.TeamRaceNext)
+      uwait(0.3)
+      Input.click()
+      for _ in range(5):
+        uwait(0.2)
+        yield
+      Input.rmoveto(*position.TeamRaceNext)
+      uwait(0.1)
+      Input.click()
+    elif 'TeamRaceResult' in stg:
+      Input.rmoveto(*position.TeamRaceResultOk)
+      uwait(0.3)
+      Input.click()
+      times -= 1
+      if times <= 0:
+        break

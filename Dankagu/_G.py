@@ -3,7 +3,24 @@ from os import get_exec_path
 from time import sleep
 from random import random
 from copy import copy
+import sys
 import json
+
+IS_WIN32 = False
+IS_LINUX = False
+
+if sys.platform == 'win32':
+  IS_WIN32 = True
+elif sys.platform == 'linux':
+  IS_LINUX = True
+
+IS_WIN32 = False
+IS_LINUX = False
+
+if sys.platform == 'win32':
+  IS_WIN32 = True
+elif sys.platform == 'linux':
+  IS_LINUX = True
 
 ARGV = {}
 
@@ -17,6 +34,9 @@ AppChildHwnd = 0
 
 AppInputHwnd   = 0
 AppInputUseMsg = True
+
+SelfHwnd = 0
+SelfPid  = 0
 
 DCTmpFolder = ".tmp"
 DCSnapshotFile = "snapshot.png"

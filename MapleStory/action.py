@@ -34,6 +34,7 @@ def move_up(duration):
   try:
     Input.key_down(win32con.VK_UP)
     times = int(duration / (BASE_INTERVAL_TIME + _G.FPS))
+    print(duration, times)
     for _ in range(times):
       time.sleep(BASE_INTERVAL_TIME)
       yield
@@ -56,11 +57,11 @@ def jump_down():
   try:
     Input.key_down(win32con.VK_DOWN)
     time.sleep(0.1)
-    for event in Input.get_keybd_pair(_G.MAPLE_KEYCODE['JUMP']):
+    for event in Input.get_keybd_pair(_G.MAPLE_KEYCODE['ALT']):
       Input.SendInput(event)
     time.sleep(0.1)
   finally:
-    Input.key_up(win32con.VK_UP)
+    Input.key_up(win32con.VK_DOWN)
 
 def interact():
   for event in Input.get_keybd_pair(_G.MAPLE_KEYCODE['SPACE']):
