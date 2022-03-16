@@ -6,6 +6,7 @@ from copy import copy, deepcopy
 import traceback
 import unicodedata
 
+ENCODING = 'UTF-8'
 IS_WIN32 = False
 IS_LINUX = False
 
@@ -322,6 +323,13 @@ RARITY_A  = 2
 RARITY_S  = 3
 RARITY_SS = 4
 RARITY_NAME = ['C','B','A','S','SS','US']
+
+# Events
+EVETYPE_INF = 13
+EVETYPE_TC  = 19
+EVETYPE_RB  = 7
+EVETYPE_TR  = 8
+EVETYPE_HSR = 9
 
 LastErrorCode = 0
 LastErrorMessage = ''

@@ -1,19 +1,30 @@
 StageAlias = {
   'gg':   101002309,  # gear grinds
-  'hsr':  304016106,  # high speed rail
+  'hsr':  304018106,  # high speed rail
   'gold': 201001110,  # gold Mat quest
   'exp':  202001110,  # exp Mat quest
   'inf': 306002101,   # Infinite quest
+  'raid': 301066504
 }
 
 RaidStages = [
-  301062504,
-  301058504,
-  301054504,
+  301070504, 301066504, 301062504, 301058504, 301054504,
 ]
 
 StageData = {
           0: ('Waiting for maintenance', 'メンテナンス中...'),
+  304018106: ('Playing Events', '入隊訓練：アヌシー (Inferno)'),
+  301070504: ('Playing Raid', '湖きらめくフォーチュンテラー Raid (Very Hard)'),
+  301069505: ('Playing Events','湖きらめくフォーチュンテラー 2-5 (Very Hard)'),
+  301069504: ('Playing Events','湖きらめくフォーチュンテラー 2-4 (Very Hard)'),
+  302035505: ('Playing Events', 'ベイクド・ドールは食いしん坊 1-5 (Very Hard)'),
+  302035504: ('Playing Events', 'ベイクド・ドールは食いしん坊 1-4 (Very Hard)'),
+  304017106: ('Playing Events', '入隊訓練：アサヒカワ (Inferno)'),
+  301066204: ('Playing Raid', 'ケダモノフローズンチョコレート Raid (Very Hard)'),
+  301065505: ('Playing Events', 'ケダモノフローズンチョコレート 2-5 (Very Hard)'),
+  301065504: ('Playing Events', 'ケダモノフローズンチョコレート 2-4 (Very Hard)'),
+  301064505: ('Playing Events', 'ケダモノフローズンチョコレート 1-5 (Very Hard)'),
+  301064504: ('Playing Events', 'ケダモノフローズンチョコレート 1-4 (Very Hard)'),
   306002101: ('Playing Events', '無限クエスト'),
   302033505: ('Playing Events', 'オシャレデパート大戦争 1-5 (Very Hard)'),
   304016106: ('Playing Events', '入隊訓練：ユーストン (Inferno)'),
@@ -70,6 +81,22 @@ StageData = {
   212002106: ('Playing Material Quest', '狭霧の洞穴【防具】6 階層'),
   212003106: ('Playing Material Quest', '狭霧の洞穴【裝飾】6 階層'),
   212003104: ('Playing Material Quest', '狭霧の洞穴【裝飾】4 階層'),
+  124048505: ('Playing Main Story', 'クエスト 48-5 (Very Hard)'),
+  124048504: ('Playing Main Story', 'クエスト 48-4 (Very Hard)'),
+  124048503: ('Playing Main Story', 'クエスト 48-3 (Very Hard)'),
+  124048502: ('Playing Main Story', 'クエスト 48-2 (Very Hard)'),
+  124048501: ('Playing Main Story', 'クエスト 48-1 (Very Hard)'),
+  124047505: ('Playing Main Story', 'クエスト 47-5 (Very Hard)'),
+  124047504: ('Playing Main Story', 'クエスト 47-4 (Very Hard)'),
+  124047503: ('Playing Main Story', 'クエスト 47-3 (Very Hard)'),
+  124047502: ('Playing Main Story', 'クエスト 47-2 (Very Hard)'),
+  124047501: ('Playing Main Story', 'クエスト 47-1 (Very Hard)'),
+  123046505: ('Playing Main Story', 'クエスト 46-5 (Very Hard)'),
+  123046504: ('Playing Main Story', 'クエスト 46-4 (Very Hard)'),
+  123046503: ('Playing Main Story', 'クエスト 46-3 (Very Hard)'),
+  123045505: ('Playing Main Story', 'クエスト 45-5 (Very Hard)'),
+  123045504: ('Playing Main Story', 'クエスト 45-4 (Very Hard)'),
+  123045503: ('Playing Main Story', 'クエスト 45-3 (Very Hard)'),
   122044505: ('Playing Main Story', 'クエスト 44-5 (Very Hard)'),
   122044504: ('Playing Main Story', 'クエスト 44-4 (Very Hard)'),
   122044503: ('Playing Main Story', 'クエスト 44-3 (Very Hard)'),

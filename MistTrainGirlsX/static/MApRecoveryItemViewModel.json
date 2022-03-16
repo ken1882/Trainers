@@ -430,5 +430,45 @@
     "RecoveryEffect": 30,
     "StartDate": "2022-01-15T12:00:00",
     "EndDate": "2022-02-03T23:59:59"
+  },
+  {
+    "Id": 56,
+    "RecoveryItemTypes": 4,
+    "MItemId": 520,
+    "RecoveryEffect": 30,
+    "StartDate": "2022-02-01T12:00:00",
+    "EndDate": "2022-02-20T23:59:59"
+  },
+  {
+    "Id": 57,
+    "RecoveryItemTypes": 4,
+    "MItemId": 523,
+    "RecoveryEffect": 30,
+    "StartDate": "2022-02-08T12:00:00",
+    "EndDate": "2022-02-27T23:59:59"
+  },
+  {
+    "Id": 58,
+    "RecoveryItemTypes": 4,
+    "MItemId": 526,
+    "RecoveryEffect": 30,
+    "StartDate": "2022-02-15T14:10:00",
+    "EndDate": "2022-03-06T23:59:59"
+  },
+  {
+    "Id": 59,
+    "RecoveryItemTypes": 4,
+    "MItemId": 541,
+    "RecoveryEffect": 30,
+    "StartDate": "2022-03-01T12:00:00",
+    "EndDate": "2022-03-20T23:59:59"
+  },
+  {
+    "Id": 60,
+    "RecoveryItemTypes": 4,
+    "MItemId": 546,
+    "RecoveryEffect": 30,
+    "StartDate": "2022-03-08T12:00:00",
+    "EndDate": "2022-03-27T23:59:59"
   }
 ]

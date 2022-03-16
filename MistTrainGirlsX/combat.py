@@ -14,7 +14,7 @@ import Input, vktable
 import game
 import utils
 from datetime import date, datetime, timedelta
-from stage import StageAlias, StageData, RaidStages
+import stage
 from Input import input
 import battle_analyzer
 
@@ -23,6 +23,7 @@ if _G.IS_WIN32:
 
 LOG_STATUS = True
 FLAG_INTERACTIVE = False
+FLAG_CONFIRM_RP_USE = True
 
 PartyId  = 0
 StageId  = 0
@@ -74,7 +75,7 @@ AvailableFriendRentals = []
 RentalCycle = None
 
 UnmasteredCharacters = []
-UnmasteredSwapIndex  = [3, 4]
+UnmasteredSwapIndex  = [0,1,2]
 
 STATUS_MODIFIER_INC = 1
 STATUS_MODIFIER_DEC = 2
@@ -247,7 +248,7 @@ def process_actions(commands, verion):
       "BattleSettings": {
         "BattleAutoSetting":0 if FLAG_INTERACTIVE else 3,
         "BattleSpeed":2,
-        "BattleSpecialSkillAnimation":0,
+        "BattleSpecialSkillAnimation":1,
         "IsAutoSpecialSkill":False,
         "IsAutoOverDrive":True,
         "EnableConnect":True
@@ -282,7 +283,7 @@ def use_special_skill(ch, target_id, ovd, verion):
       "BattleSettings": {
         "BattleAutoSetting":0 if FLAG_INTERACTIVE else 3,
         "BattleSpeed":2,
-        "BattleSpecialSkillAnimation":0,
+        "BattleSpecialSkillAnimation":1,
         "IsAutoSpecialSkill":False,
         "IsAutoOverDrive":True,
         "EnableConnect":True
@@ -303,7 +304,7 @@ def surrender():
       "BattleSettings": {
         "BattleAutoSetting":3,
         "BattleSpeed":2,
-        "BattleSpecialSkillAnimation":0,
+        "BattleSpecialSkillAnimation":1,
         "IsAutoSpecialSkill":False,
         "IsAutoOverDrive":True,
         "EnableConnect":True
@@ -333,8 +334,8 @@ def get_movable_characters(characters):
 def is_skill_usable(character, skill, sp_cost=0):
   if sp_cost <= 0:
     sp_cost = skill['SPCost']
-  sp = character['SP']
-  rp = character['RP']
+  sp = max(0, character['SP'])
+  rp = max(0, character['RP'])
   if sp < sp_cost or rp < skill['RPCost']:
     return False
   return True
@@ -691,9 +692,12 @@ def get_available_actions(data, do_print=None):
     acts  = []
     actor = player.get_character_by_uid(ch['CID'])
     bchar = game.get_character_base(actor['MCharacterId'])
-    string += f"[{ch['ID']}] {bchar['Name']} {bchar['MCharacterBase']['Name']}"
-    string += f" HP: {round(ch['HP']*100 / actor['UCharacterBaseViewModel']['Status']['HP'], 2)}%"
-    string += f" SP: {ch['SP']}/{MaxSP}"
+    sname = f"[{ch['ID']}] {bchar['Name']} {bchar['MCharacterBase']['Name']}"
+    shp   = f" HP: {round(ch['HP']*100 / actor['UCharacterBaseViewModel']['Status']['HP'], 2)}%"
+    ssp   = f" SP: {ch['SP']}/{MaxSP}"
+    string += format_padded_utfstring(
+      (sname, 35), (shp, 15, True), (ssp, 10, True)
+    )
     if ch not in movables:
       string += ' 行動不能'
     string += '\n'
@@ -753,7 +757,7 @@ def process_action_input(data):
         amod = ins.split()[-1]
         amod = int(amod)
       except Exception:
-        print("Invalid auto combat type")
+        print("[!] Invalid auto combat type")
       for i in range(1,len(BattleStyle)):
         BattleStyle[i] = amod
       return determine_actions(data)
@@ -769,13 +773,16 @@ def process_action_input(data):
         sid = int(sid)
         tid = int(tid)
       except Exception:
-        print("Invalid instruction")
+        print("[!] Invalid instruction")
         continue
       ch = next((ch for ch in battlers if ch['ID'] == sid), None)
       if not ch:
-        print("Invalid character")
+        print("[!] Invalid character")
         continue
+      odat = deepcopy(data)
       data = use_special_skill(ch, tid, ovd, data['Version'])
+      if not data:
+        data = odat
       log_battle_status(data)
       if data['BattleState']['BattleStatus'] == BATTLESTAT_VICTORY:
         return BATTLESTAT_VICTORY
@@ -784,7 +791,7 @@ def process_action_input(data):
     ins = ins.split()
     for idx,seq in enumerate(ins):
       if len(ins) != len(battlers):
-        print("Instruction size does not match party size")
+        print("[!] Instruction size does not match party size")
         continue
       seq = seq.split('-')
       iid = seq[0]        # action/instruction index
@@ -800,17 +807,37 @@ def process_action_input(data):
         iid = int(iid)
         tid = int(tid)
       except Exception:
-        print("Invalid instruction or target")
+        print("[!] Invalid instruction or target")
         break
       # check action available
       if iid not in range(0, len(actions[idx])):
-        print(f"Instruction {iid} is unavailable")
+        print(f"[!] Instruction {iid} is unavailable")
         break
       # check action target
       if iid > 0 and len(seq) < 2:
-        print(f"Instruction {iid} missing target")
+        print(f"[!] Instruction {iid} missing target")
         break
       act = actions[idx][iid]
+      if not act:
+        print(f"[!] Invalid action at {idx} of {iid}")
+        break
+      # check action usable
+      mskill = interpret_skill(act)
+      if not is_skill_usable(ch, mskill):
+        print(f"[!] Action at {idx} of {iid} is unusable (insufficient SP/RP?)")
+        break
+      elif FLAG_CONFIRM_RP_USE and mskill['RPCost'] > 0:
+        flag_ok = False
+        while True:
+          yn = input(f"[WARNING] Skill {mskill['Name']} will cost {mskill['RPCost']} RP (has {ch['RP']}), confirm? (y/n): ").strip().lower()
+          if yn == 'y':
+            flag_ok = True
+            break
+          elif yn == 'n':
+            break
+        if not flag_ok:
+          print("Denied RP-skill usage")
+          break
       if tid == 0:
         tid = determine_target(act, battlers[idx], data['BattleState']['Enemies'], battlers)
       if act and ch in movables:
@@ -953,11 +980,11 @@ def process_stageid_input():
     ser = inp[1] if len(inp) > 1 else ''
     if utils.isdigit(sid) and int(sid) == 0:
       string = format_padded_utfstring(('Id', 15, True), (' Alias', 10), ('Name', 50)) + '\n'
-      for id,name in StageData.items():
+      for id,name in stage.StageData.items():
         if id == 0:
           continue
         name = name[-1]
-        alias = next((k for k,v in StageAlias.items() if v == id), '')
+        alias = next((k for k,v in stage.StageAlias.items() if v == id), '')
         if ser in alias or ser in name:
           string += format_padded_utfstring(
             (id, 15, True), (' '+alias, 10), (name, 50)
@@ -966,8 +993,8 @@ def process_stageid_input():
       sid = ''
       continue
     if not utils.isdigit(sid):
-      if sid in StageAlias:
-        sid = StageAlias[sid]
+      if sid in stage.StageAlias:
+        sid = stage.StageAlias[sid]
       else:
         continue
     sid = int(sid)
@@ -1000,7 +1027,7 @@ def start_battle_process(sid, pid, rid):
   global BattleId,LastErrorCode,LOG_STATUS,FLAG_INTERACTIVE
   LOG_STATUS = not _G.ARGV.less or FLAG_INTERACTIVE
   log_info("Stage/Party/Rental IDs:", sid, pid, rid)
-  if sid in RaidStages:
+  if sid in stage.RaidStages:
     data = start_raid(sid, pid, rid)
   else:
     data = start_battle(sid, pid, rid)
@@ -1010,7 +1037,7 @@ def start_battle_process(sid, pid, rid):
       recovered = recover_stamina()
       if not recovered:
         return SIG_COMBAT_STOP
-      if sid in RaidStages:
+      if sid in stage.RaidStages:
         data = start_raid(sid, pid, rid)
       else:
         data = start_battle(sid, pid, rid)
@@ -1053,7 +1080,7 @@ def log_final_report():
   string  = f"\n{'='*30} Report {'='*30}\n"
   line_width = len(string.strip())
   try:
-    string += f"{StageData[StageId][-1]}\n" if StageId in StageData else ''
+    string += f"{stage.StageData[StageId][-1]}\n" if StageId in stage.StageData else ''
     elapsed = ReportDetail['end_t'] - ReportDetail['start_t'] - ReportDetail['paused_t']
     string += "Start time:   " + ReportDetail['start_t'].strftime('%Y-%m-%d %H:%M:%S') + '\n'
     string += "End time:     " + ReportDetail['end_t'].strftime('%Y-%m-%d %H:%M:%S') + '\n'
@@ -1134,7 +1161,7 @@ def process_prepare_inputs():
   return (pid, sid, rid)
 
 def swap_mastered_trains():
-  global PartyId,UnmasteredCharacters,UnmasteredCharacters
+  global PartyId,StageId,UnmasteredCharacters,UnmasteredCharacters
   player.clear_cache()
   parties = player.get_current_parties()['UParties']
   party = None
@@ -1143,9 +1170,10 @@ def swap_mastered_trains():
       party = p
       break
   slots = party['UCharacterSlots']
+  maxed = player.get_maxed_partymember(PartyId, StageId)
   for idx in UnmasteredSwapIndex:
     och = slots[idx]['UCharacter']
-    if not player.is_character_mastered(och, True):
+    if och['Id'] not in maxed:
       continue
     if not UnmasteredCharacters:
       log_warning("No unmastered characters left to train")
@@ -1165,6 +1193,7 @@ def swap_mastered_trains():
 def main():
   global PartyId,StageId,RentalUid,AvailableFriendRentals,RentalCycle
   global FlagRequestReEnter,ReportDetail,UnmasteredCharacters,FLAG_INTERACTIVE
+  _G.FlagRunning = True
   FlagRequestReEnter = False
   log_info("Program initialized")
   reset_final_report()
@@ -1175,8 +1204,8 @@ def main():
     while True:
       string = "You have unfinished battle!"
       qid = last_battle['MQuestId']
-      if qid in StageData:
-        string += f" ({StageData[qid][-1]})\n"
+      if qid in stage.StageData:
+        string += f" ({stage.StageData[qid][-1]})\n"
       string += "Would you like to resume? (Y/N): "
       yn = input(string).strip().lower()
       if yn == 'y':
@@ -1188,6 +1217,14 @@ def main():
       elif yn == 'n':
         surrender()
         break
+  while True: 
+    yn = input("Manually handle combat? (Y/N): ").strip().lower()
+    if yn == 'y':
+      FLAG_INTERACTIVE = True
+      break
+    elif yn == 'n':
+      FLAG_INTERACTIVE = False
+      break
   if not flag_resume_battle:
     PartyId,StageId,RentalUid = process_prepare_inputs()
   discord.update_status(StageId)

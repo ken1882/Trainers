@@ -35,6 +35,8 @@ TemporaryNetworkErrors = (
 )
 
 ServerList = (
+  'https://app-misttrain-prod-001.azurewebsites.net',
+  'https://app-misttrain-prod-002.azurewebsites.net',
   'https://mist-train-east5.azurewebsites.net',
   'https://mist-train-east4.azurewebsites.net',
   'https://mist-train-east6.azurewebsites.net',
@@ -95,7 +97,7 @@ def init():
   if not args.auto_reauth and not Session.headers['Authorization']:
     raise RuntimeError("Game token is required to start game without reauthorize")
   determine_server()
-  load_database()
+  load_database(True)
 
 def determine_server():
   global Session,ServerList,ServerLocation
@@ -302,29 +304,30 @@ def load_database(forced=False):
   global ConsumableDatabase,WeaponDatabase,ArmorDatabase,AccessoryDatabase,GearDatabase
   global FieldSkillDatabase,QuestDatabase,ABStoneDatabase,SceneDatabase,PotionExpiration
   links = [
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MEnemyViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MFormationViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MSkillViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MLinkSkillViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MItemViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MWeaponViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MArmorViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MAccessoryViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterPieceViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MFieldSkillViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MQuestViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterGearLevelViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MAbilityStoneViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MSceneViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MApRecoveryItemViewModel.json',
+    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MCharacterViewModel.json',
+    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MEnemyViewModel.json',
+    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MFormationViewModel.json',
+    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MSkillViewModel.json',
+    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MLinkSkillViewModel.json',
+    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MItemViewModel.json',
+    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MWeaponViewModel.json',
+    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MArmorViewModel.json',
+    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MAccessoryViewModel.json',
+    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MCharacterPieceViewModel.json',
+    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MFieldSkillViewModel.json',
+    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MQuestViewModel.json',
+    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MCharacterGearLevelViewModel.json',
+    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MAbilityStoneViewModel.json',
+    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MSceneViewModel.json',
+    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MApRecoveryItemViewModel.json',
   ]
   for i,link in enumerate(links):
     path = f"{STATIC_FILE_DIRECTORY}/{link.split('/')[-1]}"
     db = None
     if forced or not os.path.exists(path) or time() - os.path.getmtime(path) > STATIC_FILE_TTL:
       try:
-        db = get_request(link)
+        log_info("Loading", link)
+        db = requests.get(link).json()
       except (SystemExit, Exception) as err:
         log_error(f"Error occurred ({err}) while requesting database, using local instead")
     # Init dbs
