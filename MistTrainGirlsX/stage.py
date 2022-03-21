@@ -4,15 +4,21 @@ StageAlias = {
   'gold': 201001110,  # gold Mat quest
   'exp':  202001110,  # exp Mat quest
   'inf': 306002101,   # Infinite quest
-  'raid': 301066504
+  'raid': 301066504,
 }
 
 RaidStages = [
   301070504, 301066504, 301062504, 301058504, 301054504,
 ]
 
+TurnLimitedStages = [
+  310001401, 310001402, 310001403, 310001404, 310001405 
+]
+TurnLimitedStages.append(RaidStages)
+
 StageData = {
           0: ('Waiting for maintenance', 'メンテナンス中...'),
+  302037504: ('Playing Events', '激突！密林バイリンガル！ 1-4 (Very Hard)'),
   304018106: ('Playing Events', '入隊訓練：アヌシー (Inferno)'),
   301070504: ('Playing Raid', '湖きらめくフォーチュンテラー Raid (Very Hard)'),
   301069505: ('Playing Events','湖きらめくフォーチュンテラー 2-5 (Very Hard)'),

@@ -1,8 +1,12 @@
+import os
 import cv2
 import numpy as np
 import win32gui
+import pytesseract
 from desktopmagic.screengrab_win32 import getRectAsImage
 from PIL import Image
+import os
+from time import sleep
 
 import _G
 import Input
@@ -147,3 +151,26 @@ def find_object_with_rates(objimg_path, threshold=CVMatchHardRate):
   objects = filter_local_templates(res, threshold)
   rates = [res[y][x] for x,y in objects]
   return (objects, rates)
+
+def img2str(image_file, lang='jpn', config='--psm 12 --psm 13'):
+  if not os.path.exists(image_file) and not image_file.startswith(_G.DCTmpFolder):
+    image_file = f"{_G.DCTmpFolder}/{image_file}"
+  return pytesseract.image_to_string(image_file, lang=lang, config=config) or ''
+
+def ocr_rect(rect, fname, zoom=1.0, lang='jpn', config='--psm 12 --psm 13', **kwargs):
+  log_info(f"Processing OCR for {fname}")
+  if kwargs.get('num_only'):
+    lang = 'eng'
+    config += ' -c tessedit_char_whitelist=1234567890'
+  if not os.path.exists(fname):
+    fname = f"{_G.DCTmpFolder}/{fname}"
+  img = take_snapshot(rect, fname)
+  if zoom != 1.0:
+    size = (int(img.size[0]*zoom), int(img.size[1]*zoom))
+    resize_image(size, fname, fname)
+  sleep(0.3)
+  img.close()
+  return img2str(fname, lang, config).translate(str.maketrans('。',' ')).strip()
+
+def multiscale_matching(src, start=0.5, end=2.5, step=0.1):
+  pass

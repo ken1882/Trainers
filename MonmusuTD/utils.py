@@ -1,4 +1,3 @@
-import pytesseract
 import _G
 from _G import log_error,log_debug,log_info,log_warning,resume,wait,uwait
 import numpy as np
@@ -8,8 +7,6 @@ from time import sleep
 from random import random
 import traceback
 import os.path
-from PIL import Image
-import graphics
 from difflib import SequenceMatcher
 
 def EnumWindowCallback(hwnd, lparam):
@@ -71,26 +68,6 @@ def safe_execute_func(func, args=[], kwargs={}):
 
 def handle_exception(err, errinfo):
   _G.log_error(f"An error occured during runtime!\n{str(err)}\n{errinfo}")
-
-def img2str(image_file, lang='jpn', config='--psm 12 --psm 13'):
-  if not os.path.exists(image_file) and not image_file.startswith(_G.DCTmpFolder):
-    image_file = f"{_G.DCTmpFolder}/{image_file}"
-  return pytesseract.image_to_string(image_file, lang=lang, config=config) or ''
-
-def ocr_rect(rect, fname, zoom=1.0, lang='jpn', config='--psm 12 --psm 13', **kwargs):
-  log_info(f"Processing OCR for {fname}")
-  if kwargs.get('num_only'):
-    lang = 'eng'
-    config += ' -c tessedit_char_whitelist=1234567890'
-  if not os.path.exists(fname):
-    fname = f"{_G.DCTmpFolder}/{fname}"
-  img = graphics.take_snapshot(rect, fname)
-  if zoom != 1.0:
-    size = (int(img.size[0]*zoom), int(img.size[1]*zoom))
-    graphics.resize_image(size, fname, fname)
-  sleep(0.3)
-  img.close()
-  return img2str(fname, lang, config).translate(str.maketrans('。',' ')).strip()
 
 def diff_string(a,b):
   return SequenceMatcher(None,a,b).ratio()

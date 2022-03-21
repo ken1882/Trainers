@@ -608,7 +608,12 @@ def log_player_profile(data):
   log_info(string)
 
 def is_defeated(data):
-  return len(get_alive_characters(data['BattleState']['Characters'])) == 0
+  global StageId
+  if len(get_alive_characters(data['BattleState']['Characters'])) == 0:
+    return True
+  if StageId in stage.TurnLimitedStages and data['Version'] >= 10:
+    return True
+  return False
 
 def record_loots(loots):
   global ReportDetail
