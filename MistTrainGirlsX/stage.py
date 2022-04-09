@@ -8,7 +8,7 @@ StageAlias = {
 }
 
 RaidStages = [
-  301070504, 301066504, 301062504, 301058504, 301054504,
+  301074504, 301070504, 301066504, 301062504, 301058504, 301054504,
 ]
 
 TurnLimitedStages = [
@@ -18,6 +18,8 @@ TurnLimitedStages.append(RaidStages)
 
 StageData = {
           0: ('Waiting for maintenance', 'メンテナンス中...'),
+  301074504: ('Playing Raid', '雛と聖歌のクレイドル Raid (Very Hard)'),
+  301073504: ('Plating Events', '雛と聖歌のクレイドル 2-4 (Very Hard)'),
   302037504: ('Playing Events', '激突！密林バイリンガル！ 1-4 (Very Hard)'),
   304018106: ('Playing Events', '入隊訓練：アヌシー (Inferno)'),
   301070504: ('Playing Raid', '湖きらめくフォーチュンテラー Raid (Very Hard)'),
@@ -87,6 +89,16 @@ StageData = {
   212002106: ('Playing Material Quest', '狭霧の洞穴【防具】6 階層'),
   212003106: ('Playing Material Quest', '狭霧の洞穴【裝飾】6 階層'),
   212003104: ('Playing Material Quest', '狭霧の洞穴【裝飾】4 階層'),
+  125050505: ('Playing Main Story', 'クエスト 50-5 (Very Hard)'),
+  125050504: ('Playing Main Story', 'クエスト 50-4 (Very Hard)'),
+  125050503: ('Playing Main Story', 'クエスト 50-3 (Very Hard)'),
+  125050502: ('Playing Main Story', 'クエスト 50-2 (Very Hard)'),
+  125050501: ('Playing Main Story', 'クエスト 50-1 (Very Hard)'),
+  125049505: ('Playing Main Story', 'クエスト 49-5 (Very Hard)'),
+  125049504: ('Playing Main Story', 'クエスト 49-4 (Very Hard)'),
+  125049503: ('Playing Main Story', 'クエスト 49-3 (Very Hard)'),
+  125049502: ('Playing Main Story', 'クエスト 49-2 (Very Hard)'),
+  125049501: ('Playing Main Story', 'クエスト 49-1 (Very Hard)'),
   124048505: ('Playing Main Story', 'クエスト 48-5 (Very Hard)'),
   124048504: ('Playing Main Story', 'クエスト 48-4 (Very Hard)'),
   124048503: ('Playing Main Story', 'クエスト 48-3 (Very Hard)'),

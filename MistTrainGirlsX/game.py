@@ -1,3 +1,5 @@
+# coding: UTF-8
+
 import re
 from urllib3.exceptions import ProtocolError
 import _G
@@ -147,8 +149,7 @@ def get_request(url, depth=1):
     log_warning("Server day changing, wait for 1 minute")
     wait(60)
     if not is_day_changing():
-      log_info("Server day changed, attempting to reauth game")
-      reauth_game()
+      log_warning("Server day changed")
       break
   if not url.startswith('http'):
     url = ServerLocation + url
@@ -183,8 +184,7 @@ def post_request(url, data=None, depth=1):
     log_warning("Server day changing, wait for 1 minute")
     wait(60)
     if not is_day_changing():
-      log_info("Server day changed, attempting to reauth game")
-      reauth_game()
+      log_warning("Server day changed")
       wait(1)
       break
   res = None
@@ -258,9 +258,9 @@ def reauth_game():
         st = literal_eval(line.strip().split(':')[-1][:-1].strip())
         break
     payload = raw_form.split('\n')[1]
-    rep = re.search(r"mist-train-east(\d)", payload).span()
-    rep = payload[rep[0]:rep[1]]
-    payload = payload.replace(rep, ServerLocation.split('//')[1].split('.')[0])
+    # rep = re.search(r"app-misttrain-prod-(\d+)", payload).span()
+    # rep = payload[rep[0]:rep[1]]
+    # payload = payload.replace(rep, ServerLocation.split('//')[1].split('.')[0])
     rep = re.search(r"st=(.+?)&", payload).group(0)
     rep = rep.split('=')[1][:-1]
     payload = payload.replace(rep, st)
@@ -304,22 +304,22 @@ def load_database(forced=False):
   global ConsumableDatabase,WeaponDatabase,ArmorDatabase,AccessoryDatabase,GearDatabase
   global FieldSkillDatabase,QuestDatabase,ABStoneDatabase,SceneDatabase,PotionExpiration
   links = [
-    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MCharacterViewModel.json',
-    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MEnemyViewModel.json',
-    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MFormationViewModel.json',
-    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MSkillViewModel.json',
-    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MLinkSkillViewModel.json',
-    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MItemViewModel.json',
-    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MWeaponViewModel.json',
-    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MArmorViewModel.json',
-    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MAccessoryViewModel.json',
-    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MCharacterPieceViewModel.json',
-    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MFieldSkillViewModel.json',
-    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MQuestViewModel.json',
-    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MCharacterGearLevelViewModel.json',
-    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MAbilityStoneViewModel.json',
-    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MSceneViewModel.json',
-    'https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MApRecoveryItemViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MEnemyViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MFormationViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MSkillViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MLinkSkillViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MItemViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MWeaponViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MArmorViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MAccessoryViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterPieceViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MFieldSkillViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MQuestViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterGearLevelViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MAbilityStoneViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MSceneViewModel.json',
+    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MApRecoveryItemViewModel.json',
   ]
   for i,link in enumerate(links):
     path = f"{STATIC_FILE_DIRECTORY}/{link.split('/')[-1]}"

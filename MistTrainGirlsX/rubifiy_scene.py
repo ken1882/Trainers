@@ -18,7 +18,7 @@ MaruHeaders = {
 LinewrapSymbol = '＊'
 CommonTitleCache = {}
 SceneMeta = {}
-for obj in requests.get('https://assets3.mist-train-girls.com/production-client-web-static/MasterData/MSceneViewModel.json').json():
+for obj in requests.get('https://assets.mist-train-girls.com/production-client-web-static/MasterData/MSceneViewModel.json').json():
   SceneMeta[obj['Id']] = obj
 
 ###
