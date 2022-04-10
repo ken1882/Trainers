@@ -20803,37 +20803,37 @@
     "WeaponEquipType": 0,
     "MSkills": [
       {
-        "Id": 1024983,
+        "Id": 1025025,
         "MEnemyId": 40026103,
         "MSkillId": 111101132,
         "Order": 0
       },
       {
-        "Id": 1024979,
+        "Id": 1025021,
         "MEnemyId": 40026103,
         "MSkillId": 111700129,
         "Order": 0
       },
       {
-        "Id": 1024980,
+        "Id": 1025022,
         "MEnemyId": 40026103,
         "MSkillId": 111700128,
         "Order": 0
       },
       {
-        "Id": 1024981,
+        "Id": 1025023,
         "MEnemyId": 40026103,
         "MSkillId": 111700136,
         "Order": 0
       },
       {
-        "Id": 1024982,
+        "Id": 1025024,
         "MEnemyId": 40026103,
         "MSkillId": 111101133,
         "Order": 0
       },
       {
-        "Id": 1024984,
+        "Id": 1025026,
         "MEnemyId": 40026103,
         "MSkillId": 421,
         "Order": 0

@@ -23553,6 +23553,33 @@
     "SceneType": 1
   },
   {
+    "Id": 111220101,
+    "Title": "\u30d9\u30c3\u30c9\u3067\u3084\u308b\u3053\u3068\u306f\u3072\u3068\u3064\uff01",
+    "IsAdult": false,
+    "NextMSceneId": null,
+    "SceneStartEffectType": 0,
+    "InboxPackageId": null,
+    "SceneType": 1
+  },
+  {
+    "Id": 111220102,
+    "Title": "\u4eca\u591c\u306f\u6cca\u3081\u3066\uff01",
+    "IsAdult": false,
+    "NextMSceneId": null,
+    "SceneStartEffectType": 0,
+    "InboxPackageId": null,
+    "SceneType": 1
+  },
+  {
+    "Id": 111220103,
+    "Title": "\u306c\u304f\u3082\u308a\u3092\u6c42\u3081\u3066",
+    "IsAdult": false,
+    "NextMSceneId": null,
+    "SceneStartEffectType": 0,
+    "InboxPackageId": null,
+    "SceneType": 1
+  },
+  {
     "Id": 111230101,
     "Title": "\u30a2\u30c7\u30ec\u30fc\u30c9\u306f\u98a8\u90aa\u3092\u5f15\u304b\u306a\u3044",
     "IsAdult": false,
@@ -24715,6 +24742,24 @@
   },
   {
     "Id": 211140107,
+    "Title": "\u305d\u306e\u5f8c\u2015\u2015",
+    "IsAdult": true,
+    "NextMSceneId": null,
+    "SceneStartEffectType": 0,
+    "InboxPackageId": null,
+    "SceneType": 2
+  },
+  {
+    "Id": 211220104,
+    "Title": "\u591c\u306e\u30b9\u30c8\u30ec\u30c3\u30c1",
+    "IsAdult": false,
+    "NextMSceneId": 211220105,
+    "SceneStartEffectType": 0,
+    "InboxPackageId": null,
+    "SceneType": 1
+  },
+  {
+    "Id": 211220105,
     "Title": "\u305d\u306e\u5f8c\u2015\u2015",
     "IsAdult": true,
     "NextMSceneId": null,
