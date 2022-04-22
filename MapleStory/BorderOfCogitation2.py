@@ -216,6 +216,7 @@ def pickup():
     else:
         action.move_right(0.5)
     FlagPicking = False
+    sleep(0.8)
 
 LoopCounter = 0
 RandActions = [
