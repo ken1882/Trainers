@@ -14,6 +14,7 @@ FiberQueue     = []
 ConstantThread = None
 BaseInterval = 0.1
 FlagPicking    = False
+LastBODTime    = 0
 
 ori_sleep = sleep
 def sleep(sec):
@@ -60,7 +61,7 @@ def register_constant_skill(skill, interval, stagger=True):
     SkillCDTimer[skill.name] = 0
 
 def loop_constant_skills():
-    global ConstantSkills,SkillCDTimer,FlagPicking
+    global ConstantSkills,SkillCDTimer,FlagPicking,LastBODTime
     while _G.FlagRunning:
         sleep(_G.FPS)
         curt = time()
@@ -68,9 +69,12 @@ def loop_constant_skills():
             sk,cd,stg = sk
             if stg and FlagPicking:
                 continue
-            if curt - SkillCDTimer[sk.name] < cd+randint(0,3):
+            if curt - SkillCDTimer[sk.name] < cd+randint(0,2):
                 continue
             sk.use()
+            if sk.name == skill.BreathOfDivinity.name:
+                LastBODTime = time()
+                print('Use BOD')
             SkillCDTimer[sk.name] = curt
             sleep(0.3)
 
@@ -81,7 +85,7 @@ def start_constant_thread():
     ConstantThread.start()
 
 def setup():
-    register_constant_skill(skill.BreathOfDivinity, 31, False)
+    register_constant_skill(skill.BreathOfDivinity, 62, False)
     register_constant_skill(skill.Reincarnation, 240)
     register_constant_skill(skill.DarkFog, 20)
     register_constant_skill(skill.MasterOfNightmare, 75)
@@ -217,9 +221,9 @@ def pickup():
 
 LoopCounter = 0
 RandActions = [
-    rand_useskill, rand_useskill4,
-    rand_useskill2, rand_useskill3, 
-    rand_useskill4, rand_useskill4
+    rand_useskill, rand_useskill, rand_useskill,
+    rand_useskill2, #rand_useskill3, 
+    rand_useskill4, rand_useskill4, rand_useskill4, rand_useskill4,
 ]
 def main_loop():
     global LoopCounter
@@ -238,7 +242,7 @@ def main_loop():
     skill.Return.use()
     check_user_interrupt()
     LoopCounter += 1 
-    if LoopCounter > 6+randint(1,4):
+    if LoopCounter > 6+randint(1,4) and time() < LastBODTime+30:
         pickup()
         LoopCounter = 0
 
