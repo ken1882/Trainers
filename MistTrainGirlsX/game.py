@@ -539,3 +539,7 @@ def is_potion_expired(mitem_id):
   if curt >= edate:
     return True
   return False
+
+def get_current_events():
+  pass
+

@@ -107,7 +107,8 @@ def rand_useskill2():
     skill.ElementalBarrage.use()
     for _ in range(5):
         sleep(1)
-        skill.EarthCircle.use()
+        if random() > 0.4:
+            skill.EarthCircle.use()
     skill.Return.use()
     sleep(0.1)
 

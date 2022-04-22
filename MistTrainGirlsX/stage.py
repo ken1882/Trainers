@@ -1,6 +1,6 @@
 StageAlias = {
   'gg':   101002309,  # gear grinds
-  'hsr':  304018106,  # high speed rail
+  'hsr':  304019106,  # high speed rail
   'gold': 201001110,  # gold Mat quest
   'exp':  202001110,  # exp Mat quest
   'inf': 306002101,   # Infinite quest
@@ -18,6 +18,7 @@ TurnLimitedStages.append(RaidStages)
 
 StageData = {
           0: ('Waiting for maintenance', 'メンテナンス中...'),
+  304019106: ('Playing Events', '入隊訓練：アデレード (Inferno)'),
   301074504: ('Playing Raid', '雛と聖歌のクレイドル Raid (Very Hard)'),
   301073504: ('Plating Events', '雛と聖歌のクレイドル 2-4 (Very Hard)'),
   302037504: ('Playing Events', '激突！密林バイリンガル！ 1-4 (Very Hard)'),
