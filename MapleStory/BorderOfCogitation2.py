@@ -164,40 +164,37 @@ def check_user_interrupt():
 def pickup():
     global FlagPicking
     FlagPicking = True
+    _dir = 0 if random() < 0.5 else 1
     skill_time = 0.5
     action.double_jumpup()
     sleep(0.25)
     skill.ThunderCircle.use()
     sleep(skill_time)
-    action.move_right(1.6)
-    action.blink_right()
+    if _dir:
+        action.move_right(1.6)
+        action.blink_right()
+    else:
+        action.move_left(1.6)
+        action.blink_left()
     skill.ManaBrust.use()
     sleep(skill_time)
-    action.blink_right()
+    if _dir:
+        action.blink_right()
+    else:
+        action.blink_left()
     skill.ManaBrust.use()
     sleep(1)
     action.jump_down()
     sleep(1)
     skill.ThunderCircle.use()
     sleep(skill_time)
-    action.blink_left()
-    skill.EarthCircle.use()
-    sleep(skill_time)
-    action.blink_left()
-    skill.EarthCircle.use()
-    sleep(skill_time)
-    action.blink_left()
-    skill.EarthCircle.use()
-    sleep(skill_time)
-    action.blink_left()
-    skill.EarthCircle.use()
-    sleep(skill_time)
-    action.blink_left()
-    skill.EarthCircle.use()
-    sleep(skill_time)
-    action.blink_left()
-    skill.EarthCircle.use()
-    sleep(skill_time)
+    for _ in range(6):
+        if _dir:
+            action.blink_left()
+        else:
+            action.blink_right()
+        skill.EarthCircle.use()
+        sleep(skill_time)
     sleep(0.5)
     action.double_jumpup()
     sleep(0.25)
@@ -207,16 +204,17 @@ def pickup():
     sleep(1)
     skill.ThunderCircle.use()
     sleep(skill_time)
-    action.blink_right()
-    skill.EarthCircle.use()
-    sleep(skill_time)
-    action.blink_right()
-    skill.EarthCircle.use()
-    sleep(skill_time)
-    action.blink_right()
-    skill.EarthCircle.use()
-    sleep(skill_time)
-    action.move_left(0.5)
+    for _ in range(3):
+        if _dir:
+            action.blink_right()
+        else:
+            action.blink_left()
+        skill.EarthCircle.use()
+        sleep(skill_time)
+    if _dir:
+        action.move_left(0.5)
+    else:
+        action.move_right(0.5)
     FlagPicking = False
 
 LoopCounter = 0

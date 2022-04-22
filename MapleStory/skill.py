@@ -2,7 +2,9 @@ from datetime import date, datetime,timedelta
 from graphics import is_color_ok
 import Input
 import _G
+from time import sleep, time
 
+LastSkillUsedTime = 0
 class Skill:
   def __init__(self, name, cd, keycode):
     '''
@@ -22,6 +24,11 @@ class Skill:
     return datetime.now() - self.last_used_time > self.cd
 
   def use(self):
+    global LastSkillUsedTime
+    curt = time()
+    if curt < LastSkillUsedTime+0.1:
+      sleep(LastSkillUsedTime+0.1 - curt)
+    LastSkillUsedTime = time()
     for event in Input.get_keybd_pair(self.keycode):
       Input.SendInput(event)
 
