@@ -1,5 +1,3 @@
-from numpy import gradient
-from win32gui import ExtCreatePen
 import _G,stage
 from _G import resume, resume_from, pop_fiber_ret, wait, uwait
 import Input, position, heuristics, training, tourment
