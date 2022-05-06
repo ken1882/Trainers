@@ -9,13 +9,10 @@ __UCharacterCache = {}
 __UCharacterStats = {}
 __UStatsUnchangedTimes = {}
 __UnsellableItems = set()
-USTAT_UNCHANGE_THRESHOLD = 20
+USTAT_UNCHANGE_THRESHOLD = 10
 
 MIST_GEAR_ID = 85
 SWAP_GEAR_ID = [
-  {},
-  {},
-  {},
   {
     'weapon': [
       0,
@@ -47,7 +44,10 @@ SWAP_GEAR_ID = [
     ],
     'armor': 26147275,  # エクリプスプレート改
     'accessory': 33128720,  # エクリプスネック改
-  }
+  },
+  {'weapon': [0,0,0,0,0,0,0,0,0,0], 'armor': 26147280, 'accessory': 33128716},
+  {'weapon': [0,0,0,0,0,0,0,0,0,0], 'armor': 26147275, 'accessory': 33128718},
+  {'weapon': [0,0,0,0,0,0,0,0,0,0], 'armor': 26147278, 'accessory': 33128721},
 ]
 
 def clear_cache():
@@ -160,6 +160,18 @@ def is_character_mastered(ch, accumulate=False):
       __UCharacterStats[mid] = sstats
       __UStatsUnchangedTimes[mid] = 0
   return flag_maxed
+
+def get_maxed_partymember(pid, sid):
+  '''
+  Get party stats maxed party member uid of given stage
+  '''
+  res = game.get_request(f"/api/Quests/{sid}/prepare/{pid}?rentalUUserId=null")
+  ret = []
+  for ch in res['r']['QuestPreparationCharacterViewModels']:
+    if all([n == 0 for _,n in ch['GrowStatus'].items()]):
+      ret.append(ch['UCharacterId'])
+      continue
+  return ret
 
 def get_unmastered_characters():
   '''
@@ -397,11 +409,11 @@ def swap_party_character(pid, sidx, cid, **kwargs):
   char = get_character_by_uid(cid)
   equips = get_suitable_equpiments(char, sidx)
   if not wid:
-    wid = equips[0]
+    wid = equips[0] or 'null'
   if not aid:
-    aid = equips[1]
+    aid = equips[1] or 'null'
   if not did:
-    did = equips[2]
+    did = equips[2] or 'null'
   return game.post_request(f"/api/UParties/{pid}/CharacterSlots/{sid}?uCharacterId={cid}&uWeaponId={wid}&uArmorId={aid}&uAccessoryId={did}&uSkillId={eid}")
 
 def get_character_party_index(pid, mchid):
@@ -439,8 +451,8 @@ def enhance_abstone_atk(id, n1=0, n2=0, n3=0):
 
 def dump_scene_metadata():
   uris = {
-    'main': 'https://mist-train-east5.azurewebsites.net/api/UScenes/MainScenes',
-    'event': 'https://mist-train-east5.azurewebsites.net/api/UScenes/EventScenes',
+    'main': '/api/UScenes/MainScenes',
+    'event': '/api/UScenes/EventScenes',
   }
   ret = {}
   for key,uri in uris.items():
@@ -463,7 +475,7 @@ def dump_all_available_scenes(meta):
       if os.path.exists(path):
         log_info(f"Scene#{id} {game.get_scene(id)['Title']} already saved, skip")
         continue
-      res = game.get_request(f"https://mist-train-east5.azurewebsites.net/api/UScenes/{id}")
+      res = game.get_request(f"/api/UScenes/{id}")
       data = res['r']
       data['MSceneDetailViewModel'] = sorted(data['MSceneDetailViewModel'], key=lambda o:o['GroupOrder'])
       with open(path, 'w') as fp:

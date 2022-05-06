@@ -1,8 +1,10 @@
+from time import sleep
 import win32con
 import _G
 from _G import uwait
 import Input
 import Arcana_UpperPath,StarryOcean4
+import skill
 from utils import spawn_childproc
 
 def start_click_fiber():
@@ -21,6 +23,20 @@ def start_starry_ocean():
   _G.MainChildPipe = _G.ChildPipe[name]
   _G.MainChildName = name
   print("Chlid proc started")
+
+def start_reincarnation_helper():
+  hour = 60 * 60 * 4
+  interval = 60
+  for i in range(hour // interval):
+    sleep(1)
+    print(f"Use BOD #{i+1}")
+    skill.BreathOfDivinity.use()
+    if i % 5 == 0:
+      sleep(0.3)
+      print(f"Place monument #{(i // 5)+1}")
+      skill.Reincarnation.use()
+    sleep(interval)
+    
 
 def start_test_fiber():
   pass

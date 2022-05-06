@@ -129,7 +129,8 @@ MAPLE_KEYCODE = {
   ',': 0x8C,
   '.': 0x8D,
   '/': 0xBF,
-  'SHIFT': 0x2A,
+  #'SHIFT': 0x2A,
+  'SHIFT': 0x83,
   'CTRL': 0x1D,
   'ALT': 0x38,
   'SPACE': 0x39,
@@ -166,11 +167,11 @@ def resume(fiber):
   try:
     ret = next(fiber)
     if ret and ret[0] == MsgPipeRet:
-      log_info("Fiber signaled return")
+      log_debug("Fiber signaled return")
       FiberRet = ret[1]
       return False
   except StopIteration:
-    log_info("Fiber has stopped")
+    log_debug("Fiber has stopped")
     return False
   return True
 

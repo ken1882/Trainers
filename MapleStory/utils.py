@@ -120,3 +120,7 @@ def message_child(msg):
   '''
   if _G.MainChildPipe:
     _G.MainChildPipe[0].send(msg)
+
+
+def is_focused():
+  return win32gui.GetForegroundWindow() == _G.AppHwnd

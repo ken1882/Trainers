@@ -2,7 +2,9 @@ from datetime import date, datetime,timedelta
 from graphics import is_color_ok
 import Input
 import _G
+from time import sleep, time
 
+LastSkillUsedTime = 0
 class Skill:
   def __init__(self, name, cd, keycode):
     '''
@@ -22,6 +24,11 @@ class Skill:
     return datetime.now() - self.last_used_time > self.cd
 
   def use(self):
+    global LastSkillUsedTime
+    curt = time()
+    if curt < LastSkillUsedTime+0.1:
+      sleep(LastSkillUsedTime+0.1 - curt)
+    LastSkillUsedTime = time()
     for event in Input.get_keybd_pair(self.keycode):
       Input.SendInput(event)
 
@@ -50,6 +57,7 @@ DragonMaster      = Skill('DragonMaster', 240, _G.MAPLE_KEYCODE['2'])      # 龍
 SummonOnyxDragon  = Skill('SummonOnyxDragon', 80, _G.MAPLE_KEYCODE['3'])   # 招喚聖歐尼斯龍
 LucidsNightmare   = Skill('LucidsNightmare', 110, _G.MAPLE_KEYCODE['4'])   # 露希妲的惡夢
 FreudsWisdom      = Skill('FreudsWisdom', 25, _G.MAPLE_KEYCODE['C'])       # 普利特的祝福
+# SpiderMirror      = Skill('SpiderMirror', 250, _G.MAPLE_KEYCODE['6'])    # 蜘蛛之鏡
 HeroicMemories    = Skill('HeroicMemories', 120, _G.MAPLE_KEYCODE['7'])    # 英雄歐尼斯
 
 TakenoKonoko      = Skill('TakenoKonoko', 1800, _G.MAPLE_KEYCODE['0'])    # 木野子的祝福
@@ -58,10 +66,12 @@ Yorozu            = Skill('Yorozu', 1800, None)                           # 萬�
 Izuna             = Skill('Izuna', 1800, None)                            # 泉奈的祈禱
 Ibaraki           = Skill('Ibaraki', 1800, None)                          # 棘鬼
 
-BreathOfDivinity  = Skill('CelestialBreath', 60, _G.MAPLE_KEYCODE['Z'])     # 天上的氣息
-MasterOfNightmare = Skill('MasterOfNightmare', 150, _G.MAPLE_KEYCODE['`'])  # 惡夢的支配者
+BreathOfDivinity  = Skill('BreathOfDivinity', 60, _G.MAPLE_KEYCODE['Z'])     # 天上的氣息
+MasterOfNightmare = Skill('MasterOfNightmare', 150, _G.MAPLE_KEYCODE['`'])   # 惡夢的支配者
 
 DecentHolySymbol = Skill('DecentHolySymbol', 180, _G.MAPLE_KEYCODE['M'])    # 實用的祈禱
 ManaOverload     = Skill('ManaOverload', 60, _G.MAPLE_KEYCODE['O'])         # 超載魔力
 EtherealForm     = Skill('EtherealForm', 60, _G.MAPLE_KEYCODE['9'])         # 虛無型態
 DecentAdvancedBlessing = Skill('DecentAdvancedBlessing', 180, _G.MAPLE_KEYCODE['K']) # 實用的進階祝福
+
+Reincarnation = Skill('Reincarnation', 180, _G.MAPLE_KEYCODE['Y'])

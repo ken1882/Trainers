@@ -1,3 +1,5 @@
+# coding: UTF-8
+
 import re
 from urllib3.exceptions import ProtocolError
 import _G
@@ -35,6 +37,8 @@ TemporaryNetworkErrors = (
 )
 
 ServerList = (
+  'https://app-misttrain-prod-001.azurewebsites.net',
+  'https://app-misttrain-prod-002.azurewebsites.net',
   'https://mist-train-east5.azurewebsites.net',
   'https://mist-train-east4.azurewebsites.net',
   'https://mist-train-east6.azurewebsites.net',
@@ -95,7 +99,7 @@ def init():
   if not args.auto_reauth and not Session.headers['Authorization']:
     raise RuntimeError("Game token is required to start game without reauthorize")
   determine_server()
-  load_database()
+  load_database(True)
 
 def determine_server():
   global Session,ServerList,ServerLocation
@@ -145,8 +149,7 @@ def get_request(url, depth=1):
     log_warning("Server day changing, wait for 1 minute")
     wait(60)
     if not is_day_changing():
-      log_info("Server day changed, attempting to reauth game")
-      reauth_game()
+      log_warning("Server day changed")
       break
   if not url.startswith('http'):
     url = ServerLocation + url
@@ -181,8 +184,7 @@ def post_request(url, data=None, depth=1):
     log_warning("Server day changing, wait for 1 minute")
     wait(60)
     if not is_day_changing():
-      log_info("Server day changed, attempting to reauth game")
-      reauth_game()
+      log_warning("Server day changed")
       wait(1)
       break
   res = None
@@ -256,9 +258,9 @@ def reauth_game():
         st = literal_eval(line.strip().split(':')[-1][:-1].strip())
         break
     payload = raw_form.split('\n')[1]
-    rep = re.search(r"mist-train-east(\d)", payload).span()
-    rep = payload[rep[0]:rep[1]]
-    payload = payload.replace(rep, ServerLocation.split('//')[1].split('.')[0])
+    # rep = re.search(r"app-misttrain-prod-(\d+)", payload).span()
+    # rep = payload[rep[0]:rep[1]]
+    # payload = payload.replace(rep, ServerLocation.split('//')[1].split('.')[0])
     rep = re.search(r"st=(.+?)&", payload).group(0)
     rep = rep.split('=')[1][:-1]
     payload = payload.replace(rep, st)
@@ -324,7 +326,8 @@ def load_database(forced=False):
     db = None
     if forced or not os.path.exists(path) or time() - os.path.getmtime(path) > STATIC_FILE_TTL:
       try:
-        db = get_request(link)
+        log_info("Loading", link)
+        db = requests.get(link).json()
       except (SystemExit, Exception) as err:
         log_error(f"Error occurred ({err}) while requesting database, using local instead")
     # Init dbs
@@ -536,3 +539,7 @@ def is_potion_expired(mitem_id):
   if curt >= edate:
     return True
   return False
+
+def get_current_events():
+  pass
+

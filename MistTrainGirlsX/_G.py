@@ -6,6 +6,7 @@ from copy import copy, deepcopy
 import traceback
 import unicodedata
 
+ENCODING = 'UTF-8'
 IS_WIN32 = False
 IS_LINUX = False
 
@@ -322,6 +323,18 @@ RARITY_A  = 2
 RARITY_S  = 3
 RARITY_SS = 4
 RARITY_NAME = ['C','B','A','S','SS','US']
+
+# Events
+EVETYPE_RB        = 7   # Raid Boss
+EVETYPE_TR        = 8   # Treasure
+EVETYPE_HSR       = 9   # High speed rail
+EVETYPE_ALTER     = 10
+EVETYPE_LOTTERY   = 11
+EVETYPE_BR        = 12  # Boss Rush
+EVETYPE_INF       = 13  # Infinity
+EVETYPE_JEWEL     = 15  # 狭霧の洞穴
+EVETYPE_TC        = 19  # Training Camp
+
 
 LastErrorCode = 0
 LastErrorMessage = ''
