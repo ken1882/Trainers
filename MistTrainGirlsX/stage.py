@@ -8,7 +8,7 @@ StageAlias = {
 }
 
 RaidStages = [
-  301074504, 301070504, 301066504, 301062504, 301058504, 301054504,
+  301078504, 301074504, 301070504, 301066504, 301062504, 301058504, 301054504,
 ]
 
 TurnLimitedStages = [
@@ -18,6 +18,9 @@ TurnLimitedStages.append(RaidStages)
 
 StageData = {
           0: ('Waiting for maintenance', 'メンテナンス中...'),
+  301078504: ('Playing Raid', '荒野の果てのロスト・シップ Raid (Very Hard)'),
+  301077505: ('Playing Events', '荒野の果てのロスト・シップ 2-5 (Very Hard)'),
+  301077504: ('Playing Events', '荒野の果てのロスト・シップ 2-4 (Very Hard)'),
   304019106: ('Playing Events', '入隊訓練：アデレード (Inferno)'),
   301074504: ('Playing Raid', '雛と聖歌のクレイドル Raid (Very Hard)'),
   301073504: ('Plating Events', '雛と聖歌のクレイドル 2-4 (Very Hard)'),
@@ -90,6 +93,16 @@ StageData = {
   212002106: ('Playing Material Quest', '狭霧の洞穴【防具】6 階層'),
   212003106: ('Playing Material Quest', '狭霧の洞穴【裝飾】6 階層'),
   212003104: ('Playing Material Quest', '狭霧の洞穴【裝飾】4 階層'),
+  126052505: ('Playing Main Story', 'クエスト 52-5 (Very Hard)'),
+  126052504: ('Playing Main Story', 'クエスト 52-4 (Very Hard)'),
+  126052503: ('Playing Main Story', 'クエスト 52-3 (Very Hard)'),
+  126052502: ('Playing Main Story', 'クエスト 52-2 (Very Hard)'),
+  126052501: ('Playing Main Story', 'クエスト 52-1 (Very Hard)'),
+  126051505: ('Playing Main Story', 'クエスト 51-5 (Very Hard)'),
+  126051504: ('Playing Main Story', 'クエスト 51-4 (Very Hard)'),
+  126051503: ('Playing Main Story', 'クエスト 51-3 (Very Hard)'),
+  126051502: ('Playing Main Story', 'クエスト 51-2 (Very Hard)'),
+  126051501: ('Playing Main Story', 'クエスト 51-1 (Very Hard)'),
   125050505: ('Playing Main Story', 'クエスト 50-5 (Very Hard)'),
   125050504: ('Playing Main Story', 'クエスト 50-4 (Very Hard)'),
   125050503: ('Playing Main Story', 'クエスト 50-3 (Very Hard)'),

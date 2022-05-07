@@ -75,7 +75,13 @@ AvailableFriendRentals = []
 RentalCycle = None
 
 UnmasteredCharacters = []
-UnmasteredSwapIndex  = [0,1,2]
+UnmasteredSwapIndex  = [
+  #0,
+  #1,
+  #2,
+  3,
+  4
+]
 
 STATUS_MODIFIER_INC = 1
 STATUS_MODIFIER_DEC = 2

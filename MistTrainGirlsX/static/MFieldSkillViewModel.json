@@ -350,6 +350,20 @@
     "AbilityMSkill3Id": null
   },
   {
+    "Id": 7020026,
+    "Name": "\u6050\u308c\u306a\u3044\u610f\u5fd7",
+    "Description": "",
+    "Rarity": 3,
+    "MFieldSkillRarity": {
+      "Rarity": 3,
+      "LevelLimit": 4
+    },
+    "Cost": 33,
+    "AbilityMSkill1Id": 3010034,
+    "AbilityMSkill2Id": 3030008,
+    "AbilityMSkill3Id": null
+  },
+  {
     "Id": 7030001,
     "Name": "\u9577\u3044\u65c5\u306e\u9014\u4e2d\u3067",
     "Description": "",
@@ -1008,6 +1022,34 @@
     "AbilityMSkill3Id": null
   },
   {
+    "Id": 7030048,
+    "Name": "\u60aa\u304f\u306a\u3044\u3088\u30e1\u30a7\uff5e",
+    "Description": "",
+    "Rarity": 3,
+    "MFieldSkillRarity": {
+      "Rarity": 3,
+      "LevelLimit": 4
+    },
+    "Cost": 35,
+    "AbilityMSkill1Id": 3010023,
+    "AbilityMSkill2Id": 3030074,
+    "AbilityMSkill3Id": null
+  },
+  {
+    "Id": 7030050,
+    "Name": "\u30e2\u30f3\u30b9\u30bf\u30fc\u5a18\u3068\u306e\u3075\u308c\u3042\u3044",
+    "Description": "",
+    "Rarity": 3,
+    "MFieldSkillRarity": {
+      "Rarity": 3,
+      "LevelLimit": 4
+    },
+    "Cost": 30,
+    "AbilityMSkill1Id": 3010008,
+    "AbilityMSkill2Id": 3070001,
+    "AbilityMSkill3Id": null
+  },
+  {
     "Id": 7040001,
     "Name": "\u30aa\u30aa\u30a8\u305f\u3061\u306e\u591c",
     "Description": "",
@@ -1370,6 +1412,20 @@
     "AbilityMSkill1Id": 3010005,
     "AbilityMSkill2Id": 3020008,
     "AbilityMSkill3Id": 3030074
+  },
+  {
+    "Id": 7040027,
+    "Name": "\u653e\u8ab2\u5f8c\u306e\u5973\u5b50\u4f1a\u266a",
+    "Description": "",
+    "Rarity": 4,
+    "MFieldSkillRarity": {
+      "Rarity": 4,
+      "LevelLimit": 5
+    },
+    "Cost": 66,
+    "AbilityMSkill1Id": 3030074,
+    "AbilityMSkill2Id": 3030008,
+    "AbilityMSkill3Id": 3030002
   },
   {
     "Id": 7040028,
