@@ -25,9 +25,12 @@ class Skill:
 
   def use(self):
     global LastSkillUsedTime
-    curt = time()
-    if curt < LastSkillUsedTime+0.1:
-      sleep(LastSkillUsedTime+0.1 - curt)
+    if _G.FlagPaused or not _G.FlagRunning:
+      return
+    if self.name not in ['Teleport'] or self.name in ['BreathOfDivinity']:
+      curt = time()
+      if curt < LastSkillUsedTime+0.2:
+        sleep(min(0.1, curt-LastSkillUsedTime))
     LastSkillUsedTime = time()
     for event in Input.get_keybd_pair(self.keycode):
       Input.SendInput(event)
@@ -67,6 +70,7 @@ Izuna             = Skill('Izuna', 1800, None)                            # 泉�
 Ibaraki           = Skill('Ibaraki', 1800, None)                          # 棘鬼
 
 BreathOfDivinity  = Skill('BreathOfDivinity', 60, _G.MAPLE_KEYCODE['Z'])     # 天上的氣息
+BreathOfDivinity2 = Skill('BreathOfDivinity2', 62, _G.MAPLE_KEYCODE['Z'])     # 天上的氣息
 MasterOfNightmare = Skill('MasterOfNightmare', 150, _G.MAPLE_KEYCODE['`'])   # 惡夢的支配者
 
 DecentHolySymbol = Skill('DecentHolySymbol', 180, _G.MAPLE_KEYCODE['M'])    # 實用的祈禱
