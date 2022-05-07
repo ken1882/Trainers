@@ -28,7 +28,7 @@ def start_reincarnation_helper():
   hour = 60 * 60 * 4
   interval = 60
   for i in range(hour // interval):
-    sleep(1)
+    sleep(2)
     print(f"Use BOD #{i+1}")
     skill.BreathOfDivinity.use()
     if i % 5 == 0:
