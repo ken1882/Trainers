@@ -37,6 +37,9 @@ def __start_autosong():
         Input.rclick(*position.StoryUnlockNext)
         uwait(0.2)
         yield
+        Input.rclick(*position.EventOK)
+        uwait(0.2)
+        yield
 
 def start_auto_song_fiber():
   n = int(_G.ARGV.repeats or 0)
