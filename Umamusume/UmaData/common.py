@@ -1,5 +1,6 @@
 RunningStyleSkills = [
   [ # 逃
+    '大逃げ',
     '逃亡者',
     '押し切り準備',
     'じゃじゃウマ娘',
@@ -213,6 +214,7 @@ NormalSkillOrder = [
   '一匹狼',
   
   # running style higher priority
+  '大逃げ',
   '逃亡者',
   '押し切り準備',
   'じゃじゃウマ娘',
