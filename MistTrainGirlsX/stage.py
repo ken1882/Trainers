@@ -1,6 +1,6 @@
 StageAlias = {
   'gg':   101002309,  # gear grinds
-  'hsr':  304019106,  # high speed rail
+  'hsr':  304020106,  # high speed rail
   'gold': 201001110,  # gold Mat quest
   'exp':  202001110,  # exp Mat quest
   'inf': 306002101,   # Infinite quest
@@ -8,6 +8,7 @@ StageAlias = {
 }
 
 RaidStages = [
+  301082504, 
   301078504, 301074504, 301070504, 301066504, 301062504, 301058504, 301054504,
 ]
 
@@ -18,6 +19,12 @@ TurnLimitedStages.append(RaidStages)
 
 StageData = {
           0: ('Waiting for maintenance', 'メンテナンス中...'),
+  301082504: ('Playing Raid', '管理社会のメサイア Raid (Very Hard)'),
+  301081505: ('Playing Events', '管理社会のメサイア 2-5 (Very Hard)'),
+  301081504: ('Playing Events', '管理社会のメサイア 2-4 (Very Hard)'),
+  302041505: ('Playing Events', '対魔忍緊急指令！霧の列車防衛作戦 1-5 (Very Hard)'),
+  302041504: ('Playing Events', '対魔忍緊急指令！霧の列車防衛作戦 1-4 (Very Hard)'),
+  304020106: ('Playing Events', '入隊訓練：カオヤイ (Inferno)'),
   301078504: ('Playing Raid', '荒野の果てのロスト・シップ Raid (Very Hard)'),
   301077505: ('Playing Events', '荒野の果てのロスト・シップ 2-5 (Very Hard)'),
   301077504: ('Playing Events', '荒野の果てのロスト・シップ 2-4 (Very Hard)'),
@@ -93,6 +100,16 @@ StageData = {
   212002106: ('Playing Material Quest', '狭霧の洞穴【防具】6 階層'),
   212003106: ('Playing Material Quest', '狭霧の洞穴【裝飾】6 階層'),
   212003104: ('Playing Material Quest', '狭霧の洞穴【裝飾】4 階層'),
+  127054505: ('Playing Main Story', 'クエスト 54-5 (Very Hard)'),
+  127054504: ('Playing Main Story', 'クエスト 54-4 (Very Hard)'),
+  127054503: ('Playing Main Story', 'クエスト 54-3 (Very Hard)'),
+  127054502: ('Playing Main Story', 'クエスト 54-2 (Very Hard)'),
+  127054501: ('Playing Main Story', 'クエスト 54-1 (Very Hard)'),
+  127053505: ('Playing Main Story', 'クエスト 53-5 (Very Hard)'),
+  127053504: ('Playing Main Story', 'クエスト 53-4 (Very Hard)'),
+  127053503: ('Playing Main Story', 'クエスト 53-3 (Very Hard)'),
+  127053502: ('Playing Main Story', 'クエスト 53-2 (Very Hard)'),
+  127053501: ('Playing Main Story', 'クエスト 53-1 (Very Hard)'),
   126052505: ('Playing Main Story', 'クエスト 52-5 (Very Hard)'),
   126052504: ('Playing Main Story', 'クエスト 52-4 (Very Hard)'),
   126052503: ('Playing Main Story', 'クエスト 52-3 (Very Hard)'),
