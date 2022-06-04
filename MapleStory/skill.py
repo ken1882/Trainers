@@ -1,4 +1,5 @@
 from datetime import date, datetime,timedelta
+from random import random
 from graphics import is_color_ok
 import Input
 import _G
@@ -33,6 +34,9 @@ class Skill:
         sleep(min(0.1, curt-LastSkillUsedTime))
     LastSkillUsedTime = time()
     for event in Input.get_keybd_pair(self.keycode):
+      r = random()/5
+      if r < 0.1:
+        sleep(r)
       Input.SendInput(event)
 
 TrueArachnidReflection = Skill('TrueArachnidReflection', 250, _G.MAPLE_KEYCODE['6']) # 蜘蛛之鏡

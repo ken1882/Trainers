@@ -13,6 +13,10 @@ WORD = ctypes.c_ushort
 ScrollTime  = 0.03
 ScrollDelta = [1,5]
 
+VK_MOUSE3 = 0x4
+VK_MOUSE4 = 0x5
+VK_MOUSE5 = 0x6
+
 class MOUSEINPUT(ctypes.Structure):
   _fields_ = (('dx', LONG),
               ('dy', LONG),
@@ -84,7 +88,7 @@ keystate = [0 for _ in range(0xff)]
 def update():
   global keystate
   for i in range(0xff):
-    if win32api.GetAsyncKeyState(i):
+    if win32api.GetAsyncKeyState(i) & 0x8000:
       keystate[i] += 1
     else:
       keystate[i] = 0

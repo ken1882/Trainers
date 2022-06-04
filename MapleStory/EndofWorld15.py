@@ -197,7 +197,7 @@ def pickup():
             sleep(0.05)
         else:
             skill.ManaBrust.use()
-        sleep(skill_time+0.1)
+        sleep(skill_time+0.05)
     Input.key_up(win32con.VK_LEFT)
     sleep(skill_time)
     skill.MagicDerbis.use()
@@ -209,7 +209,7 @@ def pickup():
         sleep(0.1)
     sleep(skill_time+0.1)
     Input.key_up(win32con.VK_RIGHT)
-    action.move_left(0.4)
+    action.move_left(0.5)
     FlagPicking = False
     # sleep(0.8)
 
@@ -233,14 +233,13 @@ def main_loop():
     _exec_action(skill.WindCircle.use)
     sleep(0.3, True)
     _exec_action(action.blink_right)
-    sleep(0.5)
+    sleep(1)
     FlagLockSkillUse = False
-    sleep(0.5)
     if not _G.FlagPaused:
         LoopCounter += 1 
     if LoopCounter % 2 == 0 and random() < 0.6:
         skill.MagicDerbis.use()
-    if not _G.FlagPaused and LoopCounter > 7+randint(0,3) and time() < LastBODTime+30:
+    if not _G.FlagPaused and LoopCounter > 7+randint(1,3) and time() < LastBODTime+30:
         pickup()
         LoopCounter = 0
         return
@@ -248,14 +247,14 @@ def main_loop():
     for _ in range(5):
         sleep(0.5, True)
         if not flag_turned and random() < 0.3:
-            _exec_action(action.move_right, 0.2)
+            _exec_action(action.move_right, 0.21)
             flag_turned = True
     if random() < 0.4:
         _exec_action(RandActions[randint(0, len(RandActions)-1)])
         sleep(0.5, True)
     # sleep(0.4, True)
     if not flag_turned:
-        _exec_action(action.move_right, 0.2)
+        _exec_action(action.move_right, 0.21)
     _exec_action(skill.FireBreath.use)
     _exec_action(skill.EarthCircle.use)
     sleep(3, True)
