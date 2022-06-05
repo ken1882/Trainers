@@ -174,6 +174,7 @@ def pickup():
         sleep(0.05)
         skill.EarthCircle.use()
         sleep(skill_time)
+    action.move_left(0.5)
     sleep(skill_time)
     action.double_jumpup(action.DIR_LEFT)
     sleep(0.25)
