@@ -1,5 +1,6 @@
 import action
 import _G
+import utils
 from time import sleep,time
 from random import random, randint
 from threading import Thread
@@ -16,6 +17,10 @@ BaseInterval = 0.1
 FlagPicking    = False
 LastBODTime    = 0
 FlagLockSkillUse = False
+StandPos = (90, 136)
+RandMoveCount = 0
+RandMoveSeed  = 4
+TimeDeltaPerPixel = 0.07
 
 ori_sleep = sleep
 def sleep(sec, r=False):
@@ -210,8 +215,17 @@ def pickup():
     sleep(skill_time+0.1)
     Input.key_up(win32con.VK_RIGHT)
     action.move_left(0.5)
+    _G.flush()
+    px = utils.get_player_pos()
+    print("Player pos:", px)
+    if px:
+        dx = px[0] - StandPos[0]
+        if dx > 0:
+            action.move_left(TimeDeltaPerPixel*dx)
+        else:
+            action.move_right(TimeDeltaPerPixel*dx*-1)
+    action.move_right(0.2)
     FlagPicking = False
-    # sleep(0.8)
 
 LoopCounter = 0
 RandActions = [
@@ -220,48 +234,54 @@ RandActions = [
     rand_useskill4, rand_useskill4, rand_useskill4, rand_useskill4,
 ]
 def _exec_action(func, *args, **kwargs):
+    global FlagLockSkillUse
     if not _G.FlagRunning or _G.FlagPaused:
         return
+    FlagLockSkillUse = True
     func(*args, **kwargs)
+    FlagLockSkillUse = False
 
 def main_loop():
-    global LoopCounter,FlagLockSkillUse
-    sleep(0.5, True)
-    FlagLockSkillUse = True
-    _exec_action(action.blink_left)
+    global LoopCounter,FlagLockSkillUse,RandMoveSeed,RandMoveCount
+    sleep(0.3, True)
     _exec_action(skill.DragonFlash.use)
     _exec_action(skill.WindCircle.use)
-    sleep(0.3, True)
-    _exec_action(action.blink_right)
-    sleep(1)
-    FlagLockSkillUse = False
     if not _G.FlagPaused:
         LoopCounter += 1 
-    if LoopCounter % 2 == 0 and random() < 0.6:
-        skill.MagicDerbis.use()
-    if not _G.FlagPaused and LoopCounter > 7+randint(1,3) and time() < LastBODTime+30:
-        pickup()
-        LoopCounter = 0
-        return
-    flag_turned = False
-    for _ in range(5):
+        RandMoveCount += 1
+    seed = randint(1,6)
+    seed2 = randint(2,3)
+    for i in range(7):
         sleep(0.5, True)
-        if not flag_turned and random() < 0.3:
-            _exec_action(action.move_right, 0.21)
-            flag_turned = True
-    if random() < 0.4:
-        _exec_action(RandActions[randint(0, len(RandActions)-1)])
-        sleep(0.5, True)
-    # sleep(0.4, True)
-    if not flag_turned:
-        _exec_action(action.move_right, 0.21)
+        if i == seed and LoopCounter % seed2 == 0:
+            skill.MagicDerbis.use()
+    
     _exec_action(skill.FireBreath.use)
     _exec_action(skill.EarthCircle.use)
-    sleep(3, True)
+    if not _G.FlagPaused:
+        LoopCounter += 1 
+    seed = randint(1,4)
+    for i in range(5):
+        sleep(0.5, True)
+        if i == seed and LoopCounter % seed2 == 0:
+            skill.MagicDerbis.use()
+    sleep(0.15)
     _exec_action(skill.Return.use)
+    
+    if not _G.FlagPaused:
+        if LoopCounter > 12+randint(1,3) and time() < LastBODTime+30:
+            pickup()
+            LoopCounter = 0
+            return
+        if RandMoveCount >= RandMoveSeed:
+            action.move_left(0.3)
+            action.move_right(0.4)
+            RandMoveCount = 0
+            RandMoveSeed  = randint(3,4)
     # check_user_interrupt()
 
 if __name__ == '__main__':
+    utils.find_app_window()
     try:
         setup()
         start_constant_thread()
@@ -269,6 +289,7 @@ if __name__ == '__main__':
         # rand_useskill4()
         # pickup()
         while True:
+            _G.FrameCount += 1
             main_loop()
     finally:
         _G.FlagRunning = False

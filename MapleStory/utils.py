@@ -121,6 +121,22 @@ def message_child(msg):
   if _G.MainChildPipe:
     _G.MainChildPipe[0].send(msg)
 
-
 def is_focused():
   return win32gui.GetForegroundWindow() == _G.AppHwnd
+
+def get_player_pos():
+  ww = _G.AppRect[2] - _G.AppRect[0]
+  wh = _G.AppRect[3] - _G.AppRect[1]
+  sw = ww // 4
+  sh = wh // 3
+  graphics.take_snapshot((0, 0, sw, sh))
+  pos = graphics.find_object('player.png')
+  if pos:
+    return pos[0]
+  log_warning("Unable to get player position")
+  return None
+
+# 
+# 0.2 = 2
+# 0.3 = 4
+# 1.0 = 13
