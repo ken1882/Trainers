@@ -57,7 +57,13 @@ end
 
 WindowWidth  = 1208
 WindowHeight = 764
-Accounts, Password, CharIndex = eval(File.read("dp_credential.rb"))
+Accounts = []
+File.open('dp_credentials.txt') do |file|
+  file.each_line do |line|
+    next if line.strip.length < 3
+    Accounts << [line.strip.split(' ')]
+  end
+end
 EnterAccountPos = [650, 480]
 EnterGamePos    = [1095, 688]
 LogoutPos       = [1156, 735]
@@ -75,16 +81,13 @@ CharSelectionPos = [608, 387]
 def start_eggdance_fiber
   Graphics.move_window($APP_HWND, 1, 1, WindowWidth, WindowHeight)
   
-  Accounts.each_with_index do |acc, index|
+  Accounts.each do |ainfo|
+    acc, pwd, cidx = ainfo
     # Login details
     puts "Login #{acc}"
-    acc.each_char{|ch| Input.trigger_key(ch.upcase.ord, false); Fiber.yield }
-    Input.trigger_key Keymap[:vk_enter]
-    Password[index].each do |kbind|
-      kbind.each{|ch| Input.key_down(ch, false); Fiber.yield}
-      wait 0.03
-      kbind.each{|ch| Input.key_up(ch, false); Fiber.yield}
-    end
+    acc.each_char{|ch| Input.type_char(ch); Fiber.yield }
+    Input.trigger_key Keymap[:vk_enter],false
+    pwd.each_char{|ch| Input.type_char(ch); Fiber.yield }
     wait(0.1)
     Input.trigger_key(Keymap[:vk_enter], false)
     
@@ -98,8 +101,8 @@ def start_eggdance_fiber
 
     # Select character
     3.times do
-      px = CharacterListPos.at(CharIndex[index]).first + rand(15)
-      py = CharacterListPos.at(CharIndex[index]).last  + rand(15)
+      px = CharacterListPos.at(cidx).first + rand(15)
+      py = CharacterListPos.at(cidx).last  + rand(15)
       Input.moveto(px, py); Fiber.yield;
       Input.click_l(false,true);
       wait(0.1+rand.floor(2)/2)
@@ -173,7 +176,8 @@ PasteProc = Proc.new{
   Input.key_up(Keymap[:vk_Lcontrol],false)
 }
 
-def start_mail_fiber(cnt)
+def start_mail_fiber(cnt=nil)
+  cnt = ARGV.find{|arg| arg.include? '--count='}.split('=').last
   cnt.to_i.times do
     Input.moveto(*FirstShardPos); uwait(0.2);
     Input.click_r(false,true); uwait(0.2);
@@ -183,7 +187,8 @@ def start_mail_fiber(cnt)
   end
 end
 
-def start_cod_fiber(cnt)
+def start_cod_fiber(cnt=nil)
+  cnt = ARGV.find{|arg| arg.include? '--count='}.split('=').last
   cnt.to_i.times do
     Input.moveto(*FirstShardPos); uwait(0.2);
     Input.click_r(false,true); uwait(0.2);
@@ -212,7 +217,11 @@ def start_bag_clear_fiber
 end
 
 def start_sell_fiber
-  Grinding.send :shop_sells;
+  Grinding.send :shop_sells
+end
+
+def start_shardcombine_fiber
+  Grinding.send :combine_shards, true
 end
 
 def start_auction_fiber

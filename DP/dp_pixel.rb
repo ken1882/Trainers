@@ -27,8 +27,8 @@ module Graphics
   def screen_pixels_matched?(coords, pixels)
     coords.each_with_index do |pos, i|
       p = get_pixel(pos.first, pos.last)
-      # puts "#{pos} #{p.rgb}"
-      return false if (p.rgb.sum - pixels[i].sum).abs > PixelTolerance
+      # puts "#{pos} #{p.rgb} #{dp}"
+      return false if pixels[i].each_with_index.any?{|n,j| (n-p.rgb[j]).abs > PixelTolerance}
     end
     return true
   end
