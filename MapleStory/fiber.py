@@ -28,7 +28,7 @@ def start_reincarnation_helper():
   hour = 60 * 60 * 4
   interval = 60
   for i in range(hour // interval):
-    sleep(1)
+    sleep(2)
     print(f"Use BOD #{i+1}")
     skill.BreathOfDivinity.use()
     if i % 5 == 0:
@@ -37,6 +37,18 @@ def start_reincarnation_helper():
       skill.Reincarnation.use()
     sleep(interval)
     
+
+def start_alter_helper():
+  while True:
+    Input.update()
+    sleep(_G.FPS)
+    if Input.is_trigger(win32con.VK_NUMPAD9):
+      break
+    elif Input.is_trigger(win32con.VK_NUMPAD0):
+      kp = Input.get_keybd_pair(_G.MAPLE_KEYCODE['SPACE'])
+      for _ in range(30):
+        for event in kp:
+          Input.SendInput(event)
 
 def start_test_fiber():
   pass

@@ -52,6 +52,7 @@ AutoSellItems = [
   (      ITYPE_GEAR2,   106,         9900,         10), # Gear：[古の魔女の末裔]セイラム
 ]
 
+PublicRaid = False
 
 ConsumableMaxKeepRatio = 0.995
 ConsumableMinKeepRatio = 0.95
@@ -75,7 +76,13 @@ AvailableFriendRentals = []
 RentalCycle = None
 
 UnmasteredCharacters = []
-UnmasteredSwapIndex  = [0,1,2]
+UnmasteredSwapIndex  = [
+  #0,
+  #1,
+  #2,
+  3,
+  4
+]
 
 STATUS_MODIFIER_INC = 1
 STATUS_MODIFIER_DEC = 2
@@ -220,12 +227,33 @@ def start_battle(sid, pid, rid=0):
   return res['r']
 
 def start_raid(sid, pid, rid=0):
+  global PublicRaid
   log_info("Starting raid")
   rid = rid if rid else 'null'
   res = game.post_request(f"/api/Battle/canstartRaid/{sid}?uPartyId={pid}&isFriend=false&isHost=true&uRaidId=null")
   if res['r']['FaildReason'] != ERROR_SUCCESS:
     return res['r']['FaildReason']
-  res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=0")
+  if PublicRaid:
+    res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=3")
+    boss = res['r']['BattleState']['Enemies'][0]
+    try:
+      payload = {
+        'EnemyParameters': [
+          {
+            'EnemyId': boss['EID'],
+            'X': boss['X'], 'Y': boss['Y']
+          }
+        ],
+        'PriorityOrder': 0,
+        'SentAfter': 0,
+        'SpecialPriorityTargetFlag': None,
+        'StampId': None
+      }
+      game.post_request('api/Raid/sendLogs', payload)
+    except Exception as err:
+      handle_exception(err)
+  else:
+    res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=0")
   return res['r']
 
 def join_raid(sid, pid, rid=0, scope=3):

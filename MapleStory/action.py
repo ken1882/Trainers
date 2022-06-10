@@ -7,6 +7,8 @@ from multiprocessing import Process,Pipe
 import skill
 
 BASE_INTERVAL_TIME = 0.1
+DIR_LEFT  = 1
+DIR_RIGHT = 2
 
 def move_left_async(duration):
   try:
@@ -117,36 +119,36 @@ def interact():
 def blink_left():
   try:
     Input.key_down(win32con.VK_LEFT)
-    time.sleep(0.1)
+    time.sleep(0.08)
     skill.Teleport.use()
-    time.sleep(0.2)
+    time.sleep(0.15)
   finally:
     Input.key_up(win32con.VK_LEFT)
 
 def blink_right():
   try:
     Input.key_down(win32con.VK_RIGHT)
-    time.sleep(0.1)
+    time.sleep(0.08)
     skill.Teleport.use()
-    time.sleep(0.2)
+    time.sleep(0.15)
   finally:
     Input.key_up(win32con.VK_RIGHT)
 
 def blink_up():
   try:
     Input.key_down(win32con.VK_UP)
-    time.sleep(0.1)
+    time.sleep(0.08)
     skill.Teleport.use()
-    time.sleep(0.2)
+    time.sleep(0.15)
   finally:
     Input.key_up(win32con.VK_UP)
 
 def blink_down():
   try:
     Input.key_down(win32con.VK_DOWN)
-    time.sleep(0.1)
+    time.sleep(0.08)
     skill.Teleport.use()
-    time.sleep(0.2)
+    time.sleep(0.15)
   finally:
     Input.key_up(win32con.VK_DOWN)
 
@@ -155,14 +157,17 @@ def jump():
     Input.SendInput(event)
     time.sleep(0.05)
 
-def double_jumpup():
+def double_jumpup(dir=0):
   eves = list(Input.get_keybd_pair(win32con.VK_UP))
-  jme  = list(Input.get_keybd_pair(_G.MAPLE_KEYCODE['ALT']))
   try:
     Input.SendInput(eves[0])
     Input.key_down(win32con.VK_UP)
     time.sleep(0.1)
     jump()
+    if dir == DIR_LEFT:
+      Input.trigger_key(win32con.VK_LEFT)
+    elif dir == DIR_RIGHT:
+      Input.trigger_key(win32con.VK_RIGHT)
     time.sleep(0.2)
     jump()
     time.sleep(1)

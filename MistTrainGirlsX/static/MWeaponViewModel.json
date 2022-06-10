@@ -1709,7 +1709,8 @@
       110019403,
       114028403,
       119038403,
-      123045403
+      123045403,
+      127054403
     ],
     "PossibleSlotCounts": [
       1
@@ -1762,7 +1763,8 @@
       116032309,
       120040309,
       123046305,
-      124048309
+      124048309,
+      127054309
     ],
     "PossibleSlotCounts": [
       1
@@ -2056,7 +2058,8 @@
       104007403,
       113026309,
       116032309,
-      121042309
+      121042309,
+      127054309
     ],
     "PossibleSlotCounts": [
       1
@@ -2300,7 +2303,8 @@
       113026403,
       116031403,
       119037403,
-      124048403
+      124048403,
+      127053403
     ],
     "PossibleSlotCounts": [
       1
@@ -2351,7 +2355,8 @@
       111022309,
       117034309,
       123046309,
-      122044309
+      122044309,
+      126052309
     ],
     "PossibleSlotCounts": [
       1
@@ -2593,7 +2598,8 @@
       108015403,
       111021403,
       117034403,
-      125049403
+      125049403,
+      126052403
     ],
     "PossibleSlotCounts": [
       1
@@ -2791,7 +2797,9 @@
       115030309,
       118036309,
       122044309,
-      124048305
+      124048305,
+      126052309,
+      127054305
     ],
     "PossibleSlotCounts": [
       1
@@ -2887,7 +2895,8 @@
       109018403,
       115030403,
       120040403,
-      123046403
+      123046403,
+      126051403
     ],
     "PossibleSlotCounts": [
       1
@@ -2997,7 +3006,8 @@
       118036302,
       119037305,
       121041305,
-      122044305
+      122044305,
+      126052302
     ],
     "PossibleSlotCounts": [
       1
@@ -3058,7 +3068,8 @@
       118036305,
       119037305,
       120040302,
-      122044302
+      122044302,
+      127053302
     ],
     "PossibleSlotCounts": [
       1
@@ -3121,7 +3132,8 @@
       123046302,
       122043305,
       124047302,
-      125050302
+      125050302,
+      126051305
     ],
     "PossibleSlotCounts": [
       1
@@ -3182,7 +3194,8 @@
       120039302,
       122043302,
       124048305,
-      125049305
+      125049305,
+      127053305
     ],
     "PossibleSlotCounts": [
       1
@@ -3242,7 +3255,9 @@
       117034302,
       119037302,
       120040305,
-      121042305
+      121042305,
+      126052305,
+      127054305
     ],
     "PossibleSlotCounts": [
       1
@@ -3304,7 +3319,9 @@
       121041305,
       122044305,
       124047305,
-      125050305
+      125050305,
+      126052305,
+      126051302
     ],
     "PossibleSlotCounts": [
       1
@@ -3366,7 +3383,9 @@
       121042305,
       123045305,
       124047305,
-      125049302
+      125049302,
+      126051305,
+      127054302
     ],
     "PossibleSlotCounts": [
       1
@@ -3489,7 +3508,8 @@
       121042302,
       123045302,
       124048302,
-      125050305
+      125050305,
+      127053305
     ],
     "PossibleSlotCounts": [
       1
@@ -13460,6 +13480,270 @@
     ]
   },
   {
+    "Id": 304,
+    "Name": "\u30e9\u30a4\u30c8\u30cb\u30f3\u30b0\u30b7\u30e5\u30fc\u30bf\u30fc",
+    "Description": "\u6b66\u5668\u3002\u6b66\u5668\u7a2e\u304c\u9283\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "WeaponEquipType": 9,
+    "MWeaponType": {
+      "WeaponEquipType": 9,
+      "WeaponAttributeType": 3,
+      "NormalAttackMSkillId": -19
+    },
+    "EquipmentRarity": 4,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 4,
+      "EvolutionLimit": 4
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": null,
+    "UniqueMSkillId": 402010080,
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 305,
+    "Name": "\u77f3\u5207\u517c\u5149",
+    "Description": "\u6b66\u5668\u3002\u6b66\u5668\u7a2e\u304c\u5263\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "WeaponEquipType": 2,
+    "MWeaponType": {
+      "WeaponEquipType": 2,
+      "WeaponAttributeType": 1,
+      "NormalAttackMSkillId": -12
+    },
+    "EquipmentRarity": 4,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 4,
+      "EvolutionLimit": 4
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": null,
+    "UniqueMSkillId": 402010081,
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 306,
+    "Name": "\u51cd\u8c79\u62f3",
+    "Description": "\u6b66\u5668\u3002\u6b66\u5668\u7a2e\u304c\u62f3\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "WeaponEquipType": 1,
+    "MWeaponType": {
+      "WeaponEquipType": 1,
+      "WeaponAttributeType": 2,
+      "NormalAttackMSkillId": -11
+    },
+    "EquipmentRarity": 4,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 4,
+      "EvolutionLimit": 4
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": null,
+    "UniqueMSkillId": 402010082,
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 307,
+    "Name": "\u5c0f\u592a\u5200",
+    "Description": "\u6b66\u5668\u3002\u6b66\u5668\u7a2e\u304c\u5263\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "WeaponEquipType": 2,
+    "MWeaponType": {
+      "WeaponEquipType": 2,
+      "WeaponAttributeType": 1,
+      "NormalAttackMSkillId": -12
+    },
+    "EquipmentRarity": 3,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 3,
+      "EvolutionLimit": 3
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": 6,
+    "UniqueMSkillId": 402010077,
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 308,
+    "Name": "\u5f92\u624b\u7a7a\u62f3",
+    "Description": "\u6b66\u5668\u3002\u6b66\u5668\u7a2e\u304c\u62f3\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "WeaponEquipType": 1,
+    "MWeaponType": {
+      "WeaponEquipType": 1,
+      "WeaponAttributeType": 2,
+      "NormalAttackMSkillId": -11
+    },
+    "EquipmentRarity": 3,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 3,
+      "EvolutionLimit": 3
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": 6,
+    "UniqueMSkillId": 408020007,
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 309,
+    "Name": "\u5f71\u306e\u5203",
+    "Description": "\u6b66\u5668\u3002\u6b66\u5668\u7a2e\u304c\u65a7\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "WeaponEquipType": 3,
+    "MWeaponType": {
+      "WeaponEquipType": 3,
+      "WeaponAttributeType": 1,
+      "NormalAttackMSkillId": -13
+    },
+    "EquipmentRarity": 3,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 3,
+      "EvolutionLimit": 3
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": 6,
+    "UniqueMSkillId": 408010029,
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
     "Id": 310,
     "Name": "\u30d0\u30cb\u30fc\u306e\u62f3",
     "Description": "\u88c5\u5099\u3057\u3066\u3044\u308b\u3068\u30d1\u30ef\u30fc\u30a2\u30c3\u30d7\u3057\u305f\u6c17\u5206\u306b\u306a\u308b\u62f3\u3002/n\u30b7\u30ea\u30fc\u30ba\u3067\u63c3\u3048\u3066\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u3055\u3089\u306a\u308b\u5f37\u529b\u306a\u52b9\u679c\u3092\u767a\u63ee\u3059\u308b\u3002/n\u6b66\u5668\u7a2e\u304c\u62f3\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002/nSS\u30aa\u30cf\u30ca[\u82b1\u821e\u3046\u683c\u95d8\u5e2b\u7bc4]\u306b\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u30d0\u30c8\u30eb\u4e2d\u306e\u898b\u305f\u76ee\u304c\u5909\u308f\u308b\u3002",
@@ -13680,6 +13964,98 @@
     ]
   },
   {
+    "Id": 315,
+    "Name": "\u30aa\u30d6\u30b7\u30c7\u30a3\u30a2\u30f3\u30b9\u30d4\u30a2",
+    "Description": "\u9ed2\u66dc\u306e\u714c\u304d\u3092\u79d8\u3081\u305f\u69cd\u3002/n\u30b7\u30ea\u30fc\u30ba\u3067\u63c3\u3048\u3066\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u3055\u3089\u306a\u308b\u5f37\u529b\u306a\u52b9\u679c\u3092\u767a\u63ee\u3059\u308b\u3002",
+    "WeaponEquipType": 4,
+    "MWeaponType": {
+      "WeaponEquipType": 4,
+      "WeaponAttributeType": 3,
+      "NormalAttackMSkillId": -14
+    },
+    "EquipmentRarity": 3,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 3,
+      "EvolutionLimit": 3
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": 70,
+    "UniqueMSkillId": null,
+    "MSeriesSetId": 25,
+    "DropQuestIds": [
+      126051503
+    ],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 316,
+    "Name": "\u30aa\u30d6\u30b7\u30c7\u30a3\u30a2\u30f3\u30a6\u30a3\u30c3\u30d7",
+    "Description": "\u9ed2\u66dc\u306e\u714c\u304d\u3092\u79d8\u3081\u305f\u97ad\u3002/n\u30b7\u30ea\u30fc\u30ba\u3067\u63c3\u3048\u3066\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u3055\u3089\u306a\u308b\u5f37\u529b\u306a\u52b9\u679c\u3092\u767a\u63ee\u3059\u308b\u3002",
+    "WeaponEquipType": 5,
+    "MWeaponType": {
+      "WeaponEquipType": 5,
+      "WeaponAttributeType": 2,
+      "NormalAttackMSkillId": -15
+    },
+    "EquipmentRarity": 3,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 3,
+      "EvolutionLimit": 3
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": 70,
+    "UniqueMSkillId": null,
+    "MSeriesSetId": 25,
+    "DropQuestIds": [
+      127053503
+    ],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
     "Id": 317,
     "Name": "\u30b5\u30f3\u30bf\u306e\u4eba\u5f62",
     "Description": "\u88c5\u5099\u3057\u3066\u3044\u308b\u3068\u30d7\u30ec\u30bc\u30f3\u30c8\u3092\u6e21\u3057\u305f\u304f\u306a\u308b\u9b54\u5177\u3002/n\u30b7\u30ea\u30fc\u30ba\u3067\u63c3\u3048\u3066\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u3055\u3089\u306a\u308b\u5f37\u529b\u306a\u52b9\u679c\u3092\u767a\u63ee\u3059\u308b\u3002/n\u6b66\u5668\u7a2e\u304c\u9b54\u5177\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002/nSS\u30b7\u30e2\u30a2\u30de\u30c5[\u51b7\u9759\u6c88\u7740\u306a\u304a\u4e16\u8a71\u4fc2]\u306b\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u30d0\u30c8\u30eb\u4e2d\u306e\u898b\u305f\u76ee\u304c\u5909\u308f\u308b\u3002",
@@ -13763,6 +14139,450 @@
     "UniqueMSkillId": null,
     "MSeriesSetId": 22,
     "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 319,
+    "Name": "\u30ac\u30a4\u30a2\u30d5\u30ec\u30c3\u30c9",
+    "Description": "\u6b66\u5668\u3002\u6b66\u5668\u7a2e\u304c\u5f13\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "WeaponEquipType": 7,
+    "MWeaponType": {
+      "WeaponEquipType": 7,
+      "WeaponAttributeType": 3,
+      "NormalAttackMSkillId": -17
+    },
+    "EquipmentRarity": 4,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 4,
+      "EvolutionLimit": 4
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": 77,
+    "UniqueMSkillId": 408030192,
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 320,
+    "Name": "\u30c6\u30e9\u30d5\u30ec\u30c3\u30c9",
+    "Description": "\u6b66\u5668\u3002\u6b66\u5668\u7a2e\u304c\u5f13\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "WeaponEquipType": 7,
+    "MWeaponType": {
+      "WeaponEquipType": 7,
+      "WeaponAttributeType": 3,
+      "NormalAttackMSkillId": -17
+    },
+    "EquipmentRarity": 3,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 3,
+      "EvolutionLimit": 3
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": 6,
+    "UniqueMSkillId": 408030191,
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 321,
+    "Name": "\u8f5f\u96f7\u65ad\u7f6a\u65ac",
+    "Description": "\u6b66\u5668\u3002\u6b66\u5668\u7a2e\u304c\u65a7\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "WeaponEquipType": 3,
+    "MWeaponType": {
+      "WeaponEquipType": 3,
+      "WeaponAttributeType": 1,
+      "NormalAttackMSkillId": -13
+    },
+    "EquipmentRarity": 4,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 4,
+      "EvolutionLimit": 4
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": 76,
+    "UniqueMSkillId": 408030189,
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 322,
+    "Name": "\u96f7\u5149\u65ac",
+    "Description": "\u6b66\u5668\u3002\u6b66\u5668\u7a2e\u304c\u65a7\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "WeaponEquipType": 3,
+    "MWeaponType": {
+      "WeaponEquipType": 3,
+      "WeaponAttributeType": 1,
+      "NormalAttackMSkillId": -13
+    },
+    "EquipmentRarity": 3,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 3,
+      "EvolutionLimit": 3
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": 6,
+    "UniqueMSkillId": 408030188,
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 324,
+    "Name": "\u30aa\u30d6\u30b7\u30c7\u30a3\u30a2\u30f3\u30a2\u30c3\u30af\u30b9",
+    "Description": "\u9ed2\u66dc\u306e\u714c\u304d\u3092\u79d8\u3081\u305f\u65a7\u3002/n\u30b7\u30ea\u30fc\u30ba\u3067\u63c3\u3048\u3066\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u3055\u3089\u306a\u308b\u5f37\u529b\u306a\u52b9\u679c\u3092\u767a\u63ee\u3059\u308b\u3002",
+    "WeaponEquipType": 3,
+    "MWeaponType": {
+      "WeaponEquipType": 3,
+      "WeaponAttributeType": 1,
+      "NormalAttackMSkillId": -13
+    },
+    "EquipmentRarity": 3,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 3,
+      "EvolutionLimit": 3
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": 70,
+    "UniqueMSkillId": null,
+    "MSeriesSetId": 25,
+    "DropQuestIds": [
+      127054503
+    ],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 325,
+    "Name": "\u30b4\u30fc\u30eb\u30c9\u30d5\u30a3\u30ca\u30fc\u30ec",
+    "Description": "\u6b66\u5668\u3002\u6b66\u5668\u7a2e\u304c\u97ad\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "WeaponEquipType": 5,
+    "MWeaponType": {
+      "WeaponEquipType": 5,
+      "WeaponAttributeType": 2,
+      "NormalAttackMSkillId": -15
+    },
+    "EquipmentRarity": 4,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 4,
+      "EvolutionLimit": 4
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": 78,
+    "UniqueMSkillId": 408030197,
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 326,
+    "Name": "\u30b7\u30eb\u30d0\u30fc\u30ba\u30c8\u30ea\u30c3\u30af",
+    "Description": "\u6b66\u5668\u3002\u6b66\u5668\u7a2e\u304c\u97ad\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "WeaponEquipType": 5,
+    "MWeaponType": {
+      "WeaponEquipType": 5,
+      "WeaponAttributeType": 2,
+      "NormalAttackMSkillId": -15
+    },
+    "EquipmentRarity": 3,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 3,
+      "EvolutionLimit": 3
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": 6,
+    "UniqueMSkillId": 408030196,
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 327,
+    "Name": "\u30d6\u30ed\u30bb\u30b7\u30e3\u30aa\u30f3",
+    "Description": "\u6b66\u5668\u3002\u6b66\u5668\u7a2e\u304c\u69cd\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "WeaponEquipType": 4,
+    "MWeaponType": {
+      "WeaponEquipType": 4,
+      "WeaponAttributeType": 3,
+      "NormalAttackMSkillId": -14
+    },
+    "EquipmentRarity": 4,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 4,
+      "EvolutionLimit": 4
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": 79,
+    "UniqueMSkillId": 408030200,
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 328,
+    "Name": "\u30ab\u30eb\u30af\u30b7\u30e3\u30aa\u30f3",
+    "Description": "\u6b66\u5668\u3002\u6b66\u5668\u7a2e\u304c\u69cd\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "WeaponEquipType": 4,
+    "MWeaponType": {
+      "WeaponEquipType": 4,
+      "WeaponAttributeType": 3,
+      "NormalAttackMSkillId": -14
+    },
+    "EquipmentRarity": 3,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 3,
+      "EvolutionLimit": 3
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": 6,
+    "UniqueMSkillId": 408030199,
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 333,
+    "Name": "\u30aa\u30d6\u30b7\u30c7\u30a3\u30a2\u30f3\u30bd\u30fc\u30c9",
+    "Description": "\u9ed2\u66dc\u306e\u714c\u304d\u3092\u79d8\u3081\u305f\u5263\u3002/n\u30b7\u30ea\u30fc\u30ba\u3067\u63c3\u3048\u3066\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u3055\u3089\u306a\u308b\u5f37\u529b\u306a\u52b9\u679c\u3092\u767a\u63ee\u3059\u308b\u3002",
+    "WeaponEquipType": 2,
+    "MWeaponType": {
+      "WeaponEquipType": 2,
+      "WeaponAttributeType": 1,
+      "NormalAttackMSkillId": -12
+    },
+    "EquipmentRarity": 3,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 3,
+      "EvolutionLimit": 3
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": 70,
+    "UniqueMSkillId": null,
+    "MSeriesSetId": 25,
+    "DropQuestIds": [
+      126052503
+    ],
     "PossibleSlotCounts": [
       1
     ]
@@ -14029,6 +14849,50 @@
     "DropQuestIds": [],
     "PossibleSlotCounts": [
       0
+    ]
+  },
+  {
+    "Id": 382,
+    "Name": "\u304a\u3082\u3061\u3083\u306a\u65a7",
+    "Description": "\u30a2\u30e4\u30e9\u304c\u6301\u3063\u3066\u3044\u305f\u304a\u3082\u3061\u3083\u306a\u65a7\u3002/n\u304a\u4e16\u8a71\u306b\u306a\u3063\u3066\u3044\u308b\u6f01\u5e2b\u3055\u3093\u304c\u3001\u30a2\u30e4\u30e9\u306b\u8b72\u3063\u305f\u3082\u306e\u3002/n\u6b66\u5668\u7a2e\u304c\u65a7\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002/n\u30b7\u30ea\u30fc\u30ba\u3067\u63c3\u3048\u3066\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u3055\u3089\u306a\u308b\u5f37\u529b\u306a\u52b9\u679c\u3092\u767a\u63ee\u3059\u308b\u3002/nSS\u30ed\u30ba\u30a6\u30a7\u30eb[\u661f\u306e\u6cb3\u3092\u98db\u3073\u8d8a\u3048\u3066]\u306b\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u30d0\u30c8\u30eb\u4e2d\u306e\u898b\u305f\u76ee\u304c\u5909\u308f\u308b\u3002",
+    "WeaponEquipType": 3,
+    "MWeaponType": {
+      "WeaponEquipType": 3,
+      "WeaponAttributeType": 1,
+      "NormalAttackMSkillId": -13
+    },
+    "EquipmentRarity": 4,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 4,
+      "EvolutionLimit": 4
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": null,
+    "UniqueMSkillId": null,
+    "MSeriesSetId": 30,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
     ]
   }
 ]
