@@ -5,6 +5,7 @@ module DunarTemple
   TimesPerJBBuff = 3
   TimesPer302ShardCombine = 3
   TimesPerEquipmentEnhance = 9
+  TimesPerShardDiscard = 2
   TimesPerAutoRestart = 12
   
   ExctractBarPos     = [[856, 804],[845, 809],[959, 806]]
@@ -21,7 +22,7 @@ module DunarTemple
   def start
     # return p in_dungeon?
     # return Combat.reset_view
-    # return start_room2
+    # return start_room3
 	  # return p hud_opened?
     # return clear_inventory
     # return p Combat.target_reachable?
@@ -29,6 +30,7 @@ module DunarTemple
     # return discard_shards
     # return extract_loots
 	  # return shop_sells
+    # return enhance_equipments
     if FlagHasJB
       get_jb_buff
       rotateX(-90-rand(20))
@@ -89,21 +91,21 @@ module DunarTemple
       rotateX(-75)
       Input.key_down Keymap[:vk_W],false; uwait 0.95;
       Input.key_up Keymap[:vk_W]; uwait 1;
-      if @timer_run % TimesPerAutoRestart == 0
+      if $flag_auto_restart && @timer_run % TimesPerAutoRestart == 0
         puts "Restarting program"
         args = ARGV.join ' '
-        cmd = "ruby dp.rb -r #{args}"
+        cmd = "ruby dp.rb #{args} --auto-start"
         exec cmd
       end
       get_jb_buff
       rotateX(-90-rand(20))
     else
       rotateX(190+rand(30))
-      if @timer_run % TimesPerAutoRestart == 0
-      puts "Restarting program"
-      args = ARGV.join ' '
-      cmd = "ruby dp.rb -r #{args}"
-      exec cmd
+      if $flag_auto_restart && @timer_run % TimesPerAutoRestart == 0
+        puts "Restarting program"
+        args = ARGV.join ' '
+        cmd = "ruby dp.rb #{args} --auto-start"
+        exec cmd
       end
     end  
   end
@@ -115,18 +117,20 @@ module DunarTemple
     puts "#{wt} seconds before teleport"
     wt.times{|i| wait(0.95);}; uwait 2;
     wait_until_transition_ok; uwait 2;
+    3.times{Input.zoomout 0x1000+rand(0x200); uwait 0.3;}
   end
 
   def start_room1 
     puts "Starting room#1"
     Combat.earth_shield; uwait 1;
     Combat.reset_view; uwait 1;
-    move_left 1.3
+    move_left 1.7
     move_front 1.2,true,false
     rotateX(90)
     9.times{wait(0.1); Input.trigger_key Keymap[:vk_space],false}
     rotateX(90)
     3.times{wait(0.1); Input.trigger_key Keymap[:vk_space],false}
+    uwait(0.6)
     Input.key_up(Keymap[:vk_W],false)
     rotateX(-180)
     Combat.summon_dragon; uwait(0.5)
@@ -147,19 +151,20 @@ module DunarTemple
     Input.trigger_key Keymap[:vk_f2]; uwait(0.6);
     Combat.blink;
     Input.key_up Keymap[:vk_W],false; uwait(0.5);
-    move_front(0.7,true,true,true)
     Thread.new{
-      sleep(1.0)
+      sleep(0.8)
+      2.times{ Input.trigger_key Keymap[:vk_space],false; sleep(0.1); }
+      sleep(0.6)
       vk = Keymap[:vk_4]
-      Input.trigger_key(vk); sleep(0.03);
-      rotateY(90,40,true)
-      2.times{Input.click_l(false, true); sleep(0.05);}
-      rotateY(-88,40,true)
+      3.times{Input.trigger_key(vk); sleep(0.05);}
+      rotateY(90, 80, true)
+      3.times{Input.click_l(false, true); sleep(0.05);}
+      rotateY(-88, 80, true)
       Combat.cd(vk, 15)
     }
-    uwait(0.4)
-    move_front(1.2, true, true, false); Combat.blink; uwait(0.3);
-    Combat.backjump;
+    move_front(2.5,true,true,false)
+    Combat.blink; uwait(0.5);
+    Combat.backjump
     uwait(0.1)
     # Input.trigger_key Keymap[:vk_f1]
     Combat.backjump; Combat.roll;
@@ -171,8 +176,9 @@ module DunarTemple
     puts "Start room#3"
     Combat.earth_shield; uwait 1;
     Combat.reset_view; uwait 1;
-    move_front 8.5,true; uwait 1;
-    move_front 1.2,true
+    move_front 8.5,true; uwait 0.7;
+    move_front 2.0,true; uwait 0.3;
+    Combat.backjump
     rotateX(90); uwait 0.5;
     move_front 1.4,true; uwait 0.5;
     Combat.summon_dragon; Combat.backjump;
@@ -209,7 +215,9 @@ module DunarTemple
       Input.trigger_key Keymap[:vk_esc],false; uwait 0.5;
     end
     Input.trigger_key Keymap[:vk_D],false; uwait 0.5; Combat.earth_shield; uwait 2;
-    discard_shards; uwait 2;
+    if @timer_run % TimesPerShardDiscard == 0
+      discard_shards; uwait 2;
+    end
     if FlagHasMerchant
       Input.trigger_key Keymap[:vk_esc],false; uwait 0.5;
       Input.trigger_key Keymap[:vk_A],false; uwait 0.5; Combat.earth_shield; uwait 2;

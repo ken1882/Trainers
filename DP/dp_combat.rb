@@ -75,8 +75,8 @@ module Combat
   HpBarColor = [210, 46, 4]
   MpBarColor = [10, 125, 160]
 
-  EnemyBarPos   = [[1789, 63], [1715, 127], [1785, 81]]
-  EnemyBarColor = [[190, 49, 1], [239, 239, 239], [7, 110, 142]]
+  EnemyBarPos   = [[1788, 63], [1787, 81]]
+  EnemyBarColor = [[191, 37, 1], [7, 111, 142]]
   CombatIndicatorPos = [72, 74]
 
   TargetTooFarPos = [[778, 305],[848, 308],[1140, 301]]
@@ -367,6 +367,6 @@ module Combat
   def reset_view
     rotateY(360,50); uwait 0.5;
     rotateY(-150,50)
-    Input.zoomout 0xC00+rand(0x100)
+    3.times{Input.zoomout 0x1000+rand(0x200); uwait 0.5;}
   end
 end
