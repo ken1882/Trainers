@@ -17,10 +17,10 @@ BaseInterval = 0.1
 FlagPicking    = False
 LastBODTime    = 0
 FlagLockSkillUse = False
-StandPos = (90, 136)
+StandPos = (88, 104)#(90, 136)
 RandMoveCount = 0
 RandMoveSeed  = 4
-TimeDeltaPerPixel = 0.07
+TimeDeltaPerPixel = 0.10
 
 ori_sleep = sleep
 def sleep(sec, r=False):
