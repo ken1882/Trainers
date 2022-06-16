@@ -25,6 +25,9 @@ module Grinding
   NextPagePos   = [1618, 706]
   NextColumnDX  = 48
   
+  ExtractTimePerItem = 1.5
+  RarityOffsetX = 19
+  
   FirstItemPos       = [[1506, 452]]
   FirstItemColor     = [[27, 27, 27]]
   ExtractBarPos = [[900,818],[960,818]]
@@ -126,13 +129,19 @@ module Grinding
     _ExtractProc = Proc.new{
       for i in (StartExtRowN...[StartExtRowN+3,ItemRowPos.size].min)
         mx, my = *ItemRowPos[i]
-        8.times do 
-          Input.moveto mx-rand(10), my+rand(10)-5
-          Input.click_r false,true; uwait(0.1);
-          mx += NextColumnDX
+        target_pos = []
+        8.times do |j|
+          mx += NextColumnDX unless j == 0
+          next if determine_item_rarity(mx+RarityOffsetX, my) > 1
+          target_pos << [mx, my]
+        end
+        target_pos.each do |pos|
+          Input.moveto pos[0]-rand(10), pos[1]+rand(10)-5
+          Input.click_r false,true; uwait(0.1)
           Input.click_r false,true
         end
       end
+      target_pos.size
     }
   	_exterrcnt = 0
     _EnsureExtractingProc = Proc.new{
@@ -166,13 +175,14 @@ module Grinding
 		    _exterrcnt += 1
       end
     }
-    _ExtractProc.call; uwait 0.3; Input.moveto *StartExcPos;
-    uwait(0.3); Input.click_l false,true; uwait(0.3);
-    puts "Extract started"
     loop do
-      _ExtractProc.call; uwait 0.3;
-      Input.moveto *GearsPos; uwait(0.5);
-      _EnsureExtractingProc.call
+      n_ext = _ExtractProc.call
+      uwait 0.3; Input.moveto *StartExcPos;
+      uwait(0.3); Input.click_l false,true; uwait(0.3);
+      puts "Extract started"
+      Input.moveto GearsPos[0],GearsPos[1]-200; uwait(0.5);
+      # _EnsureExtractingProc.call
+      uwait(n_ext * ExtractTimePerItem)
       cur_page += 1
       break if 3.times.collect{
         uwait(0.2); Graphics.screen_pixels_matched?(
@@ -238,6 +248,10 @@ module Grinding
   end
 
   def combine_shards(combine_302=false)
+    if $flag_disable_shardcombine
+      puts "Shards combine disabled"
+      return
+    end
     puts "Start combine dragon shards"
 	  Input.key_down Keymap[:vk_Lcontrol],false; uwait 0.5;
     Input.trigger_key Keymap[:vk_equal]; uwait 0.5;
@@ -424,6 +438,10 @@ module Grinding
   end
 
   def shop_sells
+    if $flag_disable_itemsell
+      puts "Item sell disabled"
+      return
+    end
 	  while !hud_opened?
       Input.key_down Keymap[:vk_Lcontrol],false; uwait 0.5;
       Input.trigger_key Keymap[:vk_minus]; uwait 0.5;
@@ -440,7 +458,7 @@ module Grinding
         mx, my = rpos 
         8.times do
           _pos = 9.times.collect{|i| [mx+(i%3-1),my+(i/3)-1] }
-          if !(_pos.collect{ |p| 
+          if determine_item_rarity(mx+RarityOffsetX,my) < 2 && !(_pos.collect{ |p| 
                 Graphics.screen_pixels_matched?([p], [ColorNoItem])
               }
             ).all?
@@ -518,4 +536,14 @@ module Grinding
     Input.click_l false,true; uwait 0.3;
     exit
   end
+end
+
+def determine_item_rarity(px, py)
+  color = Graphics.get_pixel(px, py)
+  # puts "(#{px},#{py}) #{color.rgb}"
+  return 4 if color.r + color.b > color.g && color.r + color.g > 0x7f && color.b < 0x40 # orange
+  return 3 if color.r + color.b > 0x7f && color.g < 0x40 # purple
+  return 1 if color.r + color.b + 0x0a < color.g # green
+  return 2 if color.g + color.b > 0x7f && color.r < 0x40 # teal
+  return 0 # gary
 end
