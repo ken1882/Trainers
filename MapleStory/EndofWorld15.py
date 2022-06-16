@@ -26,6 +26,9 @@ ori_sleep = sleep
 def sleep(sec, r=False):
     if not _G.FlagRunning or _G.FlagPaused:
         return
+    while not utils.is_focused():
+        print("Unfocused, wait for 1 second")
+        ori_sleep(1)
     r = random()/10 if r else 0
     Input.update()
     ori_sleep(sec+r)
