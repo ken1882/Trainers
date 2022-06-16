@@ -29,6 +29,7 @@ def sleep(sec, r=False):
     while not utils.is_focused():
         print("Unfocused, wait for 1 second")
         ori_sleep(1)
+        sec = max(sec-1, 0)
     r = random()/10 if r else 0
     Input.update()
     ori_sleep(sec+r)
