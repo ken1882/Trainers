@@ -55,12 +55,24 @@ module Input
     SendMessage.call($MC_Hwnd, WM_RBUTTONUP, 0, 0)
     $flag_pressed = false
   end
+
+  def mouse_ldown
+    SendMessage.call($MC_Hwnd, WM_LBUTTONDOWN, 0, 0)
+    $flag_pressed = true
+  end
+
+  def mouse_lup
+    SendMessage.call($MC_Hwnd, WM_LBUTTONUP, 0, 0)
+    $flag_pressed = false
+  end
 end
 
 def main_update
   Input.update
   if Input.trigger?(Keymap[:vk_f8])
-    $flag_pressed ? Input.mouse_rup : Input.mouse_rdown
+    # $flag_pressed ? Input.mouse_rup : Input.mouse_rdown
+    puts $flag_pressed ? "Press end" : "Press start"
+    $flag_pressed ? Input.mouse_lup : Input.mouse_ldown
   end
   $flag_running = false if Input.trigger?(Keymap[:vk_f9])
 end
@@ -85,4 +97,5 @@ rescue SystemExit, Interrupt
 ensure
   puts "Bye!"
   Input.mouse_rup if $flag_pressed
+  Input.mouse_lup if $flag_pressed
 end

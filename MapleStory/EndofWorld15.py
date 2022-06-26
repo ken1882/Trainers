@@ -17,15 +17,20 @@ BaseInterval = 0.1
 FlagPicking    = False
 LastBODTime    = 0
 FlagLockSkillUse = False
-StandPos = (90, 136)
+StandPos = (88, 104)#(90, 136)
+MaxCorrectionDelta = 200
 RandMoveCount = 0
 RandMoveSeed  = 4
-TimeDeltaPerPixel = 0.07
+TimeDeltaPerPixel = 0.08
 
 ori_sleep = sleep
 def sleep(sec, r=False):
     if not _G.FlagRunning or _G.FlagPaused:
         return
+    while not utils.is_focused():
+        print("Unfocused, wait for 1 second")
+        ori_sleep(1)
+        sec = max(sec-1, 0)
     r = random()/10 if r else 0
     Input.update()
     ori_sleep(sec+r)
@@ -221,7 +226,9 @@ def pickup():
     print("Player pos:", px)
     if px:
         dx = px[0] - StandPos[0]
-        if dx > 0:
+        if abs(dx) > MaxCorrectionDelta:
+            print("Potentially wrong pos result, skip correction")
+        elif dx > 0:
             action.move_left(TimeDeltaPerPixel*dx)
         else:
             action.move_right(TimeDeltaPerPixel*dx*-1)
@@ -283,6 +290,7 @@ def main_loop():
 
 if __name__ == '__main__':
     utils.find_app_window()
+    print("Player pos:", utils.get_player_pos())
     try:
         setup()
         start_constant_thread()

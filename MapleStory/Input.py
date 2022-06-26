@@ -278,3 +278,6 @@ def get_keybd_pair(code):
   yield Keyboard(code)
   yield Keyboard(code, win32con.KEYEVENTF_KEYUP)
 
+# def get_mosue_pair(flags, x=0, y=0, data=0):
+#   yield Mouse(flags, x, y ,data)
+#   yield Mouse(code, win32con.KEYEVENTF_KEYUP)
