@@ -550,5 +550,13 @@
     "RecoveryEffect": 30,
     "StartDate": "2022-06-08T14:10:00",
     "EndDate": "2022-06-27T23:59:59"
+  },
+  {
+    "Id": 75,
+    "RecoveryItemTypes": 4,
+    "MItemId": 645,
+    "RecoveryEffect": 30,
+    "StartDate": "2022-06-15T14:10:00",
+    "EndDate": "2022-07-04T23:59:59"
   }
 ]

@@ -277,3 +277,4 @@ def rmoveto(x,y,rrange=8,**kwargs):
 def get_keybd_pair(code):
   yield Keyboard(code)
   yield Keyboard(code, win32con.KEYEVENTF_KEYUP)
+
