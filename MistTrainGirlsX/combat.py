@@ -24,6 +24,8 @@ if _G.IS_WIN32:
 LOG_STATUS = True
 FLAG_INTERACTIVE = False
 FLAG_CONFIRM_RP_USE = True
+FLAG_STOP_ON_FULL_XP = False
+
 
 PartyId  = 0
 StageId  = 0
@@ -65,9 +67,10 @@ UnmovableEffects = [
   24, # Charm
 ]
 
-MaxSP = 20
-MaxOP = 100
-MaxProficiency = 99
+MAX_SP = 20
+MAX_OP = 100
+MAX_EXP = 99500
+MAX_PROFICIENCY = 99
 
 LastBattleWon = False
 FlagRequestReEnter = False
@@ -375,7 +378,7 @@ def get_least_proficient_skill(character, skills):
   mcharacter = player.get_character_by_uid(character['CID'])
   uskills = [mcharacter['USkill1'], mcharacter['USkill2'], mcharacter['USkill3']]
   luskill = sorted(uskills, key=lambda sk:sk['Rank'])[0]
-  if luskill['Rank'] == MaxProficiency:
+  if luskill['Rank'] == MAX_PROFICIENCY:
     return None
   return next((sk for sk in skills if sk['Id'] == luskill['Id']), None)
 
@@ -570,8 +573,8 @@ def log_battle_status(data, actions=[]):
           string += f"| {STATUS_AILMENT[se_type]}: {se_turn} "
       string += '\n'
       hps = f"HP: {ch['HP']}/{actor['UCharacterBaseViewModel']['Status']['HP']}"
-      sps = f"SP: {ch['SP']}/{MaxSP}"
-      ops = f"OP: {ch['OP']}/{MaxOP}"
+      sps = f"SP: {ch['SP']}/{MAX_SP}"
+      ops = f"OP: {ch['OP']}/{MAX_OP}"
       rps = f"RP: {ch['RP']}/{ch['MaxRP']}"
       cps = f"CP: {ch['CP']}"
       string += "{:15} {:8} {:10} {:8} {}\n".format(hps, sps, ops, rps, cps)
@@ -727,7 +730,7 @@ def get_available_actions(data, do_print=None):
     bchar = game.get_character_base(actor['MCharacterId'])
     sname = f"[{ch['ID']}] {bchar['Name']} {bchar['MCharacterBase']['Name']}"
     shp   = f" HP: {round(ch['HP']*100 / actor['UCharacterBaseViewModel']['Status']['HP'], 2)}%"
-    ssp   = f" SP: {ch['SP']}/{MaxSP}"
+    ssp   = f" SP: {ch['SP']}/{MAX_SP}"
     string += format_padded_utfstring(
       (sname, 35), (shp, 15, True), (ssp, 10, True)
     )
@@ -904,8 +907,8 @@ def log_detail_status(data):
         string += '(行動不能)'
       string += '\n'
       hps = f"HP: {ch['HP']}/{actor['UCharacterBaseViewModel']['Status']['HP']}"
-      sps = f"SP: {ch['SP']}/{MaxSP}"
-      ops = f"OP: {ch['OP']}/{MaxOP}"
+      sps = f"SP: {ch['SP']}/{MAX_SP}"
+      ops = f"OP: {ch['OP']}/{MAX_OP}"
       rps = f"RP: {ch['RP']}/{ch['MaxRP']}"
       cps = f"CP: {ch['CP']}"
       string += "{:15} {:8} {:10} {:8} {}\n".format(hps, sps, ops, rps, cps)
@@ -1057,7 +1060,8 @@ def process_rentalid_input():
   return rid
 
 def start_battle_process(sid, pid, rid):
-  global BattleId,LastErrorCode,LOG_STATUS,FLAG_INTERACTIVE
+  global BattleId,LastErrorCode,FlagRequestReEnter
+  global LOG_STATUS,FLAG_INTERACTIVE
   LOG_STATUS = not _G.ARGV.less or FLAG_INTERACTIVE
   log_info("Stage/Party/Rental IDs:", sid, pid, rid)
   if sid in stage.RaidStages:
@@ -1082,10 +1086,26 @@ def start_battle_process(sid, pid, rid):
       return SIG_COMBAT_STOP 
   if type(data) == dict and 'BattleId' in data:
     BattleId = data['BattleId']
+    if determine_last_battle(data):
+      FlagRequestReEnter = True
     return process_combat(data)
   else:
     LastErrorCode = data
     raise RuntimeError(f"Unable to start battle (ERRNO={data})")
+
+def determine_last_battle(data):
+  global FLAG_STOP_ON_FULL_XP
+  if not FLAG_STOP_ON_FULL_XP:
+    return False
+  if 'UPartyViewModel' not in data:
+    return False
+  if 'UCharacterSlots' not in data['UPartyViewModel']:
+    return False
+  slots = data['UPartyViewModel']['UCharacterSlots']
+  for char in slots:
+    if char['UCharacter']['UCharacterBaseViewModel']['Experience'] < MAX_EXP:
+      return False
+  return True
 
 def reset_final_report():
   global ReportDetail

@@ -1,6 +1,6 @@
 StageAlias = {
   'gg':   101002309,  # gear grinds
-  'hsr':  304020106,  # high speed rail
+  'hsr':  304021106,  # high speed rail
   'gold': 201001110,  # gold Mat quest
   'exp':  202001110,  # exp Mat quest
   'inf': 306002101,   # Infinite quest
@@ -19,6 +19,9 @@ TurnLimitedStages.append(RaidStages)
 
 StageData = {
           0: ('Waiting for maintenance', 'メンテナンス中...'),
+  302043505: ('Playing Events', '出発進行！御一夜鉄道からの緊急乗り入れ運転！？ 1-5 (Very Hard)'),
+  302043504: ('Playing Events', '出発進行！御一夜鉄道からの緊急乗り入れ運転！？ 1-4 (Very Hard)'),
+  304021106: ('Playing Events', '入隊訓練：バラブー (Inferno)'),
   301082504: ('Playing Raid', '管理社会のメサイア Raid (Very Hard)'),
   301081505: ('Playing Events', '管理社会のメサイア 2-5 (Very Hard)'),
   301081504: ('Playing Events', '管理社会のメサイア 2-4 (Very Hard)'),
