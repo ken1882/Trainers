@@ -19,14 +19,16 @@ class Skill:
     self.name    = name
     self.cd      = timedelta(seconds=cd)
     self.keycode = keycode
-    self.last_used_time = 0
+    self.last_used_time = datetime(1990, 1, 1)
   
   def is_ready(self):
-    return datetime.now() - self.last_used_time > self.cd
+    return (datetime.now() - self.last_used_time) > self.cd
 
   def use(self):
     global LastSkillUsedTime
     if _G.FlagPaused or not _G.FlagRunning:
+      return
+    if not self.is_ready():
       return
     if self.name not in ['Teleport'] or self.name in ['BreathOfDivinity']:
       curt = time()
@@ -38,6 +40,9 @@ class Skill:
       if r < 0.1:
         sleep(r)
       Input.SendInput(event)
+  
+  def apply_cd(self):
+    self.last_used_time = datetime.now()
 
 TrueArachnidReflection = Skill('TrueArachnidReflection', 250, _G.MAPLE_KEYCODE['6']) # 蜘蛛之鏡
 WillOfAlliance    = Skill('WillOfAlliance', 7200, _G.MAPLE_KEYCODE['L'])    # 聯盟的意志
