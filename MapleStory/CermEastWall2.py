@@ -8,19 +8,24 @@ import skill
 import Input, win32con
 from random import random
 
-SkillCDTimer   = {}
-ConstantSkills = {}
-FiberQueue     = []
-ConstantThread = None
-ListenerThread = None
-BaseInterval = 0.1
-FlagPicking    = False
-LastBODTime    = 0
-FlagLockSkillUse = False
-StandPos = (81, 78)
-MaxCorrectionDelta = 100
-TimeDeltaPerPixel = 0.08
+SkillCDTimer    = {}
+ConstantSkills  = {}
+FiberQueue      = []
+ConstantThread  = None
+ListenerThread  = None
+BaseInterval    = 0.1
+LastBODTime     = 0
 CommonSkillTime = 0.5
+
+MidStandPos    = (81, 78)
+LeftStandPos   = (48, 94)
+RightStandPos  = (126, 94)
+
+MaxCorrectionDelta = 100
+TimeDeltaPerPixel  = 0.08
+
+FlagPicking    = False
+FlagLockSkillUse = False
 
 ori_sleep = sleep
 def sleep(sec, r=False):
@@ -110,6 +115,11 @@ def start_constant_thread():
 
 def setup():
     global ListenerThread
+    skill.SpiderMirror.apply_cd()
+    skill.SolarImprint.apply_cd()
+    skill.DragonMaster.apply_cd()
+    skill.DarkFog.apply_cd()
+    skill.SummonOnyxDragon.apply_cd()
     ListenerThread = Thread(target=start_pause_listener)
     ListenerThread.start()
     # register_constant_skill(skill.BreathOfDivinity2, 63, False)
@@ -129,6 +139,13 @@ def mana_whirl():
     Input.key_up(win32con.VK_DOWN)
     sleep(0.2)
 
+def use_random_skill():
+    seed = randint(0, 1)
+    if seed:
+        _exec_action(skill.ThunderCircle.use)
+    else:
+        _exec_action(skill.EarthCircle.use)
+
 def check_user_interrupt():
     keys = [
         0x50, # P
@@ -144,6 +161,18 @@ def check_user_interrupt():
         sleep(10)
         check_user_interrupt()
 
+def correct_stand_pos(pos):
+    px = utils.get_player_pos()
+    print("Player pos:", px)
+    if px:
+        dx = px[0] - pos[0]
+        if abs(dx) > MaxCorrectionDelta:
+            print("Potentially wrong pos result, skip correction")
+        elif dx > 0:
+            action.move_left(TimeDeltaPerPixel*dx)
+        else:
+            action.move_right(TimeDeltaPerPixel*dx*-1)
+
 def _exec_action(func, *args, **kwargs):
     global FlagLockSkillUse
     if not _G.FlagRunning or _G.FlagPaused:
@@ -152,11 +181,67 @@ def _exec_action(func, *args, **kwargs):
     func(*args, **kwargs)
     FlagLockSkillUse = False
 
+def dragonmaster():
+    global FlagLockSkillUse
+    FlagLockSkillUse = True
+    skill.DragonMaster.apply_cd()
+    kc = skill.DragonMaster.keycode
+    kp = [Input.Keyboard(kc), Input.Keyboard(kc, win32con.KEYEVENTF_KEYUP)]
+    Input.SendInput(kp[0])
+    sleep(0.3)
+    Input.SendInput(kp[1])
+    sleep(0.5)
+
+    Input.SendInput(kp[0])
+    sleep(0.5)
+    action.move_down(0.8)
+    sleep(0.1)
+    action.move_up(2)
+    Input.SendInput(kp[1])
+
+    sleep(0.3)
+    action.move_right(0.2)
+    sleep(0.2)
+
+    Input.SendInput(kp[0])
+    sleep(0.5)
+    action.move_down(2.4)
+    Input.SendInput(kp[1])
+
+    sleep(0.3)
+    action.move_left(0.2)
+    sleep(0.2)
+
+    Input.SendInput(kp[0])
+    sleep(0.5)
+    action.move_up(1.8)
+    action.move_down(1)
+    Input.SendInput(kp[1])
+
+    FlagLockSkillUse = False
+
 def main_loop():
     global LoopCounter,FlagLockSkillUse,RandMoveSeed,RandMoveCount
     sleep(0.3, True)
-    # center
     action.move_left(0.2)
+    if skill.DragonMaster.is_ready():
+        skill.DragonMaster.apply_cd()
+        dragonmaster()
+        sleep(0.5)
+        return 
+    # center
+    if skill.SpiderMirror.is_ready():
+        _exec_action(skill.SpiderMirror.use)
+        skill.SpiderMirror.apply_cd()
+        sleep(2.5)
+    if skill.SolarImprint.is_ready():
+        _exec_action(skill.SolarImprint.use)
+        skill.SolarImprint.apply_cd()
+        sleep(2)
+    if skill.Reincarnation.is_ready():
+        skill.Reincarnation.use()
+        skill.Reincarnation.apply_cd()
+        sleep(0.5)
     _exec_action(skill.FireBreath.use)
     _exec_action(skill.EarthCircle.use)
     action.blink_down()
@@ -177,30 +262,68 @@ def main_loop():
             Input.key_up(win32con.VK_RIGHT)
             action.blink_up()
     sleep(0.3)
+    action.move_left(0.2)
     _exec_action(skill.DragonFlash.use)
     _exec_action(skill.WindCircle.use)
     sleep(0.5)
     action.blink_down()
-    sleep(0.5)
+    sleep(0.2) # tag
+    if randint(0, 1):
+        skill.MagicDerbis.use()
+    sleep(0.1)
     Input.key_down(win32con.VK_LEFT)
     # right to bottom-left
     _exec_action(skill.ThunderCircle.use)
-    sleep(0.6)
+    sleep(0.5) # tag
     for i in range(4):
         skill.Teleport.use()
         sleep(0.2)
-        _exec_action(skill.EarthCircle.use)
+        use_random_skill()
         sleep(0.6)
     Input.key_up(win32con.VK_LEFT)
+    correct_stand_pos(LeftStandPos)
+    action.move_left(0.2)
     sleep(0.4)
     mana_whirl()
     sleep(0.1)
+    
     # bottom-left to upper-left
-    for i in range(2):
-        action.blink_up()
-        sleep(0.4)
+    aoe_used = False
+    action.blink_up()
+    sleep(0.4)
+    if skill.DarkFog.is_ready():
+        aoe_used = True
+        _exec_action(skill.DarkFog.use)
+        skill.DarkFog.apply_cd()
+    else:
+        if skill.EldasFall.is_ready():
+            _exec_action(skill.ManaBrust.use)
+        else:
+            _exec_action(skill.ThunderCircle.use)
+    sleep(0.3)
+
+    action.blink_up()
+    sleep(0.4)
+    if skill.EldasFall.is_ready():
+        if aoe_used:
+            sleep(2)
+        _exec_action(skill.EldasFall.use)
+        skill.EldasFall.apply_cd()
+    else:    
         _exec_action(skill.ThunderCircle.use)
-        sleep(0.3)
+    sleep(0.3)
+    
+    if skill.SummonOnyxDragon.is_ready():
+        action.blink_up()
+        sleep(0.6)
+        _exec_action(skill.SummonOnyxDragon.use)
+        skill.SummonOnyxDragon.apply_cd()
+        sleep(0.6)
+        action.blink_down()
+        sleep(0.6)
+        _exec_action(skill.ThunderCircle.use)
+        sleep(0.5)
+    
     # upper-left to center
     Input.key_down(win32con.VK_RIGHT)
     skill.Teleport.use()
@@ -209,22 +332,12 @@ def main_loop():
     sleep(0.4)
     action.blink_right()
     Input.key_up(win32con.VK_RIGHT)
-    sleep(0.7)
+    sleep(0.5) # tag
     _exec_action(skill.EarthCircle.use)
     sleep(0.1)
     action.blink_down()
-    sleep(0.5)
-    px = utils.get_player_pos()
-    print("Player pos:", px)
-    if px:
-        dx = px[0] - StandPos[0]
-        if abs(dx) > MaxCorrectionDelta:
-            print("Potentially wrong pos result, skip correction")
-        elif dx > 0:
-            action.move_left(TimeDeltaPerPixel*dx)
-        else:
-            action.move_right(TimeDeltaPerPixel*dx*-1)
-    sleep(0.1)
+    sleep(0.2)
+    # correct_stand_pos(MidStandPos)
 
 
 if __name__ == '__main__':
