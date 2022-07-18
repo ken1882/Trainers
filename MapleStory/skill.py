@@ -69,8 +69,8 @@ DragonMaster      = Skill('DragonMaster', 240, _G.MAPLE_KEYCODE['2'])      # 龍
 SummonOnyxDragon  = Skill('SummonOnyxDragon', 80, _G.MAPLE_KEYCODE['3'])   # 招喚聖歐尼斯龍
 LucidsNightmare   = Skill('LucidsNightmare', 110, _G.MAPLE_KEYCODE['4'])   # 露希妲的惡夢
 FreudsWisdom      = Skill('FreudsWisdom', 25, _G.MAPLE_KEYCODE['C'])       # 普利特的祝福
-SpiderMirror      = Skill('SpiderMirror', 245, _G.MAPLE_KEYCODE['8'])      # 蜘蛛之鏡
-SolarImprint      = Skill('SolarImprint', 245, _G.MAPLE_KEYCODE['9'])      # 烈陽印記
+SpiderMirror      = Skill('SpiderMirror', 245, _G.MAPLE_KEYCODE['6'])      # 蜘蛛之鏡
+SolarImprint      = Skill('SolarImprint', 245, _G.MAPLE_KEYCODE['I'])      # 烈陽印記
 HeroicMemories    = Skill('HeroicMemories', 120, _G.MAPLE_KEYCODE['7'])    # 英雄歐尼斯
 EldasFall         = Skill('EldasFall', 38, _G.MAPLE_KEYCODE['T'])          # 艾爾達斯降臨
 
@@ -80,8 +80,8 @@ Yorozu            = Skill('Yorozu', 1800, None)                           # 萬�
 Izuna             = Skill('Izuna', 1800, None)                            # 泉奈的祈禱
 Ibaraki           = Skill('Ibaraki', 1800, None)                          # 棘鬼
 
-BreathOfDivinity  = Skill('BreathOfDivinity', 60, _G.MAPLE_KEYCODE['C'])     # 天上的氣息
-BreathOfDivinity2 = Skill('BreathOfDivinity2', 62, _G.MAPLE_KEYCODE['C'])     # 天上的氣息
+BreathOfDivinity  = Skill('BreathOfDivinity', 60, _G.MAPLE_KEYCODE['Z'])     # 天上的氣息
+BreathOfDivinity2 = Skill('BreathOfDivinity2', 62, _G.MAPLE_KEYCODE['Z'])     # 天上的氣息
 MasterOfNightmare = Skill('MasterOfNightmare', 150, _G.MAPLE_KEYCODE['`'])   # 惡夢的支配者
 
 DecentHolySymbol = Skill('DecentHolySymbol', 180, _G.MAPLE_KEYCODE['M'])    # 實用的祈禱
@@ -90,3 +90,4 @@ EtherealForm     = Skill('EtherealForm', 60, _G.MAPLE_KEYCODE['9'])         # �
 DecentAdvancedBlessing = Skill('DecentAdvancedBlessing', 180, _G.MAPLE_KEYCODE['K']) # 實用的進階祝福
 
 Reincarnation = Skill('Reincarnation', 240, _G.MAPLE_KEYCODE['Y'])
+FireStarter   = Skill('FireStarter', 900, _G.MAPLE_KEYCODE['J'])

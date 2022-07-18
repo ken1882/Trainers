@@ -67,7 +67,7 @@ CVLocalDistance  = 10     # Template local maximum picking range
 
 ConsoleArgv = None
 
-# Use `SendInput`
+# Use `SendInput`, scancode instead of virtual keycode
 MAPLE_KEYCODE = { 
   'ESC': 0x01,
   'F1': 0x3B,
@@ -80,8 +80,8 @@ MAPLE_KEYCODE = {
   'F8': 0x42,
   'F9': 0x43,
   'F10': 0x44,
-  'F11': 0x57,
-  'F12': 0x58,
+  'F11': 0x85,
+  'F12': 0x86,
   '`': 0x29,
   '1': 0x02,
   '2': 0x03,
@@ -114,9 +114,9 @@ MAPLE_KEYCODE = {
   'F': 0x21,
   'G': 0x22,
   'H': 0x23,
-  'J': 0x51,
-  'K': 0x52,
-  'L': 0x53,
+  'J': 0x24,
+  'K': 0x25,
+  'L': 0x26,
   ';': 0x27,
   "'": 0x28,
   'Z': 0x2C,

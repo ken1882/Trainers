@@ -5,6 +5,8 @@ from time import sleep
 from _G import (resume,wait,uwait,log_debug,log_error,log_info,log_warning)
 import ctypes
 
+win32con.KEYEVENTF_SCANCODE = 0x0008
+
 LONG = ctypes.c_long
 DWORD = ctypes.c_ulong
 ULONG_PTR = ctypes.POINTER(DWORD)
@@ -110,20 +112,36 @@ def get_cursor_pos(app_offset=False):
     my = my - _G.AppRect[1] - _G.WinTitleBarSize[1] - _G.WinDesktopBorderOffset[1]
   return (mx, my)
 
-def key_down(*args):
+def key_down(*args, sc=False, msg=False):
   for kid in args:
-    win32api.keybd_event(kid, 0, 0, 0)
+    if msg:
+      lp = 0
+      if sc:
+        lp |= (kid << 16)
+      win32api.SendMessage(_G.AppHwnd, win32con.WM_KEYDOWN, kid, lp)
+    else:
+      if sc:
+        SendInput(Keyboard(kid, win32con.KEYEVENTF_SCANCODE))
+      else:
+        win32api.keybd_event(kid, 0, 0, 0)
 
-def key_up(*args):
+def key_up(*args, sc=False, msg=False):
   for kid in args:
-    win32api.keybd_event(kid, 0, win32con.KEYEVENTF_KEYUP, 0)
+    if msg:
+      lp = 0
+      if sc:
+        lp |= (kid << 16)
+      win32api.SendMessage(_G.AppHwnd, win32con.WM_KEYUP, kid, lp)
+    else:
+      if sc:
+        SendInput(Keyboard(kid, win32con.KEYEVENTF_KEYUP | win32con.KEYEVENTF_SCANCODE))
+      else:
+        win32api.keybd_event(kid, 0, win32con.KEYEVENTF_KEYUP, 0)
 
-def trigger_key(*args):
-  for kid in args:
-    key_down(kid)
+def trigger_key(*args, sc=False, msg=False):
+  key_down(*args, sc=sc, msg=msg)
   sleep(0.03)
-  for kid in args:
-    key_up(kid)
+  key_up(*args, sc=sc, msg=msg)
 
 def mouse_down(x=None, y=None, app_offset=False):
   # cx, cy = get_cursor_pos(app_offset)
@@ -275,8 +293,8 @@ def rmoveto(x,y,rrange=8,**kwargs):
   moveto(x+random.randint(-rrange, rrange), y+random.randint(-rrange, rrange), **kwargs)
 
 def get_keybd_pair(code):
-  yield Keyboard(code)
-  yield Keyboard(code, win32con.KEYEVENTF_KEYUP)
+  yield Keyboard(code, win32con.KEYEVENTF_SCANCODE)
+  yield Keyboard(code, win32con.KEYEVENTF_KEYUP | win32con.KEYEVENTF_SCANCODE)
 
 # def get_mosue_pair(flags, x=0, y=0, data=0):
 #   yield Mouse(flags, x, y ,data)
