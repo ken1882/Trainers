@@ -1,4 +1,5 @@
-from re import M
+from tkinter.tix import Tree
+import _G
 from _G import *
 import game
 from copy import deepcopy
@@ -13,9 +14,6 @@ USTAT_UNCHANGE_THRESHOLD = 10
 
 MIST_GEAR_ID = 85
 SWAP_GEAR_ID = [
-  {'weapon': [0,0,0,0,0,0,0,0,0,0], 'armor': 26147280, 'accessory': 33128716},
-  {'weapon': [0,0,0,0,0,0,0,0,0,0], 'armor': 26147275, 'accessory': 33128718},
-  {'weapon': [0,0,0,0,0,0,0,0,0,0], 'armor': 26147278, 'accessory': 33128721},
   {
     'weapon': [
       0,
@@ -48,6 +46,9 @@ SWAP_GEAR_ID = [
     'armor': 26147275,  # エクリプスプレート改
     'accessory': 33128720,  # エクリプスネック改
   },
+  {'weapon': [0,0,0,0,0,0,0,0,0,0], 'armor': 26147280, 'accessory': 33128716},
+  {'weapon': [0,0,0,0,0,0,0,0,0,0], 'armor': 26147275, 'accessory': 33128718},
+  {'weapon': [0,0,0,0,0,0,0,0,0,0], 'armor': 26147278, 'accessory': 33128721},
 ]
 
 def clear_cache():
@@ -131,12 +132,14 @@ def get_all_items(flatten=False):
     return ar
   return ret
 
-def is_character_mastered(ch, accumulate=False):
+def is_character_mastered(ch, accumulate=False, check_stat=True):
   global __UCharacterStats,__UStatsUnchangedTimes
   sk_keys = ['USkill1','USkill2','USkill3']
   skills = [ch[sk] for sk in sk_keys]
   if any([sk['Rank'] < 99 for sk in skills]):
     return False
+  if not check_stat:
+    return True
   res = game.get_request(f"/api/UCharacters/{ch['UCharacterBaseId']}/BaseStatusUp")
   mstatus = res['r']['MaxStatuses'][-1]
   sstats = 0
@@ -168,6 +171,8 @@ def get_maxed_partymember(pid, sid):
   res = game.get_request(f"/api/Quests/{sid}/prepare/{pid}?rentalUUserId=null")
   ret = []
   for ch in res['r']['QuestPreparationCharacterViewModels']:
+    if _G.FlagTrainSkill and not is_character_mastered(get_character_by_uid(ch['UCharacterId']), check_stat=False):
+      continue
     if all([n == 0 for _,n in ch['GrowStatus'].items()]):
       ret.append(ch['UCharacterId'])
       continue
