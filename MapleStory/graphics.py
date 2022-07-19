@@ -65,7 +65,7 @@ def get_content_rect():
   rect[3] += _G.WinTitleBarSize[1] - _G.WinTitleBarSize[1]
   return tuple(rect)
 
-def take_snapshot(rect=None,filename=None):
+def take_snapshot(rect=None,filename=None,force=False):
   if not filename:
     filename = _G.DCSnapshotFile
   offset = list(get_content_rect())
@@ -80,7 +80,7 @@ def take_snapshot(rect=None,filename=None):
     rect[2] += offset[0]
     rect[3] += offset[1]
   # note: cache will be flushed every frame during main_loop
-  if _G.LastFrameCount == _G.FrameCount and filename in _G.SnapshotCache:
+  if not force and _G.LastFrameCount == _G.FrameCount and filename in _G.SnapshotCache:
     return _G.SnapshotCache[filename]
   else:
     _G.LastFrameCount = _G.FrameCount

@@ -24,17 +24,24 @@ def start_starry_ocean():
   _G.MainChildName = name
   print("Chlid proc started")
 
-def start_reincarnation_helper():
+def start_reincarnation_helper(bod=True, fire=False):
   hour = 60 * 60 * 4
   interval = 60
+  skill.FireStarter.apply_cd()
   for i in range(hour // interval):
     sleep(2)
-    print(f"Use BOD #{i+1}")
-    skill.BreathOfDivinity.use()
+    if bod:
+      print(f"Use BOD #{i+1}")
+      skill.BreathOfDivinity.use()
     if i % 5 == 0:
       sleep(0.3)
       print(f"Place monument #{(i // 5)+1}")
       skill.Reincarnation.use()
+    if fire and skill.FireStarter.is_ready():
+      sleep(1)
+      print('Ignite incendiary')
+      skill.FireStarter.use()
+      skill.FireStarter.apply_cd()
     sleep(interval)
     
 
