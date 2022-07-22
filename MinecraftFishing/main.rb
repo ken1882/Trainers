@@ -70,9 +70,9 @@ end
 def main_update
   Input.update
   if Input.trigger?(Keymap[:vk_f8])
-    # $flag_pressed ? Input.mouse_rup : Input.mouse_rdown
+    $flag_pressed ? Input.mouse_rup : Input.mouse_rdown
+    # $flag_pressed ? Input.mouse_lup : Input.mouse_ldown
     puts $flag_pressed ? "Press end" : "Press start"
-    $flag_pressed ? Input.mouse_lup : Input.mouse_ldown
   end
   $flag_running = false if Input.trigger?(Keymap[:vk_f9])
 end
