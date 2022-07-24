@@ -28,6 +28,10 @@ def start_reincarnation_helper(bod=True, fire=False):
   hour = 60 * 60 * 4
   interval = 60
   skill.FireStarter.apply_cd()
+  if bod:
+    print('Auto BOD on')
+  if fire:
+    print('Auto fire on')
   for i in range(hour // interval):
     sleep(2)
     if bod:

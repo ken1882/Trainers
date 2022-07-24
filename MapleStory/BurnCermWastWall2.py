@@ -18,8 +18,8 @@ BaseInterval    = 0.1
 LastBODTime     = 0
 CommonSkillTime = 0.5
 
-LeftStandPos   = (30, 93)
-RightStandPos  = (105, 93)
+LeftStandPos   = (32, 93)
+RightStandPos  = (106, 93)
 
 MaxCorrectionDelta = 100
 TimeDeltaPerPixel  = 0.08
@@ -270,12 +270,12 @@ def main_loop():
             mana_whirl()
             sleep(0.3)
             action.blink_up()
-    # _exec_action(skill.EarthCircle.use)
-    # sleep(0.4) 
     if skill.EldasFall.is_ready():
         _exec_action(skill.EldasFall.use)
         skill.EldasFall.apply_cd()
-        sleep(0.4)
+    else:
+        _exec_action(skill.EarthCircle.use)
+    sleep(0.4) 
     _exec_action(skill.DragonFlash.use)
     _exec_action(skill.WindCircle.use)
     if randint(0, 1):
