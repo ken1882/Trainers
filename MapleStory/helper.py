@@ -34,8 +34,8 @@ def main_loop():
     _G.log_info('Assist: Interact/Harvest ' + ('end' if Keystate[' '] else 'start'))
     Keystate[' '] ^= 1
     sleep(0.1)
-  elif Input.is_pressed(win32con.VK_NUMPAD0):
-    _G.FlagRunning = False
+  # elif Input.is_pressed(win32con.VK_NUMPAD0):
+  #   _G.FlagRunning = False
   process_autokey()
 
 if __name__ == '__main__':
