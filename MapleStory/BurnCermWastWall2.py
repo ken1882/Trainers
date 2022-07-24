@@ -18,11 +18,13 @@ BaseInterval    = 0.1
 LastBODTime     = 0
 CommonSkillTime = 0.5
 
-LeftStandPos   = (28, 93)
+LeftStandPos   = (30, 93)
 RightStandPos  = (105, 93)
 
 MaxCorrectionDelta = 100
 TimeDeltaPerPixel  = 0.08
+
+LoopCounter = 0
 
 FlagPicking    = False
 FlagLockSkillUse = False
@@ -127,7 +129,7 @@ def setup():
     register_constant_skill(skill.BreathOfDivinity, 63, False)
     # register_constant_skill(skill.Reincarnation, 240)
     # register_constant_skill(skill.DarkFog, 20)
-    register_constant_skill(skill.MasterOfNightmare, 75)
+    # register_constant_skill(skill.MasterOfNightmare, 75)
     # register_constant_skill(skill.SpiderMirror, 250)
 
 def mana_whirl():
@@ -221,13 +223,12 @@ def dragonmaster():
     FlagLockSkillUse = False
 
 def main_loop():
-    global LoopCounter,FlagLockSkillUse,RandMoveSeed,RandMoveCount
+    global LoopCounter,FlagLockSkillUse
     sleep(0.3, True)
     action.move_left(0.2)
     if skill.DragonMaster.is_ready():
         skill.DragonMaster.apply_cd()
         dragonmaster()
-        sleep(0.1)
         action.blink_up()
         sleep(0.4)
         return 
@@ -247,6 +248,7 @@ def main_loop():
     _exec_action(skill.FireBreath.use)
     _exec_action(skill.EarthCircle.use)
     action.blink_down()
+    LoopCounter += 1
     sleep(0.7)
     for _ in range(2):
         _exec_action(skill.ThunderCircle.use)
@@ -278,7 +280,15 @@ def main_loop():
     _exec_action(skill.WindCircle.use)
     if randint(0, 1):
         skill.MagicDerbis.use()
-    sleep(0.2)
+    sleep(0.3)
+    if LoopCounter > randint(2,4):
+        LoopCounter = 0
+        action.blink_right()
+        sleep(0.3)
+        _exec_action(skill.ThunderCircle.use)
+        sleep(0.4)
+        action.blink_left()
+        sleep(0.3)
     # right to center
     Input.key_down(win32con.VK_LEFT)
     for i in range(3):
@@ -289,8 +299,7 @@ def main_loop():
             skill.DarkFog.apply_cd()
         else:
             _exec_action(skill.ThunderCircle.use)
-        _exec_action(skill.ThunderCircle.use)
-        sleep(0.4)
+        sleep(0.5)
     Input.key_up(win32con.VK_LEFT)
 
     # center left to bottom left
