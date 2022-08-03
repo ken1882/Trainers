@@ -1,6 +1,6 @@
-pywin32
-Desktopmagic
+matplotlib
 opencv-python
 numpy
 pytesseract
 requests
+pytz

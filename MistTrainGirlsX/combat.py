@@ -1,8 +1,3 @@
-from tkinter import E
-
-from itsdangerous import exc
-from markupsafe import re
-from numpy import character
 import _G
 from _G import *
 import itertools
