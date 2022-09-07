@@ -12,8 +12,8 @@ SkillPtRect     = (492,696,548,721)
 RaceSkillPtRect = (492,745,548,771)
 
 DateRect      = (10,33,160,52)
-RaceFanRect1  = (246,633,340,653) 
-RaceFanRect2  = (246,758,340,775)
+RaceFanRect1  = (254,633,340,653) 
+RaceFanRect2  = (254,758,340,775)
 
 PreObjectiveSkillPos = (164, 867)
 PreObjectiveRacePos  = (405, 865)

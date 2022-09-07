@@ -200,7 +200,10 @@ module Input
     angle = Math.atan2(dy, dx)
     dx = speed * Math.cos(angle)
     dy = speed * Math.sin(angle)
-    cnt.times{ cx += dx; cy += dy; self.set_cursor(cx, cy, true); Fiber.yield;}
+    cnt.times do 
+      cx += dx; cy += dy; self.set_cursor(cx, cy, true)
+      Fiber.yield rescue nil
+    end
     self.set_cursor(x, y, false); self.set_cursor(x, y, true);
   end
   

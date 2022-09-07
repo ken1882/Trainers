@@ -1,8 +1,8 @@
+require_relative 'input'
+require_relative 'utils'
 require_relative 'dp_pixel'
 require_relative 'dp_grind'
 require_relative 'dp_fiber'
-require_relative 'input'
-require_relative 'utils'
 
 FPS = (1.0 / 120)
 
@@ -17,6 +17,7 @@ $flag_auto_restart         = ARGV.include? '-r'
 $flag_disable_shardcombine = ARGV.include? '--no-shard-combine'
 $flag_disable_itemsell     = ARGV.include? '--no-item-sell'
 $flag_auto_start           = ARGV.include? '--auto-start'
+$flag_sell_rare            = ARGV.include? '--sell-rare'
 
 puts 'Auto item sell disabled' if $flag_disable_itemsell
 puts 'Auto shard combine disable' if $flag_disable_shardcombine
