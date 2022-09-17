@@ -50,18 +50,22 @@ def rubifiy_file(file):
     text = text.replace('\\n', LinewrapSymbol)
     text = text.replace('\u3000', '')
     ruby = rubifiy_japanese(text)
-    ruby = ruby.replace(
-      '<ruby><rb>一</rb><rt>いち</rt></ruby><ruby><rb>人</rb><rt>にん</rt></ruby>',
-      '<ruby><rb>一人</rb><rt>ひとり</rt></ruby>',
+    correction = (
+      (
+        '<ruby><rb>一</rb><rt>いち</rt></ruby><ruby><rb>人</rb><rt>にん</rt></ruby>',
+        '<ruby><rb>一人</rb><rt>ひとり</rt></ruby>',
+      ),
+      (
+        '<ruby><rb>二</rb><rt>に</rt></ruby><ruby><rb>人</rb><rt>にん</rt></ruby>',
+        '<ruby><rb>二人</rb><rt>ふたり</rt></ruby>',
+      ),
+      (
+        '<ruby><rb>幻</rb><rt>まぼろし</rt></ruby><ruby><rb>霧</rb><rt>きり</rt></ruby>',
+        '<ruby><rb>幻</rb><rt>げん</rt></ruby><ruby><rb>霧</rb><rt>む</rt></ruby>',
+      )
     )
-    ruby = ruby.replace(
-      '<ruby><rb>二</rb><rt>に</rt></ruby><ruby><rb>人</rb><rt>にん</rt></ruby>',
-      '<ruby><rb>二人</rb><rt>ふたり</rt></ruby>',
-    )
-    ruby = ruby.replace(
-      '<ruby><rb>幻</rb><rt>まぼろし</rt></ruby><ruby><rb>霧</rb><rt>きり</rt></ruby>',
-      '<ruby><rb>幻</rb><rt>げん</rt></ruby><ruby><rb>霧</rb><rt>む</rt></ruby>'
-    )
+    for pair in correction:
+      ruby = ruby.replace(pair[0], pair[1])
     dialogs[i]['Ruby'] = ruby
   data['MSceneDetailViewModel'] = dialogs
   # Title

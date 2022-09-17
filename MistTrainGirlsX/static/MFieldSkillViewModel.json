@@ -406,6 +406,20 @@
     "AbilityMSkill3Id": null
   },
   {
+    "Id": 7020030,
+    "Name": "\u6148\u60b2\u306a\u308b\u4e00\u6483",
+    "Description": "",
+    "Rarity": 3,
+    "MFieldSkillRarity": {
+      "Rarity": 3,
+      "LevelLimit": 4
+    },
+    "Cost": 48,
+    "AbilityMSkill1Id": 3070062,
+    "AbilityMSkill2Id": 3070058,
+    "AbilityMSkill3Id": null
+  },
+  {
     "Id": 7030001,
     "Name": "\u9577\u3044\u65c5\u306e\u9014\u4e2d\u3067",
     "Description": "",
@@ -1176,6 +1190,34 @@
     "AbilityMSkill3Id": null
   },
   {
+    "Id": 7030056,
+    "Name": "\u3046\u3055\u3061\u3083\u3093\u5927\u597d\u304d\u30af\u30e9\u30d6\u3078\u3088\u3046\u3053\u305d",
+    "Description": "",
+    "Rarity": 3,
+    "MFieldSkillRarity": {
+      "Rarity": 3,
+      "LevelLimit": 4
+    },
+    "Cost": 30,
+    "AbilityMSkill1Id": 3030110,
+    "AbilityMSkill2Id": 3030109,
+    "AbilityMSkill3Id": null
+  },
+  {
+    "Id": 7030057,
+    "Name": "\u5e78\u305b\u306a\u7d50\u5a5a",
+    "Description": "",
+    "Rarity": 3,
+    "MFieldSkillRarity": {
+      "Rarity": 3,
+      "LevelLimit": 4
+    },
+    "Cost": 30,
+    "AbilityMSkill1Id": 3030111,
+    "AbilityMSkill2Id": 3070059,
+    "AbilityMSkill3Id": null
+  },
+  {
     "Id": 7040001,
     "Name": "\u30aa\u30aa\u30a8\u305f\u3061\u306e\u591c",
     "Description": "",
@@ -1622,5 +1664,33 @@
     "AbilityMSkill1Id": 3070056,
     "AbilityMSkill2Id": 3030008,
     "AbilityMSkill3Id": 3020001
+  },
+  {
+    "Id": 7040033,
+    "Name": "\u30d3\u30fc\u30c1\u3067\u512a\u96c5\u306a\u3072\u3068\u6642\u3092",
+    "Description": "",
+    "Rarity": 4,
+    "MFieldSkillRarity": {
+      "Rarity": 4,
+      "LevelLimit": 5
+    },
+    "Cost": 72,
+    "AbilityMSkill1Id": 3070060,
+    "AbilityMSkill2Id": 3070061,
+    "AbilityMSkill3Id": 3070003
+  },
+  {
+    "Id": 7040034,
+    "Name": "\u3072\u3089\u3081\u304d\uff01\uff1f\u7537\u88c5\u57f7\u4e8b\u653f\u7b56\uff01",
+    "Description": "",
+    "Rarity": 4,
+    "MFieldSkillRarity": {
+      "Rarity": 4,
+      "LevelLimit": 5
+    },
+    "Cost": 70,
+    "AbilityMSkill1Id": 3070063,
+    "AbilityMSkill2Id": 3030009,
+    "AbilityMSkill3Id": 3030074
   }
 ]

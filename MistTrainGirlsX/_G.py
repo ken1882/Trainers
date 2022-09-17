@@ -1,10 +1,15 @@
-import sys
+import sys,os
+import pickle
 from datetime import datetime
 from time import sleep
 from random import randint
 from copy import copy, deepcopy
+from dotenv import load_dotenv
 import traceback
 import unicodedata
+import pytz
+
+load_dotenv()
 
 ENCODING = 'UTF-8'
 IS_WIN32 = False
@@ -501,3 +506,54 @@ def extract_derpy_features(race, character, feats='all'):
       character['country']
     ]
   raise RuntimeError(f"Don't know how to extract features of {feats}")
+
+def GetCacheString(key):
+  try:
+    load_dotenv()
+    return os.getenv(key)
+  except Exception as err:
+    log_error("Error while getting cache string:", err)
+    return ''
+
+def GetCacheTimestamp(key):
+  try:
+    load_dotenv()
+    st = float(os.getenv(key) or 0)
+    st = int(st)
+    return datetime.fromtimestamp(st, tz=pytz.timezone('Asia/Tokyo'))
+  except Exception as err:
+    log_error("Error while getting timestamp:", err)
+    return datetime.now()
+
+def SetCacheString(key, val):
+  try:
+    os.system(f'dotenv set {key} "{val}"')
+  except Exception as err:
+    log_error("Error while caching:", err)
+    return None  
+
+def SetCacheTimestamp(key, val):
+  if type(val) == datetime:
+    val = val.timestamp()
+  try:
+    os.system(f'dotenv set {key} {int(val)}')
+  except Exception as err:
+    log_error("Error while caching timestamp:", err)
+    return False
+
+def GetCacheBinary(key):
+  if not os.path.exists(key):
+    return None
+  try:
+    with open(key, 'rb') as fp:
+      return pickle.load(fp)
+  except Exception:
+    uwait(0.1)
+    return GetCacheBinary(key)
+
+def SetCacheBinary(key, val):
+  try:
+    with open(key, 'wb') as fp:
+      return pickle.dump(val, fp)
+  except Exception:
+    return None
