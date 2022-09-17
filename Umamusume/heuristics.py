@@ -73,14 +73,13 @@ def determine_training_objective(sup_num=[0,0,0,0,0],attr_inc=[0,0,0,0,0]):
   log_info(f"Next objective date left: {dd}")
   dd = max(0,dd-2)
   for idx,attr in enumerate(_G.CurrentAttributes[:5]):
-    mul   = 1.0
     decay = _G.CurrentUma.ObjectiveWeightDecay
-    if attr < _G.CurrentUma.ObjectiveAttributeMin[obj_idx][idx]:
-      mul = _G.CurrentUma.MinAttributeWeightMultiplier[idx]
-    elif attr > _G.CurrentUma.ObjectiveAttributeFair[obj_idx][idx]:
-      mul = _G.CurrentUma.OverAttributeWeightMultiplier[idx]
-    else:
-      mul = _G.CurrentUma.FairAttributeWeightMultiplier[idx]
+    mul   = _G.CurrentUma.FairAttributeWeightMultiplier[idx]
+    if not _G.IgnoreStatLimit:
+      if attr < _G.CurrentUma.ObjectiveAttributeMin[obj_idx][idx]:
+        mul = _G.CurrentUma.MinAttributeWeightMultiplier[idx]
+      elif attr > _G.CurrentUma.ObjectiveAttributeFair[obj_idx][idx]:
+        mul = _G.CurrentUma.OverAttributeWeightMultiplier[idx]
     mul = mul * (decay ** dd)
     attr_weight[idx] *= mul
   log_info(f"Attribute training weight: {attr_weight}")
@@ -116,12 +115,13 @@ def determine_next_main_action():
   race   = get_optional_race(date)
   _G.CurrentStatus = status
   _G.CurrentDate = date
-  _G.CurrentAttributes = stage.get_attributes()
   log_info("Energy:", energy)
   log_info("Status:", stage.Status['name'][status])
   log_info("Date:", date)
   log_info("Sicked:", sicked)
-  log_info("Attributes:", _G.CurrentAttributes)
+  if not race and not _G.IgnoreStatLimit:
+    _G.CurrentAttributes = stage.get_attributes()
+    log_info("Attributes:", _G.CurrentAttributes)
 
   if race:
     _flag_ok = True
@@ -129,10 +129,11 @@ def determine_next_main_action():
     for idx,attr in enumerate(_G.CurrentUma.ObjectiveAttributeMin[_G.NextObjectiveIndex]):
       d = max(0, corrector.date(_G.CurrentUma.ObjectiveDate[_G.NextObjectiveIndex]) - date - 2)
       w = attr * (_G.CurrentUma.MinAttributeDateWeightDecay[idx] ** d)
-      print(f"{_G.CurrentAttributes[idx]} / {attr} => {w} {_G.CurrentAttributes[idx] < w}")
-      if _G.CurrentAttributes[idx] < w:
-        _flag_ok = False
-        break
+      if not _G.IgnoreStatLimit:
+        print(f"{_G.CurrentAttributes[idx]} / {attr} => {w} {_G.CurrentAttributes[idx] < w}")
+        if _G.CurrentAttributes[idx] < w:
+          _flag_ok = False
+          break
     if _flag_ok or _G.IgnoreStatLimit:
       return (_G.ActionRace, race)
 

@@ -16,6 +16,8 @@ def skill_name(name,cost=0):
   ret = name
   for sk in _G.UmaSkillData:
     rate = util.diff_string(name, sk['Name'])
+    if 'Cost' in sk and cost > sk['Cost']:
+      continue
     if rate > max_r:
       ret = sk['Name']
       max_r = rate

@@ -567,6 +567,7 @@ def get_available_skills(_async,immediate=False,to_get=[]):
   '''
   ret = []
   flag_duped = False  
+  
   while not flag_duped:
     if _async:
       yield

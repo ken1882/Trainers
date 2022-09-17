@@ -34,6 +34,7 @@ module Grinding
   ExtractBarColorThreshold = 50
   LastPageToExcPos   = [[1840, 655]]
   LastPageToExcColor = [[30, 30, 28]]
+  LastItemRarityPos  = [1863, 655]
 
   DragonShardPos = [1792, 408]
   ShardTypesPos  = [1523, 440]
@@ -127,7 +128,7 @@ module Grinding
     cur_page = 0    
     mx, my = *ItemRowPos[StartExtRowN]
     _ExtractProc = Proc.new{
-      for i in (StartExtRowN...[StartExtRowN+3,ItemRowPos.size].min)
+      for i in (StartExtRowN...[StartExtRowN+4,ItemRowPos.size].min)
         mx, my = *ItemRowPos[i]
         target_pos = []
         8.times do |j|
@@ -190,6 +191,8 @@ module Grinding
         )
       }.all?
       if cur_page < MaxLootPage
+        if determine_item_rarity(*LastItemRarityPos) > 1
+        end
         puts "Waiting for next page of loots"
       else
         puts "Max loot page reached"; break;
@@ -539,8 +542,9 @@ module Grinding
 end
 
 def determine_item_rarity(px, py)
+  return 0 if $flag_sell_rare
   color = Graphics.get_pixel(px, py)
-  # puts "(#{px},#{py}) #{color.rgb}"
+  puts "(#{px},#{py}) #{color.rgb}"
   return 4 if color.r + color.b > color.g && color.r + color.g > 0x7f && color.b < 0x40 # orange
   return 3 if color.r + color.b > 0x7f && color.g < 0x40 # purple
   return 1 if color.r + color.b + 0x0a < color.g # green

@@ -58,10 +58,12 @@ end
 WindowWidth  = 1208
 WindowHeight = 764
 Accounts = []
-File.open('dp_credentials.txt') do |file|
-  file.each_line do |line|
-    next if line.strip.length < 3
-    Accounts << [line.strip.split(' ')]
+if File.exists? 'dp_credentials.txt'
+  File.open('dp_credentials.txt') do |file|
+    file.each_line do |line|
+      next if line.strip.length < 3
+      Accounts << [line.strip.split(' ')]
+    end
   end
 end
 EnterAccountPos = [650, 480]

@@ -176,7 +176,7 @@ module DunarTemple
     puts "Start room#3"
     Combat.earth_shield; uwait 1;
     Combat.reset_view; uwait 1;
-    move_front 8.5,true; uwait 0.7;
+    move_front 9.0,true; uwait 0.7;
     move_front 2.0,true; uwait 0.3;
     Combat.backjump
     rotateX(90); uwait 0.5;
