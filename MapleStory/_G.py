@@ -60,7 +60,7 @@ MsgPipeRet = "\x00\x50\x00RET\x00"
 MsgPipeInfo = "\x00\x50\x00INFO\x00"
 MsgPipePause = "\x00\x50\x00PAUSE\x00"
 
-CVMatchHardRate  = 0.7    # Hard-written threshold in order to match
+CVMatchHardRate  = 0.9    # Hard-written threshold in order to match
 CVMatchStdRate   = 1.22   # Similarity standard deviation ratio above average in consider digit matched
 CVMatchMinCount  = 1      # How many matched point need to pass
 CVLocalDistance  = 10     # Template local maximum picking range

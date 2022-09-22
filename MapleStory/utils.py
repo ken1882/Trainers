@@ -128,7 +128,7 @@ def get_player_pos(force=False):
   ww = _G.AppRect[2] - _G.AppRect[0]
   wh = _G.AppRect[3] - _G.AppRect[1]
   sw = ww // 4
-  sh = wh // 3
+  sh = wh // 4
   graphics.take_snapshot((0, 0, sw, sh), force=force)
   pos = graphics.find_object('player.png')
   if pos:

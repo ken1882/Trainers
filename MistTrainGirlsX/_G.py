@@ -4,11 +4,10 @@ from datetime import datetime
 from time import sleep
 from random import randint
 from copy import copy, deepcopy
-from dotenv import load_dotenv
 import traceback
 import unicodedata
 import pytz
-
+from dotenv import load_dotenv
 load_dotenv()
 
 ENCODING = 'UTF-8'
@@ -509,7 +508,7 @@ def extract_derpy_features(race, character, feats='all'):
 
 def GetCacheString(key):
   try:
-    load_dotenv()
+    # load_dotenv()
     return os.getenv(key)
   except Exception as err:
     log_error("Error while getting cache string:", err)
@@ -517,7 +516,7 @@ def GetCacheString(key):
 
 def GetCacheTimestamp(key):
   try:
-    load_dotenv()
+    # load_dotenv()
     st = float(os.getenv(key) or 0)
     st = int(st)
     return datetime.fromtimestamp(st, tz=pytz.timezone('Asia/Tokyo'))

@@ -121,7 +121,7 @@ def blink_left():
     Input.key_down(win32con.VK_LEFT)
     time.sleep(0.08)
     skill.Teleport.use()
-    time.sleep(0.1)
+    time.sleep(0.05)
   finally:
     Input.key_up(win32con.VK_LEFT)
 
@@ -139,7 +139,7 @@ def blink_up():
     Input.key_down(win32con.VK_UP)
     time.sleep(0.08)
     skill.Teleport.use()
-    time.sleep(0.1)
+    time.sleep(0.05)
   finally:
     Input.key_up(win32con.VK_UP)
 
@@ -148,7 +148,7 @@ def blink_down():
     Input.key_down(win32con.VK_DOWN)
     time.sleep(0.08)
     skill.Teleport.use()
-    time.sleep(0.1)
+    time.sleep(0.05)
   finally:
     Input.key_up(win32con.VK_DOWN)
 

@@ -1,3 +1,4 @@
+from glob import glob
 from _G import *
 import player, game
 
@@ -8,6 +9,8 @@ PurchaseItemTypes = [
   4,  # Consumables
   10  # Gears
 ]
+
+TradeVoteGood = None
 
 def get_daily_shop():
   res = game.get_request('/api/Markets/DailyShop')
@@ -138,6 +141,30 @@ def trade_all_event_goods():
         trade_item(good['Id'], n)
       currency[good['RequiredMItemId']] -= price * n
       log_info(f"Traded good {name} x{n}, currency left: {currency}")
+
+def buy_votes():
+  global TradeVoteGood
+  if not TradeVoteGood:
+    for s in get_event_shops():
+      for g in get_tshop_goods(s['Id']):
+        if '投票券' not in game.get_item_name(g):
+          continue
+        log_info("Vote item set:", game.get_item_name(g))
+        TradeVoteGood = g
+        break
+      if TradeVoteGood:
+        break
+  currency = player.get_consumable_stock(TradeVoteGood['RequiredMItemId'])['Stock']
+  cost = TradeVoteGood['RequiredMItemNum']
+  if currency < cost * 1000:
+    return 0
+  n = currency // cost
+  res = trade_item(TradeVoteGood['Id'], n)
+  log_info('Purchased votes:', n, 'res:', res)
+  vid = TradeVoteGood['ItemId']
+  player.VoteItemId = vid
+  player.ConsumableInventory[vid] = player.get_consumable_stock(vid)['Stock']
+  return n
 
 def main():
   pdat = player.get_profile()

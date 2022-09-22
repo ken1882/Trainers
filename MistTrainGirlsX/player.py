@@ -12,6 +12,9 @@ __UStatsUnchangedTimes = {}
 __UnsellableItems = set()
 USTAT_UNCHANGE_THRESHOLD = 10
 
+ConsumableInventory = {}
+VoteItemId = 0
+
 MIST_GEAR_ID = 85
 SWAP_GEAR_ID = [
   {
@@ -473,7 +476,8 @@ def dump_all_available_scenes(meta):
   for chapter in meta:
     for inf in chapter['Scenes']:
       id = inf['MSceneId']
-      if not inf['Status']:
+      epilogue = inf['MSceneId'] % 100 > 10
+      if not inf['Status'] and not epilogue:
         log_warning(f"Scene#{id} {game.get_scene(id)['Title']} not unlocked yet, skip")
         continue
       path = f"{DCTmpFolder}/scenes/{id}.json"
@@ -486,3 +490,16 @@ def dump_all_available_scenes(meta):
       with open(path, 'w') as fp:
         json.dump(data, fp)
       log_info(f"Scene#{id} {game.get_scene(id)['Title']} saved")
+
+def vote_character(event_id, character_id):
+  if not VoteItemId or VoteItemId not in ConsumableInventory:
+    log_warning("Vote item unavailable")
+    return 0
+  total = 0
+  while ConsumableInventory[VoteItemId] > 0:
+    n = min(ConsumableInventory[VoteItemId], 99999)
+    ConsumableInventory[VoteItemId] -= n
+    total += n
+    res = game.post_request(f"/api/Vote/Vote/{event_id}/{character_id}/{n}")
+    log_info(f"Voted {n}, response:", res)
+  return total

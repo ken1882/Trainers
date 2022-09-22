@@ -36,9 +36,9 @@ class Skill:
         sleep(min(0.1, curt-LastSkillUsedTime))
     LastSkillUsedTime = time()
     for event in Input.get_keybd_pair(self.keycode):
-      r = random()/5
-      if r < 0.1:
-        sleep(r)
+      # r = random()/5
+      # if r < 0.1:
+      #   sleep(r)
       Input.SendInput(event)
   
   def apply_cd(self):
@@ -46,7 +46,7 @@ class Skill:
 
 TrueArachnidReflection = Skill('TrueArachnidReflection', 250, _G.MAPLE_KEYCODE['6']) # 蜘蛛之鏡
 WillOfAlliance    = Skill('WillOfAlliance', 7200, _G.MAPLE_KEYCODE['L'])    # 聯盟的意志
-MapleWarrior      = Skill('Maple Warrior', 10, _G.MAPLE_KEYCODE['F7'])      # 楓葉祝福
+MapleBlessing     = Skill('Maple Blessing', 10, _G.MAPLE_KEYCODE['F7'])      # 楓葉祝福
 HerosWill         = Skill('HerosWill', 300, _G.MAPLE_KEYCODE['8'])          # 楓葉淨化
 BuffCombination1  = Skill('BuffCombination1', 180, _G.MAPLE_KEYCODE['F5'])  # 加持技能組合
 
@@ -82,7 +82,7 @@ Ibaraki           = Skill('Ibaraki', 1800, None)                          # 棘�
 
 BreathOfDivinity  = Skill('BreathOfDivinity', 60, _G.MAPLE_KEYCODE['Z'])     # 天上的氣息
 BreathOfDivinity2 = Skill('BreathOfDivinity2', 62, _G.MAPLE_KEYCODE['Z'])     # 天上的氣息
-MasterOfNightmare = Skill('MasterOfNightmare', 150, _G.MAPLE_KEYCODE['`'])   # 惡夢的支配者
+MasterOfNightmare = Skill('MasterOfNightmare', 61, _G.MAPLE_KEYCODE['`'])   # 惡夢的支配者
 
 DecentHolySymbol = Skill('DecentHolySymbol', 180, _G.MAPLE_KEYCODE['M'])    # 實用的祈禱
 ManaOverload     = Skill('ManaOverload', 60, _G.MAPLE_KEYCODE['O'])         # 超載魔力

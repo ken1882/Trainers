@@ -94,7 +94,7 @@ def init():
   if args.user_agent:
     Session.headers['User-Agent'] = args.user_agent
   else:
-    path = f"{DCTmpFolder}/useragent"
+    path = f"{STATIC_FILE_DIRECTORY}/useragent"
     if os.path.exists(path):
       with open(path, 'r') as fp:
         Session.headers['User-Agent'] = fp.read()
@@ -124,7 +124,7 @@ def check_login():
   global Session,ServerLocation
   log_info("Trying to connect to server:", ServerLocation)
   url = f"{ServerLocation}/api/Login"
-  res = Session.post(url=url, headers=PostHeaders, timeout=NetworkPostTimeout)
+  res = Session.post(url=url, headers=GAME_POST_HEADERS, timeout=NetworkPostTimeout)
   if type(res) == dict or res.status_code == 401:
     log_warning("Failed login into game:", res, res.content)
     return _G.ERRNO_FAILED
@@ -208,9 +208,9 @@ def post_request(url, data=None, depth=1):
   try:
     log_debug(f"[POST] {url} with payload:", data, sep='\n')
     if data != None:
-      res = Session.post(url, json.dumps(data), headers=PostHeaders, timeout=NetworkPostTimeout)
+      res = Session.post(url, json.dumps(data), headers=GAME_POST_HEADERS, timeout=NetworkPostTimeout)
     else:
-      res = Session.post(url, headers=PostHeaders, timeout=NetworkPostTimeout)
+      res = Session.post(url, headers=GAME_POST_HEADERS, timeout=NetworkPostTimeout)
   except NetworkExcpetionRescues as err:
     Session.close()
     if depth < NetworkMaxRetry:
@@ -320,28 +320,26 @@ def reauth_game(depth=0):
     Session.headers['Content-Type'] = 'application/x-www-form-urlencoded'
     payload = _G.GetCacheString('DMM_FORM_DATA')
     ServerLocation = f"{urld.scheme}://{urld.hostname}"
-    if not payload:
-      payload = {
-        'url': f"{ServerLocation}/api/DMM/auth?fromGadget=true",
-        'gadget': _url,
-        'st': inf['st'],
-        'httpMethod': 'POST',
-        'headers': 'Content-Type=application%2Fx-www-form-urlencoded',
-        'postData': 'key=value',
-        'authz': 'signed',
-        'contentType': 'JSON',
-        'numEntries': '3',
-        'getSummaries': 'false',
-        'signOwner': 'true',
-        'signViewer': 'true',
-        'container': 'dmm',
-        'bypassSpecCache': '',
-        'getFullHeaders': 'false',
-        'oauthState': '',
-        'OAUTH_SIGNATURE_PUBLICKEY': 'key_2032',
-      }
-      payload = urlencode(payload)
-      _G.SetCacheString('DMM_FORM_DATA', payload)
+    payload = {
+      'url': f"{ServerLocation}/api/DMM/auth?fromGadget=true",
+      'gadget': _url,
+      'st': inf['st'],
+      'httpMethod': 'POST',
+      'headers': 'Content-Type=application%2Fx-www-form-urlencoded',
+      'postData': 'key=value',
+      'authz': 'signed',
+      'contentType': 'JSON',
+      'numEntries': '3',
+      'getSummaries': 'false',
+      'signOwner': 'true',
+      'signViewer': 'true',
+      'container': 'dmm',
+      'bypassSpecCache': '',
+      'getFullHeaders': 'false',
+      'oauthState': '',
+      'OAUTH_SIGNATURE_PUBLICKEY': 'key_2032',
+    }
+    payload = urlencode(payload)
 
     res = Session.post('https://osapi.dmm.com/gadgets/makeRequest', payload)
     log_debug("Response:", res)
@@ -365,12 +363,7 @@ def reauth_game(depth=0):
       return _G.ERRNO_MAINTENANCE
     res = get_request('/api/Home')
   else:
-    log_warning("Failed to login to game, retry dmm login")
-    _G.SetCacheString('DMM_COOKIES', '')
-    _G.SetCacheString('DMM_FORM', '')
-    res_dmm = login_dmm()
-    if res_dmm.status_code == 200:
-      return reauth_game(depth=depth+1)
+    log_warning("Failed to login to game")
     return None
   return res
 

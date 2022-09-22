@@ -18,8 +18,8 @@ BaseInterval    = 0.1
 LastBODTime     = 0
 CommonSkillTime = 0.5
 
-LeftStandPos   = (32, 93)
-RightStandPos  = (106, 93)
+LeftStandPos   = (28, 93)
+RightStandPos  = (103, 93)
 
 MaxCorrectionDelta = 100
 TimeDeltaPerPixel  = 0.08
@@ -281,7 +281,7 @@ def main_loop():
     if randint(0, 1):
         skill.MagicDerbis.use()
     sleep(0.3)
-    if LoopCounter > randint(2,4):
+    if LoopCounter > randint(3,4):
         LoopCounter = 0
         action.blink_right()
         sleep(0.3)

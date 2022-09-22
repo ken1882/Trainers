@@ -2,7 +2,7 @@ import _G
 from _G import *
 import itertools
 from pprint import pprint,pformat
-import player
+import player,shop
 import friend
 import discord
 import Input, vktable
@@ -21,6 +21,10 @@ FLAG_INTERACTIVE = False
 FLAG_CONFIRM_RP_USE = True
 FLAG_STOP_ON_FULL_XP = False
 
+SHOP_CHECK_DURATION = 500
+FLAG_VOTING = False
+VOTE_TARGET = (7, 111)
+VotedCount  = 0
 
 PartyId  = 0
 StageId  = 0
@@ -1240,7 +1244,8 @@ def swap_mastered_trains():
 
 def main():
   global PartyId,StageId,RentalUid,AvailableFriendRentals,RentalCycle
-  global FlagRequestReEnter,ReportDetail,UnmasteredCharacters,FLAG_INTERACTIVE
+  global FlagRequestReEnter,ReportDetail,UnmasteredCharacters,FLAG_INTERACTIVE,VotedCount
+  
   _G.FlagRunning = True
   FlagRequestReEnter = False
   log_info("Program initialized")
@@ -1325,7 +1330,14 @@ def main():
       yn = input("\nRestart battle? (Y/N): ")
       if yn.strip().lower() == 'n':
         break
+    if FLAG_VOTING and cnt % SHOP_CHECK_DURATION == 0:
+      log_info("Processing votes")
+      shop.buy_votes()
+      VotedCount += player.vote_character(*VOTE_TARGET)
+    
   log_final_report()
+  if FLAG_VOTING:
+    log_info("Voted total:", VotedCount)
 
 if __name__ == '__main__':
   try:

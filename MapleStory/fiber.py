@@ -61,5 +61,27 @@ def start_alter_helper():
         for event in kp:
           Input.SendInput(event)
 
+def start_key_fiber():
+  sleep(2)
+  kp = list(Input.get_keybd_pair(_G.MAPLE_KEYCODE['SPACE']))
+  while not Input.is_trigger(win32con.VK_NUMPAD0):
+    Input.update()
+    sleep(0.8)
+    Input.SendInput(kp[0])
+    sleep(0.1)
+    Input.SendInput(kp[1])
+    sleep(1.2)
+    Input.trigger_key(win32con.VK_DOWN)
+    sleep(0.2)
+    Input.trigger_key(win32con.VK_DOWN)
+    Input.SendInput(kp[0])
+    sleep(0.05)
+    Input.SendInput(kp[1])
+    sleep(1.5)
+    Input.SendInput(kp[0])
+    sleep(0.1)
+    Input.SendInput(kp[1])
+    sleep(0.2)
+
 def start_test_fiber():
   pass
