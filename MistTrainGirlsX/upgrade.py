@@ -105,6 +105,8 @@ def bulk_enhance(chid, lv=None, lgn=None, mgn=None, kp=None):
     lgn = lgn or 0
     mgn = mgn or 0
     gear_dat = {
+      "AttributeGearMitemId": None,
+      "AttributeGearQuantity": 0,
       "LayerGearQuantity": lgn,
       "MistGearQuantity": mgn
     }
@@ -154,7 +156,13 @@ def enhance_gear(character, target_lv):
     return character['GearLevel']
   MistGearStockCache -= mgn
   log_info(f"Enhancing character with pieces x{lgn} and mist gear x{mgn}")
-  res = game.post_request(f"/api/UCharacters/AddGearPoint/{character['Id']}/{lgn}/{mgn}")
+  gear_dat = {
+    "AttributeGearMitemId": None,
+    "AttributeGearQuantity": 0,
+    "LayerGearQuantity": lgn,
+    "MistGearQuantity": mgn
+  }
+  res = game.post_request(f"/api/UCharacters/AddGearPoint/{character['Id']}", gear_dat)
   log_info("Gear level enhance done, mist gear left:", MistGearStockCache)
   return res['r']['CurrentGearLevel']
 

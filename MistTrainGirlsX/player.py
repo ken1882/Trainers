@@ -17,6 +17,8 @@ VoteItemId = 0
 
 MIST_GEAR_ID = 85
 SWAP_GEAR_ID = [
+  {'weapon': [0,0,0,0,0,0,0,0,0,0], 'armor': 26147280, 'accessory': 33128716},
+  {'weapon': [0,0,0,0,0,0,0,0,0,0], 'armor': 26147275, 'accessory': 33128718},
   {
     'weapon': [
       0,
@@ -49,8 +51,6 @@ SWAP_GEAR_ID = [
     'armor': 26147275,  # エクリプスプレート改
     'accessory': 33128720,  # エクリプスネック改
   },
-  {'weapon': [0,0,0,0,0,0,0,0,0,0], 'armor': 26147280, 'accessory': 33128716},
-  {'weapon': [0,0,0,0,0,0,0,0,0,0], 'armor': 26147275, 'accessory': 33128718},
   {'weapon': [0,0,0,0,0,0,0,0,0,0], 'armor': 26147278, 'accessory': 33128721},
 ]
 

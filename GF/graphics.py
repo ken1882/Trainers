@@ -102,6 +102,8 @@ def resize_image(size, src_fname, dst_fname):
 def filter_local_templates(mat, threshold):
   '''
   Used in cv2.matchTemplate in order to find most likely point of bitmap
+
+  WARNING: Returned xy is int64
   '''
   global CVLocalDistance
   matched = []

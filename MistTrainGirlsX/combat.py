@@ -23,6 +23,7 @@ FLAG_STOP_ON_FULL_XP = False
 
 SHOP_CHECK_DURATION = 500
 FLAG_VOTING = False
+FLAG_AUTO_VOTE = False
 VOTE_TARGET = (7, 111)
 VotedCount  = 0
 
@@ -79,11 +80,11 @@ RentalCycle = None
 
 UnmasteredCharacters = []
 UnmasteredSwapIndex  = [
-  0,
-  1,
-  # 2,
-  # 3,
-  # 4
+  # 0,
+  # 1,
+  2,
+  3,
+  4
 ]
 
 STATUS_MODIFIER_INC = 1
@@ -236,7 +237,7 @@ def start_raid(sid, pid, rid=0):
   if res['r']['FaildReason'] != ERROR_SUCCESS:
     return res['r']['FaildReason']
   if PublicRaid:
-    res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=3")
+    res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=1")
     boss = res['r']['BattleState']['Enemies'][0]
     try:
       payload = {
@@ -1107,7 +1108,7 @@ def determine_last_battle(data):
   return True
 
 def reset_final_report():
-  global ReportDetail
+  global ReportDetail,FLAG_AUTO_VOTE,VotedCount
   ReportDetail = {
     'start_t': datetime.now(),
     'end_t': 0,
@@ -1123,6 +1124,8 @@ def reset_final_report():
     'lose': 0,
     'exp': 0,
   }
+  if FLAG_AUTO_VOTE:
+    VotedCount = 0
 
 
 def log_final_report():
@@ -1183,6 +1186,8 @@ def log_final_report():
       handle_exception(err)
   print(string)
   print(battle_analyzer.format_analyze_result())
+  if FLAG_VOTING and FLAG_AUTO_VOTE:
+    log_info("Voted total:", VotedCount)
 
 def update_input():
   global FlagRequestReEnter
@@ -1242,7 +1247,7 @@ def swap_mastered_trains():
     log_info("Charcaters in queue:")
     print(player.format_character_data(UnmasteredCharacters))
 
-def main():
+def main(times=0):
   global PartyId,StageId,RentalUid,AvailableFriendRentals,RentalCycle
   global FlagRequestReEnter,ReportDetail,UnmasteredCharacters,FLAG_INTERACTIVE,VotedCount
   
@@ -1330,14 +1335,16 @@ def main():
       yn = input("\nRestart battle? (Y/N): ")
       if yn.strip().lower() == 'n':
         break
+    if times and cnt >= times:
+      log_info("Loop timer reached")
+      break
     if FLAG_VOTING and cnt % SHOP_CHECK_DURATION == 0:
       log_info("Processing votes")
       shop.buy_votes()
-      VotedCount += player.vote_character(*VOTE_TARGET)
+      if FLAG_AUTO_VOTE:
+        VotedCount += player.vote_character(*VOTE_TARGET)
     
   log_final_report()
-  if FLAG_VOTING:
-    log_info("Voted total:", VotedCount)
 
 if __name__ == '__main__':
   try:

@@ -4,4 +4,4 @@ numpy
 pytesseract
 requests
 pytz
-dotenv
+python-dotenv

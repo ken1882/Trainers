@@ -1,23 +1,42 @@
+import os, sys
 from datetime import datetime
-from os import get_exec_path
 from time import sleep
 from random import random
 from copy import copy
 import json
 
+ARGV = {}
+
+ENCODING = 'UTF-8'
+IS_WIN32 = False
+IS_LINUX = False
+
+if sys.platform == 'win32':
+  IS_WIN32 = True
+elif sys.platform == 'linux':
+  IS_LINUX = True
+
 AppWindowName = "BlueStacks"
+AppChildWindowName = "BlueStacks Android PluginAndroid"
 AppHwnd = 0
 AppRect = [0,0,0,0]
 AppPid  = 0
 AppTid  = 0 
+AppChildHwnd = 0
+
+AppInputHwnd   = 0
+AppInputUseMsg = True
+
+SelfHwnd = 0
+SelfPid  = 0
 
 DCTmpFolder = ".tmp"
 DCSnapshotFile = "snapshot.png"
 
 WindowWidth  = 1060
 WindowHeight = 600
-WinTitleBarSize = (1, 31)
-WinDesktopBorderOffset = (8,0)
+WinTitleBarSize = (0, 40) # bluestack
+WinDesktopBorderOffset = (1,1)
 
 FPS   = (1.0 / 120)
 Fiber = None
@@ -47,10 +66,13 @@ MsgPipeTerminated = "\x00\x50\x00TERMINATED\x00"
 MsgPipeRet = "\x00\x50\x00RET\x00"
 MsgPipeInfo = "\x00\x50\x00INFO\x00"
 
-CVMatchHardRate  = 0.7    # Hard-written threshold in order to match
+CVMatchHardRate  = 0.7    # Hard-coded threshold in order to match
 CVMatchStdRate   = 1.22   # Similarity standard deviation ratio above average in consider digit matched
 CVMatchMinCount  = 1      # How many matched point need to pass
 CVLocalDistance  = 10     # Template local maximum picking range
+
+
+DiskTypes = ['Accele', 'Blast', 'Charge']
 
 def format_curtime():
   return datetime.strftime(datetime.now(), '%H:%M:%S')
@@ -110,10 +132,16 @@ def wait(sec):
 def uwait(sec):
   sleep(sec + max(random() / 2, sec * random() / 5))
 
-def cwait(sec):
-  times = sec // WaitInterval
-  for _ in range(times):
-    sleep(WaitInterval)
+def lwait(sec, intv=WaitInterval):
+  sleep(sec - sec%WaitInterval)
+  for _ in range(int(sec//WaitInterval)):
+    sleep(intv)
     yield
+
+def make_lparam(x, y):
+  return (y << 16) | x
+
+def get_lparam(val):
+  return (val & 0xffff, val >> 16)
 
 ### Loading process

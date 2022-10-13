@@ -25,7 +25,6 @@ GAME_POST_HEADERS = {
   'Accept': '*/*',
   'Accept-Encoding': 'gzip, deflate, br',
   'Content-Type': 'application/json',
-  'Authorization': ''
 }
 
 NetworkExcpetionRescues = (
@@ -35,7 +34,7 @@ NetworkExcpetionRescues = (
 
 TemporaryNetworkErrors = (
   'Object reference not set',
-  'Data may have been modified or deleted since entities were loaded',
+  'may have been modified or deleted since entities were loaded',
   'transient failure'
 )
 
@@ -124,7 +123,7 @@ def check_login():
   global Session,ServerLocation
   log_info("Trying to connect to server:", ServerLocation)
   url = f"{ServerLocation}/api/Login"
-  res = Session.post(url=url, headers=GAME_POST_HEADERS, timeout=NetworkPostTimeout)
+  res = Session.post(url=url, timeout=NetworkPostTimeout)
   if type(res) == dict or res.status_code == 401:
     log_warning("Failed login into game:", res, res.content)
     return _G.ERRNO_FAILED
@@ -165,6 +164,8 @@ def get_request(url, depth=1):
     wait(60)
     if not is_day_changing():
       log_warning("Server day changed")
+      if FlagAutoReauth:
+        reauth_game()
       break
   if not url.startswith('http'):
     url = ServerLocation + url
@@ -181,14 +182,15 @@ def get_request(url, depth=1):
       raise err
   if not is_response_ok(res):
     errno,errmsg = get_last_error()
-    if FlagAutoReauth and errno == 401:
+    if FlagAutoReauth and (errno == 401 or errno == 408):
       log_info("Attempting to reauth game")
       reauth_game()
       return get_request(url)
     elif errno == 500:
       return None
     else:
-      exit()
+      # exit()
+      return None
   if not res.content:
     return None
   return res.json()
@@ -200,7 +202,8 @@ def post_request(url, data=None, depth=1):
     wait(60)
     if not is_day_changing():
       log_warning("Server day changed")
-      wait(1)
+      if FlagAutoReauth:
+        reauth_game()
       break
   res = None
   if not url.startswith('http'):
@@ -226,7 +229,7 @@ def post_request(url, data=None, depth=1):
       wait(3)
       log_warning(f"Retry connect to {url} (depth={depth+1})")
       return post_request(url, data, depth=depth+1)
-    elif FlagAutoReauth and errno == 401:
+    elif FlagAutoReauth and (errno == 401 or errno == 408):
       log_info("Attempting to reauth game")
       reauth_game()
       wait(1)
@@ -234,7 +237,8 @@ def post_request(url, data=None, depth=1):
     elif errno == 500:
       return None
     else:
-      exit()
+      # exit()
+      return None
   if not res.content:
     return None
   return res.json()
@@ -349,7 +353,6 @@ def reauth_game(depth=0):
     if "'rc': 403" in str(data):
       return _G.ERRNO_MAINTENANCE
     new_token = json.loads(data[list(data.keys())[0]]['body'])
-    change_token(f"Bearer {new_token['r']}")
   except Exception as err:
     log_error("Unable to reauth game:", err)
     handle_exception(err)
@@ -358,6 +361,7 @@ def reauth_game(depth=0):
   
   if new_token:
     log_info("Game connected")
+    change_token(f"Bearer {new_token['r']}")
     res = check_login()
     if type(res) == int:
       return _G.ERRNO_MAINTENANCE
