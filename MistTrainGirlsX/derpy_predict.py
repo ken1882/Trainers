@@ -8,7 +8,6 @@ import numpy as np
 from derpy_datamanager import interpret_race_data
 from pprint import pprint
 
-
 ESTIMATORS = [f"{_G.DCTmpFolder}/{_G.make_model_name(d)}" for d in _G.DERPY_TRAINING_LIST]
 
 def get_upcoming_race():
@@ -127,7 +126,7 @@ def make_predictions(race):
     r.append(99)
     print(np.array(r))
   return ret
-  
+
 def main():
   race = get_upcoming_race()
   race = interpret_race_data(race)

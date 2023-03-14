@@ -71,6 +71,7 @@ FlagWorking = False
 FlagProcessingUserInput = False
 FlagTrainSwap = False
 FlagTrainSkill = False
+FlagTrainExp   = False
 
 MSG_PIPE_CONT   = '\x00\x50\x00CONTINUE\x00'
 MSG_PIPE_STOP   = "\x00\x50\x00STOP\x00"

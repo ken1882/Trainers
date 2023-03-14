@@ -69,7 +69,7 @@ UnmovableEffects = [
 
 MAX_SP = 20
 MAX_OP = 100
-MAX_EXP = 99500
+MAX_EXP = 9999000
 MAX_PROFICIENCY = 99
 
 LastBattleWon = False
@@ -80,11 +80,11 @@ RentalCycle = None
 
 UnmasteredCharacters = []
 UnmasteredSwapIndex  = [
-  # 0,
-  # 1,
+  0,
+  1,
   2,
   3,
-  4
+  # 4
 ]
 
 STATUS_MODIFIER_INC = 1
@@ -237,7 +237,7 @@ def start_raid(sid, pid, rid=0):
   if res['r']['FaildReason'] != ERROR_SUCCESS:
     return res['r']['FaildReason']
   if PublicRaid:
-    res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=1")
+    res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=2")
     boss = res['r']['BattleState']['Enemies'][0]
     try:
       payload = {
@@ -256,16 +256,16 @@ def start_raid(sid, pid, rid=0):
     except Exception as err:
       handle_exception(err)
   else:
-    res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=0")
+    res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=1")
   return res['r']
 
-def join_raid(sid, pid, rid=0, scope=3):
+def join_raid(sid, pid, rid=0, scope=2):
   log_info("Join raid")
   rid = rid if rid else 'null'
   res = game.post_request(f"/api/Battle/canstartRaid/{sid}?uPartyId={pid}&isFriend=false&isHost=true&uRaidId=null")
   if res['r']['FaildReason'] != ERROR_SUCCESS:
     return res['r']['FaildReason']
-  res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=0")
+  res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode={scope}")
   return res['r']
 
 def process_actions(commands, verion):
@@ -694,6 +694,7 @@ def process_combat(data):
     process_defeat()
   else:
     res = process_victory()
+    # log_info("Time:", res['ClearSec'])
     ReportDetail['exp'] += res['PlayerLevel']['PlayerExperienceReword']
     loots = res['QuestLoots']['Items']
     record_loots(loots)
@@ -1059,12 +1060,12 @@ def process_rentalid_input():
     return None
   return rid
 
-def start_battle_process(sid, pid, rid):
+def start_battle_process(sid, pid, rid, raid=False):
   global BattleId,LastErrorCode,FlagRequestReEnter
   global LOG_STATUS,FLAG_INTERACTIVE
   LOG_STATUS = not _G.ARGV.less or FLAG_INTERACTIVE
   log_info("Stage/Party/Rental IDs:", sid, pid, rid)
-  if sid in stage.RaidStages:
+  if raid or sid in stage.RaidStages:
     data = start_raid(sid, pid, rid)
   else:
     data = start_battle(sid, pid, rid)
@@ -1074,7 +1075,7 @@ def start_battle_process(sid, pid, rid):
       recovered = recover_stamina()
       if not recovered:
         return SIG_COMBAT_STOP
-      if sid in stage.RaidStages:
+      if raid or sid in stage.RaidStages:
         data = start_raid(sid, pid, rid)
       else:
         data = start_battle(sid, pid, rid)
@@ -1131,6 +1132,7 @@ def reset_final_report():
 def log_final_report():
   global ReportDetail,StageId
   print("Preparing report please wait...")
+  player.clear_cache()
   ReportDetail['end_t'] = datetime.now()
   string  = f"\n{'='*30} Report {'='*30}\n"
   line_width = len(string.strip())
@@ -1247,7 +1249,7 @@ def swap_mastered_trains():
     log_info("Charcaters in queue:")
     print(player.format_character_data(UnmasteredCharacters))
 
-def main(times=0):
+def main(times=0, raid=False):
   global PartyId,StageId,RentalUid,AvailableFriendRentals,RentalCycle
   global FlagRequestReEnter,ReportDetail,UnmasteredCharacters,FLAG_INTERACTIVE,VotedCount
   
@@ -1320,7 +1322,7 @@ def main(times=0):
     rid = RentalUid
     if rid == -1:
       rid = next(RentalCycle)
-    signal = start_battle_process(StageId, PartyId, rid)
+    signal = start_battle_process(StageId, PartyId, rid, raid=raid)
     log_info("Battle Ended")
     if signal == SIG_COMBAT_STOP:
       break

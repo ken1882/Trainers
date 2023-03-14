@@ -1,6 +1,6 @@
 from glob import glob
 from time import sleep
-from _G import log_debug,log_error,log_info,log_warning
+from _G import log_debug,log_error,log_info,log_warning,lwait
 
 import _G
 import re
@@ -18,6 +18,7 @@ def swap_member_async(src, dst):
     sleep(1)
     tpos = graphics.find_object(f"names/{src}.png")
   
+  yield from lwait(1)
   mx, my = tpos[0]
   Input.click(int(mx+35), int(my-40))
   

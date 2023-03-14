@@ -97,7 +97,9 @@ def analyze_action_result(commands, result):
 def format_analyze_result():
   string = '='*27+' Battle Record '+'='*27 + '\n'
   for _,battler in BattlerPool.items():
+    mch = player.get_character_by_uid(battler['cid'])
     string += game.get_character_name(battler['actor']['MCharacterId']) + ':\n'
+    string += f"EXP: {mch['UCharacterBaseViewModel']['Experience']} / {player.MAX_EXP}\n"
     for skid,action in battler['actions'].items():
       skill = game.get_skill(skid)
       string += f"* {skill['Name']}\n"

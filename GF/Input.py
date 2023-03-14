@@ -34,20 +34,28 @@ def get_cursor_pos(app_offset=True):
     my = my - _G.AppRect[1] - _G.WinTitleBarSize[1] - _G.WinDesktopBorderOffset[1]
   return (mx, my)
 
-def key_down(*args):
+def key_down(*args, use_msg=_G.AppInputUseMsg, hwnd=None):
   for kid in args:
-    win32api.keybd_event(kid, 0, 0, 0)
+    if not use_msg:
+      win32api.keybd_event(kid, 0, 0, 0)
+      continue
+    hwnd = hwnd if hwnd else _G.AppInputHwnd
+    win32api.SendMessage(hwnd, win32con.WM_KEYDOWN, kid, 0)
 
-def key_up(*args):
+def key_up(*args, use_msg=_G.AppInputUseMsg, hwnd=None):
   for kid in args:
-    win32api.keybd_event(kid, 0, win32con.KEYEVENTF_KEYUP, 0)
+    if not use_msg:
+      win32api.keybd_event(kid, 0, win32con.KEYEVENTF_KEYUP, 0)
+      continue
+    hwnd = hwnd if hwnd else _G.AppInputHwnd
+    win32api.SendMessage(hwnd, win32con.WM_KEYUP, kid, 0)
 
-def trigger_key(*args):
+def trigger_key(*args, use_msg=_G.AppInputUseMsg, hwnd=None):
   for kid in args:
-    key_down(kid)
+    key_down(kid, use_msg, hwnd)
   sleep(0.03)
   for kid in args:
-    key_up(kid)
+    key_up(kid, use_msg, hwnd)
 
 def mouse_down(x=None, y=None, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None):
   if not hwnd:
@@ -127,48 +135,9 @@ def dclick(x=None, y=None, app_offset=False, use_msg=_G.AppInputUseMsg, hwnd=Non
   sleep(0.1)
   click(x,y,app_offset, use_msg, hwnd)
 
-def scroll_up(x, y, delta = 100, app_offset=True, haste=False):
-  mouse_down(x, y, app_offset)
-  ty = y + delta
-  sleep(0.01 if haste else 0.5)
-  while y <= ty:
-    y += (random.randint(*ScrollDelta) + haste * 2)
-    set_cursor_pos(x, min([y,ty]), app_offset)
-    wait(0.01 if haste else ScrollTime)
-  mouse_up(x, y, app_offset)
-
-def scroll_down(x, y, delta = 100, app_offset=True, haste=False):
-  mouse_down(x, y, app_offset)
-  ty = y - delta
-  sleep(0.01 if haste else 0.5)
-  while y >= ty:
-    y -= (random.randint(*ScrollDelta) + haste * 2)
-    set_cursor_pos(x, max([y,ty]), app_offset)
-    wait(0.01 if haste else ScrollTime)
-  mouse_up(x, y, app_offset)
-
-def scroll_left(x, y, delta = 100, app_offset=True, haste=False):
-  mouse_down(x, y, app_offset)
-  tx = x + delta
-  sleep(0.01 if haste else 0.5)
-  while x <= tx:
-    x += (random.randint(*ScrollDelta) + haste * 2)
-    set_cursor_pos(min([x,tx]), y, app_offset)
-    wait(0.01 if haste else ScrollTime)
-  mouse_up(x, y, app_offset)
-
-def scroll_right(x, y, delta = 100, app_offset=True, haste=False):
-  mouse_down(x, y, app_offset)
-  tx = x - delta
-  sleep(0.01 if haste else 0.5)
-  while x >= tx:
-    x -= (random.randint(*ScrollDelta) + haste * 2)
-    set_cursor_pos(max([x,tx]), y, app_offset)
-    wait(0.01 if haste else ScrollTime)
-  mouse_up(x, y, app_offset)
-
-def scroll_to(x, y, x2, y2, app_offset=True, haste=False, hold=True, slow=False):
-  mouse_down(x, y, app_offset)
+def scroll_to(x, y, x2, y2, app_offset=True, use_msg=True, haste=False, hold=True, slow=False):
+  if not use_msg:
+    mouse_down(x, y, app_offset)
   sleep(0.01 if haste else ScrollTime)
   tdx, tdy = abs(x2 - x), abs(y2 - y)
   try:
@@ -186,12 +155,23 @@ def scroll_to(x, y, x2, y2, app_offset=True, haste=False, hold=True, slow=False)
     dy = 1 if dy == 0 and y != y2 else dy
     x = min([x2, x+dx]) if x2 > x else max([x2, x-dx])
     y = min([y2, y+dy]) if y2 > y else max([y2, y-dy])
-    set_cursor_pos(x, y, app_offset)
+    set_cursor_pos(x, y, app_offset, wparam=win32con.MK_LBUTTON)
     wait(0.01 if haste else ScrollTime)
   if hold:
     sleep(1)
-  mouse_up(x, y, app_offset)
+  if not use_msg:
+    mouse_up(x, y, app_offset)
 
+def wheel_scroll(x, y, delta, app_offset=True, use_msg=True, hwnd=None, haste=False, horz=False):
+  if use_msg:
+    hwnd = hwnd if hwnd else _G.AppInputHwnd
+    wparam = delta << 16
+    rect = graphics.get_content_rect()
+    x += rect[0]
+    y += rect[1]
+    code = 0x020E if horz else win32con.WM_MOUSEWHEEL
+    win32api.SendMessage(hwnd, code, wparam, make_lparam(x,y))
+    return
 
 MaxMoveTimes = 42
 def moveto(x,y,speed=10,max_steps=MaxMoveTimes,app_offset=True,aync=True,rand=True):

@@ -8,17 +8,30 @@ import graphics
 import Input
 import position
 
-LastStage = None
-def wait_until_stage(*t_stages):
+LastStage = ''
+def wait_until_stage(*t_stages, callback=None):
   global LastStage
   stg = None
-  while not stg or stg not in t_stages:
+  cnt = 0
+  while not stg or all([tstg not in stg for tstg in t_stages]):
     sleep(1)
     stg = stage.get_current_stage()
     if LastStage != stg:
       log_info(f"Current stage: {stg}")
       LastStage = stg
     yield
+    cnt += 1
+    if cnt > 3 and callback:
+      callback()
+  
+def is_carry_fightable():
+  '''
+  Determine whether leader in party has full ammo and mre
+  '''
+  return graphics.is_pixel_match(
+    ((242, 423),(242, 444),),
+    ((255, 207, 0),(175, 233, 243),)
+  )
 
 def deploy_teams(locations):
   for pos,idx in locations:
@@ -30,7 +43,7 @@ def deploy_teams(locations):
 
 def supply_position(pos):
   Input.click(*pos)
-  sleep(0.1)
+  sleep(0.2)
   Input.click(*pos)
   yield from wait_until_stage('CombatPartyPanel')
   Input.click(*position.COMBAT_PARTY_SUPPLY)
@@ -38,7 +51,7 @@ def supply_position(pos):
 
 def retret_position(pos):
   Input.click(*pos)
-  sleep(0.1)
+  sleep(0.2)
   Input.click(*pos)
   yield from wait_until_stage('CombatPartyPanel')
   Input.click(*position.COMBAT_PARTY_RETRET)
@@ -47,7 +60,8 @@ def retret_position(pos):
   yield from lwait(1)
 
 def plan_mode(locations):
-  locations.insert(0, position.COMBAT_PLAN_MODE)
+  Input.click(*position.COMBAT_PLAN_MODE)
+  sleep(2)
   for pos in locations:
     if len(pos) == 2:
       Input.click(*pos)
@@ -123,4 +137,7 @@ def dismental_chars():
   yield from lwait(1)
   Input.click(*position.DISMENTAL_CONFIRM)
   yield from lwait(1)
+  
+def check_logistics():
+  stg = stage.get_current_stage()
   

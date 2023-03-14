@@ -19,8 +19,14 @@ def daily():
     shop.main()
     expedition.main()
     training.main()
-    sys.stdin = StringIO('n exp 1 -1'.replace(' ', '\n'))
-    combat.main()
-    sys.stdin = StringIO('n gold 1 -1'.replace(' ', '\n'))
-    combat.main()
+    try:
+        sys.stdin = StringIO('n exp 1 -1'.replace(' ', '\n'))
+        combat.main()
+    except Exception:
+        pass
+    try:
+        sys.stdin = StringIO('n gold 1 -1'.replace(' ', '\n'))
+        combat.main()
+    except Exception:
+        pass
     sys.stdin = ostdin

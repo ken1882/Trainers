@@ -140,3 +140,17 @@ def is_focused():
   if _G.IS_WIN32:
     return win32gui.GetForegroundWindow() in [_G.SelfHwnd, _G.AppChildHwnd, _G.AppHwnd]
   return True
+
+def exec_fiber(fiber):
+  _G.Fiber = fiber
+  try:
+    while True:
+      _G.FrameCount += 1
+      if not _G.FlagPaused and _G.Fiber and not resume(_G.Fiber):
+        log_info(f"Worker ended, return value: {_G.pop_fiber_ret()}")
+        _G.Fiber = None 
+        _G.FlagWorking = False
+        break
+      sleep(_G.FPS)
+  finally:
+    pass

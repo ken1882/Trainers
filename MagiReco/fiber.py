@@ -10,6 +10,7 @@ from utils import ocr_rect
 
 def start_mirror_fiber():
   _n = int(_G.ARGV.repeats) or 0
+  log_info('Current stage:', stage.get_current_stage())
   for cnt in range(_n):
     stg = stage.get_current_stage()
     if stg == 'MirrorPvPSelection':
@@ -17,7 +18,7 @@ def start_mirror_fiber():
       break
     elif stg == 'MirrorRanking' or stg == 'MirrorLevel': 
       log_info("Select opponent")
-      ar = [int(ocr_rect(rect,f'opow{i}',num_only=True)) for i,rect in enumerate(position.OpponentPowerRect)]
+      ar = [int(ocr_rect(rect,f'opow{i}.png',num_only=True)) for i,rect in enumerate(position.OpponentPowerRect)]
       log_info("Opponent power:", ar)
       idx = ar.index(min(ar))
       uwait(0.3)

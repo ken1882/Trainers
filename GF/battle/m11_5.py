@@ -25,6 +25,11 @@ def edit_swap_party():
   Input.click(*DEPLOY_POSITION[0][0])
   yield from action.wait_until_stage('CombatPartySelect')
   
+  if action.is_carry_fightable():
+    log_info("Leader full supply, swap needn't")
+    Input.click(*position.COMBAT_PARTY_RETRET)
+    return
+
   Input.click(*position.COMBAT_PARTY_EDIT)
   yield from action.wait_until_stage('PartyEdit')
   yield from lwait(1)
@@ -35,8 +40,13 @@ def edit_swap_party():
     dst = 'hk416'
   
   yield from player.swap_member_async(fn, dst)
-  yield from lwait(1)
-  Input.click(*position.GENERAL_BACK)
+  stg = stage.get_current_stage()
+  while not stg or stg == 'PartyEdit':
+    if stg == 'PartyEdit':
+      Input.click(*position.GENERAL_BACK)
+    sleep(1)
+    stg = stage.get_current_stage()
+    yield
 
 
 
@@ -55,6 +65,9 @@ def main(cnt):
   if stg == 'CombatFullInventory':
     # Input.click(*position.FULL_BAG_DISMENTAL)
     # yield from action.dismental_chars()
+    # yield from lwait(1)
+    # Input.click(*position.GENERAL_BACK)
+    # yield from lwait(3)
     _G.FlagRunning = False
     return
 

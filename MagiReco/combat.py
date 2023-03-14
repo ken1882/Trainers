@@ -24,7 +24,7 @@ def start_combat():
       if is_battle_ended():
         break
       log_info("Current stage:", stg, '; waiting for player turn')
-      for _ in range(5):
+      for _ in range(10):
         uwait(0.1)
         yield
       stg = stage.get_current_stage()
@@ -39,7 +39,9 @@ def start_combat():
       yield
 
 def determine_actions():
-  determine_magia()
+  _G.flush()
+  if determine_magia():
+    use_magia()
   # determine_connection()
   disks = determine_disks()
   for di in disks:
@@ -92,6 +94,15 @@ def process_actions():
       Input.click(*position.DiskIcons[_arg])
       uwait(0.1)
       yield
+    elif _type == 'magia':
+      uwait(0.1)
+      Input.click(*position.MagiaPos)
+      uwait(0.5)
+      for i in range(3):
+        Input.click(*position.DiskIcons[i])
+        uwait(0.1)
+      uwait(0.3)
+      Input.click(*position.MagiaPos)
     else:
       pass
     for _ in range(5):
@@ -130,7 +141,9 @@ def use_skill():
   pass
 
 def use_magia():
-  pass
+  global ActionQueue
+  log_info("Use magia")
+  ActionQueue.append(('magia', 0))
 
 def select_disks():
   pass
@@ -142,4 +155,4 @@ def select_target():
   pass
 
 def determine_magia():
-  pass
+  return not stage.check_pixels(position.MagiaUnavailable)

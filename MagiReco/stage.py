@@ -68,7 +68,7 @@ def get_current_stage():
   if _G.LastFrameCount != _G.FrameCount:
     _G.CurrentStage = None
     _G.LastFrameCount = _G.FrameCount
-  elif _G.CurrentStage:
+  else:
     return _G.CurrentStage
   
   for key in Enum:
@@ -76,10 +76,18 @@ def get_current_stage():
     if graphics.is_pixel_match(stg['pos'], stg['color']):
       _G.CurrentStage = key
       return key
+  
+  if is_player_turn():
+    return 'CombatPlayerTurn'
+  
   return None
 
 def check_pixels(pixstruct):
   return graphics.is_pixel_match(pixstruct['pos'], pixstruct['color'])
+
+def is_player_turn():
+  disks = get_disks()
+  return (disks.count(_G.DiskTypes[0]) + disks.count(_G.DiskTypes[2])) > 0
 
 def get_disks():
   ret = []

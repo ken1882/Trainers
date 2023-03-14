@@ -12,7 +12,7 @@ def main():
   pid = combat.process_partyid_input()
   rid = combat.process_rentalid_input()
   cur_n   = sid
-  end_n  += sid - 1
+  # end_n  += sid - 1
   discord.update_status(sid)
   while _G.FlagRunning:
     log_info(f"Challenging floor#{cur_n%100}")

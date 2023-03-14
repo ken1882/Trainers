@@ -1,10 +1,10 @@
-from tkinter.tix import Tree
 import _G
 from _G import *
 import game
 from copy import deepcopy
 import json
 import os
+from itertools import permutations
 
 __UCharacterCache = {}
 __UCharacterStats = {}
@@ -17,8 +17,6 @@ VoteItemId = 0
 
 MIST_GEAR_ID = 85
 SWAP_GEAR_ID = [
-  {'weapon': [0,0,0,0,0,0,0,0,0,0], 'armor': 26147280, 'accessory': 33128716},
-  {'weapon': [0,0,0,0,0,0,0,0,0,0], 'armor': 26147275, 'accessory': 33128718},
   {
     'weapon': [
       0,
@@ -33,7 +31,42 @@ SWAP_GEAR_ID = [
       177034702,  # エクリプスファイア改
     ],
     'armor': 26147276,  # エクリプスジャケット改
-    'accessory': 33128722,  # エクリプスリング改
+    'accessory': 33128716, # エクリプス改
+    # 'accessory': 59632163, # 蒼炎
+  },
+  {
+    'weapon': [
+      0,
+      177034637,  # エクリプスクロウ改
+      177034612,  # エクリプスブレイド改
+      177034629,  # エクリプスエッジ改
+      177034694,  # エクリプスグレイブ改
+      177034649,  # エクリプスウィップ改
+      177034621,  # エクリプスオーブ改
+      177034679,  # エクリプスボウ改
+      177034664,  # エクリプスケーン改
+      177034702,  # エクリプスファイア改
+    ],
+    'armor': 26147280,
+    'accessory': 33128718, # エクリプス改
+    # 'accessory': 59632164, # 蒼炎
+  },
+  {
+    'weapon': [
+      0,
+      159692763,  # エクリプスクロウ
+      155914420,  # エクリプスブレイド
+      157535430,  # エクリプスエッジ
+      157062821,  # エクリプスグレイブ
+      159692821,  # エクリプスウィップ
+      159692732,  # エクリプスオーブ
+      159974094,  # エクリプスボウ
+      159974066,  # エクリプスケーン
+      159067214,  # エクリプスファイア
+    ],
+    'armor': 26147275,
+    'accessory': 33128720, # エクリプス改
+    # 'accessory': 59632165, # 蒼炎
   },
   {
     'weapon': [
@@ -49,10 +82,33 @@ SWAP_GEAR_ID = [
       159067214,  # エクリプスファイア
     ],
     'armor': 26147275,  # エクリプスプレート改
-    'accessory': 33128720,  # エクリプスネック改
+    'accessory': 33128722, # エクリプス改
+    'accessory': 59632166, # 蒼炎
   },
-  {'weapon': [0,0,0,0,0,0,0,0,0,0], 'armor': 26147278, 'accessory': 33128721},
+  {
+    'weapon': [
+      0,
+      177034637,  # エクリプスクロウ改
+      177034612,  # エクリプスブレイド改
+      177034629,  # エクリプスエッジ改
+      177034694,  # エクリプスグレイブ改
+      177034649,  # エクリプスウィップ改
+      177034621,  # エクリプスオーブ改
+      177034679,  # エクリプスボウ改
+      177034664,  # エクリプスケーン改
+      177034702,  # エクリプスファイア改
+    ], 
+    'armor': 26147278,
+    'accessory': 33128721, # エクリプス改
+    # 'accessory': 59632167, # 蒼炎
+  },
 ]
+
+MAX_SP = 20
+MAX_OP = 100
+MAX_EXP = 9999000
+MAX_ITEM = 99999
+MAX_PROFICIENCY = 99
 
 def clear_cache():
   global __UCharacterCache
@@ -137,9 +193,13 @@ def get_all_items(flatten=False):
 
 def is_character_mastered(ch, accumulate=False, check_stat=True):
   global __UCharacterStats,__UStatsUnchangedTimes
+  if _G.FlagTrainExp:
+    exp = ch['UCharacterBaseViewModel']['Experience']
+    _G.log_info(f"{game.get_character_name(ch['MCharacterId'])} EXP: {exp}/{MAX_EXP}")
+    return exp >= MAX_EXP
   sk_keys = ['USkill1','USkill2','USkill3']
   skills = [ch[sk] for sk in sk_keys]
-  if any([sk['Rank'] < 99 for sk in skills]):
+  if any([sk['Rank'] < MAX_PROFICIENCY for sk in skills]):
     return False
   if not check_stat:
     return True
@@ -174,7 +234,7 @@ def get_maxed_partymember(pid, sid):
   res = game.get_request(f"/api/Quests/{sid}/prepare/{pid}?rentalUUserId=null")
   ret = []
   for ch in res['r']['QuestPreparationCharacterViewModels']:
-    if _G.FlagTrainSkill and not is_character_mastered(get_character_by_uid(ch['UCharacterId']), check_stat=False):
+    if (_G.FlagTrainSkill or _G.FlagTrainExp) and not is_character_mastered(get_character_by_uid(ch['UCharacterId']), check_stat=False):
       continue
     if all([n == 0 for _,n in ch['GrowStatus'].items()]):
       ret.append(ch['UCharacterId'])
@@ -497,9 +557,35 @@ def vote_character(event_id, character_id):
     return 0
   total = 0
   while ConsumableInventory[VoteItemId] > 0:
-    n = min(ConsumableInventory[VoteItemId], 99999)
+    n = min(ConsumableInventory[VoteItemId], MAX_ITEM)
     ConsumableInventory[VoteItemId] -= n
     total += n
     res = game.post_request(f"/api/Vote/Vote/{event_id}/{character_id}/{n}")
     log_info(f"Voted {n}, response:", res)
   return total
+
+def buy_derpy_kirens(race_id, numbers):
+  pairs = set([tuple(sorted(s)) for s in permutations(numbers, 2)])
+  size = len(pairs)
+  bets = 100 // size
+  payload = {
+    'scheduleId': race_id,
+    'type': 3,
+    'number': [],
+  }
+  for i,p in enumerate(pairs):
+    b = bets
+    if i == 0:
+      b += 100 - bets*size
+    payload['number'].append({
+      'number1': p[0],
+      'number2': p[1],
+      'unit': b * 10000
+    })
+    # dd57c27457f926b6af6f96bdd82972a4fbc33b7acc2ba4c370507afb96854e09.bytes
+    # dd57c27457f926b6af6f96bdd82972a4fbc33b7acc2ba4c370507afb96854e09.bytes
+    if (i+1) % 4 == 0 or i+1 == size:
+      _G.log_info("Buying derpy ticket: ", payload['number'])
+      res = game.post_request('/api/Casino/Race/BuyTickets', payload)
+      print(res)
+      payload['number'] = []

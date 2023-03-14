@@ -7,10 +7,12 @@ def start_interact_fiber
 end
 
 def start_walk_fiber
+  Input.key_down(Keymap[:vk_Lshift]);
   begin
     loop{ Input.key_down(Keymap[:vk_W]); Fiber.yield; }
   ensure
     Input.mouse_lup(true,false)
+    Input.key_down(Keymap[:vk_Lshift]);
   end
 end
 

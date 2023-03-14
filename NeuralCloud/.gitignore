@@ -1,0 +1,8 @@
+__pycache__/*
+/*/__pycache__/*
+doc/
+/dist/
+/build/
+/tmp/
+/KarDiaAssistant.spec
+_*.png
