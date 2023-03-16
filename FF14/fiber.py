@@ -370,7 +370,9 @@ def start_logout_gathering_fiber():
       action.logout()
       for _ in range(50):
         action.target_player()
+        Input.key_down(win32con.VK_RIGHT)
         wait(0.5)
+        Input.key_up(win32con.VK_RIGHT)
         if stage.is_player_targeted():
           _G.log_info("Other player detected")
           flag_crowded = True
@@ -382,7 +384,8 @@ def start_logout_gathering_fiber():
     if flag_crowded:
       login_wtime += 300
     else:
-      flag_crowded = 1
+      login_wtime = 1
+    _G.log_info("Wait time:", login_wtime)
     uwait(login_wtime)
     flag_crowded = False
     _G.log_info("Start game")

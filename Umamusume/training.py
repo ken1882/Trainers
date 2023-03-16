@@ -82,7 +82,7 @@ def next_main_action():
     uwait(4)
     return
   if actions[0] == _G.ActionRace:
-    if heuristics.should_learn_skill(_G.CurrentDate):
+    if not _G.IgnoreStatLimit and heuristics.should_learn_skill(_G.CurrentDate):
       Input.rmoveto(*position.SkillSelection)
       Input.click()
       yield from get_skills()
