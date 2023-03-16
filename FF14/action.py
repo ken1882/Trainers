@@ -24,6 +24,15 @@ def target_enemy():
   sleep(0.03)
   Input.key_up(win32con.VK_TAB)
 
+def target_player():
+  Input.key_down(win32con.VK_CONTROL)
+  Input.key_down(win32con.VK_SHIFT)
+  Input.key_down(win32con.VK_TAB)
+  sleep(0.03)
+  Input.key_up(win32con.VK_TAB)
+  Input.key_up(win32con.VK_SHIFT)
+  Input.key_up(win32con.VK_CONTROL)
+
 def face_target():
   Input.key_down(win32con.VK_CONTROL)
   Input.key_down(VK_W)

@@ -310,6 +310,8 @@ def start_crafting_fiber():
       pp += delta if step > vene_step else int(delta*1.5)
     _G.log_info("Crafting complete")
     uwait(5)
+  uwait(1)
+  Input.trigger_key(win32con.VK_ESCAPE)
 
 def do_battle_rotation():
   Input.trigger_key(ord('1'))
@@ -351,12 +353,14 @@ def start_combat_fiber():
 def start_logout_gathering_fiber():
   target = _G.ARGV.gather_target
   candidate = [0, None]
+  login_wtime = 1
   for key in position.LGT_DICT:
     r = utils.diff_string(key, target)
     if r > candidate[0]:
       candidate = [r, key]
   target = position.LGT_DICT[candidate[1]]
   _G.log_info("Gathering", candidate[1])
+  flag_crowded = False
   while True:
     _G.log_info("Logout")
     depth = 0
@@ -365,12 +369,22 @@ def start_logout_gathering_fiber():
       yield
       action.logout()
       for _ in range(50):
+        action.target_player()
         wait(0.5)
+        if stage.is_player_targeted():
+          _G.log_info("Other player detected")
+          flag_crowded = True
         yield
       depth += 1
       if depth > 5:
         _G.log_error("Unable to logout (?)")
         exit(1)
+    if flag_crowded:
+      login_wtime += 300
+    else:
+      flag_crowded = 1
+    uwait(login_wtime)
+    flag_crowded = False
     _G.log_info("Start game")
     Input.rmoveto(*position.GameStart)
     yield
@@ -506,3 +520,9 @@ def start_logout_gathering_fiber():
     for _ in range(10):
       uwait(1)
       yield
+    action.target_player()
+    uwait(0.5)
+    yield
+    if stage.is_player_targeted():
+      _G.log_info("Other player detected")
+      flag_crowded = True

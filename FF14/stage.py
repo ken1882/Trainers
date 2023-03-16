@@ -166,6 +166,9 @@ def is_max_hq():
     position.CRHQPosCol[1]
   )
 
+def is_player_targeted():
+  return graphics.is_pixel_match(*position.OtherPlayerPosCol, sync=True)
+
 def is_enemy_targeted():
   return is_enemy_awared() or graphics.is_pixel_match(*position.UnawareEnemyPosCol, sync=True)
 

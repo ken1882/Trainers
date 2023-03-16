@@ -589,3 +589,26 @@ def buy_derpy_kirens(race_id, numbers):
       res = game.post_request('/api/Casino/Race/BuyTickets', payload)
       print(res)
       payload['number'] = []
+
+def dump_profiles(filter=None):
+  interval = 100
+  file = open('players.csv', 'a', encoding=_G.ENCODING)
+  try:
+    err = 0
+    for i in range(0x7fffffff):
+      if i % interval == 0:
+        file.close()
+        file = open('players.csv', 'a', encoding=_G.ENCODING)
+      r = game.get_request(f"/api/Users/{i}/Profile")
+      if not r or 'r' not in r or 'UserId' not in r['r']:
+        err += 1
+        if err > 10:
+          break
+        continue
+      err = 0
+      profile = r['r']
+      if filter and not filter(profile):
+        continue
+      file.write(f"{profile['UserId']},{profile['DmmUserId']},{profile['DisplayUserId']},{profile['Rank']},{profile['Name']}\n")
+  finally:
+    file.close()
