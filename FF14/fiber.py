@@ -354,6 +354,7 @@ def start_logout_gathering_fiber():
   target = _G.ARGV.gather_target
   candidate = [0, None]
   login_wtime = 1
+  ntarget_cnt = 0
   for key in position.LGT_DICT:
     r = utils.diff_string(key, target)
     if r > candidate[0]:
@@ -385,13 +386,18 @@ def start_logout_gathering_fiber():
       login_wtime += 300
     else:
       login_wtime = 1
+    if ntarget_cnt >= 5:
+      _G.log_error("Seems away from gathering area, exit")
+      exit(1)
     _G.log_info("Wait time:", login_wtime)
     uwait(login_wtime)
     flag_crowded = False
     _G.log_info("Start game")
     Input.rmoveto(*position.GameStart)
-    yield
-    Input.click(use_msg=False)
+    for _ in range(2):
+      uwait(0.3)
+      yield
+      Input.click(use_msg=False)
     while not stage.is_stage('CharacterSelection'):
       uwait(1)
       yield
@@ -399,9 +405,10 @@ def start_logout_gathering_fiber():
     uwait(0.3)
     Input.rmoveto(*position.FirstCharacter)
     yield
-    uwait(0.3)
-    Input.click(use_msg=False)
-    yield
+    for _ in range(2):
+      uwait(0.3)
+      Input.click(use_msg=False)
+      yield
     uwait(0.3)
     # Input.rmoveto(*position.GeneralOK)
     Input.rmoveto(*position.LoginOK)
@@ -448,6 +455,7 @@ def start_logout_gathering_fiber():
     yield
     if target.get('disableAutoFind') and not stage.has_targeted_object():
       _G.log_info("No target found, skip")
+      ntarget_cnt += 1
       continue
     else:
       while not stage.has_targeted_object():
@@ -471,6 +479,7 @@ def start_logout_gathering_fiber():
     last_dist = dist
     depth = 0
     _G.log_info(f"Target detected, distance={dist}")
+    ntarget_cnt = 0
     if not target.get('disableLock'):
       action.lockon_target()
       uwait(0.3)

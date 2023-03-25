@@ -24,8 +24,11 @@ FLAG_STOP_ON_FULL_XP = False
 SHOP_CHECK_DURATION = 500
 FLAG_VOTING = False
 FLAG_AUTO_VOTE = False
-VOTE_TARGET = (7, 111)
+
+VOTE_TARGET = (9, 111)
 VotedCount  = 0
+
+FlagTurnLimited = False
 
 PartyId  = 0
 StageId  = 0
@@ -639,10 +642,10 @@ def log_player_profile(data):
   log_info(string)
 
 def is_defeated(data):
-  global StageId
+  global StageId, FlagTurnLimited
   if len(get_alive_characters(data['BattleState']['Characters'])) == 0:
     return True
-  if StageId in stage.TurnLimitedStages and data['Version'] >= 10:
+  if data['Version'] >= 10 and FlagTurnLimited or StageId in stage.TurnLimitedStages:
     return True
   return False
 
@@ -1249,10 +1252,10 @@ def swap_mastered_trains():
     log_info("Charcaters in queue:")
     print(player.format_character_data(UnmasteredCharacters))
 
-def main(times=0, raid=False):
+def main(times=0, raid=False, turn_limited=False):
   global PartyId,StageId,RentalUid,AvailableFriendRentals,RentalCycle
-  global FlagRequestReEnter,ReportDetail,UnmasteredCharacters,FLAG_INTERACTIVE,VotedCount
-  
+  global FlagRequestReEnter,ReportDetail,UnmasteredCharacters,FLAG_INTERACTIVE,VotedCount,FlagTurnLimited
+  FlagTurnLimited = turn_limited
   _G.FlagRunning = True
   FlagRequestReEnter = False
   log_info("Program initialized")
