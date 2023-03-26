@@ -83,7 +83,7 @@ def main_loop():
   global output_cache
   _G.flush()
   update_input()
-  if datetime.now() >= _G.WORKER_TTL:
+  if _G.WORKER_TTL and datetime.now() >= _G.WORKER_TTL:
     _G.log_info("Auto terminate due to WORKER_TTL")
     _G.FlagRunning = False
     exit()
