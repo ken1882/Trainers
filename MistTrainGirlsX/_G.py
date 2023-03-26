@@ -89,7 +89,7 @@ CVLocalDistance  = 10     # Template local maximum picking range
 
 Throttling = True
 StarbrustStream = False
-PersistCharacterCache = True
+PersistCharacterCache = False
 
 SIG_COMBAT_WON  = 0x1
 SIG_COMBAT_LOST = 0x2

@@ -248,6 +248,16 @@ def enhance_all_weapons():
       log_error(err)
       break
 
+def enhance_lb_level(uchid, amount):
+  return game.post_request(
+    f"/api/UCharacters/LevelLimitBreak/Enhance/{uchid}",
+    {
+      'CharacterExperienceItemQuantity': 0,
+      'Experience': amount,
+      'GeneralExperienceItemQuantity': 0,
+    }
+  )
+
 def enhance_pt(uid, insurance=False, itype=0):
   if itype == 0:
     itype = 64

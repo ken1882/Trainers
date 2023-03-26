@@ -10,6 +10,7 @@ import game
 import utils
 from datetime import date, datetime, timedelta
 import stage
+import upgrade
 from Input import input
 import battle_analyzer
 
@@ -20,6 +21,7 @@ LOG_STATUS = True
 FLAG_INTERACTIVE = False
 FLAG_CONFIRM_RP_USE = True
 FLAG_STOP_ON_FULL_XP = False
+FLAG_AUTO_LEVEL = True
 
 SHOP_CHECK_DURATION = 500
 FLAG_VOTING = False
@@ -30,6 +32,7 @@ VotedCount  = 0
 
 FlagTurnLimited = False
 
+CurrentParty = {}
 PartyId  = 0
 StageId  = 0
 BattleId = 0
@@ -73,6 +76,7 @@ UnmovableEffects = [
 MAX_SP = 20
 MAX_OP = 100
 MAX_EXP = 9999000
+TOTAL_EXPCAP = 200000000
 MAX_PROFICIENCY = 99
 
 LastBattleWon = False
@@ -492,6 +496,21 @@ def sell_surplus_loots(loots):
       record_loot_sell(loot, curn-minn)
       record_sell_earns(res)
       log_info(f"Sold item {game.get_item_name(loot)}, amount={curn-minn}")
+
+def level_party(data):
+  if not FLAG_AUTO_LEVEL:
+    return
+  slots = data['UPartyViewModel']['UCharacterSlots']
+  for char in slots:
+    uchar = char['UCharacter']
+    if uchar['UCharacterBaseViewModel']['Experience'] < MAX_EXP:
+      continue
+    if uchar['TotalExperience'] >= TOTAL_EXPCAP or uchar['Level'] < 50 or uchar['MCharacterId']//100%10 != 4:
+      continue
+    amount = min(MAX_EXP, TOTAL_EXPCAP-uchar['TotalExperience'])
+    _G.log_info(f"Leveling {uchar['MCharacterId']} with exp:{amount}")
+    upgrade.enhance_lb_level(uchar['Id'], amount)
+  
 
 def process_victory():
   global LastBattleWon,ReportDetail
@@ -1000,6 +1019,7 @@ def log_detail_status(data):
     log_error("Error occurred during logging battle status:", handle_exception(err))
 
 def process_partyid_input():
+  global CurrentParty
   pid = 0
   while pid not in range(1,11):
     try:
@@ -1008,7 +1028,8 @@ def process_partyid_input():
       pid = 0
     if pid == 0:
       player.log_party_status()
-  pid = next((p['Id'] for p in player.get_current_parties()['UParties'] if p['PartyNo'] == pid), None)
+  CurrentParty = next((p for p in player.get_current_parties()['UParties'] if p['PartyNo'] == pid), None)
+  pid = CurrentParty['Id']
   return pid
 
 def process_stageid_input():
@@ -1090,6 +1111,7 @@ def start_battle_process(sid, pid, rid, raid=False):
       return SIG_COMBAT_STOP 
   if type(data) == dict and 'BattleId' in data:
     BattleId = data['BattleId']
+    level_party(data)
     if determine_last_battle(data):
       FlagRequestReEnter = True
     return process_combat(data)

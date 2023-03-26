@@ -5,6 +5,7 @@ from _G import (log_error,log_debug,log_info,log_warning,wait,uwait,resume)
 import utils, Input, graphics, stage
 import win32con,win32gui
 from threading import Thread
+from datetime import datetime
 import argv_parse
 import action
 
@@ -82,6 +83,10 @@ def main_loop():
   global output_cache
   _G.flush()
   update_input()
+  if datetime.now() >= _G.WORKER_TTL:
+    _G.log_info("Auto terminate due to WORKER_TTL")
+    _G.FlagRunning = False
+    exit()
   if not _G.FlagPaused and _G.Fiber and not resume(_G.Fiber):
     log_info(f"Worker ended, return value: {_G.pop_fiber_ret()}")
     _G.Fiber = None 
@@ -109,6 +114,8 @@ if __name__ == "__main__":
         _G.SelectedFiber = getattr(fiber,method)
         log_info(f"Fiber set to {method}")
         break
+  if _G.WORKER_TTL:
+    _G.log_info("Worker TTL set:", datetime.strftime(_G.WORKER_TTL, '%Y-%m-%d %H:%M:%S'))
   if _G.SelectedFiber == fiber.start_gather_fiber:
     fiber.init_node()
   try:

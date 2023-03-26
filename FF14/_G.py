@@ -50,6 +50,7 @@ FrameCount     = 0
 LastFrameCount = -1
 PosRandomRange = (8,8)
 
+WORKER_TTL = None
 SnapshotCache = {}  # OCR snapshot cache for current frame
 
 # 0:NONE 1:ERROR 2:WARNING 3:INFO 4:DEBUG
