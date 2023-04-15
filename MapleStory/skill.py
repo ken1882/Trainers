@@ -72,7 +72,7 @@ FreudsWisdom      = Skill('FreudsWisdom', 25, _G.MAPLE_KEYCODE['C'])       # 普
 SpiderMirror      = Skill('SpiderMirror', 245, _G.MAPLE_KEYCODE['6'])      # 蜘蛛之鏡
 SolarImprint      = Skill('SolarImprint', 245, _G.MAPLE_KEYCODE['I'])      # 烈陽印記
 HeroicMemories    = Skill('HeroicMemories', 120, _G.MAPLE_KEYCODE['7'])    # 英雄歐尼斯
-EldasFall         = Skill('EldasFall', 38, _G.MAPLE_KEYCODE['T'])          # 艾爾達斯降臨
+EldasFall         = Skill('EldasFall', 58, _G.MAPLE_KEYCODE['T'])          # 艾爾達斯降臨
 
 TakenoKonoko      = Skill('TakenoKonoko', 1800, _G.MAPLE_KEYCODE['0'])    # 木野子的祝福
 Kurama            = Skill('Kurama', 1800, _G.MAPLE_KEYCODE['K'])          # 闇的指甲

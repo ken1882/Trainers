@@ -299,13 +299,8 @@ def route_0():
     _exec_action(skill.WindCircle.use)
     sleep(0.4)
     for i in range(3):
-        if i == 1 and skill.EldasFall.is_ready():
-            sleep(0.2)
-            _exec_action(skill.EldasFall.use)
-            skill.EldasFall.apply_cd()
-        else:
-            _sk = use_random_skill()
-            sleep(TeleportTime)
+        _sk = use_random_skill()
+        sleep(TeleportTime)
         action.blink_right()
         sleep(SkillHaltTime[_sk])
     _exec_action(skill.ThunderCircle.use)
@@ -354,6 +349,11 @@ def route_0():
     _exec_action(skill.ThunderCircle.use)
     sleep(TeleportTime)
     action.blink_right()
+    if skill.EldasFall.is_ready():
+        sleep(0.3)
+        action.eldas_spring()
+        skill.EldasFall.apply_cd()
+        sleep(0.3)
     sleep(SkillHaltTime[skill.ThunderCircle])
     _exec_action(skill.ThunderCircle.use)
     # right to down then center

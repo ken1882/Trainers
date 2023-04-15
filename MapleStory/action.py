@@ -174,3 +174,15 @@ def double_jumpup(dir=0):
   finally:
     Input.key_up(win32con.VK_UP)
     Input.SendInput(eves[1])
+
+def eldas_spring():
+  eves = list(Input.get_keybd_pair(win32con.VK_DOWN))
+  try:
+    Input.SendInput(eves[0])
+    Input.key_down(win32con.VK_DOWN)
+    time.sleep(0.1)
+    skill.EldasFall.use()
+    time.sleep(0.5)
+  finally:
+    Input.key_up(win32con.VK_DOWN)
+    Input.SendInput(eves[1])
