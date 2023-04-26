@@ -129,6 +129,7 @@ MAPLE_KEYCODE = {
   ',': 0x33,
   '.': 0x34,
   '/': 0x35,
+  'ENTER': 0x1c,
   'SHIFT': 0x2A,
   # 'SHIFT': 0x83,
   'CTRL': 0x1D,

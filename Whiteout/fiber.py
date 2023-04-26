@@ -6,12 +6,16 @@ from utils import ocr_rect
 from datetime import datetime, timedelta
 import action
 
+UnknownStageCounter = 0
+
 def wait_until_stage(stg, handler=None, max_depth=10):
   depth = 0
   while not stage.is_stage(stg):
     wait(1)
     yield
     if not max_depth:
+      if handler:
+        yield from handler()
       continue
     depth += 1
     if depth > max_depth-2:
@@ -47,42 +51,85 @@ def start_training_fiber():
       yield
     wait(1)
 
+def on_search_cancel():
+  global UnknownStageCounter
+  if stage.is_stage('MapSearch'):
+    Input.click(*position.CancelSearch)
+    wait(1)
+    yield
+  stg = stage.get_current_stage()
+  if not stg:
+    UnknownStageCounter += 1
+    _G.log_info("Unknown stage detected:", UnknownStageCounter)
+    if UnknownStageCounter > 30:
+      _G.log_info("Close all windows")
+      UnknownStageCounter = 0
+      yield from action.close_all_windows()
+
 def start_gathering_fiber():
   while True:
     dispatched = 99
     while dispatched >= _G.ARGV.max_troop_count:
-      yield from wait_until_stage('Map', max_depth=0)
+      yield from wait_until_stage('Map', handler=on_search_cancel ,max_depth=0)
       dispatched = stage.get_dispatched_troop_count()
       _G.log_info("Troops dispatched:", dispatched)
+      # double check due to potential frame loss
       if dispatched < _G.ARGV.max_troop_count:
-        break
+        for _ in range(3):
+          wait(1)
+          yield
+        dispatched = stage.get_dispatched_troop_count()
+        _G.log_info("Troops dispatched check:", dispatched)
+        if dispatched < _G.ARGV.max_troop_count:
+          break
       for _ in range(10):
         wait(1)
         yield
     _G.log_info("Start gathering")
-    Input.click(*position.MapSearchPos)
-    wait(2)
-    yield
-    Input.click(*position.MapSearchStart)
-    wait(2)
-    yield
-    depth = 0
+    gather_opt = position.GatherFormation[dispatched]
+    search_level = _G.ARGV.gather_level
+    search_level = search_level if search_level else gather_opt['level']
     while not stage.is_map_search_found():
+      if not stage.get_current_stage():
+        yield from action.close_all_windows()
+        continue
+      yield from stage.ensure_stage('MapSearch', handler=action.open_map_search)
+      yield from action.do_map_search(max(_G.ARGV.min_gather_level, search_level))
+      for _ in range(10):
+        wait(0.5)
+        yield
+      if search_level < 0:
+        _G.log_warning("No resources found nearby, will pause for 30 minutes")
+
+      search_level -= 1
       wait(1)
       yield
-      depth += 1
-      if depth > 10:
-        _G.log_warning("No resources node found, waiting for 1 minte")
-        for _ in range(60):
-          wait(1)
-          yield
-        Input.click(*position.MapSearchStart)
-        wait(1)
-        yield
-        depth = 0
+    Input.click(*position.StartGatherPos)
+    for _ in range(5):
+      wait(1)
+      yield
+    yield from action.remove_hero(*gather_opt['remove_hero'])
+    wait(0.5)
+    
+    if dispatched+1 == _G.ARGV.max_troop_count:
+      for pos in position.MaxoutTroopPos:
+        Input.click(*pos)
+        wait(0.3)
+      wait(0.5)
+
+    Input.click(*position.DeployTroops)
+    wait(0.03)
+    Input.click(*position.DeployTroops)
     wait(1)
     yield
-    Input.click(*position.StartGatherPos)
-    wait(3)
-    yield from action.remove_hero(2, 3)
-    Input.click(*position.DeployTroops)
+    if stage.is_stage('ConfirmDeploy'):
+      _G.log_info("Cancel duplicated deployment and wait for 60 seconds")
+      Input.click(*position.CancelDeploy)
+      for _ in range(60):
+        wait(1)
+        yield
+      Input.click(*position.CommonBackPos)
+    for _ in range(3):
+      wait(0.5)
+      yield
+

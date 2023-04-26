@@ -30,8 +30,8 @@ def repeat(vk):
 def get_cursor_pos(app_offset=True):
   mx, my = win32api.GetCursorPos()
   if app_offset:
-    mx = mx - _G.AppRect[0] - _G.WinTitleBarSize[0] - _G.WinDesktopBorderOffset[0]
-    my = my - _G.AppRect[1] - _G.WinTitleBarSize[1] - _G.WinDesktopBorderOffset[1]
+    mx = mx - _G.AppRect[0] - _G.WinTitleBarSize[0]
+    my = my - _G.AppRect[1] - _G.WinTitleBarSize[1]
   return (mx, my)
 
 def key_down(*args, use_msg=_G.AppInputUseMsg, hwnd=None):

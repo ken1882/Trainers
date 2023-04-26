@@ -73,6 +73,7 @@ SpiderMirror      = Skill('SpiderMirror', 245, _G.MAPLE_KEYCODE['6'])      # 蜘
 SolarImprint      = Skill('SolarImprint', 245, _G.MAPLE_KEYCODE['I'])      # 烈陽印記
 HeroicMemories    = Skill('HeroicMemories', 120, _G.MAPLE_KEYCODE['7'])    # 英雄歐尼斯
 EldasFall         = Skill('EldasFall', 58, _G.MAPLE_KEYCODE['T'])          # 艾爾達斯降臨
+EldasStar         = Skill('EldasStar', 180, _G.MAPLE_KEYCODE['DELETE'])     # 艾爾達斯新星
 
 TakenoKonoko      = Skill('TakenoKonoko', 1800, _G.MAPLE_KEYCODE['0'])    # 木野子的祝福
 Kurama            = Skill('Kurama', 1800, _G.MAPLE_KEYCODE['K'])          # 闇的指甲
@@ -86,7 +87,7 @@ MasterOfNightmare = Skill('MasterOfNightmare', 61, _G.MAPLE_KEYCODE['`'])   # �
 
 DecentHolySymbol = Skill('DecentHolySymbol', 180, _G.MAPLE_KEYCODE['M'])    # 實用的祈禱
 ManaOverload     = Skill('ManaOverload', 60, _G.MAPLE_KEYCODE['O'])         # 超載魔力
-EtherealForm     = Skill('EtherealForm', 60, _G.MAPLE_KEYCODE['9'])         # 虛無型態
+EtherealForm     = Skill('EtherealForm', 60, _G.MAPLE_KEYCODE['END'])       # 虛無型態
 DecentAdvancedBlessing = Skill('DecentAdvancedBlessing', 180, _G.MAPLE_KEYCODE['K']) # 實用的進階祝福
 
 Reincarnation = Skill('Reincarnation', 240, _G.MAPLE_KEYCODE['Y'])

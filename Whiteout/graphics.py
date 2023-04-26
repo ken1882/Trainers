@@ -31,9 +31,8 @@ def is_pixel_match(pix, col, sync=False):
 def get_pixel(x,y,sync=False):
   # use win32api to get pixel in real time, slower
   if sync:
-    rect = get_full_rect()
-    x += rect[0]
-    y += rect[1]
+    x += _G.AppRect[0] + _G.WinTitleBarSize[0]
+    y += _G.AppRect[1] + _G.WinTitleBarSize[1]
     rgb = win32gui.GetPixel(_G.DesktopDC, x, y)
     b = (rgb & 0xff0000) >> 16
     g = (rgb & 0x00ff00) >> 8
@@ -51,18 +50,18 @@ def get_mouse_pixel(mx=None, my=None):
 
 def get_full_rect():
   return (
-    _G.AppRect[0] + _G.WinTitleBarSize[0] + _G.WinDesktopBorderOffset[0],
-    _G.AppRect[1] + _G.WinTitleBarSize[1] + _G.WinDesktopBorderOffset[1],
+    _G.AppRect[0],
+    _G.AppRect[1],
     _G.AppRect[2],
     _G.AppRect[3]
   )
 
 def get_content_rect():
   rect = list(win32gui.GetClientRect(_G.AppHwnd))
-  rect[0] += _G.WinTitleBarSize[0] + _G.WinDesktopBorderOffset[0] + _G.AppRect[0]
-  rect[1] += _G.WinTitleBarSize[1] + _G.WinDesktopBorderOffset[1] + _G.AppRect[1]
-  rect[2] += _G.WinTitleBarSize[0] - _G.WinTitleBarSize[0]
-  rect[3] += _G.WinTitleBarSize[1] - _G.WinTitleBarSize[1]
+  rect[0] += _G.WinTitleBarSize[0] + _G.AppRect[0]
+  rect[1] += _G.WinTitleBarSize[1] + _G.AppRect[1]
+  rect[2] -= (_G.WinTitleBarSize[0] + _G.WinDesktopBorderOffset[0])
+  rect[3] -= (_G.WinTitleBarSize[1] + _G.WinDesktopBorderOffset[1])
   return tuple(rect)
 
 def take_snapshot(rect=None,filename=None):

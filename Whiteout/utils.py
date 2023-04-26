@@ -43,12 +43,12 @@ def update_app_rect():
 
 def find_app_window():
   if 'find_foreground' in _G.ARGV:
-    sleep(2)
-    hwnd = win32gui.GetForegroundWindow()
-    title = win32gui.GetWindowText(hwnd)
-    if _G.AppWindowName not in title:
-      _G.log_error("Wrong foreground window, skip")
-      return
+    hwnd = 0
+    title = ''
+    while _G.AppWindowName not in title:
+      hwnd = win32gui.GetForegroundWindow()
+      title = win32gui.GetWindowText(hwnd)
+      wait(0.1)
     _G.AppHwnd = hwnd
     _G.AppTid,_G.AppPid  = win32process.GetWindowThreadProcessId(hwnd)
     print(f"App found with HWND {hwnd} ({_G.AppWindowName}), pid={_G.AppPid}")

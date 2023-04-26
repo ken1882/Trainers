@@ -21,19 +21,18 @@ def is_color_ok(cur, target):
       return False
   return True
 
-def is_pixel_match(pix, col):
+def is_pixel_match(pix, col, sync=False):
   for i, j in zip(pix, col):
     tx, ty = i
-    if not is_color_ok(get_pixel(tx, ty), j):
+    if not is_color_ok(get_pixel(tx, ty, sync), j):
       return False
   return True
 
 def get_pixel(x,y,sync=False):
   # use win32api to get pixel in real time, slower
   if sync:
-    rect = get_full_rect()
-    x += rect[0]
-    y += rect[1]
+    x += _G.AppRect[0] + _G.WinTitleBarSize[0]
+    y += _G.AppRect[1] + _G.WinTitleBarSize[1]
     rgb = win32gui.GetPixel(_G.DesktopDC, x, y)
     b = (rgb & 0xff0000) >> 16
     g = (rgb & 0x00ff00) >> 8
@@ -147,3 +146,4 @@ def find_object_with_rates(objimg_path, threshold=CVMatchHardRate):
   objects = filter_local_templates(res, threshold)
   rates = [res[y][x] for x,y in objects]
   return (objects, rates)
+

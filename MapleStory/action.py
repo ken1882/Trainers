@@ -116,6 +116,10 @@ def interact():
   for event in Input.get_keybd_pair(_G.MAPLE_KEYCODE['SPACE']):
     Input.SendInput(event)
 
+def enter():
+  for event in Input.get_keybd_pair(_G.MAPLE_KEYCODE['ENTER']):
+    Input.SendInput(event)
+
 def blink_left():
   try:
     Input.key_down(win32con.VK_LEFT)

@@ -89,13 +89,15 @@ keystate = [0 for _ in range(0xff)]
 
 def update():
   global keystate
-  for i in range(0xff):
+  for i in range(0xef):
     if win32api.GetAsyncKeyState(i) & 0x8000:
       keystate[i] += 1
     else:
       keystate[i] = 0
 
-def is_trigger(vk):
+def is_trigger(vk, sync=False):
+  if sync:
+    return win32api.GetAsyncKeyState(vk) & 0x8000
   return keystate[vk] == 1
 
 def is_pressed(vk):

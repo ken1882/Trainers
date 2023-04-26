@@ -1711,7 +1711,8 @@
       119038403,
       123045403,
       127054403,
-      134067403
+      134067403,
+      138075403
     ],
     "PossibleSlotCounts": [
       1
@@ -2016,7 +2017,8 @@
       120039403,
       124047403,
       129058403,
-      131061403
+      131061403,
+      138076403
     ],
     "PossibleSlotCounts": [
       1
@@ -2836,7 +2838,8 @@
       126052309,
       127054305,
       132064309,
-      133066309
+      133066309,
+      138076309
     ],
     "PossibleSlotCounts": [
       1
@@ -2987,7 +2990,8 @@
       115030309,
       119038309,
       124048309,
-      135070309
+      135070309,
+      138076309
     ],
     "PossibleSlotCounts": [
       1
@@ -3053,7 +3057,8 @@
       132063305,
       134067302,
       135070305,
-      136072305
+      136072305,
+      138075305
     ],
     "PossibleSlotCounts": [
       1
@@ -3124,7 +3129,8 @@
       134067305,
       135069305,
       136072305,
-      137074305
+      137074305,
+      138075305
     ],
     "PossibleSlotCounts": [
       1
@@ -3195,7 +3201,8 @@
       132063305,
       133065305,
       134067305,
-      135070302
+      135070302,
+      138075302
     ],
     "PossibleSlotCounts": [
       1
@@ -3262,7 +3269,8 @@
       133065302,
       135069305,
       136072302,
-      137074305
+      137074305,
+      138076302
     ],
     "PossibleSlotCounts": [
       1
@@ -3328,7 +3336,8 @@
       129058302,
       133066305,
       136071305,
-      137073305
+      137073305,
+      138076305
     ],
     "PossibleSlotCounts": [
       1
@@ -3398,7 +3407,8 @@
       132064302,
       134068302,
       136071302,
-      137074302
+      137074302,
+      138076305
     ],
     "PossibleSlotCounts": [
       1
@@ -19824,6 +19834,52 @@
     ]
   },
   {
+    "Id": 451,
+    "Name": "\u65b0\u7dd1\u306e\u69cd",
+    "Description": "\u65b0\u305f\u306a\u6728\u3005\u304b\u3089\u751f\u6210\u3055\u308c\u305f\u9bae\u3084\u304b\u306a\u69cd\u3002/n\u30b7\u30ea\u30fc\u30ba\u3067\u63c3\u3048\u3066\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u3055\u3089\u306a\u308b\u5f37\u529b\u306a\u52b9\u679c\u3092\u767a\u63ee\u3059\u308b\u3002/n\u6b66\u5668\u7a2e\u304c\u69cd\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "WeaponEquipType": 4,
+    "MWeaponType": {
+      "WeaponEquipType": 4,
+      "WeaponAttributeType": 3,
+      "NormalAttackMSkillId": -14
+    },
+    "EquipmentRarity": 3,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 3,
+      "EvolutionLimit": 3
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": 99,
+    "UniqueMSkillId": null,
+    "MSeriesSetId": 42,
+    "DropQuestIds": [
+      138075503
+    ],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
     "Id": 452,
     "Name": "\u65b0\u7dd1\u306e\u5263",
     "Description": "\u65b0\u305f\u306a\u6728\u3005\u304b\u3089\u751f\u6210\u3055\u308c\u305f\u9bae\u3084\u304b\u306a\u5263\u3002/n\u30b7\u30ea\u30fc\u30ba\u3067\u63c3\u3048\u3066\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u3055\u3089\u306a\u308b\u5f37\u529b\u306a\u52b9\u679c\u3092\u767a\u63ee\u3059\u308b\u3002/n\u6b66\u5668\u7a2e\u304c\u5263\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
@@ -20752,7 +20808,7 @@
   {
     "Id": 473,
     "Name": "\u65b0\u7dd1\u306e\u9b54\u5177",
-    "Description": "\u6b66\u5668\u3002\u6b66\u5668\u7a2e\u304c\u9b54\u5177\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "Description": "\u65b0\u305f\u306a\u6728\u3005\u304b\u3089\u751f\u6210\u3055\u308c\u305f\u9bae\u3084\u304b\u306a\u9b54\u5177\u3002/n\u30b7\u30ea\u30fc\u30ba\u3067\u63c3\u3048\u3066\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u3055\u3089\u306a\u308b\u5f37\u529b\u306a\u52b9\u679c\u3092\u767a\u63ee\u3059\u308b\u3002/n\u6b66\u5668\u7a2e\u304c\u9b54\u5177\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
     "WeaponEquipType": 6,
     "MWeaponType": {
       "WeaponEquipType": 6,
@@ -20785,10 +20841,12 @@
       "Blind": 0,
       "Charm": 0
     },
-    "MEquipmentSkillRateGroupId": null,
+    "MEquipmentSkillRateGroupId": 99,
     "UniqueMSkillId": null,
-    "MSeriesSetId": null,
-    "DropQuestIds": [],
+    "MSeriesSetId": 42,
+    "DropQuestIds": [
+      138076503
+    ],
     "PossibleSlotCounts": [
       1
     ]

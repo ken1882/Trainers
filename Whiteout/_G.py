@@ -33,8 +33,8 @@ DCSnapshotFile = f"snapshot_{int(random()*10000)}.png"
 
 WindowWidth  = 478
 WindowHeight = 781
-WinTitleBarSize = (1, 31)
-WinDesktopBorderOffset = (8,0)
+WinTitleBarSize = (2, 42)
+WinDesktopBorderOffset = (62,2)
 
 FPS   = (1.0 / 120)
 Fiber = None

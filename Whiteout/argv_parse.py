@@ -11,9 +11,13 @@ parser.add_argument(
 )
 parser.add_argument('--train-interval', type=int, help="Interval between troop training in minutes")
 parser.add_argument('-m', '--max-troop-count', type=int, help="How many troops can be dispatched (or march)")
+parser.add_argument('-g', '--gather-level', type=int, help="Target resource node level when gathering")
+parser.add_argument('--min-gather-level', type=int, help="Min target resource node level when gathering")
 
 def load():
   args = parser.parse_args()
   args.max_troop_count = max(args.max_troop_count or 0, 1)
+  if not args.min_gather_level:
+    args.min_gather_level = 5
   _G.ARGV = args
   return args
