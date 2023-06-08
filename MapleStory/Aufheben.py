@@ -45,18 +45,6 @@ RouteWeight = {}
 
 LastStartTime = datetime(2023, 1, 1)
 
-ori_sleep = sleep
-def sleep(sec, r=False):
-    if not _G.FlagRunning or _G.FlagPaused:
-        return
-    while not utils.is_focused() and _G.FlagRunning:
-        # print("Unfocused, wait for 1 second")
-        ori_sleep(1)
-        sec = max(sec-1, 0)
-    r = random()/10 if r else 0
-    Input.update()
-    ori_sleep(sec+r)
-
 def start_main(pipe_in, pipe_out, *args, **kwargs):
   _G.PipeIn  = pipe_in
   _G.PipeOut = pipe_out
@@ -202,7 +190,7 @@ def full_burst():
     sleep(0.6)
     skill.LucidsNightmare.use()
     sleep(0.7)
-    for _ in range(4+randint(0,2)):
+    for _ in range(4):
         skill.ManaBrust.use()
         sleep(0.7)
     # skill.LucidsNightmare.use()
@@ -244,13 +232,14 @@ def start_round():
     _G.log_info("Wait for intro animation")
     sleep(30)
     while not stage.is_stage('Map'):
-        sleep(0.1)
+        sleep(0.03)
     _G.log_info("Start combat")
     LastStartTime = datetime.now()
     depth = 0
-    wt_time = 0
+    wt_time = -0.5
     while depth < 5:
         _G.flush()
+        _G.log_info("Detecting boss position")
         pos = graphics.find_object('auf_atk.png', threshold=0.8)
         _G.log_info("Boss position:", pos)
         if not pos:
@@ -258,19 +247,23 @@ def start_round():
         else:
             wt_time = 0.5
         depth += 1
+    _G.log_info("Move left")
     Input.key_down(win32con.VK_LEFT)
     sleep(0.5+wt_time)
+    _G.log_info("Etheral form")
     skill.EtherealForm.use()
     action.move_left(1)
     Input.key_up(win32con.VK_LEFT)
     action.move_right(0.2)
     sleep(1)
+    _G.log_info("Dispel")
     skill.EtherealForm.use()
     sleep(0.3)
+    _G.log_info("Burst")
     full_burst()
     for _ in range(10):
         _G.flush()
-        pos = graphics.find_object('exit_aufheben.png')
+        pos = graphics.find_object('exit_aufheben.png', threshold=0.8)
         if pos:
             Input.click(*pos[0])
             for _ in range(2):

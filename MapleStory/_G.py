@@ -13,7 +13,7 @@ AppTid  = 0
 
 DriverName = "RTCore64.exe"
 
-DCTmpFolder = ".tmp"
+DCTmpFolder = "C:/Users/Compeador/Pictures"
 DCSnapshotFile = "snapshot.png"
 
 WindowWidth  = 596
