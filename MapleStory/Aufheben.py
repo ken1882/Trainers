@@ -259,7 +259,7 @@ def start_round():
             wt_time = 0.5
         depth += 1
     Input.key_down(win32con.VK_LEFT)
-    sleep(0.5+wt_time)
+    sleep(0.2+wt_time)
     skill.EtherealForm.use()
     action.move_left(1)
     Input.key_up(win32con.VK_LEFT)

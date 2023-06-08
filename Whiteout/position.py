@@ -9,6 +9,11 @@ CancelSearch = (201, 92)
 CancelDeploy = (126, 457)
 SwitchView = (379, 707)
 
+HealAvailable   = ((206, 327), (255, 70, 70))
+StartHealing    = (336, 693)
+RequestHealHelp = (206, 329)
+HelpAvailable   = ((309, 665), (21, 168, 50))
+
 MaxoutTroopPos = (
     (348, 375),(348, 456),(348, 537),(348, 617)
 )

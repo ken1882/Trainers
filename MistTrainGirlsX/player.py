@@ -15,6 +15,18 @@ USTAT_UNCHANGE_THRESHOLD = 10
 ConsumableInventory = {}
 VoteItemId = 0
 
+MAX_EX_STATUS = {
+  "HP": 1500,
+  "Strength": 150,
+  "Defence": 150,
+  "Dexterity": 150,
+  "Speed": 150,
+  "Intelligence": 150,
+  "MindDefence": 150,
+  "Mind": 150,
+  "Luck": 150
+}
+
 MIST_GEAR_ID = 85
 SWAP_GEAR_ID = [
   {
@@ -31,8 +43,25 @@ SWAP_GEAR_ID = [
       177034702,  # エクリプスファイア改
     ],
     'armor': 26147276,  # エクリプスジャケット改
-    'accessory': 33128716, # エクリプス改
-    # 'accessory': 59632163, # 蒼炎
+    # 'accessory': 33128716, # エクリプス改
+    'accessory': 59632163, # 蒼炎
+  },
+  {
+    'weapon': [
+      0,
+      159692763,  # エクリプスクロウ
+      155914420,  # エクリプスブレイド
+      157535430,  # エクリプスエッジ
+      157062821,  # エクリプスグレイブ
+      159692821,  # エクリプスウィップ
+      159692732,  # エクリプスオーブ
+      159974094,  # エクリプスボウ
+      159974066,  # エクリプスケーン
+      159067214,  # エクリプスファイア
+    ],
+    'armor': 26147275,
+    # 'accessory': 33128720, # エクリプス改
+    'accessory': 59632165, # 蒼炎
   },
   {
     'weapon': [
@@ -50,23 +79,6 @@ SWAP_GEAR_ID = [
     'armor': 26147280,
     'accessory': 33128718, # エクリプス改
     # 'accessory': 59632164, # 蒼炎
-  },
-  {
-    'weapon': [
-      0,
-      159692763,  # エクリプスクロウ
-      155914420,  # エクリプスブレイド
-      157535430,  # エクリプスエッジ
-      157062821,  # エクリプスグレイブ
-      159692821,  # エクリプスウィップ
-      159692732,  # エクリプスオーブ
-      159974094,  # エクリプスボウ
-      159974066,  # エクリプスケーン
-      159067214,  # エクリプスファイア
-    ],
-    'armor': 26147275,
-    'accessory': 33128720, # エクリプス改
-    # 'accessory': 59632165, # 蒼炎
   },
   {
     'weapon': [
@@ -192,11 +204,18 @@ def get_all_items(flatten=False):
   return ret
 
 def is_character_mastered(ch, accumulate=False, check_stat=True):
-  global __UCharacterStats,__UStatsUnchangedTimes
+  global __UCharacterStats,__UStatsUnchangedTimes,MAX_EX_STATUS
   if _G.FlagTrainExp:
     exp = ch['UCharacterBaseViewModel']['Experience']
     _G.log_info(f"{game.get_character_name(ch['MCharacterId'])} EXP: {exp}/{MAX_EXP}")
     return exp >= MAX_EXP
+  if _G.FlagTrainExStatus:
+    ex_status = ch['UCharacterBaseViewModel']['ExStatus']
+    for k,v in ex_status.items():
+      print(game.get_character_name(ch['MCharacterId']), k, v)
+      if v < MAX_EX_STATUS[k]:
+        return False
+    return True
   sk_keys = ['USkill1','USkill2','USkill3']
   skills = [ch[sk] for sk in sk_keys]
   if any([sk['Rank'] < MAX_PROFICIENCY for sk in skills]):
@@ -233,12 +252,18 @@ def get_maxed_partymember(pid, sid):
   '''
   res = game.get_request(f"/api/Quests/{sid}/prepare/{pid}?rentalUUserId=null")
   ret = []
-  for ch in res['r']['QuestPreparationCharacterViewModels']:
-    if (_G.FlagTrainSkill or _G.FlagTrainExp) and not is_character_mastered(get_character_by_uid(ch['UCharacterId']), check_stat=False):
-      continue
-    if all([n == 0 for _,n in ch['GrowStatus'].items()]):
-      ret.append(ch['UCharacterId'])
-      continue
+  if _G.FlagTrainExStatus:
+    for ch in res['r']['QuestPreparationCharacterExStatusViewModels']:
+      if all([n == 0 for _,n in ch['GrowStatus'].items()]):
+        ret.append(ch['UCharacterId'])
+        continue
+  else:
+    for ch in res['r']['QuestPreparationCharacterViewModels']:
+      if (_G.FlagTrainSkill or _G.FlagTrainExp) and not is_character_mastered(get_character_by_uid(ch['UCharacterId']), check_stat=False):
+        continue
+      if all([n == 0 for _,n in ch['GrowStatus'].items()]):
+        ret.append(ch['UCharacterId'])
+        continue
   return ret
 
 def get_unmastered_characters():
@@ -587,7 +612,6 @@ def buy_derpy_kirens(race_id, numbers):
     if (i+1) % 4 == 0 or i+1 == size:
       _G.log_info("Buying derpy ticket: ", payload['number'])
       res = game.post_request('/api/Casino/Race/BuyTickets', payload)
-      print(res)
       payload['number'] = []
 
 def dump_profiles(st=1, filter=None):
@@ -612,3 +636,16 @@ def dump_profiles(st=1, filter=None):
       file.write(f"{profile['UserId']},{profile['DmmUserId']},{profile['DisplayUserId']},{profile['Rank']},{profile['Name']}\n")
   finally:
     file.close()
+
+def roll_raid_gacha(raid_id, token_amount):
+  num = 1
+  while num > 0:
+    res = game.get_request(f"/api/Event/{raid_id}/RaidBoxGacha")['r']
+    num = min(token_amount // res['requireItemQuantity'], res['RemaignBoxItemCount'])
+    token_amount -= num * res['requireItemQuantity']
+    if num == 0:
+      break
+    log_info(f"Roll {num} times, left: {token_amount}")
+    game.post_request(f"/api/Event/{raid_id}/RaidBoxGacha/Roll?rollCount={num}")
+    if num >= res['RemaignBoxItemCount']:
+      game.post_request(f"/api/Event/{raid_id}/RaidBoxGacha/Reset")
