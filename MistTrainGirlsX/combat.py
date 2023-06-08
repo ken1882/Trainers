@@ -21,6 +21,7 @@ LOG_STATUS = True
 FLAG_INTERACTIVE = False
 FLAG_CONFIRM_RP_USE = True
 FLAG_STOP_ON_FULL_XP = False
+FLAG_STOP_ON_NO_TRAINEE = True
 FLAG_AUTO_LEVEL = True
 
 SHOP_CHECK_DURATION = 500
@@ -89,8 +90,8 @@ UnmasteredCharacters = []
 UnmasteredSwapIndex  = [
   0,
   1,
-  2,
-  3,
+  # 2,
+  # 3,
   # 4
 ]
 
@@ -214,6 +215,19 @@ ReportDetail = {
 W_TYPE = 10 ** 6
 W_QUANTITY = 10 ** 8
 
+BATTLE_SETTINGS = {
+  "BattleAutoSetting": 0 if FLAG_INTERACTIVE else 3,
+  "BattleAutoSpecialSkillType": 0,
+  "BattleSpecialSkillAnimation": 1,
+  "BattleSkipBuffEffectFlag": 3,
+  "BattleSpeed": 2,
+  "EnableConnect": True,
+  "EnableEnemyShieldEffect": False,
+  "IsAutoOverDrive": True,
+  "IsAutoSpecialSkill": False,
+  "UserPreferenceActiveFlag": 1,
+}
+
 BattleVersion = 0
 
 def hash_item_id(item, q=None):
@@ -283,14 +297,7 @@ def process_actions(commands, verion):
       "Type":1,
       "IsSimulation": False,
       "Version": verion,
-      "BattleSettings": {
-        "BattleAutoSetting":0 if FLAG_INTERACTIVE else 3,
-        "BattleSpeed":2,
-        "BattleSpecialSkillAnimation":1,
-        "IsAutoSpecialSkill":False,
-        "IsAutoOverDrive":True,
-        "EnableConnect":True
-      },
+      "BattleSettings": BATTLE_SETTINGS,
       "Commands": commands
     }
   )
@@ -318,14 +325,7 @@ def use_special_skill(ch, target_id, ovd, verion):
       "Type":2,
       "IsSimulation": False,
       "Version": verion,
-      "BattleSettings": {
-        "BattleAutoSetting":0 if FLAG_INTERACTIVE else 3,
-        "BattleSpeed":2,
-        "BattleSpecialSkillAnimation":1,
-        "IsAutoSpecialSkill":False,
-        "IsAutoOverDrive":True,
-        "EnableConnect":True
-      },
+      "BattleSettings": BATTLE_SETTINGS,
       "Commands": commands
     }
   )
@@ -339,14 +339,7 @@ def surrender():
     {
       "Type":1,
       "IsSimulation": False,
-      "BattleSettings": {
-        "BattleAutoSetting":3,
-        "BattleSpeed":2,
-        "BattleSpecialSkillAnimation":1,
-        "IsAutoSpecialSkill":False,
-        "IsAutoOverDrive":True,
-        "EnableConnect":True
-      },
+      "BattleSettings": BATTLE_SETTINGS,
     }
   )
   return res['r']
@@ -1261,6 +1254,8 @@ def swap_mastered_trains():
       continue
     if not UnmasteredCharacters:
       log_warning("No unmastered characters left to train")
+      if FLAG_STOP_ON_NO_TRAINEE:
+        _G.FlagRunning = False
       break
     schar = UnmasteredCharacters.pop()
     pcidx = player.get_character_party_index(PartyId, schar['MCharacterId'])
@@ -1351,7 +1346,7 @@ def main(times=0, raid=False, turn_limited=False):
     log_info("Battle Ended")
     if signal == SIG_COMBAT_STOP:
       break
-    if _G.FlagTrainSwap and signal == SIG_COMBAT_WON:
+    if _G.FlagTrainSwap and (signal == SIG_COMBAT_WON or turn_limited):
       log_info("Checking skin maxed")
       swap_mastered_trains()
     uwait(1)

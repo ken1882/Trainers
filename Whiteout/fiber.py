@@ -65,6 +65,8 @@ def on_search_cancel():
       _G.log_info("Close all windows")
       UnknownStageCounter = 0
       yield from action.close_all_windows()
+  else:
+    UnknownStageCounter = 0
 
 def start_gathering_fiber():
   while True:
@@ -111,11 +113,11 @@ def start_gathering_fiber():
     yield from action.remove_hero(*gather_opt['remove_hero'])
     wait(0.5)
     
-    if dispatched+1 == _G.ARGV.max_troop_count:
-      for pos in position.MaxoutTroopPos:
-        Input.click(*pos)
-        wait(0.3)
-      wait(0.5)
+    # if dispatched+1 == _G.ARGV.max_troop_count:
+    #   for pos in position.MaxoutTroopPos:
+    #     Input.click(*pos)
+    #     wait(0.3)
+    #   wait(0.5)
 
     Input.click(*position.DeployTroops)
     wait(0.03)
@@ -133,3 +135,23 @@ def start_gathering_fiber():
       wait(0.5)
       yield
 
+def start_healing_fiber():
+  while True:
+    if graphics.is_pixel_match([position.HelpAvailable[0]], [position.HelpAvailable[1]], True):
+      Input.click(*position.HelpAvailable[0])
+      wait(0.3)
+    yield
+    if stage.is_stage('Chat'):
+      Input.click(*position.CommonBackPos)
+      wait(0.5)
+    if graphics.is_pixel_match([position.HealAvailable[0]], [position.HealAvailable[1]], True):
+      Input.click(*position.HealAvailable[0])
+      wait(0.5)
+      Input.click(*position.StartHealing)
+      # yield
+      # while not stage.is_stage('Home'):
+      #   yield
+      wait(1)
+      Input.click(*position.RequestHealHelp)
+      wait(0.5)
+    yield
