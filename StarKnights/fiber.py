@@ -1,0 +1,60 @@
+from time import sleep
+import win32con
+import _G
+from _G import uwait
+import Input
+import stage, position, graphics
+
+def start_refight_fiber():
+  n = _G.ARGV.repeats or 0
+  while n >= 0:
+    sleep(1)
+    yield
+    if stage.is_stage('CombatVictory') or stage.is_stage('CombatRewards'):
+      for _ in range(5):
+        yield
+        Input.rclick(500, 650)
+        sleep(0.5)
+    elif stage.is_stage('CombatResult'):
+      Input.click(*position.CombatRefight)
+      n -= 1
+      _G.log_info(f"Refight, times left: {n}")
+  
+def start_initiate_fiber():
+  lasts = []
+  stack_size = 8
+  diff_threshold = 30
+  cnt = 0
+  while True:
+    yield
+    if not stage.is_stage('CombatInitiate'):
+      lasts = []
+      continue
+    _G.log_debug(cnt)
+    if cnt < 1:
+      cnt += 1
+      continue
+    else:
+      cnt = 0
+    while True:
+      col = graphics.get_pixel(*position.RocketStartPos, True)
+      _G.log_debug(col)
+      if sum(col) < 30:
+        continue
+      if len(lasts) < stack_size:
+        lasts.insert(0, col)
+        continue
+      cs = 0
+      for c in lasts:
+        cs += sum(c)
+      cs /= stack_size
+      cv = sum(col)
+      if cv - cs > diff_threshold or _G.ARGV.auxiliary:
+        Input.click(500, 300)
+        break
+      lasts.insert(0, col)
+      lasts.pop()
+
+def start_test_fiber():
+  while True:
+    print(graphics.get_pixel(*position.RocketStartPos, True))
