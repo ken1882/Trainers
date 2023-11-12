@@ -1,0 +1,6 @@
+CombatRefight = (897, 708)
+CombatNext    = (1140, 655)
+RocketStartPos= (757, 524)
+ItemDescRect  = (235, 200, 1050, 450)
+RaidBossStart = (1105, 579)
+StartBattle   = (1087, 675)

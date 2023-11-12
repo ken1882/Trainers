@@ -188,23 +188,30 @@ def get_player_location_by_face(th=0.8):
         _G.log_warning("Unable to find player location")
         return (0, (0,0))
     if cx > 1200:
-        if cy > 670:
+        if cy > 700:
             return (3, pos)
         return (6, pos)
     elif cx < 600:
-        if cy > 670:
+        if cy > 700:
             return (1, pos)
         return (4, pos)
-    if cy > 670:
+    if cy > 700:
         return (2, pos)
     return (5, pos)
 
 LastPlayerPos = (0, (0,0))
 def determine_movement():
     global LastPlayerPos
-    MV_FACTOR = 210
+    MV_FACTOR = 220
     c_num, c_pos = get_candy_location()
     p_num, p_pos = get_player_location_by_plate()
+    if abs(c_pos[1] - p_pos[1]) > 100:
+        if c_pos[1] > p_pos[1]:
+            if p_num in [1,2,3]:
+                p_num += 3
+        if c_pos[1] < p_pos[1]:
+            if p_num in [4,5,6]:
+                p_num -= 3
     if p_num == 0:
         p_num, p_pos = get_player_location_by_face()
         if p_num == 0:
@@ -354,7 +361,7 @@ def main_loop():
             depth = 0
         else:
             depth = 0
-        sleep(0.5)
+        sleep(1)
         _G.flush()
 
 if __name__ == '__main__':

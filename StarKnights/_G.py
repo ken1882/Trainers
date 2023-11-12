@@ -3,31 +3,43 @@ from os import get_exec_path, name
 from time import sleep
 from random import random
 from copy import copy
-import json
+import sys
 
-AppWindowName = "MapleStory"
+IS_WIN32 = False
+IS_LINUX = False
+
+if sys.platform == 'win32':
+  IS_WIN32 = True
+elif sys.platform == 'linux':
+  IS_LINUX = True
+
+AppWindowName = 'twinkle_starknightsX'
 AppHwnd = 0
 AppRect = [0,0,0,0]
 AppPid  = 0
 AppTid  = 0 
+AppInputHwnd = 0
+
+AppInputUseMsg = False
 
 DriverName = "RTCore64.exe"
 
-DCTmpFolder = "C:/Users/Compeador/Pictures"
+DCTmpFolder = ".tmp"
 DCSnapshotFile = "snapshot.png"
 
-WindowWidth  = 596
-WindowHeight = 1070
-WinTitleBarSize = (1, 31)
+WindowWidth  = 1296
+WindowHeight = 759
+WinTitleBarSize = (0, 31)
 WinDesktopBorderOffset = (8,0)
 
 DataCollectDirectory = ".traindata"
 
-FPS   = (1.0 / 120)
+FPS   = (1.0 / 240)
 Fiber = None
 FiberRet = None
 DesktopDC = None
-SelectedFiber = None 
+SelectedFiber = None
+ARGV = {}
 
 ColorBiasRange = 10
 CurrentStage   = None
@@ -210,3 +222,9 @@ def termiante():
       proc.terminate()
     except Exception:
       pass
+
+def make_lparam(x, y):
+  return (int(y) << 16) | int(x)
+
+def get_lparam(val):
+  return (val & 0xffff, val >> 16)
