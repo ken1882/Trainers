@@ -854,5 +854,109 @@
     "RecoveryEffect": 30,
     "StartDate": "2023-06-09T12:00:00",
     "EndDate": "2023-06-28T23:59:59"
+  },
+  {
+    "Id": 123,
+    "RecoveryItemTypes": 4,
+    "MItemId": 1281,
+    "RecoveryEffect": 30,
+    "StartDate": "2023-06-15T14:10:00",
+    "EndDate": "2023-07-04T23:59:59"
+  },
+  {
+    "Id": 124,
+    "RecoveryItemTypes": 4,
+    "MItemId": 1322,
+    "RecoveryEffect": 30,
+    "StartDate": "2023-06-15T14:10:00",
+    "EndDate": "2023-07-10T23:59:59"
+  },
+  {
+    "Id": 125,
+    "RecoveryItemTypes": 4,
+    "MItemId": 1303,
+    "RecoveryEffect": 30,
+    "StartDate": "2023-07-01T12:00:00",
+    "EndDate": "2023-07-20T23:59:59"
+  },
+  {
+    "Id": 126,
+    "RecoveryItemTypes": 4,
+    "MItemId": 1308,
+    "RecoveryEffect": 30,
+    "StartDate": "2023-07-08T12:00:00",
+    "EndDate": "2023-07-27T23:59:59"
+  },
+  {
+    "Id": 127,
+    "RecoveryItemTypes": 4,
+    "MItemId": 1311,
+    "RecoveryEffect": 30,
+    "StartDate": "2023-07-14T14:10:00",
+    "EndDate": "2023-08-02T23:59:59"
+  },
+  {
+    "Id": 128,
+    "RecoveryItemTypes": 4,
+    "MItemId": 1331,
+    "RecoveryEffect": 30,
+    "StartDate": "2023-08-01T12:00:00",
+    "EndDate": "2023-08-20T23:59:59"
+  },
+  {
+    "Id": 129,
+    "RecoveryItemTypes": 4,
+    "MItemId": 1336,
+    "RecoveryEffect": 30,
+    "StartDate": "2023-08-08T12:00:00",
+    "EndDate": "2023-08-27T23:59:59"
+  },
+  {
+    "Id": 130,
+    "RecoveryItemTypes": 4,
+    "MItemId": 1339,
+    "RecoveryEffect": 30,
+    "StartDate": "2023-08-14T14:10:00",
+    "EndDate": "2023-09-02T23:59:59"
+  },
+  {
+    "Id": 131,
+    "RecoveryItemTypes": 4,
+    "MItemId": 1360,
+    "RecoveryEffect": 30,
+    "StartDate": "2023-09-01T12:00:00",
+    "EndDate": "2023-09-20T23:59:59"
+  },
+  {
+    "Id": 132,
+    "RecoveryItemTypes": 4,
+    "MItemId": 1365,
+    "RecoveryEffect": 30,
+    "StartDate": "2023-09-08T12:00:00",
+    "EndDate": "2023-10-23T12:00:00"
+  },
+  {
+    "Id": 133,
+    "RecoveryItemTypes": 4,
+    "MItemId": 1407,
+    "RecoveryEffect": 30,
+    "StartDate": "2023-09-15T12:10:00",
+    "EndDate": "2023-10-23T23:59:59"
+  },
+  {
+    "Id": 134,
+    "RecoveryItemTypes": 4,
+    "MItemId": 1397,
+    "RecoveryEffect": 30,
+    "StartDate": "2023-10-08T12:00:00",
+    "EndDate": "2023-10-27T23:59:59"
+  },
+  {
+    "Id": 135,
+    "RecoveryItemTypes": 4,
+    "MItemId": 1400,
+    "RecoveryEffect": 30,
+    "StartDate": "2023-10-13T14:10:00",
+    "EndDate": "2023-11-01T23:59:59"
   }
 ]

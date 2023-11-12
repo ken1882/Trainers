@@ -94,7 +94,7 @@ SWAP_GEAR_ID = [
       159067214,  # エクリプスファイア
     ],
     'armor': 26147275,  # エクリプスプレート改
-    'accessory': 33128722, # エクリプス改
+    # 'accessory': 33128722, # エクリプス改
     'accessory': 59632166, # 蒼炎
   },
   {
@@ -111,8 +111,8 @@ SWAP_GEAR_ID = [
       177034702,  # エクリプスファイア改
     ], 
     'armor': 26147278,
-    'accessory': 33128721, # エクリプス改
-    # 'accessory': 59632167, # 蒼炎
+    # 'accessory': 33128721, # エクリプス改
+    'accessory': 59632167, # 蒼炎
   },
 ]
 
@@ -587,6 +587,8 @@ def vote_character(event_id, character_id):
     total += n
     res = game.post_request(f"/api/Vote/Vote/{event_id}/{character_id}/{n}")
     log_info(f"Voted {n}, response:", res)
+    if 'AfterVoteMItemCount' in res['r']:
+      ConsumableInventory[VoteItemId] -= res['r']['AfterVoteMItemCount']
   return total
 
 def buy_derpy_kirens(race_id, numbers):
@@ -607,8 +609,6 @@ def buy_derpy_kirens(race_id, numbers):
       'number2': p[1],
       'unit': b * 10000
     })
-    # dd57c27457f926b6af6f96bdd82972a4fbc33b7acc2ba4c370507afb96854e09.bytes
-    # dd57c27457f926b6af6f96bdd82972a4fbc33b7acc2ba4c370507afb96854e09.bytes
     if (i+1) % 4 == 0 or i+1 == size:
       _G.log_info("Buying derpy ticket: ", payload['number'])
       res = game.post_request('/api/Casino/Race/BuyTickets', payload)

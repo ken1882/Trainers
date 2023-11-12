@@ -23,12 +23,13 @@ FLAG_CONFIRM_RP_USE = True
 FLAG_STOP_ON_FULL_XP = False
 FLAG_STOP_ON_NO_TRAINEE = True
 FLAG_AUTO_LEVEL = True
+FLAG_ANALYZE = True
 
 SHOP_CHECK_DURATION = 500
 FLAG_VOTING = False
 FLAG_AUTO_VOTE = False
 
-VOTE_TARGET = (9, 111)
+VOTE_TARGET = (11, 111)
 VotedCount  = 0
 
 FlagTurnLimited = False
@@ -88,10 +89,10 @@ RentalCycle = None
 
 UnmasteredCharacters = []
 UnmasteredSwapIndex  = [
-  0,
+  # 0,
   1,
-  # 2,
-  # 3,
+  2,
+  3,
   # 4
 ]
 
@@ -302,7 +303,8 @@ def process_actions(commands, verion):
     }
   )
   result = res['r']
-  battle_analyzer.analyze_action_result(commands, result)
+  if FLAG_ANALYZE:
+    battle_analyzer.analyze_action_result(commands, result)
   return result
 
 def use_special_skill(ch, target_id, ovd, verion):
@@ -330,7 +332,8 @@ def use_special_skill(ch, target_id, ovd, verion):
     }
   )
   result = res['r']
-  battle_analyzer.analyze_action_result(commands, result)
+  if FLAG_ANALYZE:
+    battle_analyzer.analyze_action_result(commands, result)
   return result
 
 def surrender():
@@ -678,10 +681,12 @@ def process_combat(data):
   global LastBattleWon,ReportDetail,FLAG_INTERACTIVE,BattleVersion
   LastBattleWon = False
   ReportDetail['times'] += 1
-  battle_analyzer.setup_battlers(data)
+  if FLAG_ANALYZE:
+    battle_analyzer.setup_battlers(data)
   log_info("Battle started")
   log_battle_status(data)
-  battle_analyzer.setup_battlers(data)
+  if FLAG_ANALYZE:
+    battle_analyzer.setup_battlers(data)
   while not is_defeated(data) and data['BattleState']['BattleStatus'] != BATTLESTAT_VICTORY:
     BattleVersion = data['Version']
     if FLAG_INTERACTIVE:
@@ -768,7 +773,7 @@ def get_available_actions(data, do_print=None):
       if not sk['IsCommandSkill']:
         continue
       # skip normal attack and charge
-      if sk['Id'] <= 0 or sk['SP'] <= 0:
+      if sk['Id'] <= 0 or sk['SP'] < 0:
         continue
       skill = game.get_skill(sk['SkillRefId'])
       string += f"[{sk_idx}]{skill['Name']}({sk['SP']}{'/'+str(skill['RPCost']) if skill['RPCost'] > 0 else ''}) "
@@ -1197,15 +1202,16 @@ def log_final_report():
     log_error(f"An error occured while logging final report: {err}")
     handle_exception(err)
   string += f"\n{'='*68}\n"
+  if FLAG_ANALYZE:
+    string += battle_analyzer.format_analyze_result()
+  print(string)
   if _G.ARGV.output:
     try:
-      with open(_G.ARGV.output, 'a') as fp:
+      with open(_G.ARGV.output, 'a', encoding=_G.ENCODING) as fp:
         fp.write(string)
     except Exception as err:
       log_error(f"An error occured while writing result file: {err}")
       handle_exception(err)
-  print(string)
-  print(battle_analyzer.format_analyze_result())
   if FLAG_VOTING and FLAG_AUTO_VOTE:
     log_info("Voted total:", VotedCount)
 

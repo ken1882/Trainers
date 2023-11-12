@@ -36,3 +36,5 @@ def daily():
     print(res)
     res = game.post_request('/api/SendRewards/mission/35703269')
     print(res)
+    res = game.post_request('/api/SendRewards/mission/1148716694')
+    print(res)

@@ -53,6 +53,8 @@ ServerList = (
   'https://mist-train-east3.azurewebsites.net',
 )
 
+STATIC_DATA_HOST = 'https://assets.mist-train-girls.com/production-client-web-static'
+
 ServerLocation = ''
 
 CharacterDatabase = {}
@@ -154,7 +156,7 @@ def is_response_ok(res):
 
 def is_day_changing():
   curt = localt2jpt(datetime.now())
-  return (curt.hour == 4 and curt.minute >= 58) or (curt.hour == 5 and curt.minute < 10)
+  return (curt.hour == 4 and curt.minute >= 59) or (curt.hour == 5 and curt.minute <= 1)
 
 def change_token(token):
   global Session
@@ -388,22 +390,22 @@ def load_database(forced=False):
   global ConsumableDatabase,WeaponDatabase,ArmorDatabase,AccessoryDatabase,GearDatabase
   global FieldSkillDatabase,QuestDatabase,ABStoneDatabase,SceneDatabase,PotionExpiration
   links = [
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MEnemyViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MFormationViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MSkillViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MLinkSkillViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MItemViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MWeaponViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MArmorViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MAccessoryViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterPieceViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MFieldSkillViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MQuestViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MCharacterGearLevelViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MAbilityStoneViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MSceneViewModel.json',
-    'https://assets.mist-train-girls.com/production-client-web-static/MasterData/MApRecoveryItemViewModel.json',
+    '/MasterData/MCharacterViewModel.json',
+    '/MasterData/MEnemyViewModel.json',
+    '/MasterData/MFormationViewModel.json',
+    '/MasterData/MSkillViewModel.json',
+    '/MasterData/MLinkSkillViewModel.json',
+    '/MasterData/MItemViewModel.json',
+    '/MasterData/MWeaponViewModel.json',
+    '/MasterData/MArmorViewModel.json',
+    '/MasterData/MAccessoryViewModel.json',
+    '/MasterData/MCharacterPieceViewModel.json',
+    '/MasterData/MFieldSkillViewModel.json',
+    '/MasterData/MQuestViewModel.json',
+    '/MasterData/MCharacterGearLevelViewModel.json',
+    '/MasterData/MAbilityStoneViewModel.json',
+    '/MasterData/MSceneViewModel.json',
+    '/MasterData/MApRecoveryItemViewModel.json',
   ]
   for i,link in enumerate(links):
     path = f"{STATIC_FILE_DIRECTORY}/{link.split('/')[-1]}"
@@ -411,7 +413,7 @@ def load_database(forced=False):
     if forced or not os.path.exists(path) or time() - os.path.getmtime(path) > STATIC_FILE_TTL:
       try:
         log_info("Loading", link)
-        db = requests.get(link).json()
+        db = requests.get(STATIC_DATA_HOST+link).json()
       except (SystemExit, Exception) as err:
         log_error(f"Error occurred ({err}) while requesting database, using local instead")
     # Init dbs

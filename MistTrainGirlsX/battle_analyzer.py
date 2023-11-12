@@ -12,6 +12,7 @@ SkillStruct = {
   'id': 0,      # skill id
   'damage': 0,  # damage dealt
   'times': 0,   # times used
+  'ebdamage': 0, # elemental burst damage
   'kills': 0,
   'maxn': 0,
   'minn': 0x7fffffff,
@@ -85,7 +86,14 @@ def analyze_action_result(commands, result):
       BattlerPool[mchid]['actions'][skill_id]['damage'] += dmg
       BattlerPool[mchid]['actions'][skill_id]['maxn'] = max(dmg, BattlerPool[mchid]['actions'][skill_id]['maxn'])
       BattlerPool[mchid]['actions'][skill_id]['minn'] = min(dmg, BattlerPool[mchid]['actions'][skill_id]['minn'])
-
+      # Elemental Burst Damage
+      for act in actions:
+        if act['ActionId'] != action['ActionId']:
+          continue
+        if not act['ActivatedElementalBursts']:
+          continue
+        for eb in act['ActivatedElementalBursts']:
+          BattlerPool[mchid]['actions'][skill_id]['ebdamage'] += eb['AdditionalDamage']
       if action['TargetCurrentHPPercent'] == 0:
         BattlerPool[mchid]['actions'][skill_id]['kills'] += 1
       # save counted to prevent recalculation of repeat skills
@@ -104,6 +112,7 @@ def format_analyze_result():
       skill = game.get_skill(skid)
       string += f"* {skill['Name']}\n"
       string += f"  - Total Damage: {action['damage']}\n"
+      string += f"  -    EB Damage: {action['ebdamage']}\n"
       string += f"  -   Times used: {action['times']}\n"
       string += f"  -  Avg. Damage: {action['damage'] / action['times']}\n"
       string += f"  -  Max. Damage: {action['maxn']}\n"

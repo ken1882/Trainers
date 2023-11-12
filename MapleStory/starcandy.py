@@ -178,7 +178,10 @@ def get_player_location_by_plate(th=0.6):
 def get_player_location_by_face(th=0.8):
     _G.flush()
     try:
-        cx, cy = graphics.find_object('player_face.png', th)[0]
+        pfa = graphics.find_object('player_face.png', th)
+        if not pfa:
+            pfa = graphics.find_object('player_face1.png', th)
+        cx, cy = pfa[0]
         cy += 150
         pos = (cx, cy,)
     except Exception:
@@ -196,16 +199,29 @@ def get_player_location_by_face(th=0.8):
         return (2, pos)
     return (5, pos)
 
+LastPlayerPos = (0, (0,0))
 def determine_movement():
+    global LastPlayerPos
     MV_FACTOR = 210
     c_num, c_pos = get_candy_location()
     p_num, p_pos = get_player_location_by_plate()
     if p_num == 0:
         p_num, p_pos = get_player_location_by_face()
+        if p_num == 0:
+            _G.log_warning("Use last player pos")
+            p_num, p_pos = LastPlayerPos
+    if abs(c_pos[1] - p_pos[1]) > 100:
+        if c_pos[1] > p_pos[1]:
+            if p_num in [1,2,3]:
+                p_num += 3
+        if c_pos[1] < p_pos[1]:
+            if p_num in [4,5,6]:
+                p_num -= 3
     print(c_num, c_pos)
     print(p_num, p_pos)
     dx = c_pos[0] - p_pos[0]
     print(f"{p_num} -> {c_num}")
+    LastPlayerPos = (c_num, c_pos)
     if p_num == 0 or c_num == 0:
         _G.log_warning("Unable to find route")
         return 1

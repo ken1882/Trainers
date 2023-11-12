@@ -137,21 +137,24 @@ def start_gathering_fiber():
 
 def start_healing_fiber():
   while True:
-    if graphics.is_pixel_match([position.HelpAvailable[0]], [position.HelpAvailable[1]], True):
+    if graphics.is_pixel_match([position.HelpAvailable[0]], [position.HelpAvailable[1]], True) or \
+      graphics.is_pixel_match([position.HelpAvailable2[0]], [position.HelpAvailable2[1]], True):
       Input.click(*position.HelpAvailable[0])
-      wait(0.3)
+      wait(0.8)
     yield
     if stage.is_stage('Chat'):
       Input.click(*position.CommonBackPos)
       wait(0.5)
     if graphics.is_pixel_match([position.HealAvailable[0]], [position.HealAvailable[1]], True):
       Input.click(*position.HealAvailable[0])
-      wait(0.5)
+      wait(1)
       Input.click(*position.StartHealing)
       # yield
       # while not stage.is_stage('Home'):
       #   yield
-      wait(1)
-      Input.click(*position.RequestHealHelp)
+      wait(0.8)
+      Input.click(336, 695)
       wait(0.5)
+      Input.click(*position.CommonBackPos)
+      wait(1)
     yield
