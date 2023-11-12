@@ -127,7 +127,7 @@ def click(x=None, y=None, app_offset=False, use_msg=_G.AppInputUseMsg, hwnd=None
   sleep(0.05)
   mouse_up(x, y, app_offset, use_msg, hwnd)
 
-def rclick(x, y, app_offset=False, use_msg=_G.AppInputUseMsg, hwnd=None, rrange=_G.PosRandomRange):
+def rclick(x, y, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None, rrange=_G.PosRandomRange):
   mx = x + random.randint(-rrange[0], rrange[0])
   my = y + random.randint(-rrange[1], rrange[1])
   click(mx, my, app_offset, use_msg, hwnd)

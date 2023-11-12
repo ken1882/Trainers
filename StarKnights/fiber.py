@@ -19,11 +19,25 @@ def start_refight_fiber():
       Input.click(*position.CombatRefight)
       n -= 1
       _G.log_info(f"Refight, times left: {n}")
-  
+    elif stage.is_stage('NewScene'):
+      Input.rclick(631, 623)
+      yield
+      sleep(1)
+    elif stage.is_stage('EventBoss'):
+      Input.rclick(*position.RaidBossStart)
+      n -= 1
+      _G.log_info(f"Refight, times left: {n}")
+      for _ in range(10):
+        yield
+        sleep(0.5)
+        Input.click(*position.StartBattle)
+
 def start_initiate_fiber():
   lasts = []
   stack_size = 8
   diff_threshold = 30
+  startrail_threshold = 300
+  startring_threshold = 500
   cnt = 0
   while True:
     yield
@@ -39,9 +53,10 @@ def start_initiate_fiber():
     while True:
       col = graphics.get_pixel(*position.RocketStartPos, True)
       _G.log_debug(col)
-      if sum(col) < 30:
+      if sum(col) < diff_threshold:
         continue
-      if len(lasts) < stack_size:
+      ssize = len(lasts)
+      if ssize < stack_size:
         lasts.insert(0, col)
         continue
       cs = 0
@@ -49,7 +64,10 @@ def start_initiate_fiber():
         cs += sum(c)
       cs /= stack_size
       cv = sum(col)
-      if cv - cs > diff_threshold or _G.ARGV.auxiliary:
+      if cs > startrail_threshold:
+        break
+      if cv > startring_threshold and cv - cs > diff_threshold or _G.ARGV.auxiliary:
+        print(cv, cs)
         Input.click(500, 300)
         break
       lasts.insert(0, col)

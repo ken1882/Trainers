@@ -29,12 +29,12 @@ DCSnapshotFile = "snapshot.png"
 
 WindowWidth  = 1296
 WindowHeight = 759
-WinTitleBarSize = (1, 31)
+WinTitleBarSize = (0, 31)
 WinDesktopBorderOffset = (8,0)
 
 DataCollectDirectory = ".traindata"
 
-FPS   = (1.0 / 120)
+FPS   = (1.0 / 240)
 Fiber = None
 FiberRet = None
 DesktopDC = None

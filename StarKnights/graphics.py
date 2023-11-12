@@ -24,11 +24,11 @@ def is_pixel_match(pix, col, sync=False):
       return False
   return True
 
-def get_pixel(x,y,sync=False):
+def get_pixel(x,y,sync=False,app_offset=False):
   # use win32api to get pixel in real time, slower
   if sync:
-    x += _G.AppRect[0] + _G.WinTitleBarSize[0]
-    y += _G.AppRect[1] + _G.WinTitleBarSize[1]
+    x += _G.AppRect[0] + _G.WinTitleBarSize[0] + _G.WinDesktopBorderOffset[0]
+    y += _G.AppRect[1] + _G.WinTitleBarSize[1] + _G.WinDesktopBorderOffset[1]
     rgb = win32gui.GetPixel(_G.DesktopDC, x, y)
     b = (rgb & 0xff0000) >> 16
     g = (rgb & 0x00ff00) >> 8

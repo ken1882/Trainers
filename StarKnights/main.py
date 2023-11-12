@@ -98,7 +98,7 @@ def start_main():
     while _G.FlagRunning:
       _G.FrameCount += 1
       main_loop()
-      sleep(_G.FPS)
+      # sleep(_G.FPS)
   finally:
     _G.FlagRunning = False
 
