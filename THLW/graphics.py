@@ -137,7 +137,8 @@ def find_object(objimg_path, threshold=CVMatchHardRate):
   src = cv2.imread(f"{_G.DCTmpFolder}/{_G.DCSnapshotFile}")
   tmp = cv2.imread(objimg_path)
   res = cv2.matchTemplate(src, tmp, cv2.TM_CCOEFF_NORMED)
-  return filter_local_templates(res, threshold)
+  ret = filter_local_templates(res, threshold)
+  return [(int(p[0]),int(p[1])) for p in ret]
 
 def find_object_with_rates(objimg_path, threshold=CVMatchHardRate):
   take_snapshot()
@@ -147,3 +148,15 @@ def find_object_with_rates(objimg_path, threshold=CVMatchHardRate):
   objects = filter_local_templates(res, threshold)
   rates = [res[y][x] for x,y in objects]
   return (objects, rates)
+
+def get_difficulty():
+  diffculty = [
+    [(314, 507), (42, 84, 170)],
+    [(314, 507), (215, 76, 0)],
+    [(314, 507), (137, 88, 161)],
+  ]
+  for i,o in enumerate(diffculty):
+    p,c = o
+    if is_color_ok(get_pixel(*p, True), c):
+      return i
+  return -1
