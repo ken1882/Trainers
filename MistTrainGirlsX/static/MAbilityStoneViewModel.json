@@ -22,6 +22,7 @@
       40,
       81,
       38,
+<<<<<<< Updated upstream
       37,
       12,
       11,
@@ -35,6 +36,21 @@
       4,
       2,
       3
+=======
+      2,
+      3,
+      39,
+      5,
+      6,
+      7,
+      4,
+      9,
+      10,
+      11,
+      12,
+      37,
+      8
+>>>>>>> Stashed changes
     ]
   },
   {
@@ -43,8 +59,24 @@
     "Rarity": 3,
     "AbilityStoneEquipType": 1,
     "MLevelUpSkillGroupIds": [
+<<<<<<< Updated upstream
       22,
       21,
+=======
+      24,
+      23,
+      22,
+      21,
+      20,
+      19,
+      18,
+      17,
+      16,
+      54,
+      14,
+      13,
+      53,
+>>>>>>> Stashed changes
       46,
       23,
       20,
@@ -52,7 +84,9 @@
       52,
       49,
       50,
+      15,
       51,
+<<<<<<< Updated upstream
       53,
       54,
       13,
@@ -64,6 +98,9 @@
       48,
       18,
       19,
+=======
+      52,
+>>>>>>> Stashed changes
       85,
       84,
       83,
@@ -80,6 +117,7 @@
       30,
       29,
       28,
+<<<<<<< Updated upstream
       33,
       26,
       25,
@@ -91,6 +129,19 @@
       88,
       89,
       31,
+=======
+      26,
+      25,
+      33,
+      34,
+      35,
+      31,
+      36,
+      87,
+      88,
+      89,
+      86,
+>>>>>>> Stashed changes
       32
     ]
   },
@@ -100,13 +151,17 @@
     "Rarity": 4,
     "AbilityStoneEquipType": 2,
     "MLevelUpSkillGroupIds": [
+<<<<<<< Updated upstream
       110,
+=======
+>>>>>>> Stashed changes
       106,
       107,
       108,
       109,
       213,
       214,
+      110,
       215,
       216,
       217,
@@ -138,6 +193,7 @@
     "Rarity": 3,
     "AbilityStoneEquipType": 2,
     "MLevelUpSkillGroupIds": [
+<<<<<<< Updated upstream
       163,
       129,
       165,
@@ -147,12 +203,17 @@
       148,
       147,
       146,
+=======
+      146,
+      148,
+>>>>>>> Stashed changes
       168,
       128,
       127,
       126,
       125,
       166,
+<<<<<<< Updated upstream
       124,
       122,
       121,
@@ -162,6 +223,27 @@
       118,
       123,
       167
+=======
+      165,
+      164,
+      163,
+      162,
+      149,
+      147,
+      169,
+      129,
+      127,
+      126,
+      125,
+      124,
+      123,
+      122,
+      121,
+      120,
+      119,
+      118,
+      128
+>>>>>>> Stashed changes
     ]
   },
   {
@@ -170,6 +252,7 @@
     "Rarity": 2,
     "AbilityStoneEquipType": 2,
     "MLevelUpSkillGroupIds": [
+<<<<<<< Updated upstream
       130,
       131,
       132,
@@ -186,6 +269,24 @@
       140,
       135,
       136
+=======
+      133,
+      132,
+      139,
+      130,
+      134,
+      131,
+      135,
+      136,
+      152,
+      140,
+      141,
+      150,
+      151,
+      137,
+      153,
+      138
+>>>>>>> Stashed changes
     ]
   },
   {
@@ -194,6 +295,7 @@
     "Rarity": 4,
     "AbilityStoneEquipType": 3,
     "MLevelUpSkillGroupIds": [
+<<<<<<< Updated upstream
       93,
       91,
       186,
@@ -203,16 +305,25 @@
       191,
       192,
       193,
+=======
+>>>>>>> Stashed changes
       226,
       225,
       224,
       223,
+<<<<<<< Updated upstream
       222,
       221,
       90,
       220,
       105,
       104,
+=======
+      221,
+      220,
+      219,
+      105,
+>>>>>>> Stashed changes
       103,
       102,
       101,
@@ -223,9 +334,26 @@
       96,
       95,
       94,
+<<<<<<< Updated upstream
       92,
       219,
       188
+=======
+      93,
+      92,
+      91,
+      104,
+      90,
+      222,
+      187,
+      193,
+      192,
+      191,
+      188,
+      186,
+      189,
+      190
+>>>>>>> Stashed changes
     ]
   },
   {
@@ -234,8 +362,15 @@
     "Rarity": 3,
     "AbilityStoneEquipType": 3,
     "MLevelUpSkillGroupIds": [
+<<<<<<< Updated upstream
       179,
       180,
+=======
+      178,
+      179,
+      180,
+      198,
+>>>>>>> Stashed changes
       182,
       183,
       184,
@@ -244,12 +379,19 @@
       195,
       196,
       197,
+<<<<<<< Updated upstream
       198,
       199,
       200,
       201,
       181,
       178
+=======
+      181,
+      199,
+      201,
+      200
+>>>>>>> Stashed changes
     ]
   },
   {
@@ -258,22 +400,38 @@
     "Rarity": 2,
     "AbilityStoneEquipType": 3,
     "MLevelUpSkillGroupIds": [
+<<<<<<< Updated upstream
       174,
+=======
+>>>>>>> Stashed changes
       209,
       208,
       207,
       206,
       205,
+<<<<<<< Updated upstream
       173,
       204,
+=======
+      204,
+      203,
+>>>>>>> Stashed changes
       202,
-      177,
       176,
       175,
+<<<<<<< Updated upstream
       170,
       171,
       203,
       172
+=======
+      174,
+      173,
+      172,
+      171,
+      170,
+      177
+>>>>>>> Stashed changes
     ]
   },
   {
@@ -579,7 +737,10 @@
     "Rarity": 4,
     "AbilityStoneEquipType": 1,
     "MLevelUpSkillGroupIds": [
+<<<<<<< Updated upstream
       234,
+=======
+>>>>>>> Stashed changes
       250,
       249,
       248,
@@ -590,6 +751,7 @@
       243,
       251,
       241,
+<<<<<<< Updated upstream
       240,
       239,
       238,
@@ -597,6 +759,16 @@
       236,
       235,
       242
+=======
+      234,
+      235,
+      236,
+      242,
+      238,
+      239,
+      240,
+      237
+>>>>>>> Stashed changes
     ]
   },
   {
@@ -607,9 +779,12 @@
     "MLevelUpSkillGroupIds": [
       260,
       259,
-      258,
       257,
       256,
+<<<<<<< Updated upstream
+=======
+      258,
+>>>>>>> Stashed changes
       254,
       253,
       252,
@@ -623,10 +798,10 @@
     "AbilityStoneEquipType": 2,
     "MLevelUpSkillGroupIds": [
       271,
-      277,
       276,
       275,
       274,
+      277,
       273,
       272,
       270,
@@ -636,9 +811,9 @@
       266,
       265,
       263,
-      262,
       261,
-      269
+      269,
+      262
     ]
   },
   {
@@ -648,9 +823,13 @@
     "AbilityStoneEquipType": 2,
     "MLevelUpSkillGroupIds": [
       286,
+      283,
       285,
       284,
+<<<<<<< Updated upstream
       283,
+=======
+>>>>>>> Stashed changes
       282,
       280,
       279,
@@ -664,17 +843,28 @@
     "Rarity": 4,
     "AbilityStoneEquipType": 3,
     "MLevelUpSkillGroupIds": [
+<<<<<<< Updated upstream
       296,
+=======
+>>>>>>> Stashed changes
       302,
       301,
       300,
       299,
       298,
+<<<<<<< Updated upstream
       297,
       295,
       292,
       293,
       294,
+=======
+      296,
+      295,
+      297,
+      293,
+      292,
+>>>>>>> Stashed changes
       291,
       290,
       289,
@@ -688,6 +878,7 @@
     "Rarity": 3,
     "AbilityStoneEquipType": 3,
     "MLevelUpSkillGroupIds": [
+<<<<<<< Updated upstream
       310,
       308,
       307,
@@ -695,6 +886,15 @@
       305,
       304,
       303,
+=======
+      309,
+      308,
+      307,
+      303,
+      305,
+      304,
+      310,
+>>>>>>> Stashed changes
       306
     ]
   },
@@ -1096,10 +1296,17 @@
       368,
       367,
       366,
+<<<<<<< Updated upstream
       364,
       363,
       362,
       365,
+=======
+      365,
+      364,
+      363,
+      361,
+>>>>>>> Stashed changes
       360,
       359,
       358,
@@ -1107,7 +1314,11 @@
       356,
       355,
       354,
+<<<<<<< Updated upstream
       361
+=======
+      362
+>>>>>>> Stashed changes
     ]
   },
   {
@@ -1116,23 +1327,39 @@
     "Rarity": 4,
     "AbilityStoneEquipType": 2,
     "MLevelUpSkillGroupIds": [
+<<<<<<< Updated upstream
       380,
+=======
+      381,
+>>>>>>> Stashed changes
       387,
       386,
       385,
       384,
       383,
       382,
+<<<<<<< Updated upstream
       379,
       381,
+=======
+      380,
+      373,
+      378,
+>>>>>>> Stashed changes
       377,
       376,
       375,
       374,
+<<<<<<< Updated upstream
       373,
       372,
       371,
       378
+=======
+      372,
+      371,
+      379
+>>>>>>> Stashed changes
     ]
   },
   {
@@ -1146,6 +1373,7 @@
       398,
       397,
       396,
+<<<<<<< Updated upstream
       394,
       395,
       392,
@@ -1154,6 +1382,16 @@
       389,
       388,
       393
+=======
+      395,
+      391,
+      393,
+      392,
+      390,
+      389,
+      388,
+      394
+>>>>>>> Stashed changes
     ]
   },
   {
@@ -1182,6 +1420,7 @@
     "MLevelUpSkillGroupIds": [
       403
     ]
+<<<<<<< Updated upstream
   },
   {
     "Id": 98,
@@ -1401,5 +1640,7 @@
     "MLevelUpSkillGroupIds": [
       470
     ]
+=======
+>>>>>>> Stashed changes
   }
 ]

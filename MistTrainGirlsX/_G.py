@@ -14,6 +14,8 @@ ENCODING = 'UTF-8'
 IS_WIN32 = False
 IS_LINUX = False
 
+ExitOnError = False
+
 if sys.platform == 'win32':
   IS_WIN32 = True
 elif sys.platform == 'linux':
@@ -469,14 +471,18 @@ def extract_derpy_features(race, character, feats='all'):
   n_uma = len(race['character'])
   if feats == 'all':
     return [
-      race['raceId'],
+      # race['raceId'],
+      character['popularity'],
       race['direction'],
       race['grade'],
       n_uma,
-      character['range'],
-      abs(race['type'] - character['forte']),
+      race['range'],
+      race['type'],
+      character['forte'],
       race['weather'],
       character['weather'],
+      # abs(race['type'] - character['forte']),
+      # abs(race['weather'] - character['weather']),
       character['tactics'],
       character['report'],
       character['condition'],
@@ -484,26 +490,30 @@ def extract_derpy_features(race, character, feats='all'):
       character['stamina'],
       character['number'],
       character['waku'],
-      character['mCharacterBaseId'],
+      # character['mCharacterBaseId'],
       character['country']
     ]
   elif feats == 'noreport':
     return [
-      race['raceId'],
+      # race['raceId'],
+      character['popularity'],
       race['direction'],
       race['grade'],
       n_uma,
-      character['range'],
-      abs(race['type'] - character['forte']),
+      race['range'],
+      race['type'],
+      character['forte'],
       race['weather'],
       character['weather'],
+      # abs(race['type'] - character['forte']),
+      # abs(race['weather'] - character['weather']),
       character['tactics'],
       character['condition'],
       character['speed'],
       character['stamina'],
       character['number'],
       character['waku'],
-      character['mCharacterBaseId'],
+      # character['mCharacterBaseId'],
       character['country']
     ]
   raise RuntimeError(f"Don't know how to extract features of {feats}")

@@ -726,6 +726,7 @@
     "RecoveryEffect": 30,
     "StartDate": "2023-01-06T14:10:00",
     "EndDate": "2023-01-25T23:59:59"
+<<<<<<< Updated upstream
   },
   {
     "Id": 100,
@@ -958,5 +959,7 @@
     "RecoveryEffect": 30,
     "StartDate": "2023-10-13T14:10:00",
     "EndDate": "2023-11-01T23:59:59"
+=======
+>>>>>>> Stashed changes
   }
 ]

@@ -1,4 +1,5 @@
 from copy import deepcopy
+from glob import glob
 import _G
 import json, sys
 import matplotlib
@@ -15,6 +16,7 @@ from iterstrat.ml_stratifiers import MultilabelStratifiedKFold
 from sklearn.neural_network import MLPClassifier
 import pickle
 from pprint import pprint
+import derpy_datamanager as ddm
 
 N_JOBS  = next((int(n.split('=')[-1]) for n in sys.argv if 'njobs=' in n or 'njob=' in n), -1)
 GRID_CV = 5
@@ -64,35 +66,43 @@ x_train  = []
 y_train  = []
 oy_train = []
 
+def gather_data():
+  files = glob(f"{_G.DCTmpFolder}/*derpy_warehouse.json")
+  ret  = []
+  for file in files:
+    with open(file, 'r') as fp:
+      for race in json.load(fp):
+        race = ddm.interpret_race_data(race)
+        ret.append(race)
+  return ret
+
 def load_data():
   global FEATURE_SYMBOL
   global x_train, y_train, oy_train
   sample_n = 0
   oy_train = []
-  with open(_G.DERPY_WAREHOUSE_CONTENT_PATH, 'r') as fp:
-    for line in fp:
-      times = []
-      data  = json.loads(line)
-      for i,res in enumerate(data['result']):
-        ch = data['character'][i]
-        features = _G.extract_derpy_features(data, ch, FEATURE_SYMBOL)
-        x_train.append(features)
-        times.append(res['time'])
-        sample_n += 1
-      # end each uma
-      oy_train.extend(deepcopy(times))
-      if not FIT_ORDER:
-        std, avg = np.std(times), np.average(times)
-        efdn = 3 # effective decimal n
-        times = [(n - avg) / std for n in times]
-        times = [10**(efdn+1) - n*(10**(efdn)) for n in times]
-        times = [n*n // (10**(efdn+2)) for n in times]
-        y_train.extend(times)
-      else:
-        otimes = sorted(times)
-        for t in times:
-          y_train.append( next((i+1 for i,n in enumerate(otimes) if n == t), 0) )
-    # end each race
+  for data in gather_data():
+    times = []
+    for i,res in enumerate(data['result']):
+      ch = data['character'][i]
+      features = _G.extract_derpy_features(data, ch, FEATURE_SYMBOL)
+      x_train.append(features)
+      times.append(res['time'])
+      sample_n += 1
+    # end each uma
+    oy_train.extend(deepcopy(times))
+    if not FIT_ORDER:
+      std, avg = np.std(times), np.average(times)
+      efdn = 3 # effective decimal n
+      times = [(n - avg) / std for n in times]
+      times = [10**(efdn+1) - n*(10**(efdn)) for n in times]
+      times = [n*n // (10**(efdn+2)) for n in times]
+      y_train.extend(times)
+    else:
+      otimes = sorted(times)
+      for t in times:
+        y_train.append( next((i+1 for i,n in enumerate(otimes) if n == t), 0) )
+  # end each race
   x_train = np.array(x_train)
   y_train = np.array(y_train, dtype=np.int32)
   oy_train = np.array(oy_train)
@@ -159,10 +169,10 @@ def main(outname, validate=True):
   if not validate:
     return
   
-  print("===== Start Cross-Vaildating =====")
-  scores = cross_val_score(clsier, x_train, y_train, scoring=cls_scoring, cv=K_FOLD, verbose=VERBOSE,n_jobs=N_JOBS)
+  # print("===== Start Cross-Vaildating =====")
+  # scores = cross_val_score(clsier, x_train, y_train, scoring=cls_scoring, cv=K_FOLD, verbose=VERBOSE,n_jobs=N_JOBS)
   print(outname)
-  print("cross_val_score: ", scores)
+  # print("cross_val_score: ", scores)
 
 if __name__ == '__main__':
   for menu in _G.DERPY_TRAINING_LIST:

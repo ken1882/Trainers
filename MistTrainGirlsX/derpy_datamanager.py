@@ -62,8 +62,11 @@ def interpret_race_data(race):
     obj['character'][i]['report'] = 0
     for ch in char['report']:
       obj['character'][i]['report'] += _G.DERPY_UMA_REPORT.index(ch)
-    char['condition'] = char['condition'].replace("\n",'')
-    obj['character'][i]['condition'] = next((i for i, cond in enumerate(_G.DERPY_CONDITION_LIST) if cond in char['condition']), 0)
+    if type(char['condition']) == str:
+      char['condition'] = char['condition'].replace("\n",'')
+      obj['character'][i]['condition'] = next((i for i, cond in enumerate(_G.DERPY_CONDITION_LIST) if cond in char['condition']), 0)
+    if type(char['forte']) == str:
+      obj['character'][i]['forte'] = _G.DERPY_GROUND_TYPE.index(char['forte'])
     obj['character'][i]['speed'] = _G.DERPY_STAT_TABLE[char['speed']]
     obj['character'][i]['stamina'] = _G.DERPY_STAT_TABLE[char['stamina']]
     m_charbase = game.get_character_base(char['layerId'])

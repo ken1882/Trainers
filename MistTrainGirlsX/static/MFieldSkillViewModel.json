@@ -660,6 +660,62 @@
     "AbilityMSkill4Id": null
   },
   {
+    "Id": 7020031,
+    "Name": "\u5e7b\u9727\u6559\u5e79\u90e8\u3068\u306e\u5bfe\u5cd9",
+    "Description": "",
+    "Rarity": 3,
+    "MFieldSkillRarity": {
+      "Rarity": 3,
+      "LevelLimit": 4
+    },
+    "Cost": 50,
+    "AbilityMSkill1Id": 3030074,
+    "AbilityMSkill2Id": 3070059,
+    "AbilityMSkill3Id": null
+  },
+  {
+    "Id": 7020032,
+    "Name": "\u8fbc\u307f\u3042\u3052\u308b\u611f\u60c5",
+    "Description": "",
+    "Rarity": 3,
+    "MFieldSkillRarity": {
+      "Rarity": 3,
+      "LevelLimit": 4
+    },
+    "Cost": 33,
+    "AbilityMSkill1Id": 3070052,
+    "AbilityMSkill2Id": 3020041,
+    "AbilityMSkill3Id": null
+  },
+  {
+    "Id": 7020033,
+    "Name": "\u7f8e\u3057\u3044\u666f\u8272",
+    "Description": "",
+    "Rarity": 3,
+    "MFieldSkillRarity": {
+      "Rarity": 3,
+      "LevelLimit": 4
+    },
+    "Cost": 45,
+    "AbilityMSkill1Id": 3070059,
+    "AbilityMSkill2Id": 3010003,
+    "AbilityMSkill3Id": null
+  },
+  {
+    "Id": 7020034,
+    "Name": "\u5e7b\u9727\u77f3\u306e\u60aa\u7528",
+    "Description": "",
+    "Rarity": 3,
+    "MFieldSkillRarity": {
+      "Rarity": 3,
+      "LevelLimit": 4
+    },
+    "Cost": 40,
+    "AbilityMSkill1Id": 3070058,
+    "AbilityMSkill2Id": 3070061,
+    "AbilityMSkill3Id": null
+  },
+  {
     "Id": 7030001,
     "Name": "\u9577\u3044\u65c5\u306e\u9014\u4e2d\u3067",
     "Description": "",
@@ -1517,6 +1573,121 @@
   {
     "Id": 7030058,
     "Name": "\u4fe1\u983c\u3068\u5f31\u97f3",
+<<<<<<< Updated upstream
+=======
+    "Description": "",
+    "Rarity": 3,
+    "MFieldSkillRarity": {
+      "Rarity": 3,
+      "LevelLimit": 4
+    },
+    "Cost": 46,
+    "AbilityMSkill1Id": 3030002,
+    "AbilityMSkill2Id": 3070064,
+    "AbilityMSkill3Id": null
+  },
+  {
+    "Id": 7030059,
+    "Name": "\u3084\u3063\u3066\u304a\u3057\u307e\u3044\u306a\u306e\uff01",
+    "Description": "",
+    "Rarity": 3,
+    "MFieldSkillRarity": {
+      "Rarity": 3,
+      "LevelLimit": 4
+    },
+    "Cost": 40,
+    "AbilityMSkill1Id": 3030061,
+    "AbilityMSkill2Id": 3020105,
+    "AbilityMSkill3Id": null
+  },
+  {
+    "Id": 7030060,
+    "Name": "\u30b8\u30e7\u30b9\u30c8\u30c8\u30ec\u30a4\u30f3\u30ac\u30fc\u30eb\u30ba",
+    "Description": "",
+    "Rarity": 4,
+    "MFieldSkillRarity": {
+      "Rarity": 4,
+      "LevelLimit": 5
+    },
+    "Cost": 55,
+    "AbilityMSkill1Id": 3070058,
+    "AbilityMSkill2Id": 3030084,
+    "AbilityMSkill3Id": 3010045
+  },
+  {
+    "Id": 7030061,
+    "Name": "\u821e\u53f0\u306e\u9589\u5e55",
+    "Description": "",
+    "Rarity": 3,
+    "MFieldSkillRarity": {
+      "Rarity": 3,
+      "LevelLimit": 4
+    },
+    "Cost": 55,
+    "AbilityMSkill1Id": 3070058,
+    "AbilityMSkill2Id": 3070054,
+    "AbilityMSkill3Id": null
+  },
+  {
+    "Id": 7030062,
+    "Name": "\u7570\u4e16\u754c\u306e\u30d5\u30a1\u30c3\u30b7\u30e7\u30f3\u8abf\u67fb",
+    "Description": "",
+    "Rarity": 4,
+    "MFieldSkillRarity": {
+      "Rarity": 4,
+      "LevelLimit": 5
+    },
+    "Cost": 58,
+    "AbilityMSkill1Id": 3070062,
+    "AbilityMSkill2Id": 3030085,
+    "AbilityMSkill3Id": 3010046
+  },
+  {
+    "Id": 7030063,
+    "Name": "\u7d50\u754c\u5c55\u958b",
+    "Description": "",
+    "Rarity": 3,
+    "MFieldSkillRarity": {
+      "Rarity": 3,
+      "LevelLimit": 4
+    },
+    "Cost": 45,
+    "AbilityMSkill1Id": 3070058,
+    "AbilityMSkill2Id": 3030062,
+    "AbilityMSkill3Id": null
+  },
+  {
+    "Id": 7030064,
+    "Name": "\u8c6a\u5feb\uff01\u68af\u5b50\u6551\u52a9\uff01",
+    "Description": "",
+    "Rarity": 3,
+    "MFieldSkillRarity": {
+      "Rarity": 3,
+      "LevelLimit": 4
+    },
+    "Cost": 46,
+    "AbilityMSkill1Id": 3070076,
+    "AbilityMSkill2Id": 3070075,
+    "AbilityMSkill3Id": null
+  },
+  {
+    "Id": 7030065,
+    "Name": "\u5fc5\u6bba\uff01\u90aa\u738b\u7fd4\u5149\u62f3\uff01",
+    "Description": "",
+    "Rarity": 3,
+    "MFieldSkillRarity": {
+      "Rarity": 3,
+      "LevelLimit": 4
+    },
+    "Cost": 38,
+    "AbilityMSkill1Id": 3070052,
+    "AbilityMSkill2Id": 3070058,
+    "AbilityMSkill3Id": null
+  },
+  {
+    "Id": 7040001,
+    "Name": "\u30aa\u30aa\u30a8\u305f\u3061\u306e\u591c",
+>>>>>>> Stashed changes
     "Description": "",
     "Rarity": 3,
     "MFieldSkillRarity": {
@@ -1613,11 +1784,18 @@
       "Rarity": 3,
       "LevelLimit": 4
     },
+<<<<<<< Updated upstream
     "Cost": 46,
     "AbilityMSkill1Id": 3070076,
     "AbilityMSkill2Id": 3070075,
     "AbilityMSkill3Id": null,
     "AbilityMSkill4Id": null
+=======
+    "Cost": 38,
+    "AbilityMSkill1Id": 3020101,
+    "AbilityMSkill2Id": 3070078,
+    "AbilityMSkill3Id": 3070032
+>>>>>>> Stashed changes
   },
   {
     "Id": 7030065,
@@ -2321,8 +2499,12 @@
     "Cost": 60,
     "AbilityMSkill1Id": 3070002,
     "AbilityMSkill2Id": 3020112,
+<<<<<<< Updated upstream
     "AbilityMSkill3Id": 3020113,
     "AbilityMSkill4Id": null
+=======
+    "AbilityMSkill3Id": 3020113
+>>>>>>> Stashed changes
   },
   {
     "Id": 7040022,
@@ -2516,8 +2698,12 @@
     "Cost": 70,
     "AbilityMSkill1Id": 3070063,
     "AbilityMSkill2Id": 3030009,
+<<<<<<< Updated upstream
     "AbilityMSkill3Id": 3030074,
     "AbilityMSkill4Id": null
+=======
+    "AbilityMSkill3Id": 3030074
+>>>>>>> Stashed changes
   },
   {
     "Id": 7040035,
@@ -2531,8 +2717,12 @@
     "Cost": 80,
     "AbilityMSkill1Id": 3070059,
     "AbilityMSkill2Id": 3070065,
+<<<<<<< Updated upstream
     "AbilityMSkill3Id": 3070067,
     "AbilityMSkill4Id": null
+=======
+    "AbilityMSkill3Id": 3070067
+>>>>>>> Stashed changes
   },
   {
     "Id": 7040036,
@@ -2546,8 +2736,12 @@
     "Cost": 83,
     "AbilityMSkill1Id": 3070059,
     "AbilityMSkill2Id": 3030083,
+<<<<<<< Updated upstream
     "AbilityMSkill3Id": 3030081,
     "AbilityMSkill4Id": null
+=======
+    "AbilityMSkill3Id": 3030081
+>>>>>>> Stashed changes
   },
   {
     "Id": 7040037,
@@ -2561,8 +2755,12 @@
     "Cost": 90,
     "AbilityMSkill1Id": 3070059,
     "AbilityMSkill2Id": 3070069,
+<<<<<<< Updated upstream
     "AbilityMSkill3Id": 3070068,
     "AbilityMSkill4Id": null
+=======
+    "AbilityMSkill3Id": 3070068
+>>>>>>> Stashed changes
   },
   {
     "Id": 7040038,
@@ -2576,8 +2774,12 @@
     "Cost": 83,
     "AbilityMSkill1Id": 3030062,
     "AbilityMSkill2Id": 3070070,
+<<<<<<< Updated upstream
     "AbilityMSkill3Id": 3030009,
     "AbilityMSkill4Id": null
+=======
+    "AbilityMSkill3Id": 3030009
+>>>>>>> Stashed changes
   },
   {
     "Id": 7040039,
@@ -2591,8 +2793,12 @@
     "Cost": 65,
     "AbilityMSkill1Id": 3070069,
     "AbilityMSkill2Id": 3070071,
+<<<<<<< Updated upstream
     "AbilityMSkill3Id": 3020041,
     "AbilityMSkill4Id": null
+=======
+    "AbilityMSkill3Id": 3020041
+>>>>>>> Stashed changes
   },
   {
     "Id": 7040040,
@@ -2606,8 +2812,12 @@
     "Cost": 73,
     "AbilityMSkill1Id": 3070061,
     "AbilityMSkill2Id": 3070059,
+<<<<<<< Updated upstream
     "AbilityMSkill3Id": 3070072,
     "AbilityMSkill4Id": null
+=======
+    "AbilityMSkill3Id": 3070072
+>>>>>>> Stashed changes
   },
   {
     "Id": 7040041,
@@ -2621,8 +2831,12 @@
     "Cost": 85,
     "AbilityMSkill1Id": 3070073,
     "AbilityMSkill2Id": 3070059,
+<<<<<<< Updated upstream
     "AbilityMSkill3Id": 3070074,
     "AbilityMSkill4Id": null
+=======
+    "AbilityMSkill3Id": 3070074
+>>>>>>> Stashed changes
   },
   {
     "Id": 7040042,
@@ -2636,8 +2850,12 @@
     "Cost": 74,
     "AbilityMSkill1Id": 3070073,
     "AbilityMSkill2Id": 3030081,
+<<<<<<< Updated upstream
     "AbilityMSkill3Id": 3070077,
     "AbilityMSkill4Id": null
+=======
+    "AbilityMSkill3Id": 3070077
+>>>>>>> Stashed changes
   },
   {
     "Id": 7040043,
@@ -2651,6 +2869,7 @@
     "Cost": 90,
     "AbilityMSkill1Id": 3070059,
     "AbilityMSkill2Id": 3070079,
+<<<<<<< Updated upstream
     "AbilityMSkill3Id": 3070080,
     "AbilityMSkill4Id": null
   },
@@ -2953,5 +3172,8 @@
     "AbilityMSkill2Id": 3180132,
     "AbilityMSkill3Id": 3190133,
     "AbilityMSkill4Id": 3020114
+=======
+    "AbilityMSkill3Id": 3070080
+>>>>>>> Stashed changes
   }
 ]

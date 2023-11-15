@@ -1385,7 +1385,8 @@ if __name__ == '__main__':
     if LastErrorCode == 403:
       discord.update_status(0)
     handle_exception(err)
-    exit()
+    if _G.ExitOnError:
+      exit()
   finally:
     if _G.IS_LINUX:
       Input.restore_terminal_settings()

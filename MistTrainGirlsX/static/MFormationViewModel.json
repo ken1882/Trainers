@@ -477,6 +477,28 @@
         "MSkillId": 504050015
       },
       {
+        "Id": 18,
+        "MFormationId": 4,
+        "SlotNo": 3,
+        "X": 3,
+        "Y": 1,
+        "Number": 6,
+        "Description": "\u901f\u3055\u304c50%\u4e0a\u6607\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 5,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 0,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 0,
+        "DisplayFormationPower1": 3,
+        "DisplayFormationPower2": 0,
+        "DisplayFormationPower3": 0,
+        "MSkillId": 504040014
+      },
+      {
         "Id": 19,
         "MFormationId": 4,
         "SlotNo": 4,
@@ -496,7 +518,7 @@
         "DisplayFormationPower1": 3,
         "DisplayFormationPower2": 0,
         "DisplayFormationPower3": 0,
-        "MSkillId": 504040014
+        "MSkillId": 504010011
       },
       {
         "Id": 16,
@@ -518,7 +540,7 @@
         "DisplayFormationPower1": 3,
         "DisplayFormationPower2": 0,
         "DisplayFormationPower3": 0,
-        "MSkillId": 504010011
+        "MSkillId": 504020012
       },
       {
         "Id": 17,
@@ -527,28 +549,6 @@
         "X": 2,
         "Y": 0,
         "Number": 1,
-        "Description": "\u901f\u3055\u304c50%\u4e0a\u6607\u3059\u308b\u3002",
-        "DisplayFormationEffectPath1": null,
-        "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 5,
-        "DisplayFormationEffectPath2": null,
-        "DisplayFormationTriggerText2": null,
-        "DisplayFormationEffectType2": 0,
-        "DisplayFormationEffectPath3": null,
-        "DisplayFormationTriggerText3": null,
-        "DisplayFormationEffectType3": 0,
-        "DisplayFormationPower1": 3,
-        "DisplayFormationPower2": 0,
-        "DisplayFormationPower3": 0,
-        "MSkillId": 504020012
-      },
-      {
-        "Id": 18,
-        "MFormationId": 4,
-        "SlotNo": 3,
-        "X": 3,
-        "Y": 1,
-        "Number": 6,
         "Description": "\u901f\u3055\u304c50%\u4e0a\u6607\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
@@ -753,12 +753,40 @@
     "MFormationEvolutionGroupId": 1,
     "MFormationSlots": [
       {
-        "Id": 26,
+        "Id": 28,
         "MFormationId": 6,
-        "SlotNo": 1,
-        "X": 0,
-        "Y": 0,
-        "Number": 1,
+        "SlotNo": 3,
+        "X": 2,
+        "Y": 2,
+        "Number": 5,
+        "Description": "\u9b54\u6cd5\u9632\u5fa1\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u5927\uff09\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 7,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 10,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 0,
+<<<<<<< Updated upstream
+        "DisplayFormationPower1": 2,
+        "DisplayFormationPower2": 0,
+        "DisplayFormationPower3": 0,
+        "MSkillId": 506010021
+=======
+        "DisplayFormationPower1": 3,
+        "DisplayFormationPower2": 3,
+        "DisplayFormationPower3": 0
+>>>>>>> Stashed changes
+      },
+      {
+        "Id": 30,
+        "MFormationId": 6,
+        "SlotNo": 5,
+        "X": 4,
+        "Y": 4,
+        "Number": 8,
         "Description": "\u9b54\u6cd5\u9632\u5fa1\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
@@ -772,7 +800,35 @@
         "DisplayFormationPower1": 2,
         "DisplayFormationPower2": 0,
         "DisplayFormationPower3": 0,
-        "MSkillId": 506010021
+        "MSkillId": 506020022
+      },
+      {
+        "Id": 29,
+        "MFormationId": 6,
+        "SlotNo": 4,
+        "X": 4,
+        "Y": 0,
+        "Number": 1,
+        "Description": "\u9b54\u6cd5\u9632\u5fa1\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 7,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 0,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 0,
+<<<<<<< Updated upstream
+        "DisplayFormationPower1": 3,
+        "DisplayFormationPower2": 3,
+        "DisplayFormationPower3": 0,
+        "MSkillId": 506030023
+=======
+        "DisplayFormationPower1": 2,
+        "DisplayFormationPower2": 0,
+        "DisplayFormationPower3": 0
+>>>>>>> Stashed changes
       },
       {
         "Id": 27,
@@ -794,59 +850,15 @@
         "DisplayFormationPower1": 2,
         "DisplayFormationPower2": 0,
         "DisplayFormationPower3": 0,
-        "MSkillId": 506020022
-      },
-      {
-        "Id": 28,
-        "MFormationId": 6,
-        "SlotNo": 3,
-        "X": 2,
-        "Y": 2,
-        "Number": 5,
-        "Description": "\u9b54\u6cd5\u9632\u5fa1\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u5927\uff09\u3059\u308b\u3002",
-        "DisplayFormationEffectPath1": null,
-        "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 7,
-        "DisplayFormationEffectPath2": null,
-        "DisplayFormationTriggerText2": null,
-        "DisplayFormationEffectType2": 10,
-        "DisplayFormationEffectPath3": null,
-        "DisplayFormationTriggerText3": null,
-        "DisplayFormationEffectType3": 0,
-        "DisplayFormationPower1": 3,
-        "DisplayFormationPower2": 3,
-        "DisplayFormationPower3": 0,
-        "MSkillId": 506030023
-      },
-      {
-        "Id": 29,
-        "MFormationId": 6,
-        "SlotNo": 4,
-        "X": 4,
-        "Y": 0,
-        "Number": 1,
-        "Description": "\u9b54\u6cd5\u9632\u5fa1\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
-        "DisplayFormationEffectPath1": null,
-        "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 7,
-        "DisplayFormationEffectPath2": null,
-        "DisplayFormationTriggerText2": null,
-        "DisplayFormationEffectType2": 0,
-        "DisplayFormationEffectPath3": null,
-        "DisplayFormationTriggerText3": null,
-        "DisplayFormationEffectType3": 0,
-        "DisplayFormationPower1": 2,
-        "DisplayFormationPower2": 0,
-        "DisplayFormationPower3": 0,
         "MSkillId": 506040024
       },
       {
-        "Id": 30,
+        "Id": 26,
         "MFormationId": 6,
-        "SlotNo": 5,
-        "X": 4,
-        "Y": 4,
-        "Number": 8,
+        "SlotNo": 1,
+        "X": 0,
+        "Y": 0,
+        "Number": 1,
         "Description": "\u9b54\u6cd5\u9632\u5fa1\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
@@ -902,13 +914,21 @@
     "MFormationEvolutionGroupId": 2,
     "MFormationSlots": [
       {
-        "Id": 35,
+        "Id": 31,
         "MFormationId": 7,
+<<<<<<< Updated upstream
         "SlotNo": 5,
         "X": 3,
         "Y": 3,
         "Number": 9,
         "Description": "\u5e78\u904b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u547d\u4e2d\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
+=======
+        "SlotNo": 1,
+        "X": 0,
+        "Y": 0,
+        "Number": 1,
+        "Description": "\u904b\u304c15%\u4e0a\u6607\u3059\u308b\u3002\\n\u547d\u4e2d\u304c15%\u4e0a\u6607\u3059\u308b\u3002",
+>>>>>>> Stashed changes
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
         "DisplayFormationEffectType1": 9,
@@ -924,13 +944,21 @@
         "MSkillId": 507050030
       },
       {
-        "Id": 34,
+        "Id": 32,
         "MFormationId": 7,
+<<<<<<< Updated upstream
         "SlotNo": 4,
         "X": 3,
         "Y": 1,
         "Number": 2,
         "Description": "\u5e78\u904b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u547d\u4e2d\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
+=======
+        "SlotNo": 2,
+        "X": 0,
+        "Y": 4,
+        "Number": 8,
+        "Description": "\u904b\u304c15%\u4e0a\u6607\u3059\u308b\u3002\\n\u547d\u4e2d\u304c15%\u4e0a\u6607\u3059\u308b\u3002",
+>>>>>>> Stashed changes
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
         "DisplayFormationEffectType1": 9,
@@ -946,13 +974,21 @@
         "MSkillId": 507040029
       },
       {
-        "Id": 31,
+        "Id": 33,
         "MFormationId": 7,
+<<<<<<< Updated upstream
         "SlotNo": 1,
         "X": 0,
         "Y": 0,
         "Number": 1,
         "Description": "\u5e78\u904b\u304c15%\u4e0a\u6607\u3059\u308b\u3002\\n\u547d\u4e2d\u304c15%\u4e0a\u6607\u3059\u308b\u3002",
+=======
+        "SlotNo": 3,
+        "X": 1,
+        "Y": 2,
+        "Number": 5,
+        "Description": "\u904b\u304c20%\u4e0a\u6607\u3059\u308b\u3002\\n\u547d\u4e2d\u304c20%\u4e0a\u6607\u3059\u308b\u3002",
+>>>>>>> Stashed changes
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
         "DisplayFormationEffectType1": 9,
@@ -968,13 +1004,21 @@
         "MSkillId": 507010026
       },
       {
-        "Id": 32,
+        "Id": 34,
         "MFormationId": 7,
+<<<<<<< Updated upstream
         "SlotNo": 2,
         "X": 0,
         "Y": 4,
         "Number": 8,
         "Description": "\u5e78\u904b\u304c15%\u4e0a\u6607\u3059\u308b\u3002\\n\u547d\u4e2d\u304c15%\u4e0a\u6607\u3059\u308b\u3002",
+=======
+        "SlotNo": 4,
+        "X": 3,
+        "Y": 1,
+        "Number": 2,
+        "Description": "\u904b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u547d\u4e2d\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
+>>>>>>> Stashed changes
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
         "DisplayFormationEffectType1": 9,
@@ -990,13 +1034,21 @@
         "MSkillId": 507020027
       },
       {
-        "Id": 33,
+        "Id": 35,
         "MFormationId": 7,
+<<<<<<< Updated upstream
         "SlotNo": 3,
         "X": 1,
         "Y": 2,
         "Number": 5,
         "Description": "\u5e78\u904b\u304c20%\u4e0a\u6607\u3059\u308b\u3002\\n\u547d\u4e2d\u304c20%\u4e0a\u6607\u3059\u308b\u3002",
+=======
+        "SlotNo": 5,
+        "X": 3,
+        "Y": 3,
+        "Number": 9,
+        "Description": "\u904b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u547d\u4e2d\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
+>>>>>>> Stashed changes
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
         "DisplayFormationEffectType1": 9,
@@ -1051,12 +1103,12 @@
     "MFormationEvolutionGroupId": 1,
     "MFormationSlots": [
       {
-        "Id": 36,
+        "Id": 40,
         "MFormationId": 8,
-        "SlotNo": 1,
-        "X": 2,
-        "Y": 1,
-        "Number": 4,
+        "SlotNo": 5,
+        "X": 4,
+        "Y": 4,
+        "Number": 9,
         "Description": "\u56de\u5fa9\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u7269\u7406\u9632\u5fa1\u529b\u3068\u9b54\u6cd5\u9632\u5fa1\u529b\u304c10%\u4e0a\u6607\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
@@ -1071,50 +1123,6 @@
         "DisplayFormationPower2": 1,
         "DisplayFormationPower3": 1,
         "MSkillId": 508010031
-      },
-      {
-        "Id": 37,
-        "MFormationId": 8,
-        "SlotNo": 2,
-        "X": 2,
-        "Y": 3,
-        "Number": 8,
-        "Description": "\u56de\u5fa9\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u7269\u7406\u9632\u5fa1\u529b\u3068\u9b54\u6cd5\u9632\u5fa1\u529b\u304c10%\u4e0a\u6607\u3059\u308b\u3002",
-        "DisplayFormationEffectPath1": null,
-        "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 8,
-        "DisplayFormationEffectPath2": null,
-        "DisplayFormationTriggerText2": null,
-        "DisplayFormationEffectType2": 3,
-        "DisplayFormationEffectPath3": null,
-        "DisplayFormationTriggerText3": null,
-        "DisplayFormationEffectType3": 7,
-        "DisplayFormationPower1": 2,
-        "DisplayFormationPower2": 1,
-        "DisplayFormationPower3": 1,
-        "MSkillId": 508020032
-      },
-      {
-        "Id": 38,
-        "MFormationId": 8,
-        "SlotNo": 3,
-        "X": 3,
-        "Y": 2,
-        "Number": 5,
-        "Description": "\u56de\u5fa9\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u7269\u7406\u9632\u5fa1\u529b\u3068\u9b54\u6cd5\u9632\u5fa1\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
-        "DisplayFormationEffectPath1": null,
-        "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 8,
-        "DisplayFormationEffectPath2": null,
-        "DisplayFormationTriggerText2": null,
-        "DisplayFormationEffectType2": 3,
-        "DisplayFormationEffectPath3": null,
-        "DisplayFormationTriggerText3": null,
-        "DisplayFormationEffectType3": 7,
-        "DisplayFormationPower1": 3,
-        "DisplayFormationPower2": 2,
-        "DisplayFormationPower3": 2,
-        "MSkillId": 508030033
       },
       {
         "Id": 39,
@@ -1136,15 +1144,15 @@
         "DisplayFormationPower1": 2,
         "DisplayFormationPower2": 1,
         "DisplayFormationPower3": 1,
-        "MSkillId": 508040034
+        "MSkillId": 508020032
       },
       {
-        "Id": 40,
+        "Id": 36,
         "MFormationId": 8,
-        "SlotNo": 5,
-        "X": 4,
-        "Y": 4,
-        "Number": 9,
+        "SlotNo": 1,
+        "X": 2,
+        "Y": 1,
+        "Number": 4,
         "Description": "\u56de\u5fa9\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u7269\u7406\u9632\u5fa1\u529b\u3068\u9b54\u6cd5\u9632\u5fa1\u529b\u304c10%\u4e0a\u6607\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
@@ -1155,6 +1163,57 @@
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
         "DisplayFormationEffectType3": 7,
+<<<<<<< Updated upstream
+        "DisplayFormationPower1": 3,
+        "DisplayFormationPower2": 2,
+        "DisplayFormationPower3": 2,
+        "MSkillId": 508030033
+=======
+        "DisplayFormationPower1": 2,
+        "DisplayFormationPower2": 1,
+        "DisplayFormationPower3": 1
+>>>>>>> Stashed changes
+      },
+      {
+        "Id": 37,
+        "MFormationId": 8,
+        "SlotNo": 2,
+        "X": 2,
+        "Y": 3,
+        "Number": 8,
+        "Description": "\u56de\u5fa9\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u7269\u7406\u9632\u5fa1\u529b\u3068\u9b54\u6cd5\u9632\u5fa1\u529b\u304c10%\u4e0a\u6607\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 8,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 3,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 7,
+        "DisplayFormationPower1": 2,
+        "DisplayFormationPower2": 1,
+        "DisplayFormationPower3": 1,
+        "MSkillId": 508040034
+      },
+      {
+        "Id": 38,
+        "MFormationId": 8,
+        "SlotNo": 3,
+        "X": 3,
+        "Y": 2,
+        "Number": 5,
+        "Description": "\u56de\u5fa9\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u7269\u7406\u9632\u5fa1\u529b\u3068\u9b54\u6cd5\u9632\u5fa1\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 8,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 3,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 7,
+<<<<<<< Updated upstream
         "DisplayFormationPower1": 2,
         "DisplayFormationPower2": 1,
         "DisplayFormationPower3": 1,
@@ -1188,6 +1247,11 @@
         "PreviousMFormationId": null,
         "Level": null,
         "Description": "\u300e\u5b9f\u7e3e\u300f\u5185\u306e\u30df\u30c3\u30b7\u30e7\u30f3\u30af\u30ea\u30a2\u3067\u53d6\u5f97"
+=======
+        "DisplayFormationPower1": 3,
+        "DisplayFormationPower2": 2,
+        "DisplayFormationPower3": 2
+>>>>>>> Stashed changes
       }
     ]
   },
@@ -1349,13 +1413,13 @@
     "MFormationEvolutionGroupId": 1,
     "MFormationSlots": [
       {
-        "Id": 50,
+        "Id": 46,
         "MFormationId": 10,
-        "SlotNo": 5,
-        "X": 4,
-        "Y": 4,
-        "Number": 8,
-        "Description": "\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u6e1b\u5c11\uff08\u4e2d\uff09\u3059\u308b\u3002",
+        "SlotNo": 1,
+        "X": 0,
+        "Y": 1,
+        "Number": 1,
+        "Description": "\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u5927\uff09\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
         "DisplayFormationEffectType1": 10,
@@ -1365,19 +1429,23 @@
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
         "DisplayFormationEffectType3": 0,
+<<<<<<< Updated upstream
         "DisplayFormationPower1": -2,
+=======
+        "DisplayFormationPower1": 3,
+>>>>>>> Stashed changes
         "DisplayFormationPower2": 0,
         "DisplayFormationPower3": 0,
         "MSkillId": 510050045
       },
       {
-        "Id": 49,
+        "Id": 47,
         "MFormationId": 10,
-        "SlotNo": 4,
-        "X": 4,
-        "Y": 0,
-        "Number": 1,
-        "Description": "\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u6e1b\u5c11\uff08\u4e2d\uff09\u3059\u308b\u3002",
+        "SlotNo": 2,
+        "X": 0,
+        "Y": 3,
+        "Number": 8,
+        "Description": "\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u5927\uff09\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
         "DisplayFormationEffectType1": 10,
@@ -1387,7 +1455,11 @@
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
         "DisplayFormationEffectType3": 0,
+<<<<<<< Updated upstream
         "DisplayFormationPower1": -2,
+=======
+        "DisplayFormationPower1": 3,
+>>>>>>> Stashed changes
         "DisplayFormationPower2": 0,
         "DisplayFormationPower3": 0,
         "MSkillId": 510040044
@@ -1415,13 +1487,13 @@
         "MSkillId": 510030043
       },
       {
-        "Id": 46,
+        "Id": 49,
         "MFormationId": 10,
-        "SlotNo": 1,
-        "X": 0,
-        "Y": 1,
+        "SlotNo": 4,
+        "X": 4,
+        "Y": 0,
         "Number": 1,
-        "Description": "\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u5927\uff09\u3059\u308b\u3002",
+        "Description": "\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u6e1b\u5c11\uff08\u4e2d\uff09\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
         "DisplayFormationEffectType1": 10,
@@ -1431,19 +1503,19 @@
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
         "DisplayFormationEffectType3": 0,
-        "DisplayFormationPower1": 3,
+        "DisplayFormationPower1": -3,
         "DisplayFormationPower2": 0,
         "DisplayFormationPower3": 0,
         "MSkillId": 510010041
       },
       {
-        "Id": 47,
+        "Id": 50,
         "MFormationId": 10,
-        "SlotNo": 2,
-        "X": 0,
-        "Y": 3,
+        "SlotNo": 5,
+        "X": 4,
+        "Y": 4,
         "Number": 8,
-        "Description": "\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u5927\uff09\u3059\u308b\u3002",
+        "Description": "\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u6e1b\u5c11\uff08\u4e2d\uff09\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
         "DisplayFormationEffectType1": 10,
@@ -1453,7 +1525,7 @@
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
         "DisplayFormationEffectType3": 0,
-        "DisplayFormationPower1": 3,
+        "DisplayFormationPower1": -3,
         "DisplayFormationPower2": 0,
         "DisplayFormationPower3": 0,
         "MSkillId": 510020042
@@ -1498,6 +1570,7 @@
     "MFormationEvolutionGroupId": 2,
     "MFormationSlots": [
       {
+<<<<<<< Updated upstream
         "Id": 51,
         "MFormationId": 11,
         "SlotNo": 1,
@@ -1521,25 +1594,34 @@
       },
       {
         "Id": 52,
+=======
+        "Id": 54,
+>>>>>>> Stashed changes
         "MFormationId": 11,
-        "SlotNo": 2,
-        "X": 2,
-        "Y": 1,
+        "SlotNo": 4,
+        "X": 4,
+        "Y": 0,
         "Number": 1,
-        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c25\uff05\u4e0a\u6607\u3059\u308b\u3002\\n\u901f\u3055\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
+        "Description": "\u901f\u3055\u304c50%\u6e1b\u5c11\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 2,
+        "DisplayFormationEffectType1": 5,
         "DisplayFormationEffectPath2": null,
         "DisplayFormationTriggerText2": null,
-        "DisplayFormationEffectType2": 5,
+        "DisplayFormationEffectType2": 0,
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
         "DisplayFormationEffectType3": 0,
+<<<<<<< Updated upstream
         "DisplayFormationPower1": 2,
         "DisplayFormationPower2": 2,
         "DisplayFormationPower3": 0,
         "MSkillId": 511020047
+=======
+        "DisplayFormationPower1": -3,
+        "DisplayFormationPower2": 0,
+        "DisplayFormationPower3": 0
+>>>>>>> Stashed changes
       },
       {
         "Id": 53,
@@ -1564,28 +1646,6 @@
         "MSkillId": 511030048
       },
       {
-        "Id": 54,
-        "MFormationId": 11,
-        "SlotNo": 4,
-        "X": 4,
-        "Y": 0,
-        "Number": 1,
-        "Description": "\u901f\u3055\u304c50%\u6e1b\u5c11\u3059\u308b\u3002",
-        "DisplayFormationEffectPath1": null,
-        "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 5,
-        "DisplayFormationEffectPath2": null,
-        "DisplayFormationTriggerText2": null,
-        "DisplayFormationEffectType2": 0,
-        "DisplayFormationEffectPath3": null,
-        "DisplayFormationTriggerText3": null,
-        "DisplayFormationEffectType3": 0,
-        "DisplayFormationPower1": -3,
-        "DisplayFormationPower2": 0,
-        "DisplayFormationPower3": 0,
-        "MSkillId": 511040049
-      },
-      {
         "Id": 55,
         "MFormationId": 11,
         "SlotNo": 5,
@@ -1602,6 +1662,29 @@
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
         "DisplayFormationEffectType3": 0,
+        "DisplayFormationPower1": -3,
+        "DisplayFormationPower2": 0,
+        "DisplayFormationPower3": 0,
+        "MSkillId": 511040049
+      },
+      {
+        "Id": 51,
+        "MFormationId": 11,
+        "SlotNo": 1,
+        "X": 0,
+        "Y": 2,
+        "Number": 4,
+        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c25\uff05\u4e0a\u6607\u3059\u308b\u3002\\n\u901f\u3055\u304c50%\u4e0a\u6607\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 2,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 5,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 0,
+<<<<<<< Updated upstream
         "DisplayFormationPower1": -3,
         "DisplayFormationPower2": 0,
         "DisplayFormationPower3": 0,
@@ -1635,6 +1718,32 @@
         "PreviousMFormationId": null,
         "Level": null,
         "Description": "\u300e\u5b9f\u7e3e\u300f\u5185\u306e\u30df\u30c3\u30b7\u30e7\u30f3\u30af\u30ea\u30a2\u3067\u53d6\u5f97"
+=======
+        "DisplayFormationPower1": 2,
+        "DisplayFormationPower2": 3,
+        "DisplayFormationPower3": 0
+      },
+      {
+        "Id": 52,
+        "MFormationId": 11,
+        "SlotNo": 2,
+        "X": 2,
+        "Y": 1,
+        "Number": 1,
+        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c25\uff05\u4e0a\u6607\u3059\u308b\u3002\\n\u901f\u3055\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 2,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 5,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 0,
+        "DisplayFormationPower1": 2,
+        "DisplayFormationPower2": 2,
+        "DisplayFormationPower3": 0
+>>>>>>> Stashed changes
       }
     ]
   },
@@ -1862,6 +1971,7 @@
         "MSkillId": 513010056
       },
       {
+<<<<<<< Updated upstream
         "Id": 87,
         "MFormationId": 13,
         "SlotNo": 2,
@@ -1885,6 +1995,9 @@
       },
       {
         "Id": 88,
+=======
+        "Id": 86,
+>>>>>>> Stashed changes
         "MFormationId": 13,
         "SlotNo": 3,
         "X": 2,
@@ -1899,6 +2012,7 @@
         "DisplayFormationEffectType2": 5,
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
+<<<<<<< Updated upstream
         "DisplayFormationEffectType3": 0,
         "DisplayFormationPower1": 2,
         "DisplayFormationPower2": 2,
@@ -1933,6 +2047,33 @@
         "PreviousMFormationId": null,
         "Level": null,
         "Description": "\u30dc\u30b9\u30e9\u30c3\u30b7\u30e5\u306e\u4ea4\u63db\u6240\u304b\u3089\u53d6\u5f97"
+=======
+        "DisplayFormationEffectType3": 6,
+        "DisplayFormationPower1": 3,
+        "DisplayFormationPower2": 3,
+        "DisplayFormationPower3": 3
+      },
+      {
+        "Id": 87,
+        "MFormationId": 13,
+        "SlotNo": 2,
+        "X": 2,
+        "Y": 0,
+        "Number": 6,
+        "Description": "\u9b54\u6cd5\u653b\u6483\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u5263\u30fb\u65a7\u30fb\u9b54\u5177\u306e\u901f\u3055\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 6,
+        "DisplayFormationEffectPath2": "icon_organization_weaponattributetype_1",
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 5,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 0,
+        "DisplayFormationPower1": 2,
+        "DisplayFormationPower2": 2,
+        "DisplayFormationPower3": 0
+>>>>>>> Stashed changes
       }
     ]
   },
@@ -2094,10 +2235,11 @@
     "MFormationEvolutionGroupId": 3,
     "MFormationSlots": [
       {
-        "Id": 96,
+        "Id": 99,
         "MFormationId": 15,
-        "SlotNo": 1,
+        "SlotNo": 4,
         "X": 0,
+<<<<<<< Updated upstream
         "Y": 2,
         "Number": 4,
         "Description": "\u7269\u7406\u9632\u5fa1\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\u7269\u7406\u653b\u6483\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u69cd\u30fb\u5f13\u30fb\u9283\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u5927\uff09\u3059\u308b\u3002",
@@ -2123,19 +2265,31 @@
         "Y": 2,
         "Number": 5,
         "Description": "\u81ea\u8eab\u306e\u6575\u8996\u304c\u6e1b\u5c11\uff08\u4e2d\uff09\u3059\u308b\u3002\u901f\u3055\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u69cd\u30fb\u5f13\u30fb\u9283\u306e\u7269\u7406\u653b\u6483\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
+=======
+        "Y": 0,
+        "Number": 2,
+        "Description": "\u901f\u3055\u304c15%\u4e0a\u6607\u3059\u308b\u3002\\n\u7269\u7406\u9632\u5fa1\u529b\u3068\u9b54\u6cd5\u9632\u5fa1\u529b\u304c25%\u6e1b\u5c11\u3059\u308b",
+>>>>>>> Stashed changes
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 10,
+        "DisplayFormationEffectType1": 5,
         "DisplayFormationEffectPath2": null,
         "DisplayFormationTriggerText2": null,
-        "DisplayFormationEffectType2": 5,
-        "DisplayFormationEffectPath3": "icon_organization_weaponattributetype_3",
+        "DisplayFormationEffectType2": 3,
+        "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
+<<<<<<< Updated upstream
         "DisplayFormationEffectType3": 2,
         "DisplayFormationPower1": -2,
         "DisplayFormationPower2": 3,
         "DisplayFormationPower3": 2,
         "MSkillId": 515020067
+=======
+        "DisplayFormationEffectType3": 7,
+        "DisplayFormationPower1": 1,
+        "DisplayFormationPower2": -2,
+        "DisplayFormationPower3": -2
+>>>>>>> Stashed changes
       },
       {
         "Id": 98,
@@ -2160,28 +2314,6 @@
         "MSkillId": 515030068
       },
       {
-        "Id": 99,
-        "MFormationId": 15,
-        "SlotNo": 4,
-        "X": 0,
-        "Y": 0,
-        "Number": 2,
-        "Description": "\u901f\u3055\u304c15%\u4e0a\u6607\u3059\u308b\u3002\\n\u7269\u7406\u9632\u5fa1\u529b\u3068\u9b54\u6cd5\u9632\u5fa1\u529b\u304c25%\u6e1b\u5c11\u3059\u308b",
-        "DisplayFormationEffectPath1": null,
-        "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 5,
-        "DisplayFormationEffectPath2": null,
-        "DisplayFormationTriggerText2": null,
-        "DisplayFormationEffectType2": 3,
-        "DisplayFormationEffectPath3": null,
-        "DisplayFormationTriggerText3": null,
-        "DisplayFormationEffectType3": 7,
-        "DisplayFormationPower1": 1,
-        "DisplayFormationPower2": -2,
-        "DisplayFormationPower3": -2,
-        "MSkillId": 515040069
-      },
-      {
         "Id": 100,
         "MFormationId": 15,
         "SlotNo": 5,
@@ -2201,11 +2333,62 @@
         "DisplayFormationPower1": 1,
         "DisplayFormationPower2": -2,
         "DisplayFormationPower3": -2,
+        "MSkillId": 515040069
+      },
+      {
+        "Id": 96,
+        "MFormationId": 15,
+        "SlotNo": 1,
+        "X": 0,
+        "Y": 2,
+        "Number": 4,
+        "Description": "\u7269\u7406\u9632\u5fa1\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\u7269\u7406\u653b\u6483\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u69cd\u30fb\u5f13\u30fb\u9283\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u5927\uff09\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 3,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 2,
+        "DisplayFormationEffectPath3": "icon_organization_weaponattributetype_3",
+        "DisplayFormationTriggerText3": null,
+<<<<<<< Updated upstream
+        "DisplayFormationEffectType3": 7,
+        "DisplayFormationPower1": 1,
+        "DisplayFormationPower2": -2,
+        "DisplayFormationPower3": -2,
         "MSkillId": 515050070
+=======
+        "DisplayFormationEffectType3": 10,
+        "DisplayFormationPower1": 2,
+        "DisplayFormationPower2": 3,
+        "DisplayFormationPower3": 3
+      },
+      {
+        "Id": 97,
+        "MFormationId": 15,
+        "SlotNo": 2,
+        "X": 2,
+        "Y": 2,
+        "Number": 5,
+        "Description": "\u81ea\u8eab\u306e\u6575\u8996\u304c\u6e1b\u5c11\uff08\u4e2d\uff09\u3059\u308b\u3002\u901f\u3055\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u69cd\u30fb\u5f13\u30fb\u9283\u306e\u7269\u7406\u653b\u6483\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 10,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 5,
+        "DisplayFormationEffectPath3": "icon_organization_weaponattributetype_3",
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 2,
+        "DisplayFormationPower1": -2,
+        "DisplayFormationPower2": 3,
+        "DisplayFormationPower3": 2
+>>>>>>> Stashed changes
       }
     ],
     "MFormationSkills": [
       {
+<<<<<<< Updated upstream
         "Level": 1,
         "MSkillId": 501400066
       },
@@ -2248,43 +2431,58 @@
         "SlotNo": 5,
         "X": 2,
         "Y": 1,
+=======
+        "Id": 101,
+        "MFormationId": 16,
+        "SlotNo": 1,
+        "X": 0,
+        "Y": 2,
+>>>>>>> Stashed changes
         "Number": 5,
-        "Description": "\u901f\u3055\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u6756\u306e\u9b54\u6cd5\u653b\u6483\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\u6756\u306e\u9b54\u6cd5\u9632\u5fa1\u529b\u304c25%\u6e1b\u5c11\u3059\u308b\u3002",
+        "Description": "\u7269\u7406\u9632\u5fa1\u529b\u3068\u9b54\u6cd5\u9632\u5fa1\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u81ea\u8eab\u3078\u306e\u6575\u8996\u3092\u4e0a\u6607\uff08\u4e2d\uff09\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 5,
-        "DisplayFormationEffectPath2": "icon_organization_weapontype_9",
+        "DisplayFormationEffectType1": 3,
+        "DisplayFormationEffectPath2": null,
         "DisplayFormationTriggerText2": null,
-        "DisplayFormationEffectType2": 6,
-        "DisplayFormationEffectPath3": "icon_organization_weapontype_9",
+        "DisplayFormationEffectType2": 7,
+        "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
-        "DisplayFormationEffectType3": 7,
+        "DisplayFormationEffectType3": 10,
         "DisplayFormationPower1": 2,
         "DisplayFormationPower2": 2,
+<<<<<<< Updated upstream
         "DisplayFormationPower3": -2,
         "MSkillId": 516050075
+=======
+        "DisplayFormationPower3": 2
+>>>>>>> Stashed changes
       },
       {
-        "Id": 104,
+        "Id": 102,
         "MFormationId": 16,
-        "SlotNo": 4,
-        "X": 1,
-        "Y": 4,
+        "SlotNo": 2,
+        "X": 4,
+        "Y": 3,
         "Number": 5,
-        "Description": "\u901f\u3055\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u6756\u306e\u5e78\u904b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\u6756\u306e\u9b54\u6cd5\u9632\u5fa1\u529b\u304c50%\u6e1b\u5c11\u3059\u308b",
-        "DisplayFormationEffectPath1": null,
+        "Description": "\u6756\u306e\u9b54\u6cd5\u653b\u6483\u529b\u304c15%\u4e0a\u6607\u3059\u308b\u3002\\n\u6756\u306e\u56de\u5fa9\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": "icon_organization_weapontype_9",
         "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 5,
+        "DisplayFormationEffectType1": 6,
         "DisplayFormationEffectPath2": "icon_organization_weapontype_9",
         "DisplayFormationTriggerText2": null,
-        "DisplayFormationEffectType2": 9,
-        "DisplayFormationEffectPath3": "icon_organization_weapontype_9",
+        "DisplayFormationEffectType2": 8,
+        "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
-        "DisplayFormationEffectType3": 7,
-        "DisplayFormationPower1": 3,
+        "DisplayFormationEffectType3": 0,
+        "DisplayFormationPower1": 1,
         "DisplayFormationPower2": 2,
+<<<<<<< Updated upstream
         "DisplayFormationPower3": -3,
         "MSkillId": 516040074
+=======
+        "DisplayFormationPower3": 0
+>>>>>>> Stashed changes
       },
       {
         "Id": 101,
@@ -2309,24 +2507,25 @@
         "MSkillId": 516010071
       },
       {
-        "Id": 102,
+        "Id": 104,
         "MFormationId": 16,
-        "SlotNo": 2,
-        "X": 4,
-        "Y": 3,
+        "SlotNo": 4,
+        "X": 1,
+        "Y": 4,
         "Number": 5,
-        "Description": "\u6756\u306e\u9b54\u6cd5\u653b\u6483\u529b\u304c15%\u4e0a\u6607\u3059\u308b\u3002\\n\u6756\u306e\u56de\u5fa9\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
-        "DisplayFormationEffectPath1": "icon_organization_weapontype_9",
+        "Description": "\u901f\u3055\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u6756\u306e\u5e78\u904b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\u6756\u306e\u9b54\u6cd5\u9632\u5fa1\u529b\u304c50%\u6e1b\u5c11\u3059\u308b",
+        "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 6,
+        "DisplayFormationEffectType1": 5,
         "DisplayFormationEffectPath2": "icon_organization_weapontype_9",
         "DisplayFormationTriggerText2": null,
-        "DisplayFormationEffectType2": 8,
-        "DisplayFormationEffectPath3": null,
+        "DisplayFormationEffectType2": 9,
+        "DisplayFormationEffectPath3": "icon_organization_weapontype_9",
         "DisplayFormationTriggerText3": null,
-        "DisplayFormationEffectType3": 0,
-        "DisplayFormationPower1": 1,
+        "DisplayFormationEffectType3": 7,
+        "DisplayFormationPower1": 3,
         "DisplayFormationPower2": 2,
+<<<<<<< Updated upstream
         "DisplayFormationPower3": 0,
         "MSkillId": 516020072
       },
@@ -2336,6 +2535,16 @@
         "SlotNo": 3,
         "X": 1,
         "Y": 0,
+=======
+        "DisplayFormationPower3": -3
+      },
+      {
+        "Id": 105,
+        "MFormationId": 16,
+        "SlotNo": 5,
+        "X": 2,
+        "Y": 1,
+>>>>>>> Stashed changes
         "Number": 5,
         "Description": "\u901f\u3055\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u6756\u306e\u9b54\u6cd5\u653b\u6483\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\u6756\u306e\u9b54\u6cd5\u9632\u5fa1\u529b\u304c25%\u6e1b\u5c11\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
@@ -2349,6 +2558,7 @@
         "DisplayFormationEffectType3": 7,
         "DisplayFormationPower1": 2,
         "DisplayFormationPower2": 2,
+<<<<<<< Updated upstream
         "DisplayFormationPower3": -2,
         "MSkillId": 516030073
       }
@@ -2380,6 +2590,9 @@
         "PreviousMFormationId": null,
         "Level": null,
         "Description": "\u30dc\u30b9\u30e9\u30c3\u30b7\u30e5\u306e\u4ea4\u63db\u6240\u304b\u3089\u53d6\u5f97"
+=======
+        "DisplayFormationPower3": -2
+>>>>>>> Stashed changes
       }
     ]
   },
@@ -2541,6 +2754,7 @@
     "MFormationEvolutionGroupId": 3,
     "MFormationSlots": [
       {
+<<<<<<< Updated upstream
         "Id": 131,
         "MFormationId": 18,
         "SlotNo": 1,
@@ -2564,25 +2778,33 @@
       },
       {
         "Id": 132,
+=======
+        "Id": 135,
+>>>>>>> Stashed changes
         "MFormationId": 18,
-        "SlotNo": 2,
-        "X": 0,
-        "Y": 3,
-        "Number": 5,
-        "Description": "\u7269\u7406\u9632\u5fa1\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\u9b54\u6cd5\u9632\u5fa1\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u5927\uff09\u3059\u308b\u3002",
+        "SlotNo": 5,
+        "X": 3,
+        "Y": 2,
+        "Number": 6,
+        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u81ea\u8eab\u30d8\u306e\u6575\u8996\u304c\u6e1b\u5c11\uff08\u4e2d\uff09\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 3,
+        "DisplayFormationEffectType1": 2,
         "DisplayFormationEffectPath2": null,
         "DisplayFormationTriggerText2": null,
-        "DisplayFormationEffectType2": 7,
+        "DisplayFormationEffectType2": 10,
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
-        "DisplayFormationEffectType3": 10,
+        "DisplayFormationEffectType3": 0,
         "DisplayFormationPower1": 3,
+<<<<<<< Updated upstream
         "DisplayFormationPower2": 3,
         "DisplayFormationPower3": 3,
         "MSkillId": 516120082
+=======
+        "DisplayFormationPower2": -2,
+        "DisplayFormationPower3": 0
+>>>>>>> Stashed changes
       },
       {
         "Id": 133,
@@ -2629,23 +2851,24 @@
         "MSkillId": 516140084
       },
       {
-        "Id": 135,
+        "Id": 131,
         "MFormationId": 18,
-        "SlotNo": 5,
-        "X": 3,
-        "Y": 2,
-        "Number": 6,
-        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u81ea\u8eab\u30d8\u306e\u6575\u8996\u304c\u6e1b\u5c11\uff08\u4e2d\uff09\u3059\u308b\u3002",
+        "SlotNo": 1,
+        "X": 0,
+        "Y": 1,
+        "Number": 5,
+        "Description": "\u7269\u7406\u9632\u5fa1\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\u9b54\u6cd5\u9632\u5fa1\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u5927\uff09\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 2,
+        "DisplayFormationEffectType1": 3,
         "DisplayFormationEffectPath2": null,
         "DisplayFormationTriggerText2": null,
-        "DisplayFormationEffectType2": 10,
+        "DisplayFormationEffectType2": 7,
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
-        "DisplayFormationEffectType3": 0,
+        "DisplayFormationEffectType3": 10,
         "DisplayFormationPower1": 3,
+<<<<<<< Updated upstream
         "DisplayFormationPower2": -2,
         "DisplayFormationPower3": 0,
         "MSkillId": 516150085
@@ -2678,6 +2901,31 @@
         "PreviousMFormationId": null,
         "Level": null,
         "Description": "\u30dc\u30b9\u30e9\u30c3\u30b7\u30e5\u306e\u4ea4\u63db\u6240\u304b\u3089\u53d6\u5f97"
+=======
+        "DisplayFormationPower2": 3,
+        "DisplayFormationPower3": 3
+      },
+      {
+        "Id": 132,
+        "MFormationId": 18,
+        "SlotNo": 2,
+        "X": 0,
+        "Y": 3,
+        "Number": 5,
+        "Description": "\u7269\u7406\u9632\u5fa1\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\u9b54\u6cd5\u9632\u5fa1\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u5927\uff09\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 3,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 7,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 10,
+        "DisplayFormationPower1": 3,
+        "DisplayFormationPower2": 3,
+        "DisplayFormationPower3": 3
+>>>>>>> Stashed changes
       }
     ]
   },
@@ -2690,6 +2938,7 @@
     "MFormationEvolutionGroupId": 1,
     "MFormationSlots": [
       {
+<<<<<<< Updated upstream
         "Id": 139,
         "MFormationId": 19,
         "SlotNo": 4,
@@ -2713,25 +2962,56 @@
       },
       {
         "Id": 140,
+=======
+        "Id": 136,
+>>>>>>> Stashed changes
         "MFormationId": 19,
-        "SlotNo": 5,
-        "X": 4,
-        "Y": 1,
+        "SlotNo": 1,
+        "X": 0,
+        "Y": 2,
         "Number": 5,
-        "Description": "\u9b54\u6cd5\u653b\u6483\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\u901f\u3055\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u7269\u7406\u653b\u6483\u529b\u304c50%\u6e1b\u5c11\u3059\u308b\u3002",
+        "Description": "\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u4e2d\uff09\u3059\u308b\u3002\\n\u901f\u3055\u304c25%\u6e1b\u5c11\u3059\u308b",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 6,
+        "DisplayFormationEffectType1": 10,
         "DisplayFormationEffectPath2": null,
         "DisplayFormationTriggerText2": null,
         "DisplayFormationEffectType2": 5,
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
+<<<<<<< Updated upstream
         "DisplayFormationEffectType3": 2,
         "DisplayFormationPower1": 3,
         "DisplayFormationPower2": 3,
         "DisplayFormationPower3": -3,
         "MSkillId": 516200090
+=======
+        "DisplayFormationEffectType3": 0,
+        "DisplayFormationPower1": 2,
+        "DisplayFormationPower2": -2,
+        "DisplayFormationPower3": 0
+      },
+      {
+        "Id": 137,
+        "MFormationId": 19,
+        "SlotNo": 2,
+        "X": 1,
+        "Y": 2,
+        "Number": 5,
+        "Description": "\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u4e2d\uff09\u3059\u308b\u3002\\n\u901f\u3055\u304c25%\u6e1b\u5c11\u3059\u308b",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 10,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 5,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 0,
+        "DisplayFormationPower1": 2,
+        "DisplayFormationPower2": -2,
+        "DisplayFormationPower3": 0
+>>>>>>> Stashed changes
       },
       {
         "Id": 138,
@@ -2756,6 +3036,7 @@
         "MSkillId": 516180088
       },
       {
+<<<<<<< Updated upstream
         "Id": 136,
         "MFormationId": 19,
         "SlotNo": 1,
@@ -2779,20 +3060,24 @@
       },
       {
         "Id": 137,
+=======
+        "Id": 140,
+>>>>>>> Stashed changes
         "MFormationId": 19,
-        "SlotNo": 2,
-        "X": 1,
-        "Y": 2,
+        "SlotNo": 5,
+        "X": 4,
+        "Y": 1,
         "Number": 5,
-        "Description": "\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u4e2d\uff09\u3059\u308b\u3002\\n\u901f\u3055\u304c25%\u6e1b\u5c11\u3059\u308b",
+        "Description": "\u9b54\u6cd5\u653b\u6483\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\u901f\u3055\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u7269\u7406\u653b\u6483\u529b\u304c50%\u6e1b\u5c11\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 10,
+        "DisplayFormationEffectType1": 6,
         "DisplayFormationEffectPath2": null,
         "DisplayFormationTriggerText2": null,
         "DisplayFormationEffectType2": 5,
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
+<<<<<<< Updated upstream
         "DisplayFormationEffectType3": 0,
         "DisplayFormationPower1": 2,
         "DisplayFormationPower2": -2,
@@ -2827,6 +3112,12 @@
         "PreviousMFormationId": null,
         "Level": null,
         "Description": "\u300e\u5b9f\u7e3e\u300f\u5185\u306e\u30df\u30c3\u30b7\u30e7\u30f3\u30af\u30ea\u30a2\u3067\u53d6\u5f97"
+=======
+        "DisplayFormationEffectType3": 2,
+        "DisplayFormationPower1": 3,
+        "DisplayFormationPower2": 3,
+        "DisplayFormationPower3": -3
+>>>>>>> Stashed changes
       }
     ]
   },
@@ -2839,6 +3130,30 @@
     "MFormationEvolutionGroupId": 3,
     "MFormationSlots": [
       {
+<<<<<<< Updated upstream
+=======
+        "Id": 167,
+        "MFormationId": 20,
+        "SlotNo": 2,
+        "X": 0,
+        "Y": 3,
+        "Number": 6,
+        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\u56de\u5fa9\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u5927\uff09\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 2,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 8,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 10,
+        "DisplayFormationPower1": 2,
+        "DisplayFormationPower2": 2,
+        "DisplayFormationPower3": 3
+      },
+      {
+>>>>>>> Stashed changes
         "Id": 170,
         "MFormationId": 20,
         "SlotNo": 5,
@@ -2862,6 +3177,30 @@
       },
       {
         "Id": 169,
+<<<<<<< Updated upstream
+=======
+        "MFormationId": 20,
+        "SlotNo": 4,
+        "X": 2,
+        "Y": 4,
+        "Number": 9,
+        "Description": "\u547d\u4e2d\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u56de\u5fa9\u304c25%\u6e1b\u5c11\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 4,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 8,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 0,
+        "DisplayFormationPower1": 2,
+        "DisplayFormationPower2": -2,
+        "DisplayFormationPower3": 0
+      },
+      {
+        "Id": 168,
+>>>>>>> Stashed changes
         "MFormationId": 20,
         "SlotNo": 4,
         "X": 2,
@@ -2901,6 +3240,7 @@
         "DisplayFormationEffectType3": 10,
         "DisplayFormationPower1": 2,
         "DisplayFormationPower2": 2,
+<<<<<<< Updated upstream
         "DisplayFormationPower3": 3,
         "MSkillId": 520020092
       },
@@ -2912,16 +3252,36 @@
         "Y": 1,
         "Number": 4,
         "Description": "\u7269\u7406\u653b\u6483\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\u56de\u5fa9\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u5927\uff09\u3059\u308b\u3002",
+=======
+        "DisplayFormationPower3": 3
+      }
+    ]
+  },
+  {
+    "Id": 21,
+    "Name": "\u767d\u306e\u9b54\u5c0e\u58eb\u968a",
+    "Description": "\u524d\u885b2\u540d\u306e\u9b54\u6cd5\u653b\u6483\u529b\u3092\u4e0a\u6607\u3055\u305b\u3064\u3064\u3001\u5f8c\u885b1\u540d\u304c\u56de\u5fa9\u529b\u3068\u901f\u3055\u3067\u524d\u885b\u3092\u30ab\u30d0\u30fc\u3059\u308b\u968a\u5217\u3002",
+    "MFormationSlots": [
+      {
+        "Id": 174,
+        "MFormationId": 21,
+        "SlotNo": 4,
+        "X": 4,
+        "Y": 3,
+        "Number": 6,
+        "Description": "\u547d\u4e2d\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u56de\u5fa9\u304c25%\u6e1b\u5c11\u3059\u308b\u3002",
+>>>>>>> Stashed changes
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 2,
+        "DisplayFormationEffectType1": 4,
         "DisplayFormationEffectPath2": null,
         "DisplayFormationTriggerText2": null,
         "DisplayFormationEffectType2": 8,
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
-        "DisplayFormationEffectType3": 10,
+        "DisplayFormationEffectType3": 0,
         "DisplayFormationPower1": 2,
+<<<<<<< Updated upstream
         "DisplayFormationPower2": 2,
         "DisplayFormationPower3": 3,
         "MSkillId": 520010091
@@ -2987,27 +3347,37 @@
     "MFormationSkillGroupId": 20,
     "MFormationEvolutionGroupId": 3,
     "MFormationSlots": [
+=======
+        "DisplayFormationPower2": -2,
+        "DisplayFormationPower3": 0
+      },
+>>>>>>> Stashed changes
       {
-        "Id": 171,
+        "Id": 173,
         "MFormationId": 21,
-        "SlotNo": 1,
-        "X": 1,
+        "SlotNo": 3,
+        "X": 4,
         "Y": 1,
         "Number": 4,
-        "Description": "\u9b54\u6cd5\u653b\u6483\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\u56de\u5fa9\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u5927\uff09\u3059\u308b\u3002",
+        "Description": "\u5e78\u904b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u56de\u5fa9\u304c25%\u6e1b\u5c11\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 6,
+        "DisplayFormationEffectType1": 9,
         "DisplayFormationEffectPath2": null,
         "DisplayFormationTriggerText2": null,
         "DisplayFormationEffectType2": 8,
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
-        "DisplayFormationEffectType3": 10,
+        "DisplayFormationEffectType3": 0,
         "DisplayFormationPower1": 2,
+<<<<<<< Updated upstream
         "DisplayFormationPower2": 2,
         "DisplayFormationPower3": 3,
         "MSkillId": 521010096
+=======
+        "DisplayFormationPower2": -2,
+        "DisplayFormationPower3": 0
+>>>>>>> Stashed changes
       },
       {
         "Id": 175,
@@ -3032,6 +3402,7 @@
         "MSkillId": 521050100
       },
       {
+<<<<<<< Updated upstream
         "Id": 174,
         "MFormationId": 21,
         "SlotNo": 4,
@@ -3055,25 +3426,37 @@
       },
       {
         "Id": 173,
+=======
+        "Id": 171,
+>>>>>>> Stashed changes
         "MFormationId": 21,
-        "SlotNo": 3,
-        "X": 4,
+        "SlotNo": 1,
+        "X": 1,
         "Y": 1,
         "Number": 4,
+<<<<<<< Updated upstream
         "Description": "\u5e78\u904b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u56de\u5fa9\u529b\u304c25%\u6e1b\u5c11\u3059\u308b\u3002",
+=======
+        "Description": "\u9b54\u6cd5\u653b\u6483\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\u56de\u5fa9\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u5927\uff09\u3059\u308b\u3002",
+>>>>>>> Stashed changes
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 9,
+        "DisplayFormationEffectType1": 6,
         "DisplayFormationEffectPath2": null,
         "DisplayFormationTriggerText2": null,
         "DisplayFormationEffectType2": 8,
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
-        "DisplayFormationEffectType3": 0,
+        "DisplayFormationEffectType3": 10,
         "DisplayFormationPower1": 2,
+<<<<<<< Updated upstream
         "DisplayFormationPower2": -2,
         "DisplayFormationPower3": 0,
         "MSkillId": 521030098
+=======
+        "DisplayFormationPower2": 2,
+        "DisplayFormationPower3": 3
+>>>>>>> Stashed changes
       },
       {
         "Id": 172,
@@ -3137,16 +3520,16 @@
     "MFormationEvolutionGroupId": 3,
     "MFormationSlots": [
       {
-        "Id": 159,
+        "Id": 156,
         "MFormationId": 22,
-        "SlotNo": 4,
-        "X": 3,
+        "SlotNo": 1,
+        "X": 0,
         "Y": 1,
         "Number": 5,
-        "Description": "\u9b54\u6cd5\u653b\u6483\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u901f\u3055\u304c50%\u6e1b\u5c11\u3059\u308b\u3002",
+        "Description": "\u5e78\u904b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u901f\u3055\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 6,
+        "DisplayFormationEffectType1": 9,
         "DisplayFormationEffectPath2": null,
         "DisplayFormationTriggerText2": null,
         "DisplayFormationEffectType2": 5,
@@ -3154,6 +3537,7 @@
         "DisplayFormationTriggerText3": null,
         "DisplayFormationEffectType3": 0,
         "DisplayFormationPower1": 2,
+<<<<<<< Updated upstream
         "DisplayFormationPower2": -3,
         "DisplayFormationPower3": 0,
         "MSkillId": 522040104
@@ -3161,24 +3545,9 @@
       {
         "Id": 158,
         "MFormationId": 22,
-        "SlotNo": 3,
-        "X": 2,
-        "Y": 2,
-        "Number": 5,
-        "Description": "\u9b54\u6cd5\u653b\u6483\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
-        "DisplayFormationEffectPath1": null,
-        "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 6,
-        "DisplayFormationEffectPath2": null,
-        "DisplayFormationTriggerText2": null,
-        "DisplayFormationEffectType2": 0,
-        "DisplayFormationEffectPath3": null,
-        "DisplayFormationTriggerText3": null,
-        "DisplayFormationEffectType3": 0,
-        "DisplayFormationPower1": 2,
-        "DisplayFormationPower2": 0,
-        "DisplayFormationPower3": 0,
-        "MSkillId": 522030103
+=======
+        "DisplayFormationPower2": 2,
+        "DisplayFormationPower3": 0
       },
       {
         "Id": 157,
@@ -3199,20 +3568,42 @@
         "DisplayFormationEffectType3": 0,
         "DisplayFormationPower1": 2,
         "DisplayFormationPower2": 2,
-        "DisplayFormationPower3": 0,
-        "MSkillId": 522020102
+        "DisplayFormationPower3": 0
       },
       {
-        "Id": 156,
+        "Id": 158,
         "MFormationId": 22,
-        "SlotNo": 1,
-        "X": 0,
-        "Y": 1,
+>>>>>>> Stashed changes
+        "SlotNo": 3,
+        "X": 2,
+        "Y": 2,
         "Number": 5,
-        "Description": "\u5e78\u904b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u901f\u3055\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
+        "Description": "\u9b54\u6cd5\u653b\u6483\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 9,
+        "DisplayFormationEffectType1": 6,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 0,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 0,
+        "DisplayFormationPower1": 2,
+        "DisplayFormationPower2": 0,
+        "DisplayFormationPower3": 0,
+        "MSkillId": 522030103
+      },
+      {
+        "Id": 160,
+        "MFormationId": 22,
+        "SlotNo": 5,
+        "X": 3,
+        "Y": 3,
+        "Number": 6,
+        "Description": "\u9b54\u6cd5\u653b\u6483\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u901f\u3055\u304c50%\u6e1b\u5c11\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 6,
         "DisplayFormationEffectPath2": null,
         "DisplayFormationTriggerText2": null,
         "DisplayFormationEffectType2": 5,
@@ -3220,6 +3611,34 @@
         "DisplayFormationTriggerText3": null,
         "DisplayFormationEffectType3": 0,
         "DisplayFormationPower1": 2,
+<<<<<<< Updated upstream
+        "DisplayFormationPower2": 2,
+        "DisplayFormationPower3": 0,
+        "MSkillId": 522020102
+=======
+        "DisplayFormationPower2": -3,
+        "DisplayFormationPower3": 0
+>>>>>>> Stashed changes
+      },
+      {
+        "Id": 159,
+        "MFormationId": 22,
+        "SlotNo": 4,
+        "X": 3,
+        "Y": 1,
+        "Number": 5,
+        "Description": "\u9b54\u6cd5\u653b\u6483\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u901f\u3055\u304c50%\u6e1b\u5c11\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 6,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 5,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 0,
+        "DisplayFormationPower1": 2,
+<<<<<<< Updated upstream
         "DisplayFormationPower2": 2,
         "DisplayFormationPower3": 0,
         "MSkillId": 522010101
@@ -3274,6 +3693,10 @@
         "PreviousMFormationId": null,
         "Level": null,
         "Description": "\u30dc\u30b9\u30e9\u30c3\u30b7\u30e5\u306e\u4ea4\u63db\u6240\u304b\u3089\u53d6\u5f97"
+=======
+        "DisplayFormationPower2": -3,
+        "DisplayFormationPower3": 0
+>>>>>>> Stashed changes
       }
     ]
   },
@@ -3286,26 +3709,33 @@
     "MFormationEvolutionGroupId": 3,
     "MFormationSlots": [
       {
-        "Id": 161,
+        "Id": 164,
         "MFormationId": 23,
-        "SlotNo": 1,
-        "X": 0,
-        "Y": 2,
-        "Number": 4,
-        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c75%\u4e0a\u6607\u3059\u308b\u3002\u7269\u7406\u9632\u5fa1\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u5927\uff09\u3059\u308b\u3002",
+        "SlotNo": 4,
+        "X": 3,
+        "Y": 4,
+        "Number": 6,
+        "Description": "\u5e78\u904b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u7269\u7406\u9632\u5fa1\u529b\u304c25%\u6e1b\u5c11\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 2,
+        "DisplayFormationEffectType1": 9,
         "DisplayFormationEffectPath2": null,
         "DisplayFormationTriggerText2": null,
         "DisplayFormationEffectType2": 3,
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
+<<<<<<< Updated upstream
         "DisplayFormationEffectType3": 10,
         "DisplayFormationPower1": 3,
         "DisplayFormationPower2": 3,
         "DisplayFormationPower3": 3,
         "MSkillId": 523010106
+=======
+        "DisplayFormationEffectType3": 0,
+        "DisplayFormationPower1": 2,
+        "DisplayFormationPower2": -2,
+        "DisplayFormationPower3": 0
+>>>>>>> Stashed changes
       },
       {
         "Id": 165,
@@ -3330,12 +3760,12 @@
         "MSkillId": 523050110
       },
       {
-        "Id": 164,
+        "Id": 162,
         "MFormationId": 23,
-        "SlotNo": 4,
+        "SlotNo": 2,
         "X": 3,
-        "Y": 4,
-        "Number": 6,
+        "Y": 0,
+        "Number": 4,
         "Description": "\u5e78\u904b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u7269\u7406\u9632\u5fa1\u529b\u304c25%\u6e1b\u5c11\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
@@ -3374,21 +3804,22 @@
         "MSkillId": 523030108
       },
       {
-        "Id": 162,
+        "Id": 161,
         "MFormationId": 23,
-        "SlotNo": 2,
-        "X": 3,
-        "Y": 0,
+        "SlotNo": 1,
+        "X": 0,
+        "Y": 2,
         "Number": 4,
-        "Description": "\u5e78\u904b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u7269\u7406\u9632\u5fa1\u529b\u304c25%\u6e1b\u5c11\u3059\u308b\u3002",
+        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c75%\u4e0a\u6607\u3059\u308b\u3002\u7269\u7406\u9632\u5fa1\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u5927\uff09\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
-        "DisplayFormationEffectType1": 9,
+        "DisplayFormationEffectType1": 2,
         "DisplayFormationEffectPath2": null,
         "DisplayFormationTriggerText2": null,
         "DisplayFormationEffectType2": 3,
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
+<<<<<<< Updated upstream
         "DisplayFormationEffectType3": 0,
         "DisplayFormationPower1": 2,
         "DisplayFormationPower2": -2,
@@ -3423,6 +3854,12 @@
         "PreviousMFormationId": null,
         "Level": null,
         "Description": "\u30dc\u30b9\u30e9\u30c3\u30b7\u30e5\u306e\u4ea4\u63db\u6240\u304b\u3089\u53d6\u5f97"
+=======
+        "DisplayFormationEffectType3": 10,
+        "DisplayFormationPower1": 3,
+        "DisplayFormationPower2": 3,
+        "DisplayFormationPower3": 3
+>>>>>>> Stashed changes
       }
     ]
   },
@@ -3435,6 +3872,7 @@
     "MFormationEvolutionGroupId": 2,
     "MFormationSlots": [
       {
+<<<<<<< Updated upstream
         "Id": 176,
         "MFormationId": 24,
         "SlotNo": 1,
@@ -3457,6 +3895,8 @@
         "MSkillId": 524010111
       },
       {
+=======
+>>>>>>> Stashed changes
         "Id": 177,
         "MFormationId": 24,
         "SlotNo": 2,
@@ -3541,6 +3981,7 @@
         "DisplayFormationEffectType3": 5,
         "DisplayFormationPower1": 2,
         "DisplayFormationPower2": 2,
+<<<<<<< Updated upstream
         "DisplayFormationPower3": 2,
         "MSkillId": 524050115
       }
@@ -3604,6 +4045,79 @@
         "DisplayFormationPower2": -2,
         "DisplayFormationPower3": 0,
         "MSkillId": 524040119
+=======
+        "DisplayFormationPower3": 2
+      },
+      {
+        "Id": 176,
+        "MFormationId": 24,
+        "SlotNo": 1,
+        "X": 2,
+        "Y": 2,
+        "Number": 5,
+        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\u547d\u4e2d\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u901f\u3055\u304c25%\u6e1b\u5c11\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 2,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 4,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 5,
+        "DisplayFormationPower1": 3,
+        "DisplayFormationPower2": 2,
+        "DisplayFormationPower3": -2
+      }
+    ]
+  },
+  {
+    "Id": 25,
+    "Name": "\u30df\u30c3\u30c9\u30a2\u30b5\u30eb\u30c8",
+    "Description": "\u524d\u885b2\u540d\u306e\u653b\u6483\u529b\u3092\u4e0a\u6607\u3055\u305b\u3064\u3064\u3001\u5f8c\u885b3\u540d\u306e\u901f\u3055\u3092\u8abf\u6574\u3059\u308b\u3002\u653b\u6483\u6027\u80fd\u3068\u653b\u6483\u9806\u756a\u306e\u8abf\u6574\u306b\u512a\u308c\u305f\u968a\u5217\u3002",
+    "MFormationSlots": [
+      {
+        "Id": 191,
+        "MFormationId": 25,
+        "SlotNo": 1,
+        "X": 0,
+        "Y": 2,
+        "Number": 4,
+        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 2,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 0,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 0,
+        "DisplayFormationPower1": 3,
+        "DisplayFormationPower2": 0,
+        "DisplayFormationPower3": 0
+      },
+      {
+        "Id": 192,
+        "MFormationId": 25,
+        "SlotNo": 2,
+        "X": 1,
+        "Y": 1,
+        "Number": 2,
+        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\u7269\u7406\u9632\u5fa1\u529b\u304c25%\u6e1b\u5c11\u3059\u308b\u3002\\n\u9b54\u6cd5\u9632\u5fa1\u529b\u304c25%\u6e1b\u5c11\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 2,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 3,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 7,
+        "DisplayFormationPower1": 3,
+        "DisplayFormationPower2": -2,
+        "DisplayFormationPower3": -2
+>>>>>>> Stashed changes
       },
       {
         "Id": 193,
@@ -3650,45 +4164,144 @@
         "MSkillId": 524050120
       },
       {
-        "Id": 191,
+        "Id": 195,
         "MFormationId": 25,
-        "SlotNo": 1,
-        "X": 0,
-        "Y": 2,
-        "Number": 4,
-        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002",
+        "SlotNo": 5,
+        "X": 4,
+        "Y": 3,
+        "Number": 9,
+        "Description": "\u9b54\u6cd5\u653b\u6483\u529b\u304c25%\u6e1b\u5c11\u3059\u308b\u3002\u901f\u3055\u304c25%\u6e1b\u5c11\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 6,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 5,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 0,
+        "DisplayFormationPower1": -2,
+        "DisplayFormationPower2": -2,
+        "DisplayFormationPower3": 0
+      }
+    ]
+  },
+  {
+    "Id": 26,
+    "Name": "\u30d0\u30bf\u30ea\u30aa\u30f3\u30bf\u30af\u30c8",
+    "Description": "\u524d\u885b3\u540d\u306e\u7269\u7406\u653b\u6483\u529b\u3092\u4e0a\u6607\u3055\u305b\u3064\u3064\u3001\u5168\u4f53\u306e\u901f\u3055\u3092\u8abf\u6574\u3067\u304d\u308b\u3001\u9632\u5fa1\u6027\u80fd\u3092\u72a0\u7272\u306b\u653b\u6483\u6027\u80fd\u3068\u9806\u756a\u306e\u8abf\u6574\u306b\u512a\u308c\u305f\u968a\u5217",
+    "MFormationSlots": [
+      {
+        "Id": 220,
+        "MFormationId": 26,
+        "SlotNo": 5,
+        "X": 4,
+        "Y": 3,
+        "Number": 9,
+        "Description": "\u7269\u7406\u9632\u5fa1\u529b\u304c30%\u6e1b\u5c11\u3059\u308b\u3002\u9b54\u6cd5\u9632\u5fa1\u529b\u304c30%\u6e1b\u5c11\u3059\u308b\u3002\\n\u901f\u3055\u304c30%\u6e1b\u5c11\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 3,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 7,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 5,
+        "DisplayFormationPower1": -2,
+        "DisplayFormationPower2": -2,
+        "DisplayFormationPower3": -2
+      },
+      {
+        "Id": 219,
+        "MFormationId": 26,
+        "SlotNo": 4,
+        "X": 4,
+        "Y": 1,
+        "Number": 1,
+        "Description": "\u7269\u7406\u9632\u5fa1\u529b\u304c30%\u6e1b\u5c11\u3059\u308b\u3002\u9b54\u6cd5\u9632\u5fa1\u529b\u304c30%\u6e1b\u5c11\u3059\u308b\u3002\\n\u901f\u3055\u304c15%\u6e1b\u5c11\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 3,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 7,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 5,
+        "DisplayFormationPower1": -2,
+        "DisplayFormationPower2": -2,
+        "DisplayFormationPower3": -1
+      },
+      {
+        "Id": 218,
+        "MFormationId": 26,
+        "SlotNo": 3,
+        "X": 2,
+        "Y": 3,
+        "Number": 9,
+        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\u901f\u3055\u304c15%\u4e0a\u6607\u3059\u308b\u3002\\n\u7269\u7406\u9632\u5fa1\u529b\u304c30%\u6e1b\u5c11\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
         "DisplayFormationEffectType1": 2,
         "DisplayFormationEffectPath2": null,
         "DisplayFormationTriggerText2": null,
-        "DisplayFormationEffectType2": 0,
+        "DisplayFormationEffectType2": 5,
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 3,
+        "DisplayFormationPower1": 3,
+        "DisplayFormationPower2": 1,
+        "DisplayFormationPower3": -2
+      },
+      {
+        "Id": 216,
+        "MFormationId": 26,
+        "SlotNo": 1,
+        "X": 0,
+        "Y": 2,
+        "Number": 4,
+        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c15%\u4e0a\u6607\u3059\u308b\u3002\u547d\u4e2d\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u901f\u3055\u304c50%\u4e0a\u6607\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 2,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 4,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+<<<<<<< Updated upstream
         "DisplayFormationEffectType3": 0,
         "DisplayFormationPower1": 3,
         "DisplayFormationPower2": 0,
         "DisplayFormationPower3": 0,
         "MSkillId": 524010116
+=======
+        "DisplayFormationEffectType3": 5,
+        "DisplayFormationPower1": 1,
+        "DisplayFormationPower2": 3,
+        "DisplayFormationPower3": 3
+>>>>>>> Stashed changes
       },
       {
-        "Id": 192,
-        "MFormationId": 25,
+        "Id": 217,
+        "MFormationId": 26,
         "SlotNo": 2,
         "X": 1,
         "Y": 1,
         "Number": 2,
-        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\u7269\u7406\u9632\u5fa1\u529b\u304c25%\u6e1b\u5c11\u3059\u308b\u3002\\n\u9b54\u6cd5\u9632\u5fa1\u529b\u304c25%\u6e1b\u5c11\u3059\u308b\u3002",
+        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\u901f\u3055\u304c30%\u4e0a\u6607\u3059\u308b\u3002\\n\u7269\u7406\u9632\u5fa1\u529b\u304c30%\u6e1b\u5c11\u3059\u308b\u3002",
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
         "DisplayFormationEffectType1": 2,
         "DisplayFormationEffectPath2": null,
         "DisplayFormationTriggerText2": null,
-        "DisplayFormationEffectType2": 3,
+        "DisplayFormationEffectType2": 5,
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
-        "DisplayFormationEffectType3": 7,
+        "DisplayFormationEffectType3": 3,
         "DisplayFormationPower1": 3,
+<<<<<<< Updated upstream
         "DisplayFormationPower2": -2,
         "DisplayFormationPower3": -2,
         "MSkillId": 524020117
@@ -3787,11 +4400,77 @@
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
         "DisplayFormationEffectType1": 2,
+=======
+        "DisplayFormationPower2": 2,
+        "DisplayFormationPower3": -2
+      }
+    ]
+  },
+  {
+    "Id": 27,
+    "Name": "\u30d8\u30af\u30bb\u30ec\u30a4\u30b9\u30af\u30ef\u30c3\u30c9",
+    "Description": "\u5f8c\u885b3\u540d\u306e\u9b54\u6cd5\u653b\u6483\u529b\u3092\u4e0a\u6607\u3055\u305b\u3064\u3064\u3001\u5168\u4f53\u306e\u901f\u3055\u3092\u8abf\u6574\u3067\u304d\u308b\u3001\u653b\u6483\u9762\u306e\u5897\u5f37\u306b\u512a\u308c\u305f\u968a\u5217",
+    "MFormationSlots": [
+      {
+        "Id": 241,
+        "MFormationId": 27,
+        "SlotNo": 1,
+        "X": 0,
+        "Y": 1,
+        "Number": 5,
+        "Description": "\u7269\u7406\u9632\u5fa1\u529b\u304c30%\u4e0a\u6607\u3059\u308b\u3002\u9b54\u6cd5\u9632\u5fa1\u529b\u304c30%\u4e0a\u6607\u3059\u308b\u3002\\n\u901f\u3055\u304c30%\u6e1b\u5c11\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 3,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 7,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 5,
+        "DisplayFormationPower1": 2,
+        "DisplayFormationPower2": 2,
+        "DisplayFormationPower3": -2
+      },
+      {
+        "Id": 242,
+        "MFormationId": 27,
+        "SlotNo": 2,
+        "X": 1,
+        "Y": 3,
+        "Number": 5,
+        "Description": "\u7269\u7406\u9632\u5fa1\u529b\u304c30%\u6e1b\u5c11\u3059\u308b\u3002\u9b54\u6cd5\u9632\u5fa1\u529b\u304c30%\u6e1b\u5c11\u3059\u308b\u3002\\n\u901f\u3055\u304c15%\u6e1b\u5c11\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 3,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 7,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 5,
+        "DisplayFormationPower1": -2,
+        "DisplayFormationPower2": -2,
+        "DisplayFormationPower3": -1
+      },
+      {
+        "Id": 243,
+        "MFormationId": 27,
+        "SlotNo": 3,
+        "X": 2,
+        "Y": 1,
+        "Number": 6,
+        "Description": "\u9b54\u6cd5\u653b\u6483\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\u901f\u3055\u304c15%\u4e0a\u6607\u3059\u308b\u3002\\n\u9b54\u6cd5\u9632\u5fa1\u529b\u304c50%\u6e1b\u5c11\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 6,
+>>>>>>> Stashed changes
         "DisplayFormationEffectPath2": null,
         "DisplayFormationTriggerText2": null,
         "DisplayFormationEffectType2": 5,
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
+<<<<<<< Updated upstream
         "DisplayFormationEffectType3": 3,
         "DisplayFormationPower1": 3,
         "DisplayFormationPower2": 1,
@@ -3828,6 +4507,42 @@
         "Y": 3,
         "Number": 9,
         "Description": "\u7269\u7406\u9632\u5fa1\u529b\u304c30%\u6e1b\u5c11\u3059\u308b\u3002\u9b54\u6cd5\u9632\u5fa1\u529b\u304c30%\u6e1b\u5c11\u3059\u308b\u3002\\n\u901f\u3055\u304c30%\u6e1b\u5c11\u3059\u308b\u3002",
+=======
+        "DisplayFormationEffectType3": 7,
+        "DisplayFormationPower1": 3,
+        "DisplayFormationPower2": 1,
+        "DisplayFormationPower3": -3
+      },
+      {
+        "Id": 244,
+        "MFormationId": 27,
+        "SlotNo": 4,
+        "X": 3,
+        "Y": 3,
+        "Number": 6,
+        "Description": "\u9b54\u6cd5\u653b\u6483\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\u901f\u3055\u304c30%\u4e0a\u6607\u3059\u308b\u3002\\n\u9b54\u6cd5\u9632\u5fa1\u529b\u304c50%\u6e1b\u5c11\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 6,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 5,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 7,
+        "DisplayFormationPower1": 3,
+        "DisplayFormationPower2": 2,
+        "DisplayFormationPower3": -3
+      },
+      {
+        "Id": 245,
+        "MFormationId": 27,
+        "SlotNo": 5,
+        "X": 4,
+        "Y": 2,
+        "Number": 8,
+        "Description": "\u9b54\u6cd5\u653b\u6483\u529b\u304c15%\u4e0a\u6607\u3059\u308b\u3002\u901f\u3055\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u9b54\u6cd5\u9632\u5fa1\u529b\u304c25%\u6e1b\u5c11\u3059\u308b\u3002",
+>>>>>>> Stashed changes
         "DisplayFormationEffectPath1": null,
         "DisplayFormationTriggerText1": null,
         "DisplayFormationEffectType1": 3,
@@ -3836,6 +4551,7 @@
         "DisplayFormationEffectType2": 7,
         "DisplayFormationEffectPath3": null,
         "DisplayFormationTriggerText3": null,
+<<<<<<< Updated upstream
         "DisplayFormationEffectType3": 5,
         "DisplayFormationPower1": -2,
         "DisplayFormationPower2": -2,
@@ -3870,6 +4586,348 @@
         "PreviousMFormationId": null,
         "Level": null,
         "Description": "\u73fe\u5728\u306f\u53d6\u5f97\u3067\u304d\u307e\u305b\u3093"
+=======
+        "DisplayFormationEffectType3": 7,
+        "DisplayFormationPower1": 1,
+        "DisplayFormationPower2": 3,
+        "DisplayFormationPower3": -2
+      }
+    ]
+  },
+  {
+    "Id": 28,
+    "Name": "\u30df\u30e9\u30fc\u30b8\u30e5\u30c7\u30a3\u30bb\u30f3\u30c8",
+    "Description": "\u524d\u885b\uff11\u540d\u3068\u5f8c\u885b\uff12\u540d\u306e\u7269\u7406\u653b\u6483\u529b\u3092\u4e0a\u6607\u3055\u305b\u308b\u3001\u653b\u6483\u9806\u756a\u3068\u30d8\u30a4\u30c8\u8abf\u6574\u306b\u512a\u308c\u305f\u968a\u5217\u3002",
+    "MFormationSlots": [
+      {
+        "Id": 250,
+        "MFormationId": 28,
+        "SlotNo": 5,
+        "X": 4,
+        "Y": 4,
+        "Number": 5,
+        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u81ea\u8eab\u30d8\u306e\u6575\u8996\u304c\u6e1b\u5c11\uff08\u4e2d\uff09\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 2,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 10,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 0,
+        "DisplayFormationPower1": 3,
+        "DisplayFormationPower2": -3,
+        "DisplayFormationPower3": 0
+      },
+      {
+        "Id": 248,
+        "MFormationId": 28,
+        "SlotNo": 3,
+        "X": 2,
+        "Y": 0,
+        "Number": 5,
+        "Description": "\u7269\u7406\u9632\u5fa1\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\u901f\u3055\u304c25%\u6e1b\u5c11\u3059\u308b\u3002\\n\u81ea\u8eab\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u5c0f\uff09\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 3,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 5,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 10,
+        "DisplayFormationPower1": 2,
+        "DisplayFormationPower2": -2,
+        "DisplayFormationPower3": 2
+      },
+      {
+        "Id": 249,
+        "MFormationId": 28,
+        "SlotNo": 4,
+        "X": 3,
+        "Y": 0,
+        "Number": 6,
+        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u81ea\u8eab\u30d8\u306e\u6575\u8996\u304c\u6e1b\u5c11\uff08\u4e2d\uff09\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 2,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 10,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 0,
+        "DisplayFormationPower1": 3,
+        "DisplayFormationPower2": -3,
+        "DisplayFormationPower3": 0
+      },
+      {
+        "Id": 246,
+        "MFormationId": 28,
+        "SlotNo": 1,
+        "X": 0,
+        "Y": 4,
+        "Number": 5,
+        "Description": "\u7269\u7406\u653b\u6483\u304c25%\u4e0a\u6607\u3059\u308b\u3002\u901f\u3055\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u6575\u8996\u304c\u4e0a\u6607\uff08\u5927\uff09\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 2,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 5,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 10,
+        "DisplayFormationPower1": 2,
+        "DisplayFormationPower2": 3,
+        "DisplayFormationPower3": 3
+      },
+      {
+        "Id": 247,
+        "MFormationId": 28,
+        "SlotNo": 2,
+        "X": 1,
+        "Y": 2,
+        "Number": 5,
+        "Description": "\u7269\u7406\u9632\u5fa1\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\u901f\u3055\u304c25%\u6e1b\u5c11\u3059\u308b\u3002\\n\u81ea\u8eab\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u5c0f\uff09\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 3,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 5,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 10,
+        "DisplayFormationPower1": 2,
+        "DisplayFormationPower2": -2,
+        "DisplayFormationPower3": 2
+      }
+    ]
+  },
+  {
+    "Id": 29,
+    "Name": "\u30d5\u30a9\u30fc\u30ab\u30b9\u30d3\u30eb\u30c9",
+    "Description": "\u524d\u885b3\u540d\u306e\u653b\u6483\u529b\u3068\u901f\u3055\u3092\u4e0a\u6607\u3055\u305b\u3064\u3064\u3001\u5f8c\u885b2\u540d\u306e\u6210\u9577\u3092\u4fc3\u9032\u3055\u305b\u308b\u3053\u3068\u304c\u3067\u304d\u308b\u968a\u5217\u3002",
+    "MFormationSlots": [
+      {
+        "Id": 251,
+        "MFormationId": 29,
+        "SlotNo": 1,
+        "X": 0,
+        "Y": 2,
+        "Number": 5,
+        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\u9b54\u6cd5\u653b\u6483\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u901f\u3055\u304c50%\u4e0a\u6607\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 2,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 6,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 5,
+        "DisplayFormationPower1": 3,
+        "DisplayFormationPower2": 3,
+        "DisplayFormationPower3": 3
+      },
+      {
+        "Id": 252,
+        "MFormationId": 29,
+        "SlotNo": 2,
+        "X": 1,
+        "Y": 0,
+        "Number": 5,
+        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\u9b54\u6cd5\u653b\u6483\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u901f\u3055\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 2,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 6,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 5,
+        "DisplayFormationPower1": 2,
+        "DisplayFormationPower2": 2,
+        "DisplayFormationPower3": 2
+      },
+      {
+        "Id": 253,
+        "MFormationId": 29,
+        "SlotNo": 3,
+        "X": 1,
+        "Y": 4,
+        "Number": 5,
+        "Description": "\u7269\u7406\u653b\u6483\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\u9b54\u6cd5\u653b\u6483\u529b\u304c25%\u4e0a\u6607\u3059\u308b\u3002\\n\u901f\u3055\u304c25%\u4e0a\u6607\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 2,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 6,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 5,
+        "DisplayFormationPower1": 2,
+        "DisplayFormationPower2": 2,
+        "DisplayFormationPower3": 2
+      },
+      {
+        "Id": 254,
+        "MFormationId": 29,
+        "SlotNo": 4,
+        "X": 3,
+        "Y": 1,
+        "Number": 4,
+        "Description": "\u901f\u3055\u304c50%\u6e1b\u5c11\u3059\u308b\u3002\\n\u80fd\u529b\u4e0a\u6607\u91cf\u3092100%\u4e0a\u6607\u3055\u305b\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 5,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 0,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 0,
+        "DisplayFormationPower1": -3,
+        "DisplayFormationPower2": 0,
+        "DisplayFormationPower3": 0
+      },
+      {
+        "Id": 255,
+        "MFormationId": 29,
+        "SlotNo": 5,
+        "X": 3,
+        "Y": 3,
+        "Number": 6,
+        "Description": "\u901f\u3055\u304c50%\u6e1b\u5c11\u3059\u308b\u3002\\n\u80fd\u529b\u4e0a\u6607\u91cf\u3092100%\u4e0a\u6607\u3055\u305b\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 5,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 0,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 0,
+        "DisplayFormationPower1": -3,
+        "DisplayFormationPower2": 0,
+        "DisplayFormationPower3": 0
+      }
+    ]
+  },
+  {
+    "Id": 30,
+    "Name": "\u30ef\u30f3\u30d5\u30a9\u30fc\u30aa\u30fc\u30eb",
+    "Description": "\u5f8c\u885b1\u540d\u306e\u9b54\u6cd5\u653b\u6483\u529b\u3068\u901f\u3055\u3092\u5927\u304d\u304f\u4e0a\u6607\u3055\u305b\u308b\u3001\u5f8c\u885b1\u540d\u306e\u5f37\u5316\u306b\u7279\u5316\u3057\u305f\u968a\u5217\u3002",
+    "MFormationSlots": [
+      {
+        "Id": 259,
+        "MFormationId": 30,
+        "SlotNo": 4,
+        "X": 3,
+        "Y": 4,
+        "Number": 5,
+        "Description": "\u7269\u7406\u9632\u5fa1\u529b\u304c50%\u6e1b\u5c11\u3059\u308b\u3002\u9b54\u6cd5\u9632\u5fa1\u529b\u304c50%\u6e1b\u5c11\u3059\u308b\u3002\\n\u901f\u3055\u304c15%\u6e1b\u5c11\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 3,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 7,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 5,
+        "DisplayFormationPower1": -3,
+        "DisplayFormationPower2": -3,
+        "DisplayFormationPower3": -1
+      },
+      {
+        "Id": 256,
+        "MFormationId": 30,
+        "SlotNo": 1,
+        "X": 0,
+        "Y": 2,
+        "Number": 4,
+        "Description": "\u7269\u7406\u9632\u5fa1\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\u9b54\u6cd5\u9632\u5fa1\u529b\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u4e0a\u6607\uff08\u5927\uff09\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 3,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 7,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 10,
+        "DisplayFormationPower1": 3,
+        "DisplayFormationPower2": 3,
+        "DisplayFormationPower3": 3
+      },
+      {
+        "Id": 257,
+        "MFormationId": 30,
+        "SlotNo": 2,
+        "X": 4,
+        "Y": 2,
+        "Number": 5,
+        "Description": "\u7269\u7406\u9632\u5fa1\u529b\u304c25%\u6e1b\u5c11\u3059\u308b\u3002\u9b54\u6cd5\u9632\u5fa1\u529b\u304c25%\u6e1b\u5c11\u3059\u308b\u3002\\n\u901f\u3055\u304c15%\u6e1b\u5c11\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 3,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 7,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 5,
+        "DisplayFormationPower1": -2,
+        "DisplayFormationPower2": -2,
+        "DisplayFormationPower3": -1
+      },
+      {
+        "Id": 258,
+        "MFormationId": 30,
+        "SlotNo": 3,
+        "X": 3,
+        "Y": 0,
+        "Number": 5,
+        "Description": "\u7269\u7406\u9632\u5fa1\u529b\u304c50%\u6e1b\u5c11\u3059\u308b\u3002\u9b54\u6cd5\u9632\u5fa1\u529b\u304c50%\u6e1b\u5c11\u3059\u308b\u3002\\n\u901f\u3055\u304c15%\u6e1b\u5c11\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 3,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 7,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 5,
+        "DisplayFormationPower1": -3,
+        "DisplayFormationPower2": -3,
+        "DisplayFormationPower3": -1
+      },
+      {
+        "Id": 260,
+        "MFormationId": 30,
+        "SlotNo": 5,
+        "X": 2,
+        "Y": 2,
+        "Number": 5,
+        "Description": "\u9b54\u6cd5\u653b\u6483\u529b\u304c75%\u4e0a\u6607\u3059\u308b\u3002\u901f\u3055\u304c50%\u4e0a\u6607\u3059\u308b\u3002\\n\u81ea\u8eab\u3078\u306e\u6575\u8996\u304c\u6e1b\u5c11\uff08\u4e2d\uff09\u3059\u308b\u3002",
+        "DisplayFormationEffectPath1": null,
+        "DisplayFormationTriggerText1": null,
+        "DisplayFormationEffectType1": 6,
+        "DisplayFormationEffectPath2": null,
+        "DisplayFormationTriggerText2": null,
+        "DisplayFormationEffectType2": 5,
+        "DisplayFormationEffectPath3": null,
+        "DisplayFormationTriggerText3": null,
+        "DisplayFormationEffectType3": 10,
+        "DisplayFormationPower1": 3,
+        "DisplayFormationPower2": 3,
+        "DisplayFormationPower3": -3
+>>>>>>> Stashed changes
       }
     ]
   },
