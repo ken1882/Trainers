@@ -7,6 +7,7 @@ parser.add_argument("-n", '--repeats', help='Repeat times')
 parser.add_argument("-s", '--stage', help='Stage name to fight')
 parser.add_argument("-i", '--index', default=0, help='Index, job-specific argument')
 parser.add_argument("-j", '--jndex', default=0, help='Secondary index, job-specific argument')
+parser.add_argument("-w", '--wait', default=300, type=int, help='Wait duration between fights')
 
 def load():
   args = parser.parse_args()

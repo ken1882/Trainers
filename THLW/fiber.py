@@ -22,10 +22,13 @@ PARTY_SEL_POS = [
 ]
 STAGE_NAME_OFFSET = [95, 42, 382, 60]
 
+Cnt_NoLimitedErrand = 0
+
 def to_homepage():
   Input.rclick(970, 25)
 
 def start_errand_fiber():
+  global Cnt_NoLimitedErrand
   while not stage.is_stage('HomePage'):
     yield
     to_homepage()
@@ -52,31 +55,38 @@ def start_errand_fiber():
       Input.rclick(50, 400)
     wait(1)
     _G.flush()
-    completed = graphics.find_object('errand_done.png', 0.98)
+    completed = graphics.find_object('errand_done.png', 0.9)
     log_info("Completed errands:", completed)
   # dispatch
   dispatched = int(utils.ocr_rect((67,517,121,542), 'errand_num.png', num_only=True)[0])
   while dispatched < 3:
     log_info("Dispatched:", dispatched)
+    wait(3)
     yield
-    errands_doing = graphics.find_object('errand_doing.png', 0.98)
+    errands_doing = graphics.find_object('errand_doing.png', 0.9)
     errands = []
-    tmp_errands = graphics.find_object('GC.png', 0.98) 
-    tmp_errands.extend(graphics.find_object('SC.png', 0.98))
-    tmp_errands.extend(graphics.find_object('wood.png', 0.98))
+    tmp_errands = graphics.find_object('GC.png', 0.9) 
+    tmp_errands.extend(graphics.find_object('SC.png', 0.9))
+    tmp_errands.extend(graphics.find_object('wood.png', 0.9))
     for erpos in tmp_errands:
       if any((abs(erpos[1]-edpos[1]) < 20 for edpos in errands_doing)):
         continue
       errands.append(erpos)
     log_info("Available errands:", errands)
+    if Cnt_NoLimitedErrand > 3:
+      pass
     if not errands:
+      Cnt_NoLimitedErrand += 1
       log_info("No errands available")
       break
     for pos in errands:
       for p in (pos, (279, 417),(845, 419),(525, 134)):
+        Cnt_NoLimitedErrand = 0
         Input.rclick(*p)
         wait(1)
         yield
+    wait(2)
+    yield
     _G.flush()
     dispatched = int(utils.ocr_rect((67,517,121,542), 'errand_num.png', num_only=True)[0])
 
@@ -160,11 +170,31 @@ def start_refight_fiber():
     raise RuntimeError("No stage name given")
   while True:
     yield
-    if stage.is_stage('RematchEnd'):
+    if stage.is_stage('BSHome'):
+      Input.click(250,185,True,False)
+      for _ in range(10):
+        wait(0.5)
+        yield
+      while not stage.is_stage('HomePage'):
+        yield
+        Input.click(615,400)
+        wait(5)
+      wait(1)
+      yield from start_errand_fiber()
+      yield from start_stage_selection_fiber()
+      flag_check_errands = False
+      wait(1)
+      yield
+    elif stage.is_stage('RematchEnd'):
       Input.rclick(480, 500)
       wait(2)
     elif stage.is_stage('StageSelect'):
       if flag_check_errands:
+        wt = _G.ARGV.wait
+        log_info(f"Waiting for {wt} seconds to recover battler stamina")
+        for _ in range(int(wt)):
+          wait(1-_G.FPS)
+          yield
         yield from start_errand_fiber()
         yield from start_stage_selection_fiber()
         flag_check_errands = False
