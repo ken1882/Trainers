@@ -103,7 +103,7 @@ def start_main():
     _G.FlagRunning = False
 
 if __name__ == "__main__":
-  utils.get_self_hwnd()
+  _G.SelfHwnd = utils.get_self_hwnd()
   detect_app_window()
   utils.resize_app_window()
   args = argv_parse.load()

@@ -1,6 +1,5 @@
 import re
-from numpy import gradient
-from win32gui import ExtCreatePen
+import win32con
 import _G,stage
 from _G import resume, resume_from, pop_fiber_ret, wait, uwait, log_info
 import Input, position, graphics
@@ -8,17 +7,18 @@ from random import randint
 import combat
 import utils
 import itertools
+from PIL import Image
 
 PARTY_SEL_POS = [
-  [(815, 526),(468, 453)],
-  [(815, 526),(446, 274)],
-  [(815, 526),(458, 144)],
-  [(815, 358),(481, 445)],
-  [(815, 358),(500, 289)],
-  [(815, 358),(504, 125)],
-  [(815, 120),(497, 147)],
-  [(815, 120),(501, 311)],
-  [(815, 120),(518, 476)]
+  [(810, 520),(468, 453)],
+  [(810, 520),(446, 274)],
+  [(810, 520),(458, 144)],
+  [(810, 350),(481, 445)],
+  [(810, 350),(500, 289)],
+  [(810, 350),(504, 125)],
+  [(810, 120),(497, 147)],
+  [(810, 120),(501, 311)],
+  [(810, 120),(518, 476)]
 ]
 STAGE_NAME_OFFSET = [95, 42, 382, 60]
 
@@ -108,7 +108,7 @@ def start_walkstage_fiber():
       wait(2)
     elif stage.is_stage('CombatPrepare'):
       wait(1)
-      Input.rclick(824, 500)
+      Input.rclick(840, 500)
       wait(3)
     elif stage.is_stage('SceneStory'):
       wait(1)
@@ -117,9 +117,9 @@ def start_walkstage_fiber():
       for _ in range(2):
         Input.rclick(609, 401)
         wait(1)
-    elif stage.is_stage('CombatVictory'):
+    elif stage.is_stage('CombatVictory') or stage.is_stage('CombatRewards'):
       Input.rclick(509, 401)
-      wait(2)
+      wait(3)
       Input.rclick(882, 514)
 
 def get_stage_names():
@@ -164,6 +164,7 @@ def start_refight_fiber():
   target_name = _G.ARGV.stage
   party_sel_cycle = itertools.cycle(PARTY_SEL_POS)
   flag_check_errands = False
+  flag_rebooting = False
   for _ in range(int(_G.ARGV.index)):
     _ = next(party_sel_cycle)
   if not target_name:
@@ -175,11 +176,20 @@ def start_refight_fiber():
       for _ in range(10):
         wait(0.5)
         yield
-      while not stage.is_stage('HomePage'):
+      flag_rebooting = True
+      continue
+    elif flag_rebooting:
+      if not stage.is_stage('HomePage'):
         yield
-        Input.click(615,400)
-        wait(5)
+        for _ in range(2):
+          Input.click(615,400)
+          for _ in range(10):
+            wait(0.5)
+            yield
+        to_homepage()
+        continue
       wait(1)
+      flag_rebooting = False
       yield from start_errand_fiber()
       yield from start_stage_selection_fiber()
       flag_check_errands = False
@@ -212,8 +222,9 @@ def start_refight_fiber():
       wait(2)
     elif stage.is_stage('CombatPrepare'):
       wait(2)
-      Input.rclick(324, 518)
-      wait(3)
+      Input.rclick(340, 510)
+      log_info("Selecting party")
+      wait(5)
       pos = next(party_sel_cycle)
       Input.mouse_down(*pos[0])
       wait(1)
@@ -228,3 +239,76 @@ def start_refight_fiber():
       Input.rclick(824, 500)
       wait(3)
       flag_check_errands = True
+    elif stage.is_stage('Disconnected'):
+      Input.rlick(599, 403)
+      wait(1)
+
+def start_rhythm_fiber():
+  left_color = set((
+    (210, 228, 254),(169, 202, 246),(187, 213, 252),(135, 181, 237),(198, 222, 250),(103, 157, 222),(140, 188, 249),
+    (207, 212, 214),(113, 172, 233),(84, 119, 234),(66, 142, 244),(64, 113, 216),(118, 154, 232),(184, 239, 254),
+    (34, 153, 220),(65, 255, 255),(71, 207, 245),(103, 215, 250),(124, 173, 232),(83, 153, 230),(153, 231, 255),
+    (45, 206, 255),(79, 115, 223),(88, 146, 217),(41, 89, 160),(67, 135, 231),(41, 136, 185),(193, 202, 206),
+    (118, 225, 253),(98, 155, 237),(41, 98, 187),(59, 196, 250),(124, 175, 244),(104, 166, 253),(57, 180, 253),
+    (49, 106, 197),(87, 219, 253),(106, 217, 254),(97, 163, 228),(91, 221, 255),(127, 167, 224),(88, 102, 151),
+    (76, 143, 219),(68, 132, 210),(49, 120, 154),(40, 90, 159),(91, 98, 174),(48, 99, 142),(80, 109, 163),
+    (88, 94, 155),(61, 82, 183),(64, 89, 134),(56, 104, 152),
+  ))
+  right_color = set((
+    (207, 60, 44),(247, 196, 160),(235, 70, 47),(222, 81, 23),(236, 138, 113),(243, 172, 143),(239, 103, 82),
+    (253, 119, 69),(255, 251, 190),(246, 183, 148),(235, 121, 97),(235, 159, 117),(255, 128, 85),(255, 215, 164),
+    (237, 151, 72),(242, 161, 135),(215, 101, 82),(220, 62, 43),(209, 83, 67),(218, 120, 85),(255, 229, 180),
+    (194, 75, 67),(201, 51, 32),(229, 130, 105),(235, 148, 122),(239, 167, 138),(234, 128, 103),(255, 123, 72),
+    (236, 143, 70),(182, 130, 128),(176, 170, 169),(255, 237, 184),(200, 89, 111),(240, 149, 131),(255, 154, 106),
+    (247, 208, 164),(200, 65, 52),(254, 192, 152),(254, 144, 95),(239, 128, 103),(210, 55, 39),(215, 101, 82),
+    (210, 55, 39),(198, 47, 34),(216, 60, 41),(210, 55, 39),(254, 144, 95),(247, 195, 153),(229, 130, 105),
+    (243, 183, 138),(255, 131, 85),(203, 117, 64),(255, 209, 166),(242, 160, 127),(239, 111, 92),(234, 131, 105),
+    (254, 188, 150),(255, 246, 188),(158, 70, 67),(243, 168, 139), (255, 176, 142),(243, 109, 71),(255, 121, 81),
+    (253, 155, 70),(236, 154, 127),(139, 97, 87),(241, 185, 150),(254, 210, 162),(240, 155, 62),(223, 115, 95),
+    (242, 165, 137),(243, 190, 145),(254, 238, 187),(248, 118, 68),(231, 112, 66),(252, 183, 142),(243, 160, 139),
+    (193, 48, 36),(231, 135, 110),(238, 156, 130),(232, 140, 114),(206, 53, 38),(241, 156, 133),(156, 77, 80),
+    (254, 221, 176),(242, 187, 153),(242, 182, 148),(245, 186, 152),(141, 73, 73),(255, 118, 81),
+  ))
+  left_color  = [pc for pc in left_color if pc[2] <= 210]
+  right_color = [pc for pc in right_color if pc[0] <= 210 or pc[1] >= 100]
+  while True:
+    yield
+    pl = graphics.get_pixel(406, 281, True)
+    pr = graphics.get_pixel(570, 282, True)
+    if Input.is_trigger(win32con.VK_UP):
+      print('---')
+    flag_beat = False
+    flag_lk = (pl[2] > 210 or any((1 for pc in left_color if graphics.is_color_ok(pl, pc, 2))))
+    flag_rk = ((pr[0] > 210 and pr[1] < 100) or any((True for pc in right_color if graphics.is_color_ok(pr, pc, 2))))
+    if (sum(pl) > 240*3 and sum(pr) > 240*3) or (sum(pl) < 270 and sum(pr) < 270):
+      continue
+    if sum(pl) < 240*3 and sum(pl) > 270:
+      print('L:', pl, flag_lk)
+    if sum(pr) < 240*3 and sum(pr) > 270:
+      print("R:", pr, flag_rk)
+    if flag_lk:
+      Input.click(350, 300)
+      flag_beat = True
+    if flag_rk:
+      Input.click(600, 300)
+      flag_beat = True
+    if flag_beat:
+      wait(0.03)
+
+# def start_capture_rhythm_fiber():
+#   lq = []
+#   rq = []
+#   while True:
+#     yield
+#     pl = graphics.get_pixel(380, 269, True)
+#     pr = graphics.get_pixel(596, 268, True)
+#     if sum(pl) < 240*3 and sum(pl) > 210:
+#       print(pl)
+#       lq.append(pl)
+#     if sum(pr) < 240*3 and sum(pr) > 210:
+#       print(pr)
+#       rq.append(pr)
+#     if Input.is_trigger(win32con.VK_UP):
+#       break
+#   print([c for c in lq if sum(c) > 250])
+#   print([c for c in rq if sum(c) > 250])

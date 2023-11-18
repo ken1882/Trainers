@@ -154,5 +154,6 @@ def get_self_hwnd():
 
 def is_focused():
   if _G.IS_WIN32:
-    return win32gui.GetForegroundWindow() == _G.SelfHwnd
+    hwnd = win32gui.GetForegroundWindow()
+    return hwnd == _G.SelfHwnd or hwnd == _G.AppHwnd
   return True

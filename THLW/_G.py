@@ -2,9 +2,14 @@ from datetime import datetime
 from time import sleep
 from random import random
 from copy import copy
-import json
+import sys
 
 ARGV = {}
+
+if sys.platform == 'win32':
+  IS_WIN32 = True
+elif sys.platform == 'linux':
+  IS_LINUX = True
 
 AppWindowName = "BlueStacks_5"
 AppChildWindowName = "BlueStacks Android PluginAndroid_5"

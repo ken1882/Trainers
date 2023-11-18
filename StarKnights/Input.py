@@ -118,7 +118,7 @@ def set_cursor_pos(x, y, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None, 
     y += rect[1]
   win32api.SetCursorPos((int(x),int(y)))
 
-def click(x=None, y=None, app_offset=False, use_msg=_G.AppInputUseMsg, hwnd=None):
+def click(x=None, y=None, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None):
   if not hwnd:
     hwnd = _G.AppInputHwnd
   if not use_msg and x and y:

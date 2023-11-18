@@ -1,5 +1,5 @@
 from time import sleep
-import win32con
+import win32con,win32api
 import _G
 from _G import uwait
 import Input
@@ -68,7 +68,9 @@ def start_initiate_fiber():
         break
       if cv > startring_threshold and cv - cs > diff_threshold or _G.ARGV.auxiliary:
         print(cv, cs)
+        ppos = win32api.GetCursorPos()
         Input.click(500, 300)
+        win32api.SetCursorPos(ppos)
         break
       lasts.insert(0, col)
       lasts.pop()

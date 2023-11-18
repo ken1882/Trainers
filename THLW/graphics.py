@@ -11,13 +11,15 @@ from _G import (CVLocalDistance, CVMatchHardRate, CVMatchMinCount, CVMatchStdRat
 
 _G.DesktopDC = win32gui.GetDC(0)
 
-def is_color_ok(cur, target):
+def is_color_ok(cur, target, bias=None):
+  if bias == None:
+    bias = _G.ColorBiasRange
   log_debug("=== Pixel Color Comparing ===")
   for c1,c2 in zip(cur,target):
     if _G.VerboseLevel >= 4:
       print('-'*10)
       print(c1, c2)
-    if abs(c1 - c2) > _G.ColorBiasRange:
+    if abs(c1 - c2) > bias:
       return False
   return True
 
