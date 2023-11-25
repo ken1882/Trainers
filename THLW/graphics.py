@@ -86,7 +86,15 @@ def take_snapshot(rect=None,filename=None):
     return _G.SnapshotCache[filename]
   else:
     _G.LastFrameCount = _G.FrameCount
-  return _take_snapshot(rect, filename)
+  depth = 0
+  while True:
+    try:
+      return _take_snapshot(rect, filename)
+    except Exception as err:
+      if depth > 5:
+        raise err
+      log_error("Error while taking snapshot, waiting for 5 seconds")
+      wait(5)
 
 def _take_snapshot(rect,filename):
   path = filename if filename.startswith(_G.DCTmpFolder) else f"{_G.DCTmpFolder}/{filename}"

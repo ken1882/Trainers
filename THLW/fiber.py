@@ -4,21 +4,22 @@ import _G,stage
 from _G import resume, resume_from, pop_fiber_ret, wait, uwait, log_info
 import Input, position, graphics
 from random import randint
+from datetime import datetime, timedelta
 import combat
 import utils
 import itertools
 from PIL import Image
 
 PARTY_SEL_POS = [
-  [(810, 520),(468, 453)],
-  [(810, 520),(446, 274)],
-  [(810, 520),(458, 144)],
-  [(810, 350),(481, 445)],
-  [(810, 350),(500, 289)],
-  [(810, 350),(504, 125)],
-  [(810, 120),(497, 147)],
-  [(810, 120),(501, 311)],
-  [(810, 120),(518, 476)]
+  [(815, 520),(468, 453)],
+  [(815, 520),(446, 274)],
+  [(815, 520),(458, 144)],
+  [(815, 350),(481, 445)],
+  [(815, 350),(500, 289)],
+  [(815, 350),(504, 125)],
+  [(815, 120),(497, 147)],
+  [(815, 120),(501, 311)],
+  [(815, 120),(518, 476)]
 ]
 STAGE_NAME_OFFSET = [95, 42, 382, 60]
 
@@ -31,18 +32,22 @@ def start_errand_fiber():
   global Cnt_NoLimitedErrand
   while not stage.is_stage('HomePage'):
     yield
+    if stage.is_stage('BSHome'):
+      return
     to_homepage()
     wait(1)
   Input.rclick(824, 350)
   while not stage.is_stage('Errand'):
     yield
+    if stage.is_stage('BSHome'):
+      return
     wait(1)
   wait(1.5)
   Input.rclick(49, 215)
   wait(1)
   # harvest
   _G.flush()
-  completed = graphics.find_object('errand_done.png', 0.95)
+  completed = graphics.find_object('errand_done.png', 0.9)
   log_info("Completed errands:", completed)
   while completed:
     for _ in range(3):
@@ -51,13 +56,17 @@ def start_errand_fiber():
       yield
     while not stage.is_stage('Errand'):
       yield
+      if stage.is_stage('BSHome'):
+        return
       wait(1)
       Input.rclick(50, 400)
-    wait(1)
+    wait(3)
     _G.flush()
     completed = graphics.find_object('errand_done.png', 0.9)
     log_info("Completed errands:", completed)
   # dispatch
+  if stage.is_stage('BSHome'):
+    return
   dispatched = int(utils.ocr_rect((67,517,121,542), 'errand_num.png', num_only=True)[0])
   while dispatched < 3:
     log_info("Dispatched:", dispatched)
@@ -87,6 +96,8 @@ def start_errand_fiber():
         yield
     wait(2)
     yield
+    if stage.is_stage('BSHome'):
+      return
     _G.flush()
     dispatched = int(utils.ocr_rect((67,517,121,542), 'errand_num.png', num_only=True)[0])
 
@@ -140,6 +151,8 @@ def start_stage_selection_fiber():
   event_pos = ((691, 119),(688, 217),(685, 317),(685, 415))
   while not stage.is_stage('HomePage'):
     yield
+    if stage.is_stage('BSHome'):
+      return
     to_homepage()
     wait(1)
   Input.rclick(893, 453)
@@ -152,6 +165,8 @@ def start_stage_selection_fiber():
   wait(1)
   depth = 0
   while graphics.get_difficulty() != 2:
+    if stage.is_stage('BSHome'):
+      return
     depth += 1
     Input.click(330,510)
     wait(1)
@@ -159,12 +174,13 @@ def start_stage_selection_fiber():
     if depth > 5:
       raise RuntimeError("Unable to reach lunatic difficulty")
 
-
 def start_refight_fiber():
   target_name = _G.ARGV.stage
   party_sel_cycle = itertools.cycle(PARTY_SEL_POS)
   flag_check_errands = False
   flag_rebooting = False
+  flag_fighting = False
+  end_rematch_timestamp = datetime.now()
   for _ in range(int(_G.ARGV.index)):
     _ = next(party_sel_cycle)
   if not target_name:
@@ -176,6 +192,7 @@ def start_refight_fiber():
       for _ in range(10):
         wait(0.5)
         yield
+      flag_fighting = False
       flag_rebooting = True
       continue
     elif flag_rebooting:
@@ -190,8 +207,14 @@ def start_refight_fiber():
         continue
       wait(1)
       flag_rebooting = False
-      yield from start_errand_fiber()
-      yield from start_stage_selection_fiber()
+      try:
+        yield from start_errand_fiber()
+        yield from start_stage_selection_fiber()
+      except Exception:
+        wait(5)
+        continue
+      if stage.is_stage('BSHome'):
+        continue
       flag_check_errands = False
       wait(1)
       yield
@@ -199,14 +222,21 @@ def start_refight_fiber():
       Input.rclick(480, 500)
       wait(2)
     elif stage.is_stage('StageSelect'):
+      flag_fighting = False
       if flag_check_errands:
         wt = _G.ARGV.wait
         log_info(f"Waiting for {wt} seconds to recover battler stamina")
         for _ in range(int(wt)):
           wait(1-_G.FPS)
           yield
-        yield from start_errand_fiber()
-        yield from start_stage_selection_fiber()
+        try:
+          yield from start_errand_fiber()
+          yield from start_stage_selection_fiber()
+        except Exception:
+          wait(5)
+          continue
+        if stage.is_stage('BSHome'):
+          continue
         flag_check_errands = False
         wait(1)
         yield
@@ -238,10 +268,22 @@ def start_refight_fiber():
       wait(3)
       Input.rclick(824, 500)
       wait(3)
+      end_rematch_timestamp = datetime.now()+timedelta(seconds=int(_G.ARGV.battle_duration))
+      log_info("Rematch will ends at", end_rematch_timestamp.strftime('%H:%M:%S'))
+      flag_fighting = True
       flag_check_errands = True
     elif stage.is_stage('Disconnected'):
       Input.rlick(599, 403)
       wait(1)
+    else:
+      if _G.ARGV.battle_duration and flag_fighting and end_rematch_timestamp < datetime.now():
+        log_info("Attempt end rematch")
+        Input.mouse_down(495, 86)
+        for _ in range(10):
+          wait(0.5)
+          yield
+        Input.mouse_up(495, 86)
+        end_rematch_timestamp = datetime.now() + timedelta(seconds=30)
 
 def start_rhythm_fiber():
   left_color = set((
@@ -252,7 +294,8 @@ def start_rhythm_fiber():
     (118, 225, 253),(98, 155, 237),(41, 98, 187),(59, 196, 250),(124, 175, 244),(104, 166, 253),(57, 180, 253),
     (49, 106, 197),(87, 219, 253),(106, 217, 254),(97, 163, 228),(91, 221, 255),(127, 167, 224),(88, 102, 151),
     (76, 143, 219),(68, 132, 210),(49, 120, 154),(40, 90, 159),(91, 98, 174),(48, 99, 142),(80, 109, 163),
-    (88, 94, 155),(61, 82, 183),(64, 89, 134),(56, 104, 152),
+    (88, 94, 155),(61, 82, 183),(64, 89, 134),(56, 104, 152),(63, 123, 210),(33, 82, 164),(42, 102, 183),
+    (40, 103, 183),(89, 96, 110),(48, 88, 162),
   ))
   right_color = set((
     (207, 60, 44),(247, 196, 160),(235, 70, 47),(222, 81, 23),(236, 138, 113),(243, 172, 143),(239, 103, 82),
@@ -267,7 +310,15 @@ def start_rhythm_fiber():
     (253, 155, 70),(236, 154, 127),(139, 97, 87),(241, 185, 150),(254, 210, 162),(240, 155, 62),(223, 115, 95),
     (242, 165, 137),(243, 190, 145),(254, 238, 187),(248, 118, 68),(231, 112, 66),(252, 183, 142),(243, 160, 139),
     (193, 48, 36),(231, 135, 110),(238, 156, 130),(232, 140, 114),(206, 53, 38),(241, 156, 133),(156, 77, 80),
-    (254, 221, 176),(242, 187, 153),(242, 182, 148),(245, 186, 152),(141, 73, 73),(255, 118, 81),
+    (254, 221, 176),(242, 187, 153),(242, 182, 148),(245, 186, 152),(141, 73, 73),(255, 118, 81),(226, 134, 108),
+    (244, 180, 168),(250, 198, 153),(237, 170, 121),(212, 203, 202),(247, 202, 158),(255, 129, 79),(255, 166, 127),
+    (245, 176, 144),(238, 142, 116),(240, 182, 130),(230, 113, 96),(255, 158, 105),(255, 195, 153),(210, 73, 57),
+    (241, 109, 88),(242, 171, 140),(203, 67, 53),(247, 198, 149),(239, 161, 131),(232, 144, 117),(240, 151, 123),
+    (232, 155, 110),(246, 190, 152),(243, 131, 115),(255, 129, 74),(200, 187, 186),(254, 145, 109),(242, 105, 61),
+    (253, 128, 89),(245, 139, 67),(249, 229, 177),(248, 193, 148),(253, 220, 169),(255, 209, 128),(225, 129, 100),
+    (255, 125, 85),(254, 124, 75),(236, 180, 147),(255, 224, 176),(255, 211, 144),(222, 119, 96),(204, 47, 37),
+    (254, 254, 185),(255, 184, 142),(244, 192, 140),(245, 178, 163),(221, 103, 83),(234, 144, 113),(255, 125, 82),
+    (255, 255, 194),(236, 154, 124),
   ))
   left_color  = [pc for pc in left_color if pc[2] <= 210]
   right_color = [pc for pc in right_color if pc[0] <= 210 or pc[1] >= 100]
@@ -284,7 +335,7 @@ def start_rhythm_fiber():
       continue
     if sum(pl) < 240*3 and sum(pl) > 270:
       print('L:', pl, flag_lk)
-    if sum(pr) < 240*3 and sum(pr) > 270:
+    if sum(pr) < 240*3 and sum(pr) > 270 and pr != (207, 50, 36):
       print("R:", pr, flag_rk)
     if flag_lk:
       Input.click(350, 300)

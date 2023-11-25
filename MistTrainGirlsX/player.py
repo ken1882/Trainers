@@ -546,6 +546,7 @@ def dump_scene_metadata():
   uris = {
     'main': '/api/UScenes/MainScenes',
     'event': '/api/UScenes/EventScenes',
+    'character': '/api/UScenes/ViewableCharacters'
   }
   ret = {}
   for key,uri in uris.items():
@@ -559,7 +560,13 @@ def dump_scene_metadata():
 
 def dump_all_available_scenes(meta):
   for chapter in meta:
-    for inf in chapter['Scenes']:
+    episodes = []
+    if 'Scenes' in chapter:
+      episodes = chapter['Scenes'] 
+    else:
+      for layer in chapter['CharacterScenes']:
+        episodes.extend(layer['Scenes'])
+    for inf in episodes:
       id = inf['MSceneId']
       epilogue = inf['MSceneId'] % 100 > 10
       if not inf['Status'] and not epilogue:
