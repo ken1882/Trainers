@@ -1,6 +1,6 @@
 from time import sleep
 import win32con,win32api
-import _G
+import _G, utils
 from _G import uwait
 import Input
 import stage, position, graphics

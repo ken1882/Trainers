@@ -83,7 +83,7 @@ def main_loop():
   global output_cache
   _G.flush()
   update_input()
-  if not _G.FlagPaused and _G.Fiber and not resume(_G.Fiber):
+  if not _G.FlagPaused and _G.Fiber and _G.FlagWorking and not resume(_G.Fiber):
     log_info(f"Worker ended, return value: {_G.pop_fiber_ret()}")
     _G.Fiber = None 
     _G.FlagWorking = False

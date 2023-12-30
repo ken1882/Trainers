@@ -5,6 +5,7 @@ from copy import deepcopy
 import json
 import os
 from itertools import permutations
+import MistTrainGirlsX.mtg_parser as mtg_parser
 
 __UCharacterCache = {}
 __UCharacterStats = {}
@@ -77,8 +78,8 @@ SWAP_GEAR_ID = [
       177034702,  # エクリプスファイア改
     ],
     'armor': 26147280,
-    'accessory': 33128718, # エクリプス改
-    # 'accessory': 59632164, # 蒼炎
+    # 'accessory': 33128718, # エクリプス改
+    'accessory': 59632164, # 蒼炎
   },
   {
     'weapon': [
@@ -127,9 +128,12 @@ def clear_cache():
   __UCharacterCache = {}
   
 def get_profile():
-  res  = game.get_request('/api/Users/Me')['r']
-  res2 = game.get_request('/api/Users/MyPreferences')['r']
-  ret = {**res, **res2}
+  res  = game.get_request('/api/Users/Me')
+  res2 = game.get_request('/api/Users/MyPreferences')
+  ret = {
+    **mtg_parser.parse_user_data(res),
+    **mtg_parser.parse_user_perference(res2)
+  }
   return ret
 
 def get_unfinished_combat():
@@ -143,7 +147,10 @@ def get_unfinished_combat():
 
 def get_characters():
   res = game.get_request('/api/UCharacters')
-  return res['r']
+  ret = []
+  for d in res:
+    ret.append(mtg_parser.parse_ucharacter_result(d))
+  return ret
 
 def __cache_characters(chars):
   global __UCharacterCache
@@ -157,32 +164,46 @@ def get_character_by_uid(uid, flush=False):
   return __UCharacterCache[uid]
 
 def get_consumables():
-  res = game.get_request('/api/UItems')
-  return res['r']
+  res = game.get_request('/api/UItems/GetLimitedItems')
+  ret = []
+  for d in res:
+    ret.append(mtg_parser.parse_limiteditem_result(d))
+  return ret
 
 def get_weapons():
   res = game.get_request('/api/UWeapons')
-  return res['r']
+  ret = []
+  for d in res:
+    ret.append(mtg_parser.parse_uweapon_result(d))
+  return ret
 
 def get_armors():
   res = game.get_request('/api/UArmors')
-  return res['r']
+  ret = []
+  for d in res:
+    ret.append(mtg_parser.parse_uarmor_result(d))
+  return ret
 
 def get_accessories():
   res = game.get_request('/api/UAccessories')
-  return res['r']
+  ret = []
+  for d in res:
+    ret.append(mtg_parser.parse_uaccessory_result(d))
+  return ret
 
 def get_abstones():
   res = game.get_request('/api/UAbilityStones')
-  return res['r']
+  ret = []
+  for d in res:
+    ret.append(mtg_parser.parse_uabstone_result(d))
+  return ret
 
 def get_gears():
   res = game.get_request('/api/UCharacterPieces')
-  res = res['r']
-  # key = 'MCharacterId'
-  # for idx,item in enumerate(res):
-  #   res[idx][key] = game.get_gear(item['MCharacterPieceId'])[key]
-  return res
+  ret = []
+  for d in res:
+    ret.append(mtg_parser.parse_characterpiece_result(d))
+  return ret
 
 def get_all_items(flatten=False):
   '''
@@ -223,7 +244,8 @@ def is_character_mastered(ch, accumulate=False, check_stat=True):
   if not check_stat:
     return True
   res = game.get_request(f"/api/UCharacters/{ch['UCharacterBaseId']}/BaseStatusUp")
-  mstatus = res['r']['MaxStatuses'][-1]
+  bstats = mtg_parser.parse_basestatus_result(res)
+  mstatus = bstats['MaxStatuses'][-1]
   sstats = 0
   flag_maxed = True
   for k,v in ch['UCharacterBaseViewModel']['Status'].items():
@@ -250,15 +272,16 @@ def get_maxed_partymember(pid, sid):
   '''
   Get party stats maxed party member uid of given stage
   '''
-  res = game.get_request(f"/api/Quests/{sid}/prepare/{pid}?rentalUUserId=null")
+  res = game.get_request(f"/api/Quests/{sid}/prepare/{pid}")
+  rdat = mtg_parser.parse_quest_prepare_result(res)
   ret = []
   if _G.FlagTrainExStatus:
-    for ch in res['r']['QuestPreparationCharacterExStatusViewModels']:
+    for ch in rdat['QuestPreparationCharacterExStatusViewModels']:
       if all([n == 0 for _,n in ch['GrowStatus'].items()]):
         ret.append(ch['UCharacterId'])
         continue
   else:
-    for ch in res['r']['QuestPreparationCharacterViewModels']:
+    for ch in rdat['QuestPreparationCharacterViewModels']:
       if (_G.FlagTrainSkill or _G.FlagTrainExp) and not is_character_mastered(get_character_by_uid(ch['UCharacterId']), check_stat=False):
         continue
       if all([n == 0 for _,n in ch['GrowStatus'].items()]):
@@ -283,11 +306,12 @@ def get_current_parties():
   '''
   upid = get_profile()['UPartyId']
   res = game.get_request(f"/api/UParties/GetUPartiesFromUPartyId/{upid}")
-  return res['r']
+  return mtg_parser.parse_partygroup_result(res)
 
 def get_party_by_pid(pid):
-  res = game.get_request(f"/api/Quests/208001101/prepare/{pid}?rentalUUserId=null")
-  return res['r']['UPartyViewModel']
+  res = game.get_request(f"/api/Quests/208001101/prepare/{pid}")
+  rdat = mtg_parser.parse_quest_prepare_result(res)
+  return rdat['UPartyViewModel']
 
 def interpret_parties(data):
   '''
@@ -305,7 +329,6 @@ def interpret_parties(data):
       mchid = ch['UCharacter']['MCharacterId']
       dat['UCharacterSlots'][i]['MCharacter'] = game.get_character_base(mchid)
     ret.append(dat)
-
   return ret
 
 def format_character_data(characters):
@@ -375,13 +398,14 @@ def log_party_status():
 
 def get_aprecovery_items():
   res = game.get_request('/api/UItems/ApRecoveryItems')
-  return res['r']
+  return mtg_parser.parse_consumable_items(res)
 
 def use_aprecovery_item(item, amount=1):
   if amount > item['Stock']:
     log_warning(f"Not enough items in stock for use: {item}")
     return None
-  return game.post_request(f"/api/Users/recoverStamina/{item['MItemId']}/{amount}")  
+  res = game.post_request(f"/api/Users/recoverStamina/{item['MItemId']}/{amount}")  
+  return mtg_parser.parse_aprecovery_result(res)
 
 def get_consumable_stock(id):
   items = get_consumables()
@@ -435,6 +459,7 @@ def sell_gear(item, amount):
   return res['r']['Items']
 
 def sell_item(item, amount=1):
+  raise RuntimeError("Unimplemented")
   if item['ItemType'] in [ITYPE_GEAR, ITYPE_GEAR2]:
     return sell_gear(item, amount)
   elif item['ItemType'] == ITYPE_CONSUMABLE:
@@ -448,6 +473,7 @@ def exchange_bets(amount=0, budget=0):
   amount: Bets amount to exchange
   budget: Gold amount to exchange bets (20:1)
   '''
+  raise RuntimeError("Unimplemented")
   if budget:
     amount = budget // 20
   res = game.post_request(f"/api/Casino/ExchangeCoin?exchangeGolds={amount}")
@@ -507,7 +533,9 @@ def swap_party_character(pid, sidx, cid, **kwargs):
     aid = equips[1] or 'null'
   if not did:
     did = equips[2] or 'null'
-  return game.post_request(f"/api/UParties/{pid}/CharacterSlots/{sid}?uCharacterId={cid}&uWeaponId={wid}&uArmorId={aid}&uAccessoryId={did}&uSkillId={eid}")
+  res = game.post_request(f"/api/UParties/{pid}/CharacterSlots/{sid}?uCharacterId={cid}&uWeaponId={wid}&uArmorId={aid}&uAccessoryId={did}&uSkillId={eid}")
+  ret = mtg_parser.parse_uparty(res)
+  return ret
 
 def get_character_party_index(pid, mchid):
   party = get_party_by_pid(pid)
@@ -519,6 +547,7 @@ def get_character_party_index(pid, mchid):
   return None
 
 def enhance_abstone_def(id, n1=0, n2=0, n3=0):
+  raise RuntimeError("Unimplemented")
   data = {
     'MItemIdAmount': {}
   }
@@ -531,6 +560,7 @@ def enhance_abstone_def(id, n1=0, n2=0, n3=0):
   return game.post_request(f"/api/UAbilityStones/{id}/enhance", data)
 
 def enhance_abstone_atk(id, n1=0, n2=0, n3=0):
+  raise RuntimeError("Unimplemented")
   data = {
     'MItemIdAmount': {}
   }
@@ -543,6 +573,7 @@ def enhance_abstone_atk(id, n1=0, n2=0, n3=0):
   return game.post_request(f"/api/UAbilityStones/{id}/enhance", data)
 
 def dump_scene_metadata():
+  raise RuntimeError("Unimplemented")
   uris = {
     'main': '/api/UScenes/MainScenes',
     'event': '/api/UScenes/EventScenes',
@@ -559,6 +590,7 @@ def dump_scene_metadata():
   return ret
 
 def dump_all_available_scenes(meta):
+  raise RuntimeError("Unimplemented")
   for chapter in meta:
     episodes = []
     if 'Scenes' in chapter:
@@ -584,6 +616,7 @@ def dump_all_available_scenes(meta):
       log_info(f"Scene#{id} {game.get_scene(id)['Title']} saved")
 
 def vote_character(event_id, character_id):
+  raise RuntimeError("Unimplemented")
   if not VoteItemId or VoteItemId not in ConsumableInventory:
     log_warning("Vote item unavailable")
     return 0
@@ -599,6 +632,7 @@ def vote_character(event_id, character_id):
   return total
 
 def buy_derpy_kirens(race_id, numbers):
+  raise RuntimeError("Unimplemented")
   pairs = set([tuple(sorted(s)) for s in permutations(numbers, 2)])
   size = len(pairs)
   bets = 100 // size
@@ -622,6 +656,7 @@ def buy_derpy_kirens(race_id, numbers):
       payload['number'] = []
 
 def dump_profiles(st=1, filter=None):
+  raise RuntimeError("Unimplemented")
   interval = 100
   file = open('players.csv', 'a', encoding=_G.ENCODING)
   try:
@@ -645,6 +680,7 @@ def dump_profiles(st=1, filter=None):
     file.close()
 
 def roll_raid_gacha(raid_id, token_amount):
+  raise RuntimeError("Unimplemented")
   num = 1
   while num > 0:
     res = game.get_request(f"/api/Event/{raid_id}/RaidBoxGacha")['r']

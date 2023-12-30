@@ -1,22 +1,23 @@
 from _G import *
+import MistTrainGirlsX.mtg_parser as mtg_parser
 import game
 
-def get_friends():
-  res = game.get_request('/api/Friends')
-  return res['r']
+# def get_friends():
+#   res = game.get_request('/api/Friends')
+#   return res['r']
 
 def get_rentals():
   res = game.get_request('/api/Friends/Rental')
-  return [res['r']['FriendUsers'], res['r']['OtherUsers']]
+  ret = mtg_parser.parse_friend_retals(res)
+  return [ret['FriendUsers'], ret['OtherUsers']]
 
-def send_request(duid):
-  res = game.get_request(f"/api/Friends/Search/{duid}")
-  res = game.post_request("/api/Friends/SendRequests", [res['r']['UUserId']])
-  return res
-
+# def send_request(duid):
+#   res = game.get_request(f"/api/Friends/Search/{duid}")
+#   res = game.post_request("/api/Friends/SendRequests", [res['r']['UUserId']])
+#   return res
 
 def log_rentals(ls_others=False):
-  fdat,odat      = get_rentals()
+  fdat,odat   = get_rentals()
   width_name  = 20
   width_sname = 40
   width_id    = 12
@@ -32,7 +33,7 @@ def log_rentals(ls_others=False):
     fsk = game.get_fskill(dat['MFieldSkillId'])
     string += format_padded_utfstring(
       (dat['Name'], 20, True),
-      (f"{fsk['Name']} (LV.{dat['FieldSkillLevel']}/{fsk['MFieldSkillRarity']['LevelLimit']})", width_sname, True),
+      (f"{fsk['Name']} (LV.{dat['FieldSkillLevel']}/{len(fsk['MFieldSkillLevelViewModels'])})", width_sname, True),
       (dat['UUserId'], width_id, True),
       (dat['FriendMeterPoint'], width_fpts, True)
     ) + '\n'
@@ -50,7 +51,7 @@ def log_rentals(ls_others=False):
     fsk = game.get_fskill(dat['MFieldSkillId'])
     string += format_padded_utfstring(
       (dat['Name'], 20, True),
-      (f"{fsk['Name']} (LV.{dat['FieldSkillLevel']}/{fsk['MFieldSkillRarity']['LevelLimit']})", width_sname, True),
+      (f"{fsk['Name']} (LV.{dat['FieldSkillLevel']}/{len(fsk['MFieldSkillLevelViewModels'])})", width_sname, True),
       (dat['UUserId'], width_id, True)
     ) + '\n'
   string += '='*69 + '\n'

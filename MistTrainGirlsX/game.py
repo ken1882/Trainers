@@ -18,13 +18,14 @@ from urllib.parse import unquote,urlparse,urlencode
 from ast import literal_eval
 from time import strptime
 from bs4 import BeautifulSoup as BS
+import msgpack
 import pprint
 import pytz
 
 GAME_POST_HEADERS = {
-  'Accept': '*/*',
+  'Accept': 'application/vnd.msgpack',
   'Accept-Encoding': 'gzip, deflate, br',
-  'Content-Type': 'application/json',
+  'Content-Type': 'application/vnd.msgpack',
 }
 
 NetworkExcpetionRescues = (
@@ -162,6 +163,11 @@ def change_token(token):
   global Session
   Session.headers['Authorization'] = token
 
+def unpack(content):
+  unpacker = msgpack.Unpacker()
+  unpacker.feed(content)
+  return list(unpacker)[1]
+
 def get_request(url, depth=1):
   global Session,ServerLocation
   while is_day_changing():
@@ -198,7 +204,7 @@ def get_request(url, depth=1):
       return None
   if not res.content:
     return None
-  return res.json()
+  return unpack(res.content)
 
 def post_request(url, data=None, depth=1):
   global Session,TemporaryNetworkErrors,ServerLocation
@@ -216,7 +222,7 @@ def post_request(url, data=None, depth=1):
   try:
     log_debug(f"[POST] {url} with payload:", data, sep='\n')
     if data != None:
-      res = Session.post(url, json.dumps(data), headers=GAME_POST_HEADERS, timeout=NetworkPostTimeout)
+      res = Session.post(url, data, headers=GAME_POST_HEADERS, timeout=NetworkPostTimeout)
     else:
       res = Session.post(url, headers=GAME_POST_HEADERS, timeout=NetworkPostTimeout)
   except NetworkExcpetionRescues as err:
@@ -246,7 +252,7 @@ def post_request(url, data=None, depth=1):
       return None
   if not res.content:
     return None
-  return res.json()
+  return unpack(res.content)
 
 def login_dmm():
   global Session,ServerLocation

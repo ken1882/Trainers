@@ -35,16 +35,16 @@ def start_errand_fiber():
     if stage.is_stage('BSHome'):
       return
     to_homepage()
-    wait(1)
+    wait(2)
   Input.rclick(824, 350)
   while not stage.is_stage('Errand'):
     yield
     if stage.is_stage('BSHome'):
       return
-    wait(1)
-  wait(1.5)
+    wait(2)
+  wait(3)
   Input.rclick(49, 215)
-  wait(1)
+  wait(2)
   # harvest
   _G.flush()
   completed = graphics.find_object('errand_done.png', 0.9)
@@ -52,25 +52,25 @@ def start_errand_fiber():
   while completed:
     for _ in range(3):
       Input.rclick(*completed[0])
-      wait(0.5)
+      wait(1)
       yield
     while not stage.is_stage('Errand'):
       yield
       if stage.is_stage('BSHome'):
         return
-      wait(1)
+      wait(2)
       Input.rclick(50, 400)
-    wait(3)
+    wait(5)
     _G.flush()
     completed = graphics.find_object('errand_done.png', 0.9)
     log_info("Completed errands:", completed)
   # dispatch
   if stage.is_stage('BSHome'):
     return
-  dispatched = int(utils.ocr_rect((67,517,121,542), 'errand_num.png', num_only=True)[0])
+  dispatched = int(utils.ocr_rect((65,510,121,542), 'errand_num.png', num_only=True)[0])
   while dispatched < 3:
     log_info("Dispatched:", dispatched)
-    wait(3)
+    wait(5)
     yield
     errands_doing = graphics.find_object('errand_doing.png', 0.9)
     errands = []
@@ -78,7 +78,7 @@ def start_errand_fiber():
     tmp_errands.extend(graphics.find_object('SC.png', 0.9))
     tmp_errands.extend(graphics.find_object('wood.png', 0.9))
     for erpos in tmp_errands:
-      if any((abs(erpos[1]-edpos[1]) < 20 for edpos in errands_doing)):
+      if any((abs(erpos[1]-edpos[1]) < 20 for edpos in errands_doing+errands)):
         continue
       errands.append(erpos)
     log_info("Available errands:", errands)
@@ -92,9 +92,9 @@ def start_errand_fiber():
       for p in (pos, (279, 417),(845, 419),(525, 134)):
         Cnt_NoLimitedErrand = 0
         Input.rclick(*p)
-        wait(1)
+        wait(2)
         yield
-    wait(2)
+    wait(5)
     yield
     if stage.is_stage('BSHome'):
       return
@@ -112,25 +112,25 @@ def start_walkstage_fiber():
       new_stage = news[0]
       Input.rclick(new_stage[0]+150, new_stage[1]+50)
       for _ in range(6):
-        wait(0.5)
+        wait(1)
         yield
     elif stage.is_stage('HelperSelect'):
       Input.rclick(477, 201)
-      wait(2)
+      wait(5)
     elif stage.is_stage('CombatPrepare'):
-      wait(1)
+      wait(2)
       Input.rclick(840, 500)
-      wait(3)
+      wait(5)
     elif stage.is_stage('SceneStory'):
-      wait(1)
+      wait(2)
       Input.rclick(931, 45)
-      wait(1)
+      wait(2)
       for _ in range(2):
         Input.rclick(609, 401)
-        wait(1)
+        wait(1.5)
     elif stage.is_stage('CombatVictory') or stage.is_stage('CombatRewards'):
       Input.rclick(509, 401)
-      wait(3)
+      wait(5)
       Input.rclick(882, 514)
 
 def get_stage_names():
@@ -154,22 +154,22 @@ def start_stage_selection_fiber():
     if stage.is_stage('BSHome'):
       return
     to_homepage()
-    wait(1)
+    wait(2)
   Input.rclick(893, 453)
   for _ in range(20):
     yield
-    wait(0.4)
+    wait(0.5)
   Input.rclick(762, 518)
-  wait(1.5)
+  wait(3)
   Input.rclick(*event_pos[_G.ARGV.jndex])
-  wait(1)
+  wait(2)
   depth = 0
   while graphics.get_difficulty() != 2:
     if stage.is_stage('BSHome'):
       return
     depth += 1
     Input.click(330,510)
-    wait(1)
+    wait(2)
     yield
     if depth > 5:
       raise RuntimeError("Unable to reach lunatic difficulty")
@@ -181,6 +181,7 @@ def start_refight_fiber():
   flag_rebooting = False
   flag_fighting = False
   end_rematch_timestamp = datetime.now()
+  battle_duration = int(_G.ARGV.battle_duration)
   for _ in range(int(_G.ARGV.index)):
     _ = next(party_sel_cycle)
   if not target_name:
@@ -188,9 +189,10 @@ def start_refight_fiber():
   while True:
     yield
     if stage.is_stage('BSHome'):
-      Input.click(250,185,True,False)
+      # Input.click(530-120,138,True,False)
+      Input.click(530,138,True,False)
       for _ in range(10):
-        wait(0.5)
+        wait(1)
         yield
       flag_fighting = False
       flag_rebooting = True
@@ -201,11 +203,11 @@ def start_refight_fiber():
         for _ in range(2):
           Input.click(615,400)
           for _ in range(10):
-            wait(0.5)
+            wait(1)
             yield
         to_homepage()
         continue
-      wait(1)
+      wait(2)
       flag_rebooting = False
       try:
         yield from start_errand_fiber()
@@ -216,11 +218,11 @@ def start_refight_fiber():
       if stage.is_stage('BSHome'):
         continue
       flag_check_errands = False
-      wait(1)
+      wait(2)
       yield
     elif stage.is_stage('RematchEnd'):
       Input.rclick(480, 500)
-      wait(2)
+      wait(5)
     elif stage.is_stage('StageSelect'):
       flag_fighting = False
       if flag_check_errands:
@@ -238,20 +240,20 @@ def start_refight_fiber():
         if stage.is_stage('BSHome'):
           continue
         flag_check_errands = False
-        wait(1)
+        wait(1.5)
         yield
       for pos,name in get_stage_names():
         if target_name not in name:
           continue
         Input.rclick(pos[0]+150, pos[1]+50)
         for _ in range(6):
-          wait(0.5)
+          wait(0.8)
           yield
     elif stage.is_stage('HelperSelect'):
       Input.rclick(477, 201)
-      wait(2)
+      wait(3)
     elif stage.is_stage('CombatPrepare'):
-      wait(2)
+      wait(3)
       Input.rclick(340, 510)
       log_info("Selecting party")
       wait(5)
@@ -268,15 +270,20 @@ def start_refight_fiber():
       wait(3)
       Input.rclick(824, 500)
       wait(3)
-      end_rematch_timestamp = datetime.now()+timedelta(seconds=int(_G.ARGV.battle_duration))
-      log_info("Rematch will ends at", end_rematch_timestamp.strftime('%H:%M:%S'))
+      if battle_duration:
+        end_rematch_timestamp = datetime.now()+timedelta(seconds=battle_duration)
+        log_info("Rematch will ends at", end_rematch_timestamp.strftime('%H:%M:%S'))
       flag_fighting = True
       flag_check_errands = True
     elif stage.is_stage('Disconnected'):
       Input.rlick(599, 403)
       wait(1)
+    elif stage.is_stage('CombatVictory') or stage.is_stage('CombatRewards'):
+      Input.rclick(509, 401)
+      wait(3)
+      Input.rclick(882, 514)
     else:
-      if _G.ARGV.battle_duration and flag_fighting and end_rematch_timestamp < datetime.now():
+      if battle_duration and flag_fighting and end_rematch_timestamp < datetime.now():
         log_info("Attempt end rematch")
         Input.mouse_down(495, 86)
         for _ in range(10):

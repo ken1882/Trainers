@@ -989,6 +989,46 @@
     "MItemId": 1491,
     "RecoveryEffect": 30,
     "StartDate": "2023-11-14T14:10:00",
-    "EndDate": "2023-12-07T23:59:59"
+    "EndDate": "2023-12-14T23:59:59"
+  },
+  {
+    "Id": 146,
+    "RecoveryItemTypes": 4,
+    "MItemId": 1525,
+    "RecoveryEffect": 30,
+    "StartDate": "2023-12-01T12:00:00",
+    "EndDate": "2023-12-20T23:59:59"
+  },
+  {
+    "Id": 147,
+    "RecoveryItemTypes": 4,
+    "MItemId": 1530,
+    "RecoveryEffect": 30,
+    "StartDate": "2023-12-08T12:00:00",
+    "EndDate": "2023-12-27T23:59:59"
+  },
+  {
+    "Id": 148,
+    "RecoveryItemTypes": 4,
+    "MItemId": 1534,
+    "RecoveryEffect": 30,
+    "StartDate": "2023-12-14T14:10:00",
+    "EndDate": "2024-01-04T23:59:59"
+  },
+  {
+    "Id": 151,
+    "RecoveryItemTypes": 4,
+    "MItemId": 1547,
+    "RecoveryEffect": 30,
+    "StartDate": "2024-01-01T00:00:00",
+    "EndDate": "2024-01-20T23:59:59"
+  },
+  {
+    "Id": 152,
+    "RecoveryItemTypes": 4,
+    "MItemId": 1552,
+    "RecoveryEffect": 30,
+    "StartDate": "2024-01-08T12:00:00",
+    "EndDate": "2024-01-27T23:59:59"
   }
 ]

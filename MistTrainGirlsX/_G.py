@@ -277,6 +277,17 @@ SKILL_RANGE = [
   'col',
 ]
 
+# Msgpacked item object
+MP_USER         = 0
+MP_ABSTONE      = 1
+MP_ACCESSORY    = 2
+MP_ARMOR        = 3
+MP_PARTY        = 4
+MP_PARTY_GROUP  = 5
+MP_PARTY_SLOT   = 6
+MP_USER_PREF    = 7 
+MP_MEMORY_ITEM  = 8
+
 # Item constants
 ITYPE_WEAPON      = 1
 ITYPE_ARMOR       = 2

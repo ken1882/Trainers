@@ -11,8 +11,8 @@ if sys.platform == 'win32':
 elif sys.platform == 'linux':
   IS_LINUX = True
 
-AppWindowName = "BlueStacks_5"
-AppChildWindowName = "BlueStacks Android PluginAndroid_5"
+AppWindowName = "BlueStacks"
+AppChildWindowName = "BlueStacks Android PluginAndroid"
 AppHwnd = 0
 AppRect = [0,0,0,0]
 AppPid  = 0
