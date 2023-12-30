@@ -141,7 +141,7 @@ def is_response_ok(res):
     _G.LastErrorCode = res.status_code
     if res.content:
       try:
-        _G.LastErrorMessage = res.json()['r']['m']
+        _G.LastErrorMessage = res.content.decode(errors='ignore')
       except Exception:
         pass
     if res.status_code == 403:

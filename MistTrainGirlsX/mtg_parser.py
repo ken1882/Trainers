@@ -537,7 +537,7 @@ def parse_lblevelup_payload(data):
     return msgpack.packb(ret)
 
 def parse_battlesetting_payload(data):
-    return get_keys(OBJKEYS_BATTLESETTING, data)
+    return msgpack.packb(get_keys(OBJKEYS_BATTLESETTING, data))
 
 def parse_user_data(data):
     return interpret_data(OBJKEYS_USERDATA, data)

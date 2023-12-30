@@ -5,7 +5,7 @@ from copy import deepcopy
 import json
 import os
 from itertools import permutations
-import MistTrainGirlsX.mtg_parser as mtg_parser
+import mtg_parser
 
 __UCharacterCache = {}
 __UCharacterStats = {}

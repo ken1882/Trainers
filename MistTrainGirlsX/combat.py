@@ -2,7 +2,7 @@ import _G
 from _G import *
 import itertools
 from pprint import pprint,pformat
-import request_parser
+import mtg_parser
 import player,shop
 import friend
 import discord
@@ -251,7 +251,7 @@ def start_battle(sid, pid, rid=0):
   if FaildReason != ERROR_SUCCESS:
     return FaildReason
   res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=null&uRaidId=null&raidParticipationMode=null")
-  return request_parser.parse_battle_start(res)
+  return mtg_parser.parse_battle_start(res)
 
 def start_raid(sid, pid, rid=0):
   global PublicRaid
@@ -263,7 +263,7 @@ def start_raid(sid, pid, rid=0):
     return FaildReason
   if PublicRaid:
     res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=2")
-    data = request_parser.parse_battle_start(res)
+    data = mtg_parser.parse_battle_start(res)
     # boss = data['BattleState']['Enemies'][0]
     # try:
     #   payload = {
@@ -283,13 +283,13 @@ def start_raid(sid, pid, rid=0):
     #   handle_exception(err)
   else:
     res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=1")
-  return request_parser.parse_battle_start(res)
+  return mtg_parser.parse_battle_start(res)
 
 def process_actions(commands, verion):
   global FLAG_INTERACTIVE
   log_info("Process actions")
   res = game.post_request(f"/api/Battle/attack/{BattleId}",
-    request_parser.parse_attack_payload({
+    mtg_parser.parse_attack_payload({
       "Type":1,
       "IsSimulation": False,
       "Version": verion,
@@ -297,7 +297,7 @@ def process_actions(commands, verion):
       "Commands": commands
     })
   )
-  result = request_parser.parse_attack_result(res)
+  result = mtg_parser.parse_attack_result(res)
   if FLAG_ANALYZE:
     battle_analyzer.analyze_action_result(commands, result)
   return result
@@ -318,7 +318,7 @@ def use_special_skill(ch, target_id, ovd, verion):
     }
   ]
   res = game.post_request(f"/api/Battle/attack/{BattleId}",
-    request_parser.parse_attack_payload({
+    mtg_parser.parse_attack_payload({
       "Type":2,
       "IsSimulation": False,
       "Version": verion,
@@ -326,7 +326,7 @@ def use_special_skill(ch, target_id, ovd, verion):
       "Commands": commands
     })
   )
-  result = request_parser.parse_attack_result(res)
+  result = mtg_parser.parse_attack_result(res)
   if FLAG_ANALYZE:
     battle_analyzer.analyze_action_result(commands, result)
   return result
@@ -334,7 +334,7 @@ def use_special_skill(ch, target_id, ovd, verion):
 def surrender():
   log_info("Abort battle")
   res = game.post_request(f"/api/Battle/surrender",
-    request_parser.parse_battlesetting_payload(BATTLE_SETTINGS)
+    mtg_parser.parse_battlesetting_payload(BATTLE_SETTINGS)
   )
   return res
 
@@ -505,7 +505,7 @@ def process_victory():
   LastBattleWon = True
   res = game.post_request('/api/Battle/victory?isSimulation=false')
   ReportDetail['win'] += 1
-  return request_parser.parse_victory_result(res)
+  return mtg_parser.parse_victory_result(res)
 
 def process_defeat():
   global LastBattleWon,ReportDetail

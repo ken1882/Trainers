@@ -1,5 +1,5 @@
 from _G import *
-import MistTrainGirlsX.mtg_parser as mtg_parser
+import mtg_parser
 import game
 
 # def get_friends():

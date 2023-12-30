@@ -3,7 +3,7 @@ from _G import *
 import game
 import player
 import math
-import MistTrainGirlsX.mtg_parser as mtg_parser
+import mtg_parser
 
 TargetGearLevel  = 20
 MinMistGearKeep = 1000000
