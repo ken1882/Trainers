@@ -189,8 +189,8 @@ def start_refight_fiber():
   while True:
     yield
     if stage.is_stage('BSHome'):
-      # Input.click(530-120,138,True,False)
-      Input.click(530,138,True,False)
+      Input.click(530-120,138,True,False)
+      # Input.click(530,138,True,False)
       for _ in range(10):
         wait(1)
         yield

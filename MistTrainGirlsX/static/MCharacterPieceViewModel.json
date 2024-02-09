@@ -2918,5 +2918,61 @@
   {
     "Id": 738,
     "MCharacterId": 135302
+  },
+  {
+    "Id": 739,
+    "MCharacterId": 190401
+  },
+  {
+    "Id": 740,
+    "MCharacterId": 101402
+  },
+  {
+    "Id": 741,
+    "MCharacterId": 191301
+  },
+  {
+    "Id": 742,
+    "MCharacterId": 134302
+  },
+  {
+    "Id": 743,
+    "MCharacterId": 190301
+  },
+  {
+    "Id": 744,
+    "MCharacterId": 79402
+  },
+  {
+    "Id": 745,
+    "MCharacterId": 191401
+  },
+  {
+    "Id": 746,
+    "MCharacterId": 75302
+  },
+  {
+    "Id": 747,
+    "MCharacterId": 73302
+  },
+  {
+    "Id": 748,
+    "MCharacterId": 191201
+  },
+  {
+    "Id": 749,
+    "MCharacterId": 70403
+  },
+  {
+    "Id": 750,
+    "MCharacterId": 145402
+  },
+  {
+    "Id": 751,
+    "MCharacterId": 35303
+  },
+  {
+    "Id": 752,
+    "MCharacterId": 70303
   }
 ]

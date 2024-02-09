@@ -1030,5 +1030,21 @@
     "RecoveryEffect": 30,
     "StartDate": "2024-01-08T12:00:00",
     "EndDate": "2024-01-27T23:59:59"
+  },
+  {
+    "Id": 155,
+    "RecoveryItemTypes": 4,
+    "MItemId": 1555,
+    "RecoveryEffect": 30,
+    "StartDate": "2024-01-12T14:10:00",
+    "EndDate": "2024-01-31T23:59:59"
+  },
+  {
+    "Id": 156,
+    "RecoveryItemTypes": 4,
+    "MItemId": 1592,
+    "RecoveryEffect": 30,
+    "StartDate": "2024-02-01T12:00:00",
+    "EndDate": "2024-02-20T23:59:59"
   }
 ]
