@@ -1,0 +1,112 @@
+from copy import copy
+import enum
+from time import sleep
+
+import cv2
+import numpy as np
+from desktopmagic.screengrab_win32 import getRectAsImage
+
+import _G
+import graphics
+import Input
+import position
+import utils
+from _G import log_debug, log_error, log_info, log_warning, resume, uwait, wait
+from _G import CVMatchHardRate,CVMatchMinCount,CVMatchStdRate,CVLocalDistance
+from utils import img2str, isdigit, ocr_rect
+import re
+
+Enum = {
+  'DockFull': {
+    'pos': ((272, 262),(276, 162),(667, 160),(294, 411),(541, 405),(696, 405),(527, 293),),
+    'color': ((252, 250, 244),(199, 211, 231),(198, 85, 82),(74, 124, 189),(82, 138, 206),(90, 142, 206),(255, 255, 247),)
+  },
+  'RefightComplete': {
+    'pos': ((240, 490),(331, 491),(517, 504),(651, 483),(753, 501),),
+    'color': ((148, 154, 156),(173, 171, 173),(185, 158, 218),(66, 113, 173),(90, 150, 222),)
+  },
+  'RefightComplete2': {
+    'pos': ((295, 90),(298, 491),(378, 488),(467, 504),(601, 499),(703, 488),),
+    'color': ((254, 255, 255),(66, 81, 107),(148, 154, 156),(165, 170, 173),(189, 161, 222),(74, 134, 206),(90, 147, 214),)
+  },
+  'RefightComplete3': {
+    'pos': ((292, 91),(303, 125),(291, 494),(383, 489),(463, 500),(599, 500),(700, 496),),
+    'color': ((198, 209, 232),(140, 146, 148),(165, 166, 173),(182, 159, 218),(74, 125, 198),(82, 138, 206),)
+  },
+  'RefightComplete4': {
+    'pos': ((292, 487),(382, 489),(489, 479),(461, 505),(599, 503),(699, 482),(357, 93),),
+    'color': ((140, 145, 148),(165, 166, 173),(107, 101, 173),(176, 148, 221),(74, 137, 206),(82, 134, 198),(255, 255, 255),)
+  },
+  'ObtainNewShip': {
+    'pos': ((156, 83),(228, 52),(186, 98),(36, 303),(39, 450),(35, 518),),
+    'color': ((239, 178, 66),(239, 138, 49),(239, 207, 59),(255, 255, 255),(255, 255, 255),(255, 255, 255),)
+  },
+  'NoEnhanceMats': {
+    'pos': ((577, 335),(649, 334),(720, 335),),
+    'color': ((239, 235, 243),(239, 235, 243),(239, 235, 243),)
+  },
+  'NoEnhanceMats2': {
+    'pos': ((577, 335),(649, 334),(720, 335),),
+    'color': ((231, 227, 231),(240, 239, 239),(239, 235, 231),)
+  },
+  'NoEnhanceMats3': {
+    'pos': ((576, 334),(649, 334),(720, 334),),
+    'color': ((247, 243, 239),(247, 239, 239),(239, 235, 231),)
+  },
+  'NoEnhanceMats4': {
+    'pos': ((580, 337),(651, 336),(724, 336),),
+    'color': ((239, 235, 239),(247, 239, 239),(247, 239, 239),)
+  },
+  'HomePage': {
+    'pos': ((3, 137),(620, 318),(835, 317),(765, 32),(600, 33),),
+    'color': ((247, 247, 247),(75, 130, 199),(173, 122, 69),(255, 69, 115),(255, 243, 99),)
+  },
+  'HomePage2': {
+    'pos': ((886, 321),(748, 317),(603, 34),(772, 33),(20, 533),),
+    'color': ((222, 174, 82),(82, 182, 247),(255, 242, 99),(255, 73, 107),(239, 212, 118),)
+  },
+  'ArenaMenu': {
+    'pos': ((600, 35),(766, 32),(833, 290),(735, 522),(864, 525),),
+    'color': ((255, 242, 99),(255, 69, 115),(99, 154, 206),(49, 69, 132),(189, 210, 241),)
+  },
+  'ArenaMenu2': {
+    'pos': ((50, 41),(125, 37),(640, 527),(805, 511),(768, 33),(603, 33),(924, 533),(442, 257),),
+    'color': ((33, 32, 49),(209, 224, 243),(57, 69, 107),(57, 65, 99),(255, 69, 115),(255, 243, 99),(57, 73, 123),(82, 154, 181),)
+  },
+  'Defeated': {
+    'pos': ((185, 214),(318, 207),(559, 218),(186, 493),(277, 215),),
+    'color': ((225, 231, 222),(239, 247, 239),(178, 184, 178),(248, 249, 251),(222, 227, 214),)
+  },
+  'Defeated2': {
+    'pos': ((201, 215),(482, 169),(526, 246),(566, 214),(635, 301),),
+    'color': ((239, 247, 239),(176, 183, 176),(222, 228, 222),(172, 178, 172),(170, 75, 85),)
+  }
+}
+
+def get_current_stage():
+  global Enum
+  if graphics.FlagDisableCache or _G.LastFrameCount != _G.FrameCount:
+    _G.CurrentStage = None
+    _G.LastFrameCount = _G.FrameCount
+  else:
+    return _G.CurrentStage
+  
+  for key in Enum:
+    stg = Enum[key]
+    if graphics.is_pixel_match(stg['pos'], stg['color']):
+      _G.CurrentStage = key
+      return key
+
+  return None
+
+def check_pixels(pixstruct):
+  return graphics.is_pixel_match(pixstruct['pos'], pixstruct['color'])
+
+LastStage = '_'
+def is_stage(stg):
+  global LastStage
+  s = get_current_stage()
+  if s != LastStage:
+    _G.log_info("Current stage:", s)
+    LastStage = s
+  return s and stg in s

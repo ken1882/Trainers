@@ -27,6 +27,12 @@ Cnt_NoLimitedErrand = 0
 
 def to_homepage():
   Input.rclick(970, 25)
+  wait(0.03)
+  Input.rclick(812, 37)
+
+def close_game():
+  Input.click(514, -20, True, False)
+  wait(1)
 
 def start_errand_fiber():
   global Cnt_NoLimitedErrand
@@ -67,6 +73,7 @@ def start_errand_fiber():
   # dispatch
   if stage.is_stage('BSHome'):
     return
+  wait(2)
   dispatched = int(utils.ocr_rect((65,510,121,542), 'errand_num.png', num_only=True)[0])
   while dispatched < 3:
     log_info("Dispatched:", dispatched)
@@ -174,7 +181,10 @@ def start_stage_selection_fiber():
     if depth > 5:
       raise RuntimeError("Unable to reach lunatic difficulty")
 
+StageDepth = 0
+LastStage  = None
 def start_refight_fiber():
+  global StageDepth,LastStage
   target_name = _G.ARGV.stage
   party_sel_cycle = itertools.cycle(PARTY_SEL_POS)
   flag_check_errands = False
@@ -188,9 +198,26 @@ def start_refight_fiber():
     raise RuntimeError("No stage name given")
   while True:
     yield
+    stg = stage.get_current_stage()
+    if stg:
+      if stg == LastStage:
+        StageDepth += 1
+      else:
+        StageDepth = 0
+      LastStage = stg
+    if StageDepth > 100:
+      _G.log_info(f"Stage {stg} too deep, close game")
+      StageDepth = 0
+      close_game()
+      wait(3)
     if stage.is_stage('BSHome'):
-      Input.click(530-120,138,True,False)
+      # Input.click(530-120,138,True,False)
       # Input.click(530,138,True,False)
+      wait(3)
+      apos = graphics.find_object('app.png')[0]
+      for _ in range(2):
+        Input.click(apos[0]+30,apos[1]-50,True,False)
+        wait(0.03)
       for _ in range(10):
         wait(1)
         yield
@@ -265,9 +292,17 @@ def start_refight_fiber():
       Input.rclick(*pos[1])
       wait(5)
       Input.rclick(692, 500)
-      wait(3)
+      depth = 0
+      while not stage.is_stage('RematchSetting'):
+        depth += 1
+        if depth % 5 == 0:
+          Input.rclick(692, 500)
+        wait(1)
+        yield
+      wait(1)
       Input.rclick(610, 506)
       wait(3)
+      log_info("Start battle")
       Input.rclick(824, 500)
       wait(3)
       if battle_duration:
@@ -286,6 +321,7 @@ def start_refight_fiber():
       if battle_duration and flag_fighting and end_rematch_timestamp < datetime.now():
         log_info("Attempt end rematch")
         Input.mouse_down(495, 86)
+        StageDepth += 10
         for _ in range(10):
           wait(0.5)
           yield
@@ -351,7 +387,7 @@ def start_rhythm_fiber():
       Input.click(600, 300)
       flag_beat = True
     if flag_beat:
-      wait(0.03)
+      wait(0.003)
 
 # def start_capture_rhythm_fiber():
 #   lq = []
