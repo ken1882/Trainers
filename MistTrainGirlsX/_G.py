@@ -301,6 +301,39 @@ ITYPE_GEAR        = 10  # aka character pieces
 ITYPE_GEAR2       = 11
 ITYPE_ABSTONE2    = 12
 
+# limited item categories
+ICATE_ITEM                    = 0
+ICATE_RESOURCE                = 1
+ICATE_HEAL_ITEM               = 2
+ICATE_MEMORY                  = 3
+ICATE_ENHANCE                 = 4
+ICATE_EVOLUTION               = 5
+ICATE_SKILL_ENHANCE           = 6
+ICATE_PARTY_SKILL             = 7
+ICATE_LIMIT_BREAK             = 8
+ICATE_TRAINING                = 9
+ICATE_EXPEDITION              = 10
+ICATE_GACHA                   = 11
+ICATE_QUEST_KEY               = 12
+ICATE_TRADE                   = 13
+ICATE_DMM_PT                  = 14
+ICATE_RAID                    = 15
+ICATE_MISSION                 = 16
+ICATE_WORK_OUT                = 17
+ICATE_DOUBLE_WORK_OUT         = 18
+ICATE_RANKING_TITLE           = 19
+ICATE_VOTE_TICKET             = 20
+ICATE_BASE_UP                 = 21
+ICATE_MISPO                   = 22
+ICATE_NOMINATION_TICKET       = 23
+ICATE_MISSION_POINT           = 24
+ICATE_ATTRIBUTE_GEAR          = 25
+ICATE_ULTIMATE_WEAPON_POINT   = 26
+ICATE_LEVELUP_MISSION_CAMPAIGN_POINT = 27
+ICATE_GENERAL_EXPERIENCE      = 28
+
+
+
 ITYPE_NAMES = {
   ITYPE_WEAPON: '武器',
   ITYPE_ARMOR: '防具',

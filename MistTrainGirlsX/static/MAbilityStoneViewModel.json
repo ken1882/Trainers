@@ -588,15 +588,15 @@
       245,
       244,
       243,
-      235,
-      241,
-      240,
-      239,
-      238,
       237,
+      241,
+      234,
+      235,
       236,
       242,
-      234
+      238,
+      239,
+      240
     ]
   },
   {
@@ -607,13 +607,13 @@
     "MLevelUpSkillGroupIds": [
       260,
       259,
-      258,
       257,
       256,
-      255,
+      258,
       254,
       253,
-      252
+      252,
+      255
     ]
   },
   {
@@ -622,15 +622,15 @@
     "Rarity": 4,
     "AbilityStoneEquipType": 2,
     "MLevelUpSkillGroupIds": [
+      270,
       277,
       276,
       275,
       274,
       273,
       272,
+      269,
       271,
-      270,
-      268,
       267,
       266,
       265,
@@ -638,7 +638,7 @@
       263,
       262,
       261,
-      269
+      268
     ]
   },
   {
@@ -647,13 +647,13 @@
     "Rarity": 3,
     "AbilityStoneEquipType": 2,
     "MLevelUpSkillGroupIds": [
-      281,
       286,
       285,
       284,
       283,
-      279,
+      281,
       280,
+      279,
       278,
       282
     ]
@@ -664,12 +664,12 @@
     "Rarity": 4,
     "AbilityStoneEquipType": 3,
     "MLevelUpSkillGroupIds": [
-      297,
-      298,
       296,
-      300,
       301,
+      300,
       299,
+      298,
+      297,
       295,
       302,
       293,
@@ -688,14 +688,14 @@
     "Rarity": 3,
     "AbilityStoneEquipType": 3,
     "MLevelUpSkillGroupIds": [
-      303,
-      304,
-      305,
-      306,
-      307,
-      308,
+      310,
       309,
-      310
+      308,
+      307,
+      305,
+      304,
+      303,
+      306
     ]
   },
   {
@@ -1096,12 +1096,12 @@
       367,
       366,
       365,
-      370,
       364,
       363,
-      359,
+      370,
       361,
       360,
+      359,
       358,
       357,
       356,
@@ -1299,19 +1299,19 @@
     "MLevelUpSkillGroupIds": [
       427,
       428,
-      429,
-      426,
       433,
+      426,
+      430,
       431,
       432,
-      430,
+      429,
       425,
-      418,
+      420,
       423,
       422,
       421,
-      420,
       419,
+      418,
       417,
       416,
       424
@@ -1323,6 +1323,7 @@
     "Rarity": 4,
     "AbilityStoneEquipType": 2,
     "MLevelUpSkillGroupIds": [
+      450,
       449,
       448,
       447,
@@ -1331,15 +1332,14 @@
       444,
       443,
       442,
-      450,
+      441,
       440,
       439,
       438,
       437,
       436,
       435,
-      434,
-      441
+      434
     ]
   },
   {
@@ -1348,22 +1348,22 @@
     "Rarity": 4,
     "AbilityStoneEquipType": 3,
     "MLevelUpSkillGroupIds": [
-      466,
       465,
+      466,
       464,
       463,
       462,
       461,
       460,
       459,
-      458,
+      452,
+      457,
       456,
       455,
       454,
       453,
-      452,
       451,
-      457
+      458
     ]
   },
   {
@@ -1436,6 +1436,42 @@
     "AbilityStoneEquipType": 1,
     "MLevelUpSkillGroupIds": [
       474
+    ]
+  },
+  {
+    "Id": 121,
+    "Name": "\u52aa\u529b\u5bb6\u5973\u5b50\u306e\u529b",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      475
+    ]
+  },
+  {
+    "Id": 122,
+    "Name": "\u4e00\u9014\u306a\u5f8c\u8f29\u306e\u529b",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      476
+    ]
+  },
+  {
+    "Id": 123,
+    "Name": "\u5668\u7528\u8ca7\u4e4f\u306e\u529b",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      477
+    ]
+  },
+  {
+    "Id": 124,
+    "Name": "\u6d6e\u904a\u5973\u5b50\u306e\u529b",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      478
     ]
   }
 ]

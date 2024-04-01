@@ -166,13 +166,17 @@ def get_current_stage():
 def check_pixels(pixstruct):
   return graphics.is_pixel_match(pixstruct['pos'], pixstruct['color'])
 
+StageDepth = 0
 LastStage = '_'
 def is_stage(stg):
-  global LastStage
+  global LastStage,StageDepth
   s = get_current_stage()
   if s != LastStage:
     _G.log_info("Current stage:", s)
     LastStage = s
+    StageDepth = 0
+  else:
+    StageDepth += 1
   return s and stg in s
 
 def has_completed_errands():

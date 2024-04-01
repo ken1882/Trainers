@@ -1,0 +1,37 @@
+import re
+import win32con
+import _G,stage
+from _G import resume, resume_from, pop_fiber_ret, wait, uwait, log_info
+import Input, position, graphics
+from random import randint
+from datetime import datetime, timedelta
+import combat
+import utils
+import itertools
+from PIL import Image
+
+def safe_click(x, y, dur=1, **kwargs):
+    times = int(dur // 0.05)
+    for _ in range(times):
+        wait(0.05)
+        yield
+    Input.rclick(x, y, **kwargs)
+    for _ in range(times):
+        wait(0.05)
+        yield
+
+def start_daily_traven_fiber():
+    ClickPos = ((256, 522),(449, 84),(1096, 756),(835, 811),)
+    while True:
+        yield
+        curt = datetime.now()
+        if curt.hour == 5 and curt.minute == 0:
+            for pos in ClickPos:
+                yield from safe_click(*pos)
+            _G.log_info("Traven seat taken")
+            for _ in range(60):
+                wait(1)
+                yield
+        elif curt.hour == 4 and curt.minute > 55:
+            continue
+        wait(60)

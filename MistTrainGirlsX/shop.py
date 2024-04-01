@@ -1,6 +1,7 @@
 from glob import glob
 from _G import *
 import player, game
+import mtg_parser
 
 
 MinimumKeepGold = 10000000
@@ -18,11 +19,12 @@ def get_daily_shop():
 
 def get_event_shops():
   res = game.get_request('/api/TradeShops')
-  return [st for st in res['r'] if st['TradeShopType'] == SHOP_TYPE_EVENT]
+  shops = [mtg_parser.parse_trade_shop(o) for o in res]
+  return [s for s in shops if s['TradeShopType'] == SHOP_TYPE_EVENT]
 
 def get_tshop_goods(id):
   res = game.get_request(f"/api/TradeShops/{id}/lineup")
-  return res['r']['Rewards']
+  return mtg_parser.parse_trade_shop_goods(res)['Rewards']
 
 def log_profile(pdat):
   string  = '\n===== Currency Owned =====\n'
@@ -88,7 +90,7 @@ def log_invoice(goods):
 
 def trade_item(good_id, amount):
   res = game.post_request(f"/api/TradeRewards/{good_id}/trade/{amount}")
-  return res['r']
+  return res
 
 def trade_all_event_potions():
   stores = get_event_shops()
@@ -154,7 +156,7 @@ def buy_votes():
         break
       if TradeVoteGood:
         break
-  currency = player.get_consumable_stock(TradeVoteGood['RequiredMItemId'])['Stock']
+  currency = player.get_consumable_stock(TradeVoteGood['RequiredMItemId'],category=ICATE_TRADE)['Stock']
   cost = TradeVoteGood['RequiredMItemNum']
   if currency < cost * 1000:
     return 0
@@ -163,7 +165,7 @@ def buy_votes():
   log_info('Purchased votes:', n, 'res:', res)
   vid = TradeVoteGood['ItemId']
   player.VoteItemId = vid
-  player.ConsumableInventory[vid] = player.get_consumable_stock(vid)['Stock']
+  player.ConsumableInventory[vid] = player.get_consumable_stock(vid, category=ICATE_VOTE_TICKET)['Stock']
   return n
 
 def main():

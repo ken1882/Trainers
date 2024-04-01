@@ -60,7 +60,6 @@ OBJKEYS_USERPREF = (
     'VoiceVolume',
     'MyPageBgmJukeBoxActivated',
     'AutoRoundBgmJukeBoxActivated',
-    'UJukeBoxMusicSettingViewModel',
     'CharacterAutoLockRarity',
     'IsHomeCharacterRandom',
     'CurrentHomeViewTypeIsCharacter',
@@ -125,7 +124,7 @@ OBJKEYS_USERPREF = (
     'BattleAutoSpecialSkillType',
     'BattleSkipBuffEffectFlag',
     'UserPreferenceActiveFlag',
-    'CurrentClearSideStoryChapter',
+    'CurrentClearSideStoryChapter'
 )
 OBJKEYS_BATTLE_SKILL = (
     'Id',
@@ -460,6 +459,13 @@ OBJDICT_UPARTY = (
     'MFieldSkill3Id',
     'GetUPartyFailedReason',
 )
+OBJDICT_TRADE_GOODS = (
+    'Id', 'UserItemId',
+    'StartDate', 'EndDate',
+    'Limit', 'WeeklyLimit', 'MonthlyLimit', 'TradedCount', 'Order', 
+    'ItemId', 'ItemType', 'ItemQuantity', 'RequiredMItemId', 
+    'RequiredMItemNum', 'Sold', 'HasSelectableAbility'
+)
 
 def interpret_data(keys, data):
   ret = {}
@@ -516,7 +522,6 @@ def parse_battle_start(data):
         'UPartyId',
         'Version',
         'UUserPreferences',
-        'UJukeBoxMusicSetting',
         ('UPartyViewModel', dict, OBJDICT_UPARTY),
     ), data)
 
@@ -625,3 +630,21 @@ def parse_partygroup_result(data):
 
 def parse_uparty(data):
    return interpret_data(OBJDICT_UPARTY, data)
+
+def parse_trade_shop(data):
+    return interpret_data((
+        'Id', 'TradeShopType', 'StartDate', 'EndDate',
+        'Order', 'JumpScene', 'TargetValue', 'BannerResourceUri',
+        'IconMItemId', 'IconName'
+    ), data)
+
+def parse_trade_shop_goods(data):
+    return interpret_data((
+        'JumpTargetEndDate',
+        ('Rewards', list, OBJDICT_TRADE_GOODS),
+    ), data)
+
+def parse_vote_result(data):
+   return interpret_data((
+        'TargetId', 'VoteCount', 'AfterVoteMItemCount', 'VoteFailedReason'
+    ), data)

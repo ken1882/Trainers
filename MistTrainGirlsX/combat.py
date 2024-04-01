@@ -30,7 +30,7 @@ SHOP_CHECK_DURATION = 500
 FLAG_VOTING = False
 FLAG_AUTO_VOTE = False
 
-VOTE_TARGET = (11, 111)
+VOTE_TARGET = (12, 180)
 VotedCount  = 0
 
 FlagTurnLimited = False

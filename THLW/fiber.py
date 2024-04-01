@@ -38,6 +38,9 @@ def start_errand_fiber():
   global Cnt_NoLimitedErrand
   while not stage.is_stage('HomePage'):
     yield
+    print('stage depth:', stage.StageDepth)
+    if stage.StageDepth > 30:
+      close_game()
     if stage.is_stage('BSHome'):
       return
     to_homepage()
@@ -45,6 +48,8 @@ def start_errand_fiber():
   Input.rclick(824, 350)
   while not stage.is_stage('Errand'):
     yield
+    if stage.StageDepth > 30:
+      close_game()
     if stage.is_stage('BSHome'):
       return
     wait(2)
@@ -62,6 +67,8 @@ def start_errand_fiber():
       yield
     while not stage.is_stage('Errand'):
       yield
+      if stage.StageDepth > 30:
+        close_game()
       if stage.is_stage('BSHome'):
         return
       wait(2)
@@ -71,6 +78,8 @@ def start_errand_fiber():
     completed = graphics.find_object('errand_done.png', 0.9)
     log_info("Completed errands:", completed)
   # dispatch
+  if stage.StageDepth > 30:
+      close_game()
   if stage.is_stage('BSHome'):
     return
   wait(2)
@@ -103,6 +112,8 @@ def start_errand_fiber():
         yield
     wait(5)
     yield
+    if stage.StageDepth > 30:
+      close_game()
     if stage.is_stage('BSHome'):
       return
     _G.flush()
@@ -122,7 +133,7 @@ def start_walkstage_fiber():
         wait(1)
         yield
     elif stage.is_stage('HelperSelect'):
-      Input.rclick(477, 201)
+      Input.rclick(477, 351)
       wait(5)
     elif stage.is_stage('CombatPrepare'):
       wait(2)
@@ -158,6 +169,8 @@ def start_stage_selection_fiber():
   event_pos = ((691, 119),(688, 217),(685, 317),(685, 415))
   while not stage.is_stage('HomePage'):
     yield
+    if stage.StageDepth > 30:
+      close_game()
     if stage.is_stage('BSHome'):
       return
     to_homepage()
@@ -172,6 +185,8 @@ def start_stage_selection_fiber():
   wait(2)
   depth = 0
   while graphics.get_difficulty() != 2:
+    if stage.StageDepth > 30:
+      close_game()
     if stage.is_stage('BSHome'):
       return
     depth += 1
@@ -259,6 +274,7 @@ def start_refight_fiber():
           wait(1-_G.FPS)
           yield
         try:
+          _G.log_info("Checking errands")
           yield from start_errand_fiber()
           yield from start_stage_selection_fiber()
         except Exception:
@@ -297,6 +313,12 @@ def start_refight_fiber():
         depth += 1
         if depth % 5 == 0:
           Input.rclick(692, 500)
+        if depth > 30:
+          _G.log_info(f"Stage {stg} too deep, close game")
+          StageDepth = 0
+          close_game()
+          wait(3)
+          break
         wait(1)
         yield
       wait(1)
@@ -311,7 +333,7 @@ def start_refight_fiber():
       flag_fighting = True
       flag_check_errands = True
     elif stage.is_stage('Disconnected'):
-      Input.rlick(599, 403)
+      Input.rclick(599, 403)
       wait(1)
     elif stage.is_stage('CombatVictory') or stage.is_stage('CombatRewards'):
       Input.rclick(509, 401)

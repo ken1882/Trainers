@@ -163,11 +163,26 @@ def get_character_by_uid(uid, flush=False):
   __cache_characters(get_characters())
   return __UCharacterCache[uid]
 
-def get_consumables():
-  res = game.get_request('/api/UItems/GetLimitedItems')
+def get_consumables(category=None, to_dict=False):
+  '''
+  For categories, refer to `_G.ICATE_XXXX`
+  '''
   ret = []
-  for d in res:
-    ret.append(mtg_parser.parse_limiteditem_result(d))
+  if category == None:
+    for i in range(29):
+      res = game.get_request(f"/api/UItems/GetLimitedItems?itemCategory={i}")
+      for d in res:
+        o = mtg_parser.parse_limiteditem_result(d)
+        o['Stock'] = o['ExpireStock']
+        ret.append(o)
+  else:
+    res = game.get_request(f"/api/UItems/GetLimitedItems?itemCategory={category}")
+    for d in res:
+      o = mtg_parser.parse_limiteditem_result(d)
+      o['Stock'] = o['ExpireStock']
+      ret.append(o)
+  if to_dict:
+    return {i['MItemId']: i for i in ret}
   return ret
 
 def get_weapons():
@@ -407,8 +422,8 @@ def use_aprecovery_item(item, amount=1):
   res = game.post_request(f"/api/Users/recoverStamina/{item['MItemId']}/{amount}")  
   return mtg_parser.parse_aprecovery_result(res)
 
-def get_consumable_stock(id):
-  items = get_consumables()
+def get_consumable_stock(id, category=None):
+  items = get_consumables(category)
   return next((it for it in items if it['MItemId'] == id), None)
 
 def get_gear_stock(id):
@@ -616,7 +631,6 @@ def dump_all_available_scenes(meta):
       log_info(f"Scene#{id} {game.get_scene(id)['Title']} saved")
 
 def vote_character(event_id, character_id):
-  raise RuntimeError("Unimplemented")
   if not VoteItemId or VoteItemId not in ConsumableInventory:
     log_warning("Vote item unavailable")
     return 0
@@ -624,11 +638,12 @@ def vote_character(event_id, character_id):
   while ConsumableInventory[VoteItemId] > 0:
     n = min(ConsumableInventory[VoteItemId], MAX_ITEM)
     ConsumableInventory[VoteItemId] -= n
-    total += n
     res = game.post_request(f"/api/Vote/Vote/{event_id}/{character_id}/{n}")
+    res = mtg_parser.parse_vote_result(res)
     log_info(f"Voted {n}, response:", res)
-    if 'AfterVoteMItemCount' in res['r']:
-      ConsumableInventory[VoteItemId] -= res['r']['AfterVoteMItemCount']
+    if 'AfterVoteMItemCount' in res:
+      ConsumableInventory[VoteItemId] = res['AfterVoteMItemCount']
+      total += res['VoteCount']
   return total
 
 def buy_derpy_kirens(race_id, numbers):

@@ -574,6 +574,16 @@ def get_scene(id):
   return SceneDatabase[id]
 
 def get_item(item):
+  if 'MItemId' in item:
+    return get_consumable(item['MItemId'])
+  elif 'MWeaponId' in item:
+    return get_weapon(item['MWeaponId'])
+  elif 'MArmorItem' in item:
+    return get_armor(item['MArmorItem'])
+  elif 'MAccessoryId' in item:
+    return get_accessory(item['MAccessoryId'])
+  elif 'MAbilityStoneId' in item:
+    return get_abstone(item['MAbilityStoneId'])
   if 'ItemType' not in item or 'ItemId' not in item:
     log_warning("Invalid item object: ", item)
     return item

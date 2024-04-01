@@ -98,7 +98,6 @@ def start_stage_selection_fiber():
     for pos in position.StartRefights:
         yield from safe_click(*pos)
 
-
 def start_refight_fiber():
     global BattleTargetIndex,TeamSwapCycle
     counter  = 0
@@ -112,6 +111,16 @@ def start_refight_fiber():
     while True:
         wait(1)
         yield
+        if stage.is_stage('EventRefightComplete'):
+            counter += 1
+            _G.log_info(f"Refight {counter}/{interval} times")
+            clicks = ((496, 490),(363, 107),(829, 482),(712, 501),(660, 228),(493, 381))
+            for pos in clicks:
+                yield from safe_click(*pos)
+            if counter >= interval:
+                _G.log_info("Last run, exiting")
+                break
+            continue
         if stage.is_stage('RefightComplete'):
             counter += 1
             _G.log_info(f"Finished {counter}/{interval} times")
@@ -144,7 +153,7 @@ def start_arena_fiber():
             yield
         for pos in position.ArenaSelections:
             yield from safe_click(*pos)
-            p = utils.str2int(utils.ocr_rect((910, 160, 970, 180), 'opower.png', num_only=1)) or 0
+            p = utils.str2int(utils.ocr_rect((930, 160, 980, 180), 'opower.png', num_only=1)) or 0
             _G.log_info("Opponent power:", p)
             if p > 2000:
                 break
@@ -156,3 +165,29 @@ def start_arena_fiber():
             yield
         for pos in position.ArenaDefeat:
             yield from safe_click(*pos)
+
+def determine_minigame_hidx(col):
+    if col[0] > 200 and col[1] > 200:
+        return 1
+    if col[0] > 250:
+        return 2
+    if col[2] > 200:
+        return 0
+    return -1
+
+def start_minigame_fiber():
+    while True:
+        yield
+        cols = []
+        # print('---')
+        for pos in position.MiniGameOrder:
+            c = graphics.get_pixel(*pos, True)
+            # print(c)
+            if not any([graphics.is_color_ok(c, tc) for tc in position.MiniHameHCol]):
+                break
+            cols.append(c)
+        if len(cols) != 5:
+            continue
+        for c in cols:
+            i = determine_minigame_hidx(c)
+            Input.rclick(*position.MiniGameHit[i])
