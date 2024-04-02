@@ -22,9 +22,13 @@ def safe_click(x, y, dur=1, **kwargs):
 
 def start_daily_traven_fiber():
     ClickPos = ((256, 522),(449, 84),(1096, 756),(835, 811),)
+    flag_re = False
     while True:
         yield
         curt = datetime.now()
+        if flag_re and curt.minute > 55:
+            utils.redetect_window()
+            flag_re = False
         if curt.hour == 5 and curt.minute == 0:
             for pos in ClickPos:
                 yield from safe_click(*pos)
@@ -35,3 +39,4 @@ def start_daily_traven_fiber():
         elif curt.hour == 4 and curt.minute > 55:
             continue
         wait(60)
+        flag_re = True

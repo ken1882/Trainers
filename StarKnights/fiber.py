@@ -39,8 +39,13 @@ def start_initiate_fiber():
   startrail_threshold = 300
   startring_threshold = 500
   cnt = 0
+  rcnt = 0
   while True:
     yield
+    rcnt += 1
+    if rcnt > 300:
+      utils.redetect_window()
+      rcnt = 0
     if not stage.is_stage('CombatInitiate'):
       lasts = []
       continue

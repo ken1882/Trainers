@@ -142,3 +142,9 @@ def is_focused():
   if _G.IS_WIN32:
     return win32gui.GetForegroundWindow() in [_G.SelfHwnd, _G.AppHwnd]
   return True
+
+def redetect_window():
+  try:
+    graphics.get_content_rect()
+  except Exception:
+    find_app_window()

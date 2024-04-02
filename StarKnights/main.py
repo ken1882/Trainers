@@ -29,7 +29,7 @@ def print_cache():
 def detect_app_window():
   utils.find_app_window()
   # utils.find_child_window()
-  _G.AppInputHwnd = _G.AppHwnd
+  # _G.AppInputHwnd = _G.AppHwnd
 
 def update_detector():
   last_tick = 0
