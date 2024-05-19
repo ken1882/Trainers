@@ -155,7 +155,7 @@ def start_arena_fiber():
             yield from safe_click(*pos)
             p = utils.str2int(utils.ocr_rect((930, 160, 980, 180), 'opower.png', num_only=1)) or 0
             _G.log_info("Opponent power:", p)
-            if p > 2000:
+            if p > 6000:
                 break
             yield from safe_click(*position.GeneralBack)
         for pos in position.ArenaStart:
@@ -174,6 +174,93 @@ def determine_minigame_hidx(col):
     if col[2] > 200:
         return 0
     return -1
+
+def start_errand_fiber():
+    scroll_pos = (
+        ((972, 110), (978, 110)),
+        ((972, 495), (978, 495)),
+    )
+    AwakenErrandDispatcher = (
+        (114, 127),(249, 132),(374, 131),
+    )
+    while True:
+        yield
+        if not stage.is_stage('Errand'):
+            continue
+        for pos in scroll_pos[0]:
+            Input.click(*pos)
+            yield
+        wait(1)
+        _G.flush()
+        graphics.flush()
+        errands_doing = graphics.find_object('errand_doing.png', 0.7)
+        errands_done  = graphics.find_object('errand_done.png', 0.7)
+        try:
+            dispatched = utils.ocr_rect((825, 22, 835, 42), 'dispatched.png', num_only=True)
+            print(dispatched)
+            dispatched = 4 - int(dispatched[0])
+        except Exception as err:
+            dispatched = len(errands_doing)
+            utils.handle_exception(err)
+        completed  = len(errands_done)
+        _G.log_info(f"Dispatched:", dispatched)
+        _G.log_info(f"Completed:", completed)
+        if completed > 0:
+            pos = errands_done[0]
+            Input.rclick(*pos)
+            wait(1)
+            for _ in range(5):
+                Input.rclick(50, 470)
+                wait(0.8)
+            wait(1)
+            continue
+        for _ in range(5):
+            yield
+            wait(0.3)
+        if dispatched >= 4:
+            for _ in range(550):
+                yield
+                wait(0.1)
+            continue
+        for pos in scroll_pos[1]:
+            Input.click(*pos)
+            yield
+        availables = graphics.find_object('errand_idle.png', 0.8)
+        for apos in reversed(availables):
+            rect = [apos[0]+90, apos[1], apos[0]+160, apos[1]+20]
+            ct = utils.ocr_rect(rect, f"errand_time.png", num_only=True)
+            _G.log_info("Time needed:", ct)
+            if ct.startswith('10'):
+                continue
+            Input.rclick(*apos)
+            wait(1)
+            yield
+            if graphics.find_object('awaken_errand.png', 0.8):
+                Input.rclick(200, 279)
+                wait(1)
+                yield
+                if not graphics.is_pixel_match(((585, 25),), ((247, 235, 165),)):
+                    Input.rclick(570, 35)
+                    wait(1)
+                for pos in AwakenErrandDispatcher:
+                    if sum(graphics.get_pixel(*pos, True)) < 250:
+                        continue
+                    Input.rclick(*pos)
+                    break
+                wait(1)
+                yield
+                Input.rclick(782, 526)
+                wait(1.5)
+                yield
+            for pos in [(707, 286), (836, 290), (509, 126)]:
+                Input.rclick(*pos)
+                wait(1)
+                yield
+            for _ in range(8):
+                yield
+                wait(0.3)
+            break
+        
 
 def start_minigame_fiber():
     while True:

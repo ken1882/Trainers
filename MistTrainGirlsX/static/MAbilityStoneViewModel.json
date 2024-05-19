@@ -588,15 +588,15 @@
       245,
       244,
       243,
-      237,
+      238,
       241,
       234,
       235,
       236,
       242,
-      238,
       239,
-      240
+      240,
+      237
     ]
   },
   {
@@ -605,15 +605,15 @@
     "Rarity": 3,
     "AbilityStoneEquipType": 1,
     "MLevelUpSkillGroupIds": [
-      260,
-      259,
-      257,
-      256,
       258,
-      254,
-      253,
       252,
-      255
+      253,
+      254,
+      255,
+      256,
+      257,
+      259,
+      260
     ]
   },
   {
@@ -622,13 +622,13 @@
     "Rarity": 4,
     "AbilityStoneEquipType": 2,
     "MLevelUpSkillGroupIds": [
-      270,
+      272,
+      273,
+      274,
       277,
       276,
+      270,
       275,
-      274,
-      273,
-      272,
       269,
       271,
       267,
@@ -1099,7 +1099,7 @@
       364,
       363,
       370,
-      361,
+      362,
       360,
       359,
       358,
@@ -1107,7 +1107,7 @@
       356,
       355,
       354,
-      362
+      361
     ]
   },
   {
@@ -1297,19 +1297,19 @@
     "Rarity": 4,
     "AbilityStoneEquipType": 1,
     "MLevelUpSkillGroupIds": [
+      433,
       427,
       428,
-      433,
       426,
       430,
       431,
       432,
       429,
       425,
-      420,
-      423,
       422,
+      423,
       421,
+      420,
       419,
       418,
       417,
@@ -1349,19 +1349,19 @@
     "AbilityStoneEquipType": 3,
     "MLevelUpSkillGroupIds": [
       465,
-      466,
       464,
+      466,
       463,
       462,
       461,
       460,
       459,
-      452,
+      453,
       457,
       456,
       455,
       454,
-      453,
+      452,
       451,
       458
     ]
@@ -1472,6 +1472,33 @@
     "AbilityStoneEquipType": 1,
     "MLevelUpSkillGroupIds": [
       478
+    ]
+  },
+  {
+    "Id": 125,
+    "Name": "\u5b89\u3089\u304b\u306a\u652f\u3048\u306e\u529b",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      479
+    ]
+  },
+  {
+    "Id": 126,
+    "Name": "\u9759\u8b10\u306a\u7f8e\u306e\u529b",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      480
+    ]
+  },
+  {
+    "Id": 127,
+    "Name": "\u7121\u90aa\u6c17\u306a\u77b3\u306e\u529b",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      481
     ]
   }
 ]

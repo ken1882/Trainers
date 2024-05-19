@@ -88,7 +88,9 @@ def safe_execute_func(func, args=[], kwargs={}):
     handle_exception(err, err_info)
   return _G.MsgPipeError
 
-def handle_exception(err, errinfo):
+def handle_exception(err, errinfo=None):
+  if not errinfo:
+    errinfo = traceback.format_exc()
   _G.log_error(f"An error occured during runtime!\n{str(err)}\n{errinfo}")
 
 def img2str(image_file, lang='jpn', config='--psm 12 --psm 13'):

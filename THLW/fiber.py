@@ -38,8 +38,8 @@ def start_errand_fiber():
   global Cnt_NoLimitedErrand
   while not stage.is_stage('HomePage'):
     yield
-    print('stage depth:', stage.StageDepth)
     if stage.StageDepth > 30:
+      print('stage depth:', stage.StageDepth)
       close_game()
     if stage.is_stage('BSHome'):
       return
@@ -72,7 +72,9 @@ def start_errand_fiber():
       if stage.is_stage('BSHome'):
         return
       wait(2)
-      Input.rclick(50, 400)
+      Input.rclick(0, 367, rrange=(1,8))
+      wait(0.3)
+      Input.rclick(30, 420, rrange=(1,8))
     wait(5)
     _G.flush()
     completed = graphics.find_object('errand_done.png', 0.9)
@@ -83,11 +85,16 @@ def start_errand_fiber():
   if stage.is_stage('BSHome'):
     return
   wait(2)
-  dispatched = int(utils.ocr_rect((65,510,121,542), 'errand_num.png', num_only=True)[0])
+  errands_doing = graphics.find_object('errand_doing.png', 0.9)
+  dispatched = len(errands_doing)
+  depth = 0
   while dispatched < 3:
-    log_info("Dispatched:", dispatched)
+    log_info(f"Dispatched: {dispatched} (depth={depth})")
     wait(5)
+    depth += 1
     yield
+    if depth > 5:
+      break
     errands_doing = graphics.find_object('errand_doing.png', 0.9)
     errands = []
     tmp_errands = graphics.find_object('GC.png', 0.9) 
@@ -117,7 +124,9 @@ def start_errand_fiber():
     if stage.is_stage('BSHome'):
       return
     _G.flush()
-    dispatched = int(utils.ocr_rect((67,517,121,542), 'errand_num.png', num_only=True)[0])
+    errands_doing = graphics.find_object('errand_doing.png', 0.9)
+    dispatched = len(errands_doing)
+    _G.log_info(f"Dispatched:", dispatched)
 
 def start_walkstage_fiber():
   while True:
@@ -239,6 +248,10 @@ def start_refight_fiber():
       flag_fighting = False
       flag_rebooting = True
       continue
+    elif stage.is_stage('Crashed'):
+      close_game()
+      wait(3)
+      flag_rebooting = True
     elif flag_rebooting:
       if not stage.is_stage('HomePage'):
         yield

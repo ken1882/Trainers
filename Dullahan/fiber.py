@@ -21,7 +21,7 @@ def safe_click(x, y, dur=1, **kwargs):
         yield
 
 def start_daily_traven_fiber():
-    ClickPos = ((256, 522),(449, 84),(1096, 756),(835, 811),)
+    ClickPos = ((1096, 756),(835, 811),)
     flag_re = False
     while True:
         yield
@@ -30,6 +30,11 @@ def start_daily_traven_fiber():
             utils.redetect_window()
             flag_re = False
         if curt.hour == 5 and curt.minute == 0:
+            while stage.is_stage('PowerSaving'):
+                yield from safe_click(256, 522)
+            while not stage.is_stage('Travern'):
+                yield from safe_click(449, 84)
+            wait(1.5)
             for pos in ClickPos:
                 yield from safe_click(*pos)
             _G.log_info("Traven seat taken")
