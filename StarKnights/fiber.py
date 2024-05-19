@@ -23,6 +23,14 @@ def start_refight_fiber():
       Input.rclick(631, 623)
       yield
       sleep(1)
+    elif stage.is_stage('EventReward'):
+      Input.rclick(635, 526)
+      yield
+      sleep(1)
+    elif stage.is_stage('KakinAd'):
+      Input.rclick(1177, 73)
+      yield
+      sleep(1)
     elif stage.is_stage('EventBoss'):
       Input.rclick(*position.RaidBossStart)
       n -= 1
@@ -36,7 +44,7 @@ def start_initiate_fiber():
   lasts = []
   stack_size = 8
   diff_threshold = 30
-  startrail_threshold = 300
+  startrail_threshold = 330
   startring_threshold = 500
   cnt = 0
   rcnt = 0
@@ -69,6 +77,7 @@ def start_initiate_fiber():
         cs += sum(c)
       cs /= stack_size
       cv = sum(col)
+      _G.log_debug(cs, cv)
       if cs > startrail_threshold:
         break
       if cv > startring_threshold and cv - cs > diff_threshold or _G.ARGV.auxiliary:
