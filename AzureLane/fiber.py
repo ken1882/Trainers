@@ -124,6 +124,8 @@ def start_refight_fiber():
         if stage.is_stage('RefightComplete'):
             counter += 1
             _G.log_info(f"Finished {counter}/{interval} times")
+            _G.log_info(f"Wait for {_G.ARGV.wait} seconds to recover moral")
+            wait(_G.ARGV.wait)
             if counter < interval:
                 for _ in range(10):
                     wait(0.3)
@@ -134,8 +136,6 @@ def start_refight_fiber():
                 Input.rclick(*position.RefightCancel)
                 if not _G.ARGV.no_enhance:
                     yield from start_enhance_fiber()
-                _G.log_info(f"Wait for {_G.ARGV.wait} seconds to recover moral")
-                wait(_G.ARGV.wait)
                 yield from start_stage_selection_fiber()
         elif stage.is_stage('ObtainNewShip'):
             for _ in range(2):
@@ -235,23 +235,23 @@ def start_errand_fiber():
             Input.rclick(*apos)
             wait(1)
             yield
-            if graphics.find_object('awaken_errand.png', 0.8):
-                Input.rclick(200, 279)
-                wait(1)
-                yield
-                if not graphics.is_pixel_match(((585, 25),), ((247, 235, 165),)):
-                    Input.rclick(570, 35)
-                    wait(1)
-                for pos in AwakenErrandDispatcher:
-                    if sum(graphics.get_pixel(*pos, True)) < 250:
-                        continue
-                    Input.rclick(*pos)
-                    break
-                wait(1)
-                yield
-                Input.rclick(782, 526)
-                wait(1.5)
-                yield
+            # if graphics.find_object('awaken_errand.png', 0.8):
+            #     Input.rclick(200, 279)
+            #     wait(1)
+            #     yield
+            #     if not graphics.is_pixel_match(((609, 23),), ((248, 235, 165),)):
+            #         Input.rclick(580, 29)
+            #         wait(1)
+            #     for pos in AwakenErrandDispatcher:
+            #         if sum(graphics.get_pixel(*pos, True)) < 250:
+            #             continue
+            #         Input.rclick(*pos)
+            #         break
+            #     wait(1)
+            #     yield
+            #     Input.rclick(782, 526)
+            #     wait(1.5)
+            #     yield
             for pos in [(707, 286), (836, 290), (509, 126)]:
                 Input.rclick(*pos)
                 wait(1)

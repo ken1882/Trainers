@@ -1,0 +1,23 @@
+aobscanmodule(INJ_AUTO_COMBAT,GameAssembly.dll,40 38 39 0F 84 BE 0A 00 00)
+alloc(newmem,$1000,INJ_AUTO_COMBAT)
+
+label(code)
+label(return)
+
+newmem:
+  mov [rcx],1
+code:
+  {$lua}
+    bytes = readBytes(getAddress("INJ_AUTO_COMBAT"),8,true)
+    return string.format("db %x %x %x %x %x %x",unpack(bytes))
+  {$asm}
+  jmp return
+
+
+
+
+INJ_AUTO_COMBAT:
+  jmp newmem
+  nop 4
+return:
+registersymbol(INJ_AUTO_COMBAT)
