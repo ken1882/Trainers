@@ -2,6 +2,7 @@ import _G
 from _G import *
 import itertools
 from pprint import pprint,pformat
+import mtg_parser
 import player,shop
 import friend
 import discord
@@ -23,13 +24,13 @@ FLAG_CONFIRM_RP_USE = True
 FLAG_STOP_ON_FULL_XP = False
 FLAG_STOP_ON_NO_TRAINEE = True
 FLAG_AUTO_LEVEL = True
-FLAG_ANALYZE = True
+FLAG_ANALYZE = False
 
 SHOP_CHECK_DURATION = 500
 FLAG_VOTING = False
 FLAG_AUTO_VOTE = False
 
-VOTE_TARGET = (11, 111)
+VOTE_TARGET = (12, 180)
 VotedCount  = 0
 
 FlagTurnLimited = False
@@ -90,10 +91,10 @@ RentalCycle = None
 UnmasteredCharacters = []
 UnmasteredSwapIndex  = [
   # 0,
-  1,
+  # 1,
   2,
   3,
-  # 4
+  4
 ]
 
 STATUS_MODIFIER_INC = 1
@@ -246,63 +247,57 @@ def start_battle(sid, pid, rid=0):
   log_info("Starting batlle")
   rid = rid if rid else 'null'
   res = game.post_request(f"/api/Battle/canstart/{sid}?uPartyId={pid}")
-  if res['r']['FaildReason'] != ERROR_SUCCESS:
-    return res['r']['FaildReason']
+  FaildReason = res[1]
+  if FaildReason != ERROR_SUCCESS:
+    return FaildReason
   res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=null&uRaidId=null&raidParticipationMode=null")
-  return res['r']
+  return mtg_parser.parse_battle_start(res)
 
 def start_raid(sid, pid, rid=0):
   global PublicRaid
   log_info("Starting raid")
   rid = rid if rid else 'null'
   res = game.post_request(f"/api/Battle/canstartRaid/{sid}?uPartyId={pid}&isFriend=false&isHost=true&uRaidId=null")
-  if res['r']['FaildReason'] != ERROR_SUCCESS:
-    return res['r']['FaildReason']
+  FaildReason = res[1]
+  if FaildReason != ERROR_SUCCESS:
+    return FaildReason
   if PublicRaid:
     res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=2")
-    boss = res['r']['BattleState']['Enemies'][0]
-    try:
-      payload = {
-        'EnemyParameters': [
-          {
-            'EnemyId': boss['EID'],
-            'X': boss['X'], 'Y': boss['Y']
-          }
-        ],
-        'PriorityOrder': 0,
-        'SentAfter': 0,
-        'SpecialPriorityTargetFlag': None,
-        'StampId': None
-      }
-      game.post_request('api/Raid/sendLogs', payload)
-    except Exception as err:
-      handle_exception(err)
+    data = mtg_parser.parse_battle_start(res)
+    # boss = data['BattleState']['Enemies'][0]
+    # try:
+    #   payload = {
+    #     'EnemyParameters': [
+    #       {
+    #         'EnemyId': boss['EID'],
+    #         'X': boss['X'], 'Y': boss['Y']
+    #       }
+    #     ],
+    #     'PriorityOrder': 0,
+    #     'SentAfter': 0,
+    #     'SpecialPriorityTargetFlag': None,
+    #     'StampId': None
+    #   }
+    #   game.post_request('api/Raid/sendLogs', payload)
+    # except Exception as err:
+    #   handle_exception(err)
   else:
     res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode=1")
-  return res['r']
-
-def join_raid(sid, pid, rid=0, scope=2):
-  log_info("Join raid")
-  rid = rid if rid else 'null'
-  res = game.post_request(f"/api/Battle/canstartRaid/{sid}?uPartyId={pid}&isFriend=false&isHost=true&uRaidId=null")
-  if res['r']['FaildReason'] != ERROR_SUCCESS:
-    return res['r']['FaildReason']
-  res = game.post_request(f"/api/Battle/start/{sid}?uPartyId={pid}&rentalUUserId={rid}&isRaidHelper=false&uRaidId=null&raidParticipationMode={scope}")
-  return res['r']
+  return mtg_parser.parse_battle_start(res)
 
 def process_actions(commands, verion):
   global FLAG_INTERACTIVE
   log_info("Process actions")
   res = game.post_request(f"/api/Battle/attack/{BattleId}",
-    {
+    mtg_parser.parse_attack_payload({
       "Type":1,
       "IsSimulation": False,
       "Version": verion,
       "BattleSettings": BATTLE_SETTINGS,
       "Commands": commands
-    }
+    })
   )
-  result = res['r']
+  result = mtg_parser.parse_attack_result(res)
   if FLAG_ANALYZE:
     battle_analyzer.analyze_action_result(commands, result)
   return result
@@ -323,15 +318,15 @@ def use_special_skill(ch, target_id, ovd, verion):
     }
   ]
   res = game.post_request(f"/api/Battle/attack/{BattleId}",
-    {
+    mtg_parser.parse_attack_payload({
       "Type":2,
       "IsSimulation": False,
       "Version": verion,
       "BattleSettings": BATTLE_SETTINGS,
       "Commands": commands
-    }
+    })
   )
-  result = res['r']
+  result = mtg_parser.parse_attack_result(res)
   if FLAG_ANALYZE:
     battle_analyzer.analyze_action_result(commands, result)
   return result
@@ -339,13 +334,9 @@ def use_special_skill(ch, target_id, ovd, verion):
 def surrender():
   log_info("Abort battle")
   res = game.post_request(f"/api/Battle/surrender",
-    {
-      "Type":1,
-      "IsSimulation": False,
-      "BattleSettings": BATTLE_SETTINGS,
-    }
+    mtg_parser.parse_battlesetting_payload(BATTLE_SETTINGS)
   )
-  return res['r']
+  return res
 
 def get_alive_characters(characters):
   ret = []
@@ -514,7 +505,7 @@ def process_victory():
   LastBattleWon = True
   res = game.post_request('/api/Battle/victory?isSimulation=false')
   ReportDetail['win'] += 1
-  return res['r']
+  return mtg_parser.parse_victory_result(res)
 
 def process_defeat():
   global LastBattleWon,ReportDetail
@@ -522,7 +513,7 @@ def process_defeat():
   LastBattleWon = False
   res = game.post_request('/api/Battle/defeat?isSimulation=false')
   ReportDetail['lose'] += 1
-  return res['r']
+  return res
 
 def record_ap_recovery(item, n):
   hid = hash_item_id(item)
@@ -562,7 +553,7 @@ def recover_stamina():
   num  = min(RecoveryBatchAmount, item['Stock'])
   ap1  = player.get_profile()['CurrentActionPoints']
   res  = player.use_aprecovery_item(item, num)
-  ap2  = res['r']['CurrentStamina']
+  ap2  = res['CurrentStamina']
   item['ItemType'] = ITYPE_CONSUMABLE
   item['ItemId']   = item['MItemId']
   record_ap_recovery(item, num)
@@ -719,9 +710,9 @@ def process_combat(data):
     loots = res['QuestLoots']['Items']
     record_loots(loots)
     log_loots(loots)
-    sell_surplus_loots(loots)
-    log_player_profile(res['UUser'])
-    discord.update_player_profile(res['UUserPreferences']['Name'], res['UUser']['Level'])
+    # sell_surplus_loots(loots)
+    # log_player_profile(res['UUser'])
+    # discord.update_player_profile(res['UUserPreferences']['Name'], res['UUser']['Level'])
   return SIG_COMBAT_WON if LastBattleWon else SIG_COMBAT_LOST
 
 def print_interactive_hint():
@@ -1076,7 +1067,7 @@ def process_rentalid_input():
     except Exception:
       rid = 0
     if not rid:
-      friend.log_rentals(True)
+      friend.log_rentals()
   RentalCycle = itertools.cycle(AvailableFriendRentals)
   if rid == -2:
     return None

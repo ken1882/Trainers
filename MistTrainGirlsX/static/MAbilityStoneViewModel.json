@@ -362,8 +362,12 @@
     "Rarity": 3,
     "AbilityStoneEquipType": 3,
     "MLevelUpSkillGroupIds": [
+<<<<<<< HEAD
 <<<<<<< Updated upstream
       179,
+=======
+      184,
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
       180,
 =======
       178,
@@ -373,7 +377,7 @@
 >>>>>>> Stashed changes
       182,
       183,
-      184,
+      179,
       185,
       194,
       195,
@@ -384,6 +388,7 @@
       199,
       200,
       201,
+<<<<<<< HEAD
       181,
       178
 =======
@@ -392,6 +397,10 @@
       201,
       200
 >>>>>>> Stashed changes
+=======
+      178,
+      181
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
     ]
   },
   {
@@ -400,6 +409,7 @@
     "Rarity": 2,
     "AbilityStoneEquipType": 3,
     "MLevelUpSkillGroupIds": [
+<<<<<<< HEAD
 <<<<<<< Updated upstream
       174,
 =======
@@ -421,8 +431,17 @@
       175,
 <<<<<<< Updated upstream
       170,
+=======
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
       171,
+      172,
+      174,
+      175,
+      176,
+      177,
+      202,
       203,
+<<<<<<< HEAD
       172
 =======
       174,
@@ -432,6 +451,16 @@
       170,
       177
 >>>>>>> Stashed changes
+=======
+      204,
+      205,
+      206,
+      207,
+      208,
+      209,
+      173,
+      170
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
     ]
   },
   {
@@ -737,10 +766,14 @@
     "Rarity": 4,
     "AbilityStoneEquipType": 1,
     "MLevelUpSkillGroupIds": [
+<<<<<<< HEAD
 <<<<<<< Updated upstream
       234,
 =======
 >>>>>>> Stashed changes
+=======
+      251,
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
       250,
       249,
       248,
@@ -749,15 +782,19 @@
       245,
       244,
       243,
+<<<<<<< HEAD
       251,
       241,
 <<<<<<< Updated upstream
       240,
       239,
+=======
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
       238,
-      237,
-      236,
+      241,
+      234,
       235,
+<<<<<<< HEAD
       242
 =======
       234,
@@ -769,6 +806,13 @@
       240,
       237
 >>>>>>> Stashed changes
+=======
+      236,
+      242,
+      239,
+      240,
+      237
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
     ]
   },
   {
@@ -777,6 +821,7 @@
     "Rarity": 3,
     "AbilityStoneEquipType": 1,
     "MLevelUpSkillGroupIds": [
+<<<<<<< HEAD
       260,
       259,
       257,
@@ -787,8 +832,17 @@
 >>>>>>> Stashed changes
       254,
       253,
+=======
+      258,
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
       252,
-      255
+      253,
+      254,
+      255,
+      256,
+      257,
+      259,
+      260
     ]
   },
   {
@@ -797,6 +851,7 @@
     "Rarity": 4,
     "AbilityStoneEquipType": 2,
     "MLevelUpSkillGroupIds": [
+<<<<<<< HEAD
       271,
       276,
       275,
@@ -804,16 +859,29 @@
       277,
       273,
       272,
+=======
+      272,
+      273,
+      274,
+      277,
+      276,
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
       270,
-      264,
-      268,
+      275,
+      269,
+      271,
       267,
       266,
       265,
+      264,
       263,
       261,
+<<<<<<< HEAD
       269,
       262
+=======
+      268
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
     ]
   },
   {
@@ -828,13 +896,17 @@
       284,
 <<<<<<< Updated upstream
       283,
+<<<<<<< HEAD
 =======
 >>>>>>> Stashed changes
       282,
+=======
+      281,
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
       280,
       279,
       278,
-      281
+      282
     ]
   },
   {
@@ -845,9 +917,12 @@
     "MLevelUpSkillGroupIds": [
 <<<<<<< Updated upstream
       296,
+<<<<<<< HEAD
 =======
 >>>>>>> Stashed changes
       302,
+=======
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
       301,
       300,
       299,
@@ -855,8 +930,9 @@
 <<<<<<< Updated upstream
       297,
       295,
-      292,
+      302,
       293,
+<<<<<<< HEAD
       294,
 =======
       296,
@@ -865,11 +941,15 @@
       293,
       292,
 >>>>>>> Stashed changes
+=======
+      292,
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
       291,
       290,
       289,
       288,
-      287
+      287,
+      294
     ]
   },
   {
@@ -880,9 +960,9 @@
     "MLevelUpSkillGroupIds": [
 <<<<<<< Updated upstream
       310,
+      309,
       308,
       307,
-      309,
       305,
       304,
       303,
@@ -1291,15 +1371,20 @@
     "Rarity": 4,
     "AbilityStoneEquipType": 1,
     "MLevelUpSkillGroupIds": [
-      370,
       369,
       368,
       367,
       366,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
+=======
+      365,
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
       364,
       363,
+      370,
       362,
+<<<<<<< HEAD
       365,
 =======
       365,
@@ -1307,6 +1392,8 @@
       363,
       361,
 >>>>>>> Stashed changes
+=======
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
       360,
       359,
       358,
@@ -1327,17 +1414,21 @@
     "Rarity": 4,
     "AbilityStoneEquipType": 2,
     "MLevelUpSkillGroupIds": [
+<<<<<<< HEAD
 <<<<<<< Updated upstream
       380,
 =======
       381,
 >>>>>>> Stashed changes
+=======
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
       387,
       386,
       385,
       384,
       383,
       382,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
       379,
       381,
@@ -1346,6 +1437,11 @@
       373,
       378,
 >>>>>>> Stashed changes
+=======
+      381,
+      380,
+      378,
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
       377,
       376,
       375,
@@ -1354,12 +1450,16 @@
       373,
       372,
       371,
+<<<<<<< HEAD
       378
 =======
       372,
       371,
       379
 >>>>>>> Stashed changes
+=======
+      379
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
     ]
   },
   {
@@ -1368,19 +1468,25 @@
     "Rarity": 4,
     "AbilityStoneEquipType": 3,
     "MLevelUpSkillGroupIds": [
+      396,
       400,
       399,
       398,
       397,
+<<<<<<< HEAD
       396,
 <<<<<<< Updated upstream
       394,
+=======
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
       395,
+      393,
       392,
       391,
       390,
       389,
       388,
+<<<<<<< HEAD
       393
 =======
       395,
@@ -1392,6 +1498,9 @@
       388,
       394
 >>>>>>> Stashed changes
+=======
+      394
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
     ]
   },
   {
@@ -1537,23 +1646,23 @@
     "AbilityStoneEquipType": 1,
     "MLevelUpSkillGroupIds": [
       433,
-      432,
-      431,
-      430,
-      429,
-      428,
       427,
-      425,
+      428,
       426,
-      423,
-      424,
-      417,
-      418,
-      419,
-      416,
-      421,
+      430,
+      431,
+      432,
+      429,
+      425,
       422,
-      420
+      423,
+      421,
+      420,
+      419,
+      418,
+      417,
+      416,
+      424
     ]
   },
   {
@@ -1562,14 +1671,15 @@
     "Rarity": 4,
     "AbilityStoneEquipType": 2,
     "MLevelUpSkillGroupIds": [
-      444,
       450,
       449,
       448,
       447,
       446,
       445,
+      444,
       443,
+      442,
       441,
       440,
       439,
@@ -1577,8 +1687,7 @@
       437,
       436,
       435,
-      434,
-      442
+      434
     ]
   },
   {
@@ -1587,22 +1696,22 @@
     "Rarity": 4,
     "AbilityStoneEquipType": 3,
     "MLevelUpSkillGroupIds": [
-      456,
-      466,
       465,
       464,
+      466,
       463,
       462,
       461,
       460,
-      455,
-      458,
-      457,
-      454,
+      459,
       453,
+      457,
+      456,
+      455,
+      454,
       452,
       451,
-      459
+      458
     ]
   },
   {
@@ -1640,7 +1749,109 @@
     "MLevelUpSkillGroupIds": [
       470
     ]
+<<<<<<< HEAD
 =======
 >>>>>>> Stashed changes
+=======
+  },
+  {
+    "Id": 117,
+    "Name": "\u304d\u307e\u3050\u308c\u5a18\u306e\u529b",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      471
+    ]
+  },
+  {
+    "Id": 118,
+    "Name": "\u30bf\u30b3\u8db3\u5c11\u5973\u306e\u529b",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      472
+    ]
+  },
+  {
+    "Id": 119,
+    "Name": "\u6700\u901f\u5fcd\u8005\u306e\u529b",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      473
+    ]
+  },
+  {
+    "Id": 120,
+    "Name": "\u6c37\u795e\u306e\u529b",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      474
+    ]
+  },
+  {
+    "Id": 121,
+    "Name": "\u52aa\u529b\u5bb6\u5973\u5b50\u306e\u529b",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      475
+    ]
+  },
+  {
+    "Id": 122,
+    "Name": "\u4e00\u9014\u306a\u5f8c\u8f29\u306e\u529b",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      476
+    ]
+  },
+  {
+    "Id": 123,
+    "Name": "\u5668\u7528\u8ca7\u4e4f\u306e\u529b",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      477
+    ]
+  },
+  {
+    "Id": 124,
+    "Name": "\u6d6e\u904a\u5973\u5b50\u306e\u529b",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      478
+    ]
+  },
+  {
+    "Id": 125,
+    "Name": "\u5b89\u3089\u304b\u306a\u652f\u3048\u306e\u529b",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      479
+    ]
+  },
+  {
+    "Id": 126,
+    "Name": "\u9759\u8b10\u306a\u7f8e\u306e\u529b",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      480
+    ]
+  },
+  {
+    "Id": 127,
+    "Name": "\u7121\u90aa\u6c17\u306a\u77b3\u306e\u529b",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      481
+    ]
+>>>>>>> 5f9360ea93b2aae612b9533eed331405b24ccf3d
   }
 ]

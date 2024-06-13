@@ -29,7 +29,13 @@ def get_pixel(x,y,sync=False,app_offset=False):
   if sync:
     x += _G.AppRect[0] + _G.WinTitleBarSize[0] + _G.WinDesktopBorderOffset[0]
     y += _G.AppRect[1] + _G.WinTitleBarSize[1] + _G.WinDesktopBorderOffset[1]
-    rgb = win32gui.GetPixel(_G.DesktopDC, x, y)
+    while True:
+      try:
+        rgb = win32gui.GetPixel(_G.DesktopDC, x, y)
+        break
+      except Exception:
+        log_error("Error while taking snapshot, waiting for 3 seconds")
+        wait(3)
     b = (rgb & 0xff0000) >> 16
     g = (rgb & 0x00ff00) >> 8
     r = (rgb & 0x0000ff)

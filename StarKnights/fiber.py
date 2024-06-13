@@ -1,6 +1,6 @@
 from time import sleep
-import win32con
-import _G
+import win32con,win32api
+import _G, utils
 from _G import uwait
 import Input
 import stage, position, graphics
@@ -23,6 +23,14 @@ def start_refight_fiber():
       Input.rclick(631, 623)
       yield
       sleep(1)
+    elif stage.is_stage('EventReward'):
+      Input.rclick(635, 526)
+      yield
+      sleep(1)
+    elif stage.is_stage('KakinAd'):
+      Input.rclick(1177, 73)
+      yield
+      sleep(1)
     elif stage.is_stage('EventBoss'):
       Input.rclick(*position.RaidBossStart)
       n -= 1
@@ -36,11 +44,16 @@ def start_initiate_fiber():
   lasts = []
   stack_size = 8
   diff_threshold = 30
-  startrail_threshold = 300
+  startrail_threshold = 330
   startring_threshold = 500
   cnt = 0
+  rcnt = 0
   while True:
     yield
+    rcnt += 1
+    if rcnt > 300:
+      utils.redetect_window()
+      rcnt = 0
     if not stage.is_stage('CombatInitiate'):
       lasts = []
       continue
@@ -64,11 +77,14 @@ def start_initiate_fiber():
         cs += sum(c)
       cs /= stack_size
       cv = sum(col)
+      _G.log_debug(cs, cv)
       if cs > startrail_threshold:
         break
       if cv > startring_threshold and cv - cs > diff_threshold or _G.ARGV.auxiliary:
         print(cv, cs)
+        ppos = win32api.GetCursorPos()
         Input.click(500, 300)
+        win32api.SetCursorPos(ppos)
         break
       lasts.insert(0, col)
       lasts.pop()

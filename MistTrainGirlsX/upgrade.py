@@ -3,6 +3,7 @@ from _G import *
 import game
 import player
 import math
+import mtg_parser
 
 TargetGearLevel  = 20
 MinMistGearKeep = 1000000
@@ -251,11 +252,11 @@ def enhance_all_weapons():
 def enhance_lb_level(uchid, amount):
   return game.post_request(
     f"/api/UCharacters/LevelLimitBreak/Enhance/{uchid}",
-    {
+    mtg_parser.parse_lblevelup_payload({
       'CharacterExperienceItemQuantity': 0,
       'Experience': amount,
       'GeneralExperienceItemQuantity': 0,
-    }
+    })
   )
 
 def enhance_pt(uid, insurance=False, itype=0):

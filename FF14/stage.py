@@ -92,7 +92,7 @@ def get_coord(force_correct=False, depth=0, interval=3):
 
 def has_targeted_object():
   return graphics.is_pixel_match(
-    ((783, 115),(790, 115),(803, 115),(816, 115),),
+    ((678, 85),(685, 86),(702, 86),(712, 86),),
     ((255, 255, 255),(255, 255, 255),(255, 255, 255),(255, 255, 255),)
   )
 

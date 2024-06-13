@@ -80,19 +80,20 @@ end
 $flag_working = false
 def main_update
   Input.update
-  vk = 'F'.ord
+  # vk = 'F'.ord
+  vk = 0x20
   if Input.trigger?(Keymap[:vk_f8])
     # $flag_pressed ? Input.mouse_rup : Input.mouse_rdown
     # $flag_pressed ? Input.mouse_lup : Input.mouse_ldown
-    # $flag_pressed ? Input.key_up(vk) : Input.key_down(vk)
+    $flag_pressed ? Input.key_up(vk) : Input.key_down(vk)
     $flag_working ^= true
     puts $flag_working ? "Press start" : "Press end"
   end
   if $flag_working
-    Input.mouse_ldown
-    Input.mouse_lup
-    Input.mouse_ldown
-    Input.mouse_lup
+    # Input.mouse_ldown
+    # Input.mouse_lup
+    # Input.mouse_ldown
+    # Input.mouse_lup
   end
   $flag_running = false if Input.trigger?(Keymap[:vk_f9])
 end

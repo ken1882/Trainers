@@ -32,6 +32,8 @@ def detect_app_window():
 def update_detector():
   last_tick = 0
   while _G.FlagRunning:
+    if not utils.is_focused():
+      continue
     sleep(_G.FPS*2)
     if _G.FrameCount == last_tick:
       continue
@@ -52,6 +54,8 @@ def update_detector():
       last_tick = _G.FrameCount
 
 def update_input():
+  if not utils.is_focused():
+    return
   Input.update()
   if Input.is_trigger(win32con.VK_F5):
     print("Redetecting app window")
@@ -79,7 +83,7 @@ def main_loop():
   global output_cache
   _G.flush()
   update_input()
-  if not _G.FlagPaused and _G.Fiber and not resume(_G.Fiber):
+  if not _G.FlagPaused and _G.Fiber and _G.FlagWorking and not resume(_G.Fiber):
     log_info(f"Worker ended, return value: {_G.pop_fiber_ret()}")
     _G.Fiber = None 
     _G.FlagWorking = False
@@ -96,6 +100,7 @@ def start_main():
     _G.FlagRunning = False
 
 if __name__ == "__main__":
+  _G.SelfHwnd = utils.get_self_hwnd()
   detect_app_window()
   utils.resize_app_window()
   args = argv_parse.load()

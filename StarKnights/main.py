@@ -29,7 +29,7 @@ def print_cache():
 def detect_app_window():
   utils.find_app_window()
   # utils.find_child_window()
-  _G.AppInputHwnd = _G.AppHwnd
+  # _G.AppInputHwnd = _G.AppHwnd
 
 def update_detector():
   last_tick = 0
@@ -103,7 +103,7 @@ def start_main():
     _G.FlagRunning = False
 
 if __name__ == "__main__":
-  utils.get_self_hwnd()
+  _G.SelfHwnd = utils.get_self_hwnd()
   detect_app_window()
   utils.resize_app_window()
   args = argv_parse.load()
