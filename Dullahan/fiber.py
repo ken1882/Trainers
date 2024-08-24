@@ -32,9 +32,11 @@ def start_daily_traven_fiber():
         if curt.hour == 5 and curt.minute == 0:
             while stage.is_stage('PowerSaving'):
                 yield from safe_click(256, 522)
+                curt = datetime.now()
                 if curt.hour > 6:
                     break
             while not stage.is_stage('Travern'):
+                curt = datetime.now()
                 if curt.hour > 6:
                     break
                 yield from safe_click(449, 84)

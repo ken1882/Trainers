@@ -193,7 +193,7 @@ def start_stage_selection_fiber():
   Input.rclick(*event_pos[_G.ARGV.jndex])
   wait(2)
   depth = 0
-  while graphics.get_difficulty() != 2:
+  while graphics.get_difficulty() != _G.ARGV.kndex:
     if stage.StageDepth > 30:
       close_game()
     if stage.is_stage('BSHome'):
@@ -209,6 +209,13 @@ StageDepth = 0
 LastStage  = None
 def start_refight_fiber():
   global StageDepth,LastStage
+  StageScrolls = (
+    (942, 170),
+    (942, 220),
+    (942, 300),
+    (942, 380),
+    (942, 460),
+  )
   target_name = _G.ARGV.stage
   party_sel_cycle = itertools.cycle(PARTY_SEL_POS)
   flag_check_errands = False
@@ -298,13 +305,19 @@ def start_refight_fiber():
         flag_check_errands = False
         wait(1.5)
         yield
-      for pos,name in get_stage_names():
-        if target_name not in name:
-          continue
-        Input.rclick(pos[0]+150, pos[1]+50)
-        for _ in range(6):
-          wait(0.8)
-          yield
+      for spos in StageScrolls:
+        Input.click(*spos)
+        wait(0.5)
+        yield
+        for pos,name in get_stage_names():
+          if target_name not in name:
+            continue
+          Input.rclick(pos[0]+150, pos[1]+50)
+          for _ in range(6):
+            wait(0.8)
+            yield
+        wait(1)
+        yield
     elif stage.is_stage('HelperSelect'):
       Input.rclick(477, 201)
       wait(3)

@@ -10,12 +10,15 @@ def start_press_fiber():
   yield
 
 def start_interact_fiber():
-  Input.trigger_key(ord('F'), True)
+  k = _G.ARGV.key.upper()
+  Input.trigger_key(ord(k), True)
   sleep(0.7)
-  Input.key_down(ord('F'), True)
+  Input.key_down(ord(k), True)
 
 def start_click_fiber():
+  mr = 0
   while True:
-    Input.mouse_down(0, 0, use_msg=1,mright=1)
+    Input.mouse_down(0, 0, use_msg=0,mright=mr)
+    sleep(0.03)
     yield
-    Input.mouse_up(0, 0, use_msg=1,mright=1)
+    Input.mouse_up(0, 0, use_msg=0,mright=mr)

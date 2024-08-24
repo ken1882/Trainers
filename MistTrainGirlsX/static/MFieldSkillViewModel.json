@@ -366,6 +366,14 @@
         "Value2": null
       },
       {
+        "Id": 702001103,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020104,
+        "Value2": null
+      },
+      {
         "Id": 702001104,
         "Level": 4,
         "EvolutionCount": 0,
@@ -387,14 +395,6 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3020103,
-        "Value2": null
-      },
-      {
-        "Id": 702001103,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020104,
         "Value2": null
       }
     ]
@@ -454,16 +454,16 @@
     "Cost": 35,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702001301,
-        "Level": 1,
-        "EvolutionCount": 0,
+        "Id": 702001305,
+        "Level": 5,
+        "EvolutionCount": 1,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010011,
+        "Value1": 3030068,
         "Value2": null
       },
       {
-        "Id": 702001302,
-        "Level": 2,
+        "Id": 702001304,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -478,19 +478,19 @@
         "Value2": null
       },
       {
-        "Id": 702001304,
-        "Level": 4,
+        "Id": 702001302,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
       },
       {
-        "Id": 702001305,
-        "Level": 5,
-        "EvolutionCount": 1,
+        "Id": 702001301,
+        "Level": 1,
+        "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030068,
+        "Value1": 3010011,
         "Value2": null
       }
     ]
@@ -502,11 +502,19 @@
     "Cost": 20,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702001405,
-        "Level": 5,
-        "EvolutionCount": 1,
+        "Id": 702001401,
+        "Level": 1,
+        "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070059,
+        "Value1": 3010033,
+        "Value2": null
+      },
+      {
+        "Id": 702001402,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -526,19 +534,11 @@
         "Value2": null
       },
       {
-        "Id": 702001401,
-        "Level": 1,
-        "EvolutionCount": 0,
+        "Id": 702001405,
+        "Level": 5,
+        "EvolutionCount": 1,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010033,
-        "Value2": null
-      },
-      {
-        "Id": 702001402,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "Value1": 3070059,
         "Value2": null
       }
     ]
@@ -550,16 +550,16 @@
     "Cost": 30,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702001501,
-        "Level": 1,
-        "EvolutionCount": 0,
+        "Id": 702001505,
+        "Level": 5,
+        "EvolutionCount": 1,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070008,
+        "Value1": 3070029,
         "Value2": null
       },
       {
-        "Id": 702001502,
-        "Level": 2,
+        "Id": 702001504,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -574,19 +574,19 @@
         "Value2": null
       },
       {
-        "Id": 702001504,
-        "Level": 4,
+        "Id": 702001502,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
       },
       {
-        "Id": 702001505,
-        "Level": 5,
-        "EvolutionCount": 1,
+        "Id": 702001501,
+        "Level": 1,
+        "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070029,
+        "Value1": 3070008,
         "Value2": null
       }
     ]
@@ -598,19 +598,19 @@
     "Cost": 18,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702001602,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 702001601,
         "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3010034,
+        "Value2": null
+      },
+      {
+        "Id": 702001602,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -646,22 +646,6 @@
     "Cost": 22,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702001703,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070043,
-        "Value2": null
-      },
-      {
-        "Id": 702001704,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 702001701,
         "Level": 1,
         "EvolutionCount": 0,
@@ -672,6 +656,22 @@
       {
         "Id": 702001702,
         "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 702001703,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070043,
+        "Value2": null
+      },
+      {
+        "Id": 702001704,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -694,19 +694,11 @@
     "Cost": 27,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702001805,
-        "Level": 5,
-        "EvolutionCount": 1,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020138,
-        "Value2": null
-      },
-      {
-        "Id": 702001804,
-        "Level": 4,
+        "Id": 702001801,
+        "Level": 1,
         "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070042,
         "Value2": null
       },
       {
@@ -726,11 +718,19 @@
         "Value2": null
       },
       {
-        "Id": 702001801,
-        "Level": 1,
+        "Id": 702001804,
+        "Level": 4,
         "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 702001805,
+        "Level": 5,
+        "EvolutionCount": 1,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070042,
+        "Value1": 3020138,
         "Value2": null
       }
     ]
@@ -742,27 +742,11 @@
     "Cost": 28,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702001901,
-        "Level": 1,
-        "EvolutionCount": 0,
+        "Id": 702001905,
+        "Level": 5,
+        "EvolutionCount": 1,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020101,
-        "Value2": null
-      },
-      {
-        "Id": 702001902,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 702001903,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010036,
+        "Value1": 3070049,
         "Value2": null
       },
       {
@@ -774,11 +758,27 @@
         "Value2": null
       },
       {
-        "Id": 702001905,
-        "Level": 5,
-        "EvolutionCount": 1,
+        "Id": 702001902,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 702001901,
+        "Level": 1,
+        "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070049,
+        "Value1": 3020101,
+        "Value2": null
+      },
+      {
+        "Id": 702001903,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3010036,
         "Value2": null
       }
     ]
@@ -790,16 +790,16 @@
     "Cost": 33,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702002005,
-        "Level": 5,
-        "EvolutionCount": 1,
+        "Id": 702002001,
+        "Level": 1,
+        "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070058,
+        "Value1": 3010033,
         "Value2": null
       },
       {
-        "Id": 702002004,
-        "Level": 4,
+        "Id": 702002002,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -814,19 +814,19 @@
         "Value2": null
       },
       {
-        "Id": 702002002,
-        "Level": 2,
+        "Id": 702002004,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
       },
       {
-        "Id": 702002001,
-        "Level": 1,
-        "EvolutionCount": 0,
+        "Id": 702002005,
+        "Level": 5,
+        "EvolutionCount": 1,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010033,
+        "Value1": 3070058,
         "Value2": null
       }
     ]
@@ -894,6 +894,14 @@
         "Value2": null
       },
       {
+        "Id": 702002203,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030074,
+        "Value2": null
+      },
+      {
         "Id": 702002204,
         "Level": 4,
         "EvolutionCount": 0,
@@ -915,14 +923,6 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 702002203,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030074,
         "Value2": null
       }
     ]
@@ -982,19 +982,19 @@
     "Cost": 38,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702002401,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010026,
-        "Value2": null
-      },
-      {
         "Id": 702002402,
         "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 702002401,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3010026,
         "Value2": null
       },
       {
@@ -1030,22 +1030,6 @@
     "Cost": 33,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702002504,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 702002505,
-        "Level": 5,
-        "EvolutionCount": 1,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070087,
-        "Value2": null
-      },
-      {
         "Id": 702002503,
         "Level": 3,
         "EvolutionCount": 0,
@@ -1054,8 +1038,8 @@
         "Value2": null
       },
       {
-        "Id": 702002502,
-        "Level": 2,
+        "Id": 702002504,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -1068,6 +1052,22 @@
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3010010,
         "Value2": null
+      },
+      {
+        "Id": 702002502,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 702002505,
+        "Level": 5,
+        "EvolutionCount": 1,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070087,
+        "Value2": null
       }
     ]
   },
@@ -1078,19 +1078,11 @@
     "Cost": 33,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702002601,
-        "Level": 1,
-        "EvolutionCount": 0,
+        "Id": 702002605,
+        "Level": 5,
+        "EvolutionCount": 1,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010034,
-        "Value2": null
-      },
-      {
-        "Id": 702002602,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "Value1": 3050014,
         "Value2": null
       },
       {
@@ -1110,11 +1102,19 @@
         "Value2": null
       },
       {
-        "Id": 702002605,
-        "Level": 5,
-        "EvolutionCount": 1,
+        "Id": 702002602,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 702002601,
+        "Level": 1,
+        "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3050014,
+        "Value1": 3010034,
         "Value2": null
       }
     ]
@@ -1174,6 +1174,14 @@
     "Cost": 25,
     "MFieldSkillLevelViewModels": [
       {
+        "Id": 702002805,
+        "Level": 5,
+        "EvolutionCount": 1,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3050024,
+        "Value2": null
+      },
+      {
         "Id": 702002804,
         "Level": 4,
         "EvolutionCount": 0,
@@ -1190,11 +1198,11 @@
         "Value2": null
       },
       {
-        "Id": 702002805,
-        "Level": 5,
-        "EvolutionCount": 1,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3050024,
+        "Id": 702002802,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -1203,14 +1211,6 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3020031,
-        "Value2": null
-      },
-      {
-        "Id": 702002802,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
         "Value2": null
       }
     ]
@@ -1318,14 +1318,6 @@
     "Cost": 50,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702003104,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 702003101,
         "Level": 1,
         "EvolutionCount": 0,
@@ -1347,6 +1339,14 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3070059,
+        "Value2": null
+      },
+      {
+        "Id": 702003104,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -1374,8 +1374,16 @@
         "Value2": null
       },
       {
-        "Id": 702003204,
-        "Level": 4,
+        "Id": 702003201,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070052,
+        "Value2": null
+      },
+      {
+        "Id": 702003202,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -1390,19 +1398,11 @@
         "Value2": null
       },
       {
-        "Id": 702003202,
-        "Level": 2,
+        "Id": 702003204,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 702003201,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070052,
         "Value2": null
       }
     ]
@@ -1414,22 +1414,6 @@
     "Cost": 45,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702003301,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070059,
-        "Value2": null
-      },
-      {
-        "Id": 702003302,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 702003303,
         "Level": 3,
         "EvolutionCount": 0,
@@ -1440,6 +1424,22 @@
       {
         "Id": 702003304,
         "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 702003301,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070059,
+        "Value2": null
+      },
+      {
+        "Id": 702003302,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -1461,6 +1461,22 @@
     "Rarity": 3,
     "Cost": 40,
     "MFieldSkillLevelViewModels": [
+      {
+        "Id": 702003405,
+        "Level": 5,
+        "EvolutionCount": 1,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3040022,
+        "Value2": null
+      },
+      {
+        "Id": 702003404,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
       {
         "Id": 702003401,
         "Level": 1,
@@ -1484,22 +1500,6 @@
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3070061,
         "Value2": null
-      },
-      {
-        "Id": 702003404,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 702003405,
-        "Level": 5,
-        "EvolutionCount": 1,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3040022,
-        "Value2": null
       }
     ]
   },
@@ -1509,30 +1509,6 @@
     "Rarity": 3,
     "Cost": 45,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 702003504,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 702003503,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010009,
-        "Value2": null
-      },
-      {
-        "Id": 702003505,
-        "Level": 5,
-        "EvolutionCount": 1,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070079,
-        "Value2": null
-      },
       {
         "Id": 702003501,
         "Level": 1,
@@ -1548,6 +1524,30 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 702003503,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3010009,
+        "Value2": null
+      },
+      {
+        "Id": 702003504,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 702003505,
+        "Level": 5,
+        "EvolutionCount": 1,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070079,
+        "Value2": null
       }
     ]
   },
@@ -1558,16 +1558,16 @@
     "Cost": 48,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702003601,
-        "Level": 1,
-        "EvolutionCount": 0,
+        "Id": 702003605,
+        "Level": 5,
+        "EvolutionCount": 1,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070059,
+        "Value1": 3050021,
         "Value2": null
       },
       {
-        "Id": 702003602,
-        "Level": 2,
+        "Id": 702003604,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -1582,19 +1582,19 @@
         "Value2": null
       },
       {
-        "Id": 702003604,
-        "Level": 4,
+        "Id": 702003602,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
       },
       {
-        "Id": 702003605,
-        "Level": 5,
-        "EvolutionCount": 1,
+        "Id": 702003601,
+        "Level": 1,
+        "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3050021,
+        "Value1": 3070059,
         "Value2": null
       }
     ]
@@ -1605,30 +1605,6 @@
     "Rarity": 3,
     "Cost": 43,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 702003705,
-        "Level": 5,
-        "EvolutionCount": 1,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070059,
-        "Value2": null
-      },
-      {
-        "Id": 702003704,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 702003703,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020105,
-        "Value2": null
-      },
       {
         "Id": 702003701,
         "Level": 1,
@@ -1644,6 +1620,30 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 702003703,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020105,
+        "Value2": null
+      },
+      {
+        "Id": 702003704,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 702003705,
+        "Level": 5,
+        "EvolutionCount": 1,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070059,
+        "Value2": null
       }
     ]
   },
@@ -1654,16 +1654,16 @@
     "Cost": 43,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702003801,
-        "Level": 1,
-        "EvolutionCount": 0,
+        "Id": 702003805,
+        "Level": 5,
+        "EvolutionCount": 1,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070102,
+        "Value1": 3030099,
         "Value2": null
       },
       {
-        "Id": 702003802,
-        "Level": 2,
+        "Id": 702003804,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -1678,19 +1678,19 @@
         "Value2": null
       },
       {
-        "Id": 702003804,
-        "Level": 4,
+        "Id": 702003802,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
       },
       {
-        "Id": 702003805,
-        "Level": 5,
-        "EvolutionCount": 1,
+        "Id": 702003801,
+        "Level": 1,
+        "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030099,
+        "Value1": 3070102,
         "Value2": null
       }
     ]
@@ -1702,16 +1702,16 @@
     "Cost": 35,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702003905,
-        "Level": 5,
-        "EvolutionCount": 1,
+        "Id": 702003901,
+        "Level": 1,
+        "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3050018,
+        "Value1": 3070059,
         "Value2": null
       },
       {
-        "Id": 702003904,
-        "Level": 4,
+        "Id": 702003902,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -1726,19 +1726,19 @@
         "Value2": null
       },
       {
-        "Id": 702003902,
-        "Level": 2,
+        "Id": 702003904,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
       },
       {
-        "Id": 702003901,
-        "Level": 1,
-        "EvolutionCount": 0,
+        "Id": 702003905,
+        "Level": 5,
+        "EvolutionCount": 1,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070059,
+        "Value1": 3050018,
         "Value2": null
       }
     ]
@@ -1750,16 +1750,16 @@
     "Cost": 56,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702004001,
-        "Level": 1,
-        "EvolutionCount": 0,
+        "Id": 702004005,
+        "Level": 5,
+        "EvolutionCount": 1,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030021,
+        "Value1": 3070061,
         "Value2": null
       },
       {
-        "Id": 702004002,
-        "Level": 2,
+        "Id": 702004004,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -1774,19 +1774,19 @@
         "Value2": null
       },
       {
-        "Id": 702004004,
-        "Level": 4,
+        "Id": 702004002,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
       },
       {
-        "Id": 702004005,
-        "Level": 5,
-        "EvolutionCount": 1,
+        "Id": 702004001,
+        "Level": 1,
+        "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070061,
+        "Value1": 3030021,
         "Value2": null
       }
     ]
@@ -1846,6 +1846,14 @@
     "Cost": 85,
     "MFieldSkillLevelViewModels": [
       {
+        "Id": 702004206,
+        "Level": 6,
+        "EvolutionCount": 1,
+        "FieldSkillLevelAbilityType": 2,
+        "Value1": 3070091,
+        "Value2": 3070081
+      },
+      {
         "Id": 702004205,
         "Level": 5,
         "EvolutionCount": 0,
@@ -1862,12 +1870,12 @@
         "Value2": null
       },
       {
-        "Id": 702004206,
-        "Level": 6,
-        "EvolutionCount": 1,
-        "FieldSkillLevelAbilityType": 2,
-        "Value1": 3070091,
-        "Value2": 3070081
+        "Id": 702004201,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070119,
+        "Value2": null
       },
       {
         "Id": 702004202,
@@ -1875,14 +1883,6 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 702004201,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070119,
         "Value2": null
       },
       {
@@ -1950,19 +1950,11 @@
     "Cost": 75,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702004405,
-        "Level": 5,
+        "Id": 702004401,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020108,
-        "Value2": null
-      },
-      {
-        "Id": 702004404,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "Value1": 3070065,
         "Value2": null
       },
       {
@@ -1974,19 +1966,27 @@
         "Value2": null
       },
       {
-        "Id": 702004401,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070065,
-        "Value2": null
-      },
-      {
         "Id": 702004403,
         "Level": 3,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3070059,
+        "Value2": null
+      },
+      {
+        "Id": 702004404,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 702004405,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020108,
         "Value2": null
       }
     ]
@@ -1997,6 +1997,30 @@
     "Rarity": 4,
     "Cost": 105,
     "MFieldSkillLevelViewModels": [
+      {
+        "Id": 702004504,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 702004503,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070089,
+        "Value2": null
+      },
+      {
+        "Id": 702004505,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020130,
+        "Value2": null
+      },
       {
         "Id": 702004501,
         "Level": 1,
@@ -2012,30 +2036,6 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
-      },
-      {
-        "Id": 702004503,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070089,
-        "Value2": null
-      },
-      {
-        "Id": 702004504,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 702004505,
-        "Level": 5,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020130,
-        "Value2": null
       }
     ]
   },
@@ -2046,16 +2046,16 @@
     "Cost": 78,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702004605,
-        "Level": 5,
+        "Id": 702004601,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020137,
+        "Value1": 3030051,
         "Value2": null
       },
       {
-        "Id": 702004604,
-        "Level": 4,
+        "Id": 702004602,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -2070,19 +2070,19 @@
         "Value2": null
       },
       {
-        "Id": 702004602,
-        "Level": 2,
+        "Id": 702004604,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
       },
       {
-        "Id": 702004601,
-        "Level": 1,
+        "Id": 702004605,
+        "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030051,
+        "Value1": 3020137,
         "Value2": null
       }
     ]
@@ -2094,16 +2094,16 @@
     "Cost": 65,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702004701,
-        "Level": 1,
+        "Id": 702004705,
+        "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070054,
+        "Value1": 3020090,
         "Value2": null
       },
       {
-        "Id": 702004702,
-        "Level": 2,
+        "Id": 702004704,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -2118,19 +2118,19 @@
         "Value2": null
       },
       {
-        "Id": 702004704,
-        "Level": 4,
+        "Id": 702004701,
+        "Level": 1,
         "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070054,
         "Value2": null
       },
       {
-        "Id": 702004705,
-        "Level": 5,
+        "Id": 702004702,
+        "Level": 2,
         "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020090,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       }
     ]
@@ -2190,27 +2190,19 @@
     "Cost": 83,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702004904,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 702004903,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070082,
-        "Value2": null
-      },
-      {
         "Id": 702004905,
         "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3050002,
+        "Value2": null
+      },
+      {
+        "Id": 702004904,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -2227,6 +2219,14 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 702004903,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070082,
         "Value2": null
       }
     ]
@@ -2286,30 +2286,6 @@
     "Cost": 78,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702005105,
-        "Level": 5,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030110,
-        "Value2": null
-      },
-      {
-        "Id": 702005104,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 702005103,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070077,
-        "Value2": null
-      },
-      {
         "Id": 702005101,
         "Level": 1,
         "EvolutionCount": 0,
@@ -2324,6 +2300,30 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 702005103,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070077,
+        "Value2": null
+      },
+      {
+        "Id": 702005104,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 702005105,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030110,
+        "Value2": null
       }
     ]
   },
@@ -2333,6 +2333,30 @@
     "Rarity": 4,
     "Cost": 95,
     "MFieldSkillLevelViewModels": [
+      {
+        "Id": 702005204,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 702005203,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030075,
+        "Value2": null
+      },
+      {
+        "Id": 702005205,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070059,
+        "Value2": null
+      },
       {
         "Id": 702005201,
         "Level": 1,
@@ -2348,30 +2372,6 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
-      },
-      {
-        "Id": 702005203,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030075,
-        "Value2": null
-      },
-      {
-        "Id": 702005204,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 702005205,
-        "Level": 5,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070059,
-        "Value2": null
       }
     ]
   },
@@ -2382,11 +2382,19 @@
     "Cost": 80,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 702005305,
-        "Level": 5,
+        "Id": 702005301,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3050018,
+        "Value1": 3070089,
+        "Value2": null
+      },
+      {
+        "Id": 702005302,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -2406,19 +2414,11 @@
         "Value2": null
       },
       {
-        "Id": 702005302,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 702005301,
-        "Level": 1,
+        "Id": 702005305,
+        "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070089,
+        "Value1": 3050018,
         "Value2": null
       }
     ]
@@ -2429,6 +2429,30 @@
     "Rarity": 4,
     "Cost": 100,
     "MFieldSkillLevelViewModels": [
+      {
+        "Id": 702005405,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3040002,
+        "Value2": null
+      },
+      {
+        "Id": 702005404,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 702005403,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070142,
+        "Value2": null
+      },
       {
         "Id": 702005401,
         "Level": 1,
@@ -2444,17 +2468,41 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
-      },
+      }
+    ]
+  },
+  {
+    "Id": 7020055,
+    "Name": "\u592a\u53e4\u304b\u3089\u306e\u7d46",
+    "Rarity": 4,
+    "Cost": 90,
+    "MFieldSkillLevelViewModels": [
       {
-        "Id": 702005403,
-        "Level": 3,
+        "Id": 702005501,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070142,
+        "Value1": 3020132,
         "Value2": null
       },
       {
-        "Id": 702005404,
+        "Id": 702005502,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 702005503,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070089,
+        "Value2": null
+      },
+      {
+        "Id": 702005504,
         "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
@@ -2462,11 +2510,107 @@
         "Value2": null
       },
       {
-        "Id": 702005405,
+        "Id": 702005505,
         "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3040002,
+        "Value1": 3020133,
+        "Value2": null
+      }
+    ]
+  },
+  {
+    "Id": 7020056,
+    "Name": "\u9078\u3070\u308c\u3057\u8005",
+    "Rarity": 4,
+    "Cost": 83,
+    "MFieldSkillLevelViewModels": [
+      {
+        "Id": 702005605,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030124,
+        "Value2": null
+      },
+      {
+        "Id": 702005603,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070084,
+        "Value2": null
+      },
+      {
+        "Id": 702005604,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 702005601,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070054,
+        "Value2": null
+      },
+      {
+        "Id": 702005602,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      }
+    ]
+  },
+  {
+    "Id": 7020057,
+    "Name": "\u9593\u4e00\u9aea\u306e\u9632\u304e",
+    "Rarity": 4,
+    "Cost": 79,
+    "MFieldSkillLevelViewModels": [
+      {
+        "Id": 702005701,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020142,
+        "Value2": null
+      },
+      {
+        "Id": 702005702,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 702005703,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030061,
+        "Value2": null
+      },
+      {
+        "Id": 702005704,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 702005705,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070032,
         "Value2": null
       }
     ]
@@ -2478,8 +2622,16 @@
     "Cost": 25,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703000104,
-        "Level": 4,
+        "Id": 703000101,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3010025,
+        "Value2": null
+      },
+      {
+        "Id": 703000102,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -2494,19 +2646,11 @@
         "Value2": null
       },
       {
-        "Id": 703000102,
-        "Level": 2,
+        "Id": 703000104,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 703000101,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010025,
         "Value2": null
       }
     ]
@@ -2638,22 +2782,6 @@
     "Cost": 13,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703000501,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030034,
-        "Value2": null
-      },
-      {
-        "Id": 703000502,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 703000503,
         "Level": 3,
         "EvolutionCount": 0,
@@ -2668,6 +2796,22 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 703000501,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030034,
+        "Value2": null
+      },
+      {
+        "Id": 703000502,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
       }
     ]
   },
@@ -2677,14 +2821,6 @@
     "Rarity": 3,
     "Cost": 13,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 703000604,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
       {
         "Id": 703000601,
         "Level": 1,
@@ -2708,6 +2844,14 @@
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3070016,
         "Value2": null
+      },
+      {
+        "Id": 703000604,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
       }
     ]
   },
@@ -2717,14 +2861,6 @@
     "Rarity": 3,
     "Cost": 25,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 703000703,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3040022,
-        "Value2": null
-      },
       {
         "Id": 703000704,
         "Level": 4,
@@ -2748,6 +2884,14 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 703000703,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3040022,
+        "Value2": null
       }
     ]
   },
@@ -2758,6 +2902,14 @@
     "Cost": 16,
     "MFieldSkillLevelViewModels": [
       {
+        "Id": 703000804,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
         "Id": 703000803,
         "Level": 3,
         "EvolutionCount": 0,
@@ -2766,8 +2918,8 @@
         "Value2": null
       },
       {
-        "Id": 703000804,
-        "Level": 4,
+        "Id": 703000802,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -2779,14 +2931,6 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3020080,
-        "Value2": null
-      },
-      {
-        "Id": 703000802,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
         "Value2": null
       }
     ]
@@ -2878,22 +3022,6 @@
     "Cost": 25,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703001104,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 703001103,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020001,
-        "Value2": null
-      },
-      {
         "Id": 703001101,
         "Level": 1,
         "EvolutionCount": 0,
@@ -2908,6 +3036,22 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 703001103,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020001,
+        "Value2": null
+      },
+      {
+        "Id": 703001104,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
       }
     ]
   },
@@ -2917,22 +3061,6 @@
     "Rarity": 3,
     "Cost": 16,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 703001201,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010013,
-        "Value2": null
-      },
-      {
-        "Id": 703001202,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
       {
         "Id": 703001203,
         "Level": 3,
@@ -2948,6 +3076,22 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 703001201,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3010013,
+        "Value2": null
+      },
+      {
+        "Id": 703001202,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
       }
     ]
   },
@@ -2957,22 +3101,6 @@
     "Rarity": 3,
     "Cost": 22,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 703001304,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 703001303,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070035,
-        "Value2": null
-      },
       {
         "Id": 703001301,
         "Level": 1,
@@ -2988,6 +3116,22 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 703001303,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070035,
+        "Value2": null
+      },
+      {
+        "Id": 703001304,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
       }
     ]
   },
@@ -2997,22 +3141,6 @@
     "Rarity": 3,
     "Cost": 16,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 703001401,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010005,
-        "Value2": null
-      },
-      {
-        "Id": 703001402,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
       {
         "Id": 703001403,
         "Level": 3,
@@ -3024,6 +3152,22 @@
       {
         "Id": 703001404,
         "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703001401,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3010005,
+        "Value2": null
+      },
+      {
+        "Id": 703001402,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -3078,14 +3222,6 @@
     "Cost": 30,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703001604,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 703001601,
         "Level": 1,
         "EvolutionCount": 0,
@@ -3107,6 +3243,14 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3030047,
+        "Value2": null
+      },
+      {
+        "Id": 703001604,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       }
     ]
@@ -3134,19 +3278,19 @@
         "Value2": null
       },
       {
-        "Id": 703001701,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070017,
-        "Value2": null
-      },
-      {
         "Id": 703001702,
         "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703001701,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070017,
         "Value2": null
       }
     ]
@@ -3278,14 +3422,6 @@
     "Cost": 24,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703002104,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 703002103,
         "Level": 3,
         "EvolutionCount": 0,
@@ -3294,8 +3430,8 @@
         "Value2": null
       },
       {
-        "Id": 703002102,
-        "Level": 2,
+        "Id": 703002104,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -3307,6 +3443,14 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3010035,
+        "Value2": null
+      },
+      {
+        "Id": 703002102,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       }
     ]
@@ -3358,22 +3502,6 @@
     "Cost": 25,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703002301,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010032,
-        "Value2": null
-      },
-      {
-        "Id": 703002302,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 703002303,
         "Level": 3,
         "EvolutionCount": 0,
@@ -3384,6 +3512,22 @@
       {
         "Id": 703002304,
         "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703002301,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3010032,
+        "Value2": null
+      },
+      {
+        "Id": 703002302,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -3438,14 +3582,6 @@
     "Cost": 23,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703002503,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070042,
-        "Value2": null
-      },
-      {
         "Id": 703002504,
         "Level": 4,
         "EvolutionCount": 0,
@@ -3468,6 +3604,14 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 703002503,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070042,
+        "Value2": null
       }
     ]
   },
@@ -3478,11 +3622,11 @@
     "Cost": 40,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703002602,
-        "Level": 2,
+        "Id": 703002603,
+        "Level": 3,
         "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030074,
         "Value2": null
       },
       {
@@ -3494,19 +3638,19 @@
         "Value2": null
       },
       {
-        "Id": 703002603,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030074,
-        "Value2": null
-      },
-      {
         "Id": 703002601,
         "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3030064,
+        "Value2": null
+      },
+      {
+        "Id": 703002602,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       }
     ]
@@ -3678,22 +3822,6 @@
     "Cost": 22,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703003104,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 703003103,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070033,
-        "Value2": null
-      },
-      {
         "Id": 703003101,
         "Level": 1,
         "EvolutionCount": 0,
@@ -3708,6 +3836,22 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 703003103,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070033,
+        "Value2": null
+      },
+      {
+        "Id": 703003104,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
       }
     ]
   },
@@ -3717,22 +3861,6 @@
     "Rarity": 3,
     "Cost": 38,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 703003201,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010008,
-        "Value2": null
-      },
-      {
-        "Id": 703003202,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
       {
         "Id": 703003203,
         "Level": 3,
@@ -3744,6 +3872,22 @@
       {
         "Id": 703003204,
         "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703003201,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3010008,
+        "Value2": null
+      },
+      {
+        "Id": 703003202,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -3838,19 +3982,19 @@
     "Cost": 30,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703003504,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 703003503,
         "Level": 3,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3010014,
+        "Value2": null
+      },
+      {
+        "Id": 703003504,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -3926,22 +4070,6 @@
     "Cost": 38,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703003701,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070023,
-        "Value2": null
-      },
-      {
-        "Id": 703003702,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 703003703,
         "Level": 3,
         "EvolutionCount": 0,
@@ -3952,6 +4080,22 @@
       {
         "Id": 703003704,
         "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703003701,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070023,
+        "Value2": null
+      },
+      {
+        "Id": 703003702,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -4006,22 +4150,6 @@
     "Cost": 18,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703003903,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020005,
-        "Value2": null
-      },
-      {
-        "Id": 703003904,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 703003901,
         "Level": 1,
         "EvolutionCount": 0,
@@ -4036,6 +4164,22 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 703003903,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020005,
+        "Value2": null
+      },
+      {
+        "Id": 703003904,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
       }
     ]
   },
@@ -4045,6 +4189,22 @@
     "Rarity": 3,
     "Cost": 30,
     "MFieldSkillLevelViewModels": [
+      {
+        "Id": 703004004,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703004003,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3010002,
+        "Value2": null
+      },
       {
         "Id": 703004001,
         "Level": 1,
@@ -4060,22 +4220,6 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
-      },
-      {
-        "Id": 703004003,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010002,
-        "Value2": null
-      },
-      {
-        "Id": 703004004,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
       }
     ]
   },
@@ -4085,22 +4229,6 @@
     "Rarity": 3,
     "Cost": 33,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 703004103,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030050,
-        "Value2": null
-      },
-      {
-        "Id": 703004104,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
       {
         "Id": 703004101,
         "Level": 1,
@@ -4116,6 +4244,22 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 703004103,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030050,
+        "Value2": null
+      },
+      {
+        "Id": 703004104,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
       }
     ]
   },
@@ -4125,6 +4269,14 @@
     "Rarity": 3,
     "Cost": 25,
     "MFieldSkillLevelViewModels": [
+      {
+        "Id": 703004204,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
       {
         "Id": 703004201,
         "Level": 1,
@@ -4147,14 +4299,6 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3020041,
-        "Value2": null
-      },
-      {
-        "Id": 703004204,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
         "Value2": null
       }
     ]
@@ -4206,14 +4350,6 @@
     "Cost": 36,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703004404,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 703004403,
         "Level": 3,
         "EvolutionCount": 0,
@@ -4222,8 +4358,8 @@
         "Value2": null
       },
       {
-        "Id": 703004402,
-        "Level": 2,
+        "Id": 703004404,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -4236,6 +4372,14 @@
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3030061,
         "Value2": null
+      },
+      {
+        "Id": 703004402,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
       }
     ]
   },
@@ -4246,16 +4390,8 @@
     "Cost": 28,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703004601,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010025,
-        "Value2": null
-      },
-      {
-        "Id": 703004602,
-        "Level": 2,
+        "Id": 703004604,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -4270,11 +4406,19 @@
         "Value2": null
       },
       {
-        "Id": 703004604,
-        "Level": 4,
+        "Id": 703004602,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703004601,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3010025,
         "Value2": null
       }
     ]
@@ -4366,16 +4510,16 @@
     "Cost": 50,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703004905,
-        "Level": 5,
+        "Id": 703004901,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070050,
+        "Value1": 3070001,
         "Value2": null
       },
       {
-        "Id": 703004904,
-        "Level": 4,
+        "Id": 703004902,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -4390,19 +4534,19 @@
         "Value2": null
       },
       {
-        "Id": 703004902,
-        "Level": 2,
+        "Id": 703004904,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
       },
       {
-        "Id": 703004901,
-        "Level": 1,
+        "Id": 703004905,
+        "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070001,
+        "Value1": 3070050,
         "Value2": null
       }
     ]
@@ -4414,22 +4558,6 @@
     "Cost": 30,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703005001,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010008,
-        "Value2": null
-      },
-      {
-        "Id": 703005002,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 703005003,
         "Level": 3,
         "EvolutionCount": 0,
@@ -4440,6 +4568,22 @@
       {
         "Id": 703005004,
         "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703005001,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3010008,
+        "Value2": null
+      },
+      {
+        "Id": 703005002,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -4494,16 +4638,8 @@
     "Cost": 45,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703005201,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020021,
-        "Value2": null
-      },
-      {
-        "Id": 703005202,
-        "Level": 2,
+        "Id": 703005204,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -4518,19 +4654,27 @@
         "Value2": null
       },
       {
-        "Id": 703005204,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 703005205,
         "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3010044,
+        "Value2": null
+      },
+      {
+        "Id": 703005201,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020021,
+        "Value2": null
+      },
+      {
+        "Id": 703005202,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       }
     ]
@@ -4542,22 +4686,6 @@
     "Cost": 30,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703005303,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030061,
-        "Value2": null
-      },
-      {
-        "Id": 703005304,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 703005301,
         "Level": 1,
         "EvolutionCount": 0,
@@ -4568,6 +4696,22 @@
       {
         "Id": 703005302,
         "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703005303,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030061,
+        "Value2": null
+      },
+      {
+        "Id": 703005304,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -4638,19 +4782,19 @@
         "Value2": null
       },
       {
-        "Id": 703005501,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010008,
-        "Value2": null
-      },
-      {
         "Id": 703005502,
         "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703005501,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3010008,
         "Value2": null
       }
     ]
@@ -4742,22 +4886,6 @@
     "Cost": 46,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703005804,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 703005803,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070064,
-        "Value2": null
-      },
-      {
         "Id": 703005801,
         "Level": 1,
         "EvolutionCount": 0,
@@ -4772,6 +4900,22 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 703005803,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070064,
+        "Value2": null
+      },
+      {
+        "Id": 703005804,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
       }
     ]
   },
@@ -4781,22 +4925,6 @@
     "Rarity": 3,
     "Cost": 40,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 703005901,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030061,
-        "Value2": null
-      },
-      {
-        "Id": 703005902,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
       {
         "Id": 703005903,
         "Level": 3,
@@ -4808,6 +4936,22 @@
       {
         "Id": 703005904,
         "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703005901,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030061,
+        "Value2": null
+      },
+      {
+        "Id": 703005902,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -4910,14 +5054,6 @@
     "Cost": 58,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703006205,
-        "Level": 5,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010046,
-        "Value2": null
-      },
-      {
         "Id": 703006204,
         "Level": 4,
         "EvolutionCount": 0,
@@ -4934,11 +5070,11 @@
         "Value2": null
       },
       {
-        "Id": 703006202,
-        "Level": 2,
+        "Id": 703006205,
+        "Level": 5,
         "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3010046,
         "Value2": null
       },
       {
@@ -4947,6 +5083,14 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3070062,
+        "Value2": null
+      },
+      {
+        "Id": 703006202,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       }
     ]
@@ -4957,22 +5101,6 @@
     "Rarity": 3,
     "Cost": 45,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 703006301,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070058,
-        "Value2": null
-      },
-      {
-        "Id": 703006302,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
       {
         "Id": 703006303,
         "Level": 3,
@@ -4988,6 +5116,22 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 703006301,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070058,
+        "Value2": null
+      },
+      {
+        "Id": 703006302,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
       }
     ]
   },
@@ -4998,19 +5142,19 @@
     "Cost": 46,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703006403,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070075,
-        "Value2": null
-      },
-      {
         "Id": 703006404,
         "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703006403,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070075,
         "Value2": null
       },
       {
@@ -5118,22 +5262,6 @@
     "Cost": 38,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703006704,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 703006703,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070058,
-        "Value2": null
-      },
-      {
         "Id": 703006701,
         "Level": 1,
         "EvolutionCount": 0,
@@ -5148,6 +5276,22 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 703006703,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070058,
+        "Value2": null
+      },
+      {
+        "Id": 703006704,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
       }
     ]
   },
@@ -5157,22 +5301,6 @@
     "Rarity": 3,
     "Cost": 38,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 703006801,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030008,
-        "Value2": null
-      },
-      {
-        "Id": 703006802,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
       {
         "Id": 703006803,
         "Level": 3,
@@ -5184,6 +5312,22 @@
       {
         "Id": 703006804,
         "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703006801,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030008,
+        "Value2": null
+      },
+      {
+        "Id": 703006802,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -5238,22 +5382,6 @@
     "Cost": 46,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703007001,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030017,
-        "Value2": null
-      },
-      {
-        "Id": 703007002,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 703007003,
         "Level": 3,
         "EvolutionCount": 0,
@@ -5268,6 +5396,22 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 703007001,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030017,
+        "Value2": null
+      },
+      {
+        "Id": 703007002,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
       }
     ]
   },
@@ -5277,6 +5421,46 @@
     "Rarity": 4,
     "Cost": 55,
     "MFieldSkillLevelViewModels": [
+      {
+        "Id": 703007101,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 306006,
+        "Value2": null
+      },
+      {
+        "Id": 703007102,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703007103,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070003,
+        "Value2": null
+      },
+      {
+        "Id": 703007104,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703007105,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070057,
+        "Value2": null
+      },
       {
         "Id": 703007106,
         "Level": 6,
@@ -5292,46 +5476,6 @@
         "FieldSkillLevelAbilityType": 2,
         "Value1": 3070057,
         "Value2": 3070058
-      },
-      {
-        "Id": 703007105,
-        "Level": 5,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070057,
-        "Value2": null
-      },
-      {
-        "Id": 703007101,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 306006,
-        "Value2": null
-      },
-      {
-        "Id": 703007103,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070003,
-        "Value2": null
-      },
-      {
-        "Id": 703007102,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 703007104,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
       }
     ]
   },
@@ -5342,16 +5486,8 @@
     "Cost": 55,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703007201,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070073,
-        "Value2": null
-      },
-      {
-        "Id": 703007202,
-        "Level": 2,
+        "Id": 703007204,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -5366,8 +5502,16 @@
         "Value2": null
       },
       {
-        "Id": 703007204,
-        "Level": 4,
+        "Id": 703007201,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070073,
+        "Value2": null
+      },
+      {
+        "Id": 703007202,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -5430,22 +5574,6 @@
     "Cost": 50,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703007403,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070003,
-        "Value2": null
-      },
-      {
-        "Id": 703007404,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 703007401,
         "Level": 1,
         "EvolutionCount": 0,
@@ -5460,6 +5588,22 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 703007403,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070003,
+        "Value2": null
+      },
+      {
+        "Id": 703007404,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
       }
     ]
   },
@@ -5469,6 +5613,14 @@
     "Rarity": 3,
     "Cost": 58,
     "MFieldSkillLevelViewModels": [
+      {
+        "Id": 703007504,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
       {
         "Id": 703007501,
         "Level": 1,
@@ -5491,14 +5643,6 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3070104,
-        "Value2": null
-      },
-      {
-        "Id": 703007504,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
         "Value2": null
       }
     ]
@@ -5526,19 +5670,19 @@
         "Value2": null
       },
       {
-        "Id": 703007601,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030122,
-        "Value2": null
-      },
-      {
         "Id": 703007602,
         "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703007601,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030122,
         "Value2": null
       }
     ]
@@ -5590,11 +5734,11 @@
     "Cost": 33,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703007803,
-        "Level": 3,
+        "Id": 703007804,
+        "Level": 4,
         "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020071,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -5614,11 +5758,11 @@
         "Value2": null
       },
       {
-        "Id": 703007804,
-        "Level": 4,
+        "Id": 703007803,
+        "Level": 3,
         "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020071,
         "Value2": null
       }
     ]
@@ -5630,19 +5774,19 @@
     "Cost": 43,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703007904,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 703007903,
         "Level": 3,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3030074,
+        "Value2": null
+      },
+      {
+        "Id": 703007904,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -5670,22 +5814,6 @@
     "Cost": 75,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703008001,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030096,
-        "Value2": null
-      },
-      {
-        "Id": 703008002,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 703008003,
         "Level": 3,
         "EvolutionCount": 0,
@@ -5700,6 +5828,22 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 703008001,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030096,
+        "Value2": null
+      },
+      {
+        "Id": 703008002,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
       }
     ]
   },
@@ -5709,14 +5853,6 @@
     "Rarity": 3,
     "Cost": 62,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 703008101,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030012,
-        "Value2": null
-      },
       {
         "Id": 703008102,
         "Level": 2,
@@ -5731,6 +5867,14 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3070077,
+        "Value2": null
+      },
+      {
+        "Id": 703008101,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030012,
         "Value2": null
       },
       {
@@ -5750,19 +5894,11 @@
     "Cost": 58,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703008201,
-        "Level": 1,
+        "Id": 703008205,
+        "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070003,
-        "Value2": null
-      },
-      {
-        "Id": 703008202,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "Value1": 3070058,
         "Value2": null
       },
       {
@@ -5782,11 +5918,19 @@
         "Value2": null
       },
       {
-        "Id": 703008205,
-        "Level": 5,
+        "Id": 703008202,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703008201,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070058,
+        "Value1": 3070003,
         "Value2": null
       }
     ]
@@ -5797,22 +5941,6 @@
     "Rarity": 3,
     "Cost": 58,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 703008303,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070098,
-        "Value2": null
-      },
-      {
-        "Id": 703008304,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
       {
         "Id": 703008301,
         "Level": 1,
@@ -5828,6 +5956,22 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 703008303,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070098,
+        "Value2": null
+      },
+      {
+        "Id": 703008304,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
       }
     ]
   },
@@ -5837,22 +5981,6 @@
     "Rarity": 3,
     "Cost": 43,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 703008401,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3100124,
-        "Value2": null
-      },
-      {
-        "Id": 703008402,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
       {
         "Id": 703008403,
         "Level": 3,
@@ -5868,6 +5996,22 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 703008401,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3100124,
+        "Value2": null
+      },
+      {
+        "Id": 703008402,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
       }
     ]
   },
@@ -5877,22 +6021,6 @@
     "Rarity": 3,
     "Cost": 38,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 703008503,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3120126,
-        "Value2": null
-      },
-      {
-        "Id": 703008504,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
       {
         "Id": 703008501,
         "Level": 1,
@@ -5904,6 +6032,22 @@
       {
         "Id": 703008502,
         "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703008503,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3120126,
+        "Value2": null
+      },
+      {
+        "Id": 703008504,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -5958,16 +6102,8 @@
     "Cost": 50,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703008701,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3110125,
-        "Value2": null
-      },
-      {
-        "Id": 703008702,
-        "Level": 2,
+        "Id": 703008704,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -5982,8 +6118,16 @@
         "Value2": null
       },
       {
-        "Id": 703008704,
-        "Level": 4,
+        "Id": 703008701,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3110125,
+        "Value2": null
+      },
+      {
+        "Id": 703008702,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -5998,8 +6142,16 @@
     "Cost": 58,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703008804,
-        "Level": 4,
+        "Id": 703008801,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030099,
+        "Value2": null
+      },
+      {
+        "Id": 703008802,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -6014,19 +6166,11 @@
         "Value2": null
       },
       {
-        "Id": 703008802,
-        "Level": 2,
+        "Id": 703008804,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 703008801,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030099,
         "Value2": null
       }
     ]
@@ -6078,22 +6222,6 @@
     "Cost": 51,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703009003,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070063,
-        "Value2": null
-      },
-      {
-        "Id": 703009004,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 703009001,
         "Level": 1,
         "EvolutionCount": 0,
@@ -6108,6 +6236,22 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 703009003,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070063,
+        "Value2": null
+      },
+      {
+        "Id": 703009004,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
       }
     ]
   },
@@ -6117,46 +6261,6 @@
     "Rarity": 5,
     "Cost": 84,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 703009101,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030100,
-        "Value2": null
-      },
-      {
-        "Id": 703009102,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 703009103,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070087,
-        "Value2": null
-      },
-      {
-        "Id": 703009104,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 703009105,
-        "Level": 5,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070058,
-        "Value2": null
-      },
       {
         "Id": 703009106,
         "Level": 6,
@@ -6172,6 +6276,46 @@
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3020135,
         "Value2": null
+      },
+      {
+        "Id": 703009105,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070058,
+        "Value2": null
+      },
+      {
+        "Id": 703009104,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703009103,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070087,
+        "Value2": null
+      },
+      {
+        "Id": 703009102,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703009101,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030100,
+        "Value2": null
       }
     ]
   },
@@ -6182,19 +6326,11 @@
     "Cost": 63,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703009205,
-        "Level": 5,
+        "Id": 703009201,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070042,
-        "Value2": null
-      },
-      {
-        "Id": 703009204,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "Value1": 3070061,
         "Value2": null
       },
       {
@@ -6206,19 +6342,27 @@
         "Value2": null
       },
       {
-        "Id": 703009201,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070061,
-        "Value2": null
-      },
-      {
         "Id": 703009203,
         "Level": 3,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3070059,
+        "Value2": null
+      },
+      {
+        "Id": 703009204,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703009205,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070042,
         "Value2": null
       }
     ]
@@ -6229,6 +6373,22 @@
     "Rarity": 3,
     "Cost": 68,
     "MFieldSkillLevelViewModels": [
+      {
+        "Id": 703009304,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703009303,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070060,
+        "Value2": null
+      },
       {
         "Id": 703009301,
         "Level": 1,
@@ -6244,22 +6404,6 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
-      },
-      {
-        "Id": 703009303,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070060,
-        "Value2": null
-      },
-      {
-        "Id": 703009304,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
       }
     ]
   },
@@ -6269,6 +6413,14 @@
     "Rarity": 3,
     "Cost": 50,
     "MFieldSkillLevelViewModels": [
+      {
+        "Id": 703009404,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
       {
         "Id": 703009401,
         "Level": 1,
@@ -6292,14 +6444,6 @@
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3020115,
         "Value2": null
-      },
-      {
-        "Id": 703009404,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
       }
     ]
   },
@@ -6309,6 +6453,22 @@
     "Rarity": 3,
     "Cost": 72,
     "MFieldSkillLevelViewModels": [
+      {
+        "Id": 703009504,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703009503,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070146,
+        "Value2": null
+      },
       {
         "Id": 703009501,
         "Level": 1,
@@ -6324,22 +6484,6 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
-      },
-      {
-        "Id": 703009503,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070146,
-        "Value2": null
-      },
-      {
-        "Id": 703009504,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
       }
     ]
   },
@@ -6350,8 +6494,16 @@
     "Cost": 55,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703009604,
-        "Level": 4,
+        "Id": 703009601,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030104,
+        "Value2": null
+      },
+      {
+        "Id": 703009602,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -6366,19 +6518,11 @@
         "Value2": null
       },
       {
-        "Id": 703009602,
-        "Level": 2,
+        "Id": 703009604,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 703009601,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030104,
         "Value2": null
       }
     ]
@@ -6389,6 +6533,22 @@
     "Rarity": 3,
     "Cost": 65,
     "MFieldSkillLevelViewModels": [
+      {
+        "Id": 703009704,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703009703,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070059,
+        "Value2": null
+      },
       {
         "Id": 703009701,
         "Level": 1,
@@ -6404,22 +6564,6 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
-      },
-      {
-        "Id": 703009703,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070059,
-        "Value2": null
-      },
-      {
-        "Id": 703009704,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
       }
     ]
   },
@@ -6430,14 +6574,6 @@
     "Cost": 118,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703009807,
-        "Level": 7,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020115,
-        "Value2": null
-      },
-      {
         "Id": 703009806,
         "Level": 6,
         "EvolutionCount": 0,
@@ -6446,16 +6582,16 @@
         "Value2": null
       },
       {
-        "Id": 703009805,
-        "Level": 5,
+        "Id": 703009801,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070059,
+        "Value1": 3030083,
         "Value2": null
       },
       {
-        "Id": 703009804,
-        "Level": 4,
+        "Id": 703009802,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -6470,19 +6606,27 @@
         "Value2": null
       },
       {
-        "Id": 703009802,
-        "Level": 2,
+        "Id": 703009804,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
       },
       {
-        "Id": 703009801,
-        "Level": 1,
+        "Id": 703009805,
+        "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030083,
+        "Value1": 3070059,
+        "Value2": null
+      },
+      {
+        "Id": 703009807,
+        "Level": 7,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020115,
         "Value2": null
       }
     ]
@@ -6493,6 +6637,22 @@
     "Rarity": 3,
     "Cost": 45,
     "MFieldSkillLevelViewModels": [
+      {
+        "Id": 703009904,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703009903,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030109,
+        "Value2": null
+      },
       {
         "Id": 703009901,
         "Level": 1,
@@ -6508,22 +6668,6 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
-      },
-      {
-        "Id": 703009903,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030109,
-        "Value2": null
-      },
-      {
-        "Id": 703009904,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
       }
     ]
   },
@@ -6534,8 +6678,16 @@
     "Cost": 55,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703010004,
-        "Level": 4,
+        "Id": 703010001,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030096,
+        "Value2": null
+      },
+      {
+        "Id": 703010002,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -6550,19 +6702,11 @@
         "Value2": null
       },
       {
-        "Id": 703010002,
-        "Level": 2,
+        "Id": 703010004,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 703010001,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030096,
         "Value2": null
       }
     ]
@@ -6638,16 +6782,8 @@
     "Cost": 85,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 703010201,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070059,
-        "Value2": null
-      },
-      {
-        "Id": 703010202,
-        "Level": 2,
+        "Id": 703010204,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -6662,19 +6798,27 @@
         "Value2": null
       },
       {
-        "Id": 703010204,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 703010205,
         "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3020143,
+        "Value2": null
+      },
+      {
+        "Id": 703010201,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070059,
+        "Value2": null
+      },
+      {
+        "Id": 703010202,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       }
     ]
@@ -6685,14 +6829,6 @@
     "Rarity": 5,
     "Cost": 122,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 703010307,
-        "Level": 7,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020115,
-        "Value2": null
-      },
       {
         "Id": 703010306,
         "Level": 6,
@@ -6710,19 +6846,19 @@
         "Value2": null
       },
       {
-        "Id": 703010303,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070087,
-        "Value2": null
-      },
-      {
         "Id": 703010304,
         "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703010307,
+        "Level": 7,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020115,
         "Value2": null
       },
       {
@@ -6739,6 +6875,14 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3030096,
+        "Value2": null
+      },
+      {
+        "Id": 703010303,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070087,
         "Value2": null
       }
     ]
@@ -6798,11 +6942,11 @@
         "Value2": null
       },
       {
-        "Id": 703010503,
-        "Level": 3,
+        "Id": 703010501,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030125,
+        "Value1": 3050021,
         "Value2": null
       },
       {
@@ -6814,11 +6958,11 @@
         "Value2": null
       },
       {
-        "Id": 703010501,
-        "Level": 1,
+        "Id": 703010503,
+        "Level": 3,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3050021,
+        "Value1": 3030125,
         "Value2": null
       }
     ]
@@ -6829,6 +6973,22 @@
     "Rarity": 3,
     "Cost": 65,
     "MFieldSkillLevelViewModels": [
+      {
+        "Id": 703010604,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703010603,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 4030119,
+        "Value2": null
+      },
       {
         "Id": 703010601,
         "Level": 1,
@@ -6844,17 +7004,209 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
-      },
+      }
+    ]
+  },
+  {
+    "Id": 7030107,
+    "Name": "\u7b11\u307f\u304c\u3053\u307c\u308c\u308b\u304a\u796d\u308a",
+    "Rarity": 5,
+    "Cost": 103,
+    "MFieldSkillLevelViewModels": [
       {
-        "Id": 703010603,
-        "Level": 3,
+        "Id": 703010701,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 4030119,
+        "Value1": 3070077,
         "Value2": null
       },
       {
-        "Id": 703010604,
+        "Id": 703010702,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703010703,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030075,
+        "Value2": null
+      },
+      {
+        "Id": 703010704,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703010705,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030128,
+        "Value2": null
+      },
+      {
+        "Id": 703010706,
+        "Level": 6,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703010707,
+        "Level": 7,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020143,
+        "Value2": null
+      }
+    ]
+  },
+  {
+    "Id": 7030108,
+    "Name": "\u304a\u4eba\u5f62\u3055\u3093\u306b\u306a\u308a\u305f\u3044",
+    "Rarity": 3,
+    "Cost": 48,
+    "MFieldSkillLevelViewModels": [
+      {
+        "Id": 703010801,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070061,
+        "Value2": null
+      },
+      {
+        "Id": 703010802,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703010803,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030125,
+        "Value2": null
+      },
+      {
+        "Id": 703010804,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      }
+    ]
+  },
+  {
+    "Id": 7030109,
+    "Name": "\u512a\u3057\u3055\u3068\u7c98\u6db2",
+    "Rarity": 3,
+    "Cost": 45,
+    "MFieldSkillLevelViewModels": [
+      {
+        "Id": 703010904,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703010903,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030128,
+        "Value2": null
+      },
+      {
+        "Id": 703010901,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070071,
+        "Value2": null
+      },
+      {
+        "Id": 703010902,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      }
+    ]
+  },
+  {
+    "Id": 7030110,
+    "Name": "\u30e1\u30ab\u30d1\u30c7\u30a3\u30f3\u30c8\u30f3\u00d7\u30b7\u30e3\u30fc\u30af\u30ed\u30f3 \u65b0\u305f\u306a\u308b\u6d77\u57df",
+    "Rarity": 5,
+    "Cost": 109,
+    "MFieldSkillLevelViewModels": [
+      {
+        "Id": 703011007,
+        "Level": 7,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070005,
+        "Value2": null
+      },
+      {
+        "Id": 703011006,
+        "Level": 6,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703011005,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3040025,
+        "Value2": null
+      },
+      {
+        "Id": 703011001,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070181,
+        "Value2": null
+      },
+      {
+        "Id": 703011003,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020115,
+        "Value2": null
+      },
+      {
+        "Id": 703011002,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 703011004,
         "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
@@ -6870,19 +7222,11 @@
     "Cost": 45,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704000105,
-        "Level": 5,
+        "Id": 704000101,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030088,
-        "Value2": null
-      },
-      {
-        "Id": 704000104,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "Value1": 3020031,
         "Value2": null
       },
       {
@@ -6894,19 +7238,27 @@
         "Value2": null
       },
       {
-        "Id": 704000101,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020031,
-        "Value2": null
-      },
-      {
         "Id": 704000103,
         "Level": 3,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3010050,
+        "Value2": null
+      },
+      {
+        "Id": 704000104,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704000105,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030088,
         "Value2": null
       }
     ]
@@ -6918,27 +7270,11 @@
     "Cost": 45,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704000201,
-        "Level": 1,
+        "Id": 704000205,
+        "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020051,
-        "Value2": null
-      },
-      {
-        "Id": 704000202,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 704000203,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010017,
+        "Value1": 3030057,
         "Value2": null
       },
       {
@@ -6950,20 +7286,36 @@
         "Value2": null
       },
       {
-        "Id": 704000205,
-        "Level": 5,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030057,
-        "Value2": null
-      },
-      {
         "Id": 704000206,
         "Level": 6,
         "EvolutionCount": 1,
         "FieldSkillLevelAbilityType": 2,
         "Value1": 3010017,
         "Value2": 3010052
+      },
+      {
+        "Id": 704000202,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704000201,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020051,
+        "Value2": null
+      },
+      {
+        "Id": 704000203,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3010017,
+        "Value2": null
       },
       {
         "Id": 704000207,
@@ -7030,19 +7382,11 @@
     "Cost": 45,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704000405,
-        "Level": 5,
+        "Id": 704000401,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030086,
-        "Value2": null
-      },
-      {
-        "Id": 704000404,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "Value1": 3020011,
         "Value2": null
       },
       {
@@ -7054,19 +7398,27 @@
         "Value2": null
       },
       {
-        "Id": 704000401,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020011,
-        "Value2": null
-      },
-      {
         "Id": 704000403,
         "Level": 3,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3010048,
+        "Value2": null
+      },
+      {
+        "Id": 704000404,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704000405,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030086,
         "Value2": null
       }
     ]
@@ -7150,14 +7502,6 @@
         "Value2": null
       },
       {
-        "Id": 704000604,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 704000603,
         "Level": 3,
         "EvolutionCount": 0,
@@ -7166,8 +7510,8 @@
         "Value2": null
       },
       {
-        "Id": 704000602,
-        "Level": 2,
+        "Id": 704000604,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -7179,6 +7523,14 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3010026,
+        "Value2": null
+      },
+      {
+        "Id": 704000602,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       }
     ]
@@ -7238,6 +7590,14 @@
     "Cost": 45,
     "MFieldSkillLevelViewModels": [
       {
+        "Id": 704000803,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3010030,
+        "Value2": null
+      },
+      {
         "Id": 704000805,
         "Level": 5,
         "EvolutionCount": 0,
@@ -7254,14 +7614,6 @@
         "Value2": null
       },
       {
-        "Id": 704000801,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020101,
-        "Value2": null
-      },
-      {
         "Id": 704000802,
         "Level": 2,
         "EvolutionCount": 0,
@@ -7270,11 +7622,11 @@
         "Value2": null
       },
       {
-        "Id": 704000803,
-        "Level": 3,
+        "Id": 704000801,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010030,
+        "Value1": 3020101,
         "Value2": null
       }
     ]
@@ -7334,16 +7686,16 @@
     "Cost": 20,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704001001,
-        "Level": 1,
+        "Id": 704001005,
+        "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070038,
+        "Value1": 3070040,
         "Value2": null
       },
       {
-        "Id": 704001002,
-        "Level": 2,
+        "Id": 704001004,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -7358,19 +7710,19 @@
         "Value2": null
       },
       {
-        "Id": 704001004,
-        "Level": 4,
+        "Id": 704001002,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
       },
       {
-        "Id": 704001005,
-        "Level": 5,
+        "Id": 704001001,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070040,
+        "Value1": 3070038,
         "Value2": null
       }
     ]
@@ -7382,6 +7734,14 @@
     "Cost": 52,
     "MFieldSkillLevelViewModels": [
       {
+        "Id": 704001108,
+        "Level": 8,
+        "EvolutionCount": 1,
+        "FieldSkillLevelAbilityType": 2,
+        "Value1": 3030017,
+        "Value2": 3030018
+      },
+      {
         "Id": 704001106,
         "Level": 6,
         "EvolutionCount": 1,
@@ -7390,12 +7750,12 @@
         "Value2": 3030012
       },
       {
-        "Id": 704001108,
-        "Level": 8,
-        "EvolutionCount": 1,
-        "FieldSkillLevelAbilityType": 2,
+        "Id": 704001105,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
         "Value1": 3030017,
-        "Value2": 3030018
+        "Value2": null
       },
       {
         "Id": 704001107,
@@ -7406,11 +7766,11 @@
         "Value2": 3030015
       },
       {
-        "Id": 704001105,
-        "Level": 5,
+        "Id": 704001103,
+        "Level": 3,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030017,
+        "Value1": 3030014,
         "Value2": null
       },
       {
@@ -7422,11 +7782,11 @@
         "Value2": null
       },
       {
-        "Id": 704001103,
-        "Level": 3,
+        "Id": 704001101,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030014,
+        "Value1": 3030011,
         "Value2": null
       },
       {
@@ -7435,14 +7795,6 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 704001101,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030011,
         "Value2": null
       }
     ]
@@ -7502,19 +7854,11 @@
     "Cost": 24,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704001301,
-        "Level": 1,
+        "Id": 704001305,
+        "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070113,
-        "Value2": null
-      },
-      {
-        "Id": 704001302,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "Value1": 3020041,
         "Value2": null
       },
       {
@@ -7534,11 +7878,19 @@
         "Value2": null
       },
       {
-        "Id": 704001305,
-        "Level": 5,
+        "Id": 704001301,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020041,
+        "Value1": 3070113,
+        "Value2": null
+      },
+      {
+        "Id": 704001302,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       }
     ]
@@ -7550,11 +7902,19 @@
     "Cost": 43,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704001405,
-        "Level": 5,
+        "Id": 704001401,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030092,
+        "Value1": 3010009,
+        "Value2": null
+      },
+      {
+        "Id": 704001402,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -7574,19 +7934,11 @@
         "Value2": null
       },
       {
-        "Id": 704001401,
-        "Level": 1,
+        "Id": 704001405,
+        "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010009,
-        "Value2": null
-      },
-      {
-        "Id": 704001402,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "Value1": 3030092,
         "Value2": null
       }
     ]
@@ -7598,27 +7950,19 @@
     "Cost": 39,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704001501,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070009,
-        "Value2": null
-      },
-      {
-        "Id": 704001502,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 704001503,
         "Level": 3,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3020118,
+        "Value2": null
+      },
+      {
+        "Id": 704001505,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070083,
         "Value2": null
       },
       {
@@ -7630,11 +7974,19 @@
         "Value2": null
       },
       {
-        "Id": 704001505,
-        "Level": 5,
+        "Id": 704001502,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704001501,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070083,
+        "Value1": 3070009,
         "Value2": null
       }
     ]
@@ -7702,19 +8054,19 @@
         "Value2": null
       },
       {
+        "Id": 704001703,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020105,
+        "Value2": null
+      },
+      {
         "Id": 704001705,
         "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3070046,
-        "Value2": null
-      },
-      {
-        "Id": 704001702,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
         "Value2": null
       },
       {
@@ -7726,11 +8078,11 @@
         "Value2": null
       },
       {
-        "Id": 704001703,
-        "Level": 3,
+        "Id": 704001702,
+        "Level": 2,
         "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020105,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       }
     ]
@@ -7790,6 +8142,22 @@
     "Cost": 41,
     "MFieldSkillLevelViewModels": [
       {
+        "Id": 704001905,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030047,
+        "Value2": null
+      },
+      {
+        "Id": 704001904,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
         "Id": 704001901,
         "Level": 1,
         "EvolutionCount": 0,
@@ -7812,22 +8180,6 @@
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3020049,
         "Value2": null
-      },
-      {
-        "Id": 704001904,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 704001905,
-        "Level": 5,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030047,
-        "Value2": null
       }
     ]
   },
@@ -7838,11 +8190,19 @@
     "Cost": 41,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704002005,
-        "Level": 5,
+        "Id": 704002001,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070116,
+        "Value1": 3010003,
+        "Value2": null
+      },
+      {
+        "Id": 704002002,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -7862,19 +8222,11 @@
         "Value2": null
       },
       {
-        "Id": 704002001,
-        "Level": 1,
+        "Id": 704002005,
+        "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010003,
-        "Value2": null
-      },
-      {
-        "Id": 704002002,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "Value1": 3070116,
         "Value2": null
       }
     ]
@@ -7885,30 +8237,6 @@
     "Rarity": 4,
     "Cost": 60,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 704002101,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070002,
-        "Value2": null
-      },
-      {
-        "Id": 704002102,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 704002103,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020112,
-        "Value2": null
-      },
       {
         "Id": 704002104,
         "Level": 4,
@@ -7923,6 +8251,30 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3020113,
+        "Value2": null
+      },
+      {
+        "Id": 704002102,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704002101,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070002,
+        "Value2": null
+      },
+      {
+        "Id": 704002103,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020112,
         "Value2": null
       }
     ]
@@ -7942,14 +8294,6 @@
         "Value2": 3070151
       },
       {
-        "Id": 704002207,
-        "Level": 7,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 2,
-        "Value1": 3030033,
-        "Value2": 3070058
-      },
-      {
         "Id": 704002206,
         "Level": 6,
         "EvolutionCount": 0,
@@ -7966,12 +8310,12 @@
         "Value2": null
       },
       {
-        "Id": 704002202,
-        "Level": 2,
+        "Id": 704002207,
+        "Level": 7,
         "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
+        "FieldSkillLevelAbilityType": 2,
+        "Value1": 3030033,
+        "Value2": 3070058
       },
       {
         "Id": 704002203,
@@ -7979,6 +8323,14 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3030033,
+        "Value2": null
+      },
+      {
+        "Id": 704002202,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -8006,11 +8358,19 @@
     "Cost": 51,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704002305,
-        "Level": 5,
+        "Id": 704002301,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070045,
+        "Value1": 3030128,
+        "Value2": null
+      },
+      {
+        "Id": 704002302,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -8030,19 +8390,11 @@
         "Value2": null
       },
       {
-        "Id": 704002301,
-        "Level": 1,
+        "Id": 704002305,
+        "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030128,
-        "Value2": null
-      },
-      {
-        "Id": 704002302,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "Value1": 3070045,
         "Value2": null
       }
     ]
@@ -8054,19 +8406,11 @@
     "Cost": 55,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704002401,
-        "Level": 1,
+        "Id": 704002405,
+        "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030077,
-        "Value2": null
-      },
-      {
-        "Id": 704002402,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "Value1": 3010041,
         "Value2": null
       },
       {
@@ -8086,11 +8430,19 @@
         "Value2": null
       },
       {
-        "Id": 704002405,
-        "Level": 5,
+        "Id": 704002401,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010041,
+        "Value1": 3030077,
+        "Value2": null
+      },
+      {
+        "Id": 704002402,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       }
     ]
@@ -8150,27 +8502,19 @@
     "Cost": 43,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704002604,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 704002603,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020008,
-        "Value2": null
-      },
-      {
         "Id": 704002605,
         "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3030074,
+        "Value2": null
+      },
+      {
+        "Id": 704002604,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -8187,6 +8531,14 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704002603,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020008,
         "Value2": null
       }
     ]
@@ -8246,19 +8598,19 @@
     "Cost": 40,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704002805,
-        "Level": 5,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3010042,
-        "Value2": null
-      },
-      {
         "Id": 704002804,
         "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704002805,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3010042,
         "Value2": null
       },
       {
@@ -8350,19 +8702,19 @@
         "Value2": null
       },
       {
-        "Id": 704003003,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070069,
-        "Value2": null
-      },
-      {
         "Id": 704003004,
         "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704003003,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070069,
         "Value2": null
       },
       {
@@ -8390,22 +8742,6 @@
     "Cost": 55,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704003105,
-        "Level": 5,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020041,
-        "Value2": null
-      },
-      {
-        "Id": 704003104,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 704003101,
         "Level": 1,
         "EvolutionCount": 0,
@@ -8428,6 +8764,22 @@
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3030074,
         "Value2": null
+      },
+      {
+        "Id": 704003104,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704003105,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020041,
+        "Value2": null
       }
     ]
   },
@@ -8437,30 +8789,6 @@
     "Rarity": 4,
     "Cost": 70,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 704003201,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070056,
-        "Value2": null
-      },
-      {
-        "Id": 704003202,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 704003203,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030008,
-        "Value2": null
-      },
       {
         "Id": 704003204,
         "Level": 4,
@@ -8475,6 +8803,30 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3020001,
+        "Value2": null
+      },
+      {
+        "Id": 704003203,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030008,
+        "Value2": null
+      },
+      {
+        "Id": 704003201,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070056,
+        "Value2": null
+      },
+      {
+        "Id": 704003202,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       }
     ]
@@ -8524,6 +8876,14 @@
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3070003,
         "Value2": null
+      },
+      {
+        "Id": 704003306,
+        "Level": 6,
+        "EvolutionCount": 1,
+        "FieldSkillLevelAbilityType": 2,
+        "Value1": 3070060,
+        "Value2": 3070179
       }
     ]
   },
@@ -8533,6 +8893,14 @@
     "Rarity": 4,
     "Cost": 70,
     "MFieldSkillLevelViewModels": [
+      {
+        "Id": 704003405,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030075,
+        "Value2": null
+      },
       {
         "Id": 704003404,
         "Level": 4,
@@ -8550,11 +8918,11 @@
         "Value2": null
       },
       {
-        "Id": 704003405,
-        "Level": 5,
+        "Id": 704003402,
+        "Level": 2,
         "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030075,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -8563,14 +8931,6 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3070145,
-        "Value2": null
-      },
-      {
-        "Id": 704003402,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
         "Value2": null
       }
     ]
@@ -8726,11 +9086,19 @@
     "Cost": 83,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704003805,
-        "Level": 5,
+        "Id": 704003801,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030009,
+        "Value1": 3030062,
+        "Value2": null
+      },
+      {
+        "Id": 704003802,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -8750,19 +9118,11 @@
         "Value2": null
       },
       {
-        "Id": 704003801,
-        "Level": 1,
+        "Id": 704003805,
+        "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030062,
-        "Value2": null
-      },
-      {
-        "Id": 704003802,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "Value1": 3030009,
         "Value2": null
       }
     ]
@@ -8774,19 +9134,11 @@
     "Cost": 65,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704003901,
-        "Level": 1,
+        "Id": 704003905,
+        "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070069,
-        "Value2": null
-      },
-      {
-        "Id": 704003902,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "Value1": 3020041,
         "Value2": null
       },
       {
@@ -8806,11 +9158,19 @@
         "Value2": null
       },
       {
-        "Id": 704003905,
-        "Level": 5,
+        "Id": 704003901,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020041,
+        "Value1": 3070069,
+        "Value2": null
+      },
+      {
+        "Id": 704003902,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       }
     ]
@@ -8822,11 +9182,19 @@
     "Cost": 73,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704004003,
-        "Level": 3,
+        "Id": 704004005,
+        "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070059,
+        "Value1": 3070072,
+        "Value2": null
+      },
+      {
+        "Id": 704004004,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -8846,19 +9214,11 @@
         "Value2": null
       },
       {
-        "Id": 704004004,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 704004005,
-        "Level": 5,
+        "Id": 704004003,
+        "Level": 3,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070072,
+        "Value1": 3070059,
         "Value2": null
       }
     ]
@@ -8869,30 +9229,6 @@
     "Rarity": 4,
     "Cost": 85,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 704004104,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 704004103,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070059,
-        "Value2": null
-      },
-      {
-        "Id": 704004105,
-        "Level": 5,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070074,
-        "Value2": null
-      },
       {
         "Id": 704004101,
         "Level": 1,
@@ -8908,6 +9244,30 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 704004103,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070059,
+        "Value2": null
+      },
+      {
+        "Id": 704004104,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704004105,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070074,
+        "Value2": null
       }
     ]
   },
@@ -8917,22 +9277,6 @@
     "Rarity": 4,
     "Cost": 74,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 704004205,
-        "Level": 5,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070077,
-        "Value2": null
-      },
-      {
-        "Id": 704004204,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
       {
         "Id": 704004201,
         "Level": 1,
@@ -8956,6 +9300,22 @@
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3030081,
         "Value2": null
+      },
+      {
+        "Id": 704004204,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704004205,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070077,
+        "Value2": null
       }
     ]
   },
@@ -8966,19 +9326,11 @@
     "Cost": 90,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704004301,
-        "Level": 1,
+        "Id": 704004305,
+        "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070059,
-        "Value2": null
-      },
-      {
-        "Id": 704004302,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "Value1": 3070080,
         "Value2": null
       },
       {
@@ -8998,11 +9350,19 @@
         "Value2": null
       },
       {
-        "Id": 704004305,
-        "Level": 5,
+        "Id": 704004301,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070080,
+        "Value1": 3070059,
+        "Value2": null
+      },
+      {
+        "Id": 704004302,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       }
     ]
@@ -9013,14 +9373,6 @@
     "Rarity": 4,
     "Cost": 90,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 704004405,
-        "Level": 5,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070069,
-        "Value2": null
-      },
       {
         "Id": 704004401,
         "Level": 1,
@@ -9054,6 +9406,14 @@
         "Value2": null
       },
       {
+        "Id": 704004405,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070069,
+        "Value2": null
+      },
+      {
         "Id": 704004406,
         "Level": 6,
         "EvolutionCount": 0,
@@ -9069,30 +9429,6 @@
     "Rarity": 4,
     "Cost": 79,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 704004505,
-        "Level": 5,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070081,
-        "Value2": null
-      },
-      {
-        "Id": 704004506,
-        "Level": 6,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 2,
-        "Value1": 3070081,
-        "Value2": 3070153
-      },
-      {
-        "Id": 704004504,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
       {
         "Id": 704004501,
         "Level": 1,
@@ -9116,6 +9452,30 @@
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3020115,
         "Value2": null
+      },
+      {
+        "Id": 704004504,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704004505,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070081,
+        "Value2": null
+      },
+      {
+        "Id": 704004506,
+        "Level": 6,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 2,
+        "Value1": 3070081,
+        "Value2": 3070153
       }
     ]
   },
@@ -9126,16 +9486,16 @@
     "Cost": 90,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704004601,
-        "Level": 1,
+        "Id": 704004605,
+        "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070069,
+        "Value1": 3070084,
         "Value2": null
       },
       {
-        "Id": 704004602,
-        "Level": 2,
+        "Id": 704004604,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -9150,19 +9510,19 @@
         "Value2": null
       },
       {
-        "Id": 704004604,
-        "Level": 4,
+        "Id": 704004602,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
       },
       {
-        "Id": 704004605,
-        "Level": 5,
+        "Id": 704004601,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070084,
+        "Value1": 3070069,
         "Value2": null
       }
     ]
@@ -9173,6 +9533,22 @@
     "Rarity": 4,
     "Cost": 100,
     "MFieldSkillLevelViewModels": [
+      {
+        "Id": 704004705,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070059,
+        "Value2": null
+      },
+      {
+        "Id": 704004704,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
       {
         "Id": 704004701,
         "Level": 1,
@@ -9196,22 +9572,6 @@
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3070087,
         "Value2": null
-      },
-      {
-        "Id": 704004704,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 704004705,
-        "Level": 5,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070059,
-        "Value2": null
       }
     ]
   },
@@ -9221,38 +9581,6 @@
     "Rarity": 4,
     "Cost": 80,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 704004806,
-        "Level": 6,
-        "EvolutionCount": 1,
-        "FieldSkillLevelAbilityType": 2,
-        "Value1": 3070090,
-        "Value2": 3070158
-      },
-      {
-        "Id": 704004803,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070089,
-        "Value2": null
-      },
-      {
-        "Id": 704004805,
-        "Level": 5,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070091,
-        "Value2": null
-      },
-      {
-        "Id": 704004804,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
       {
         "Id": 704004801,
         "Level": 1,
@@ -9268,6 +9596,38 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 704004803,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070089,
+        "Value2": null
+      },
+      {
+        "Id": 704004804,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704004805,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070091,
+        "Value2": null
+      },
+      {
+        "Id": 704004806,
+        "Level": 6,
+        "EvolutionCount": 1,
+        "FieldSkillLevelAbilityType": 2,
+        "Value1": 3070090,
+        "Value2": 3070158
       }
     ]
   },
@@ -9350,11 +9710,11 @@
         "Value2": null
       },
       {
-        "Id": 704005001,
-        "Level": 1,
+        "Id": 704005004,
+        "Level": 4,
         "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070097,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -9374,11 +9734,11 @@
         "Value2": null
       },
       {
-        "Id": 704005004,
-        "Level": 4,
+        "Id": 704005001,
+        "Level": 1,
         "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070097,
         "Value2": null
       }
     ]
@@ -9389,14 +9749,6 @@
     "Rarity": 4,
     "Cost": 78,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 704005105,
-        "Level": 5,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020120,
-        "Value2": null
-      },
       {
         "Id": 704005104,
         "Level": 4,
@@ -9411,6 +9763,14 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3030051,
+        "Value2": null
+      },
+      {
+        "Id": 704005105,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020120,
         "Value2": null
       },
       {
@@ -9486,11 +9846,35 @@
     "Cost": 108,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704005301,
-        "Level": 1,
+        "Id": 704005307,
+        "Level": 7,
+        "EvolutionCount": 1,
+        "FieldSkillLevelAbilityType": 2,
+        "Value1": 3070105,
+        "Value2": 3070081
+      },
+      {
+        "Id": 704005306,
+        "Level": 6,
+        "EvolutionCount": 1,
+        "FieldSkillLevelAbilityType": 2,
+        "Value1": 3070103,
+        "Value2": 3070166
+      },
+      {
+        "Id": 704005305,
+        "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070103,
+        "Value1": 3070105,
+        "Value2": null
+      },
+      {
+        "Id": 704005304,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -9510,36 +9894,12 @@
         "Value2": null
       },
       {
-        "Id": 704005304,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 704005305,
-        "Level": 5,
+        "Id": 704005301,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070105,
-        "Value2": null
-      },
-      {
-        "Id": 704005306,
-        "Level": 6,
-        "EvolutionCount": 1,
-        "FieldSkillLevelAbilityType": 2,
         "Value1": 3070103,
-        "Value2": 3070166
-      },
-      {
-        "Id": 704005307,
-        "Level": 7,
-        "EvolutionCount": 1,
-        "FieldSkillLevelAbilityType": 2,
-        "Value1": 3070105,
-        "Value2": 3070081
+        "Value2": null
       }
     ]
   },
@@ -9550,19 +9910,11 @@
     "Cost": 95,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704005405,
-        "Level": 5,
+        "Id": 704005401,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070106,
-        "Value2": null
-      },
-      {
-        "Id": 704005404,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "Value1": 3070107,
         "Value2": null
       },
       {
@@ -9574,19 +9926,27 @@
         "Value2": null
       },
       {
-        "Id": 704005401,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070107,
-        "Value2": null
-      },
-      {
         "Id": 704005403,
         "Level": 3,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3070065,
+        "Value2": null
+      },
+      {
+        "Id": 704005404,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704005405,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070106,
         "Value2": null
       }
     ]
@@ -9597,14 +9957,6 @@
     "Rarity": 4,
     "Cost": 105,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 704005501,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070108,
-        "Value2": null
-      },
       {
         "Id": 704005502,
         "Level": 2,
@@ -9644,6 +9996,14 @@
         "FieldSkillLevelAbilityType": 2,
         "Value1": 3070108,
         "Value2": 3070167
+      },
+      {
+        "Id": 704005501,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070108,
+        "Value2": null
       }
     ]
   },
@@ -9654,28 +10014,12 @@
     "Cost": 73,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704005601,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
+        "Id": 704005606,
+        "Level": 6,
+        "EvolutionCount": 1,
+        "FieldSkillLevelAbilityType": 2,
         "Value1": 3070111,
-        "Value2": null
-      },
-      {
-        "Id": 704005602,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 704005603,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070054,
-        "Value2": null
+        "Value2": 3070177
       },
       {
         "Id": 704005604,
@@ -9692,6 +10036,30 @@
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3020041,
         "Value2": null
+      },
+      {
+        "Id": 704005603,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070054,
+        "Value2": null
+      },
+      {
+        "Id": 704005601,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070111,
+        "Value2": null
+      },
+      {
+        "Id": 704005602,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
       }
     ]
   },
@@ -9702,11 +10070,19 @@
     "Cost": 88,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704005705,
-        "Level": 5,
+        "Id": 704005701,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020130,
+        "Value1": 3070117,
+        "Value2": null
+      },
+      {
+        "Id": 704005702,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -9726,19 +10102,11 @@
         "Value2": null
       },
       {
-        "Id": 704005701,
-        "Level": 1,
+        "Id": 704005705,
+        "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070117,
-        "Value2": null
-      },
-      {
-        "Id": 704005702,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "Value1": 3020130,
         "Value2": null
       }
     ]
@@ -9788,6 +10156,14 @@
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3070067,
         "Value2": null
+      },
+      {
+        "Id": 704005806,
+        "Level": 6,
+        "EvolutionCount": 1,
+        "FieldSkillLevelAbilityType": 2,
+        "Value1": 3070112,
+        "Value2": 3070178
       }
     ]
   },
@@ -9797,6 +10173,30 @@
     "Rarity": 4,
     "Cost": 95,
     "MFieldSkillLevelViewModels": [
+      {
+        "Id": 704005904,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704005903,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070121,
+        "Value2": null
+      },
+      {
+        "Id": 704005905,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070070,
+        "Value2": null
+      },
       {
         "Id": 704005901,
         "Level": 1,
@@ -9812,30 +10212,6 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
-      },
-      {
-        "Id": 704005903,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070121,
-        "Value2": null
-      },
-      {
-        "Id": 704005904,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 704005905,
-        "Level": 5,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070070,
-        "Value2": null
       }
     ]
   },
@@ -9846,43 +10222,11 @@
     "Cost": 128,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704006005,
-        "Level": 5,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3140128,
-        "Value2": null
-      },
-      {
-        "Id": 704006004,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 704006007,
         "Level": 7,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3020133,
-        "Value2": null
-      },
-      {
-        "Id": 704006002,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 704006003,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3130127,
         "Value2": null
       },
       {
@@ -9894,11 +10238,43 @@
         "Value2": null
       },
       {
+        "Id": 704006005,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3140128,
+        "Value2": null
+      },
+      {
         "Id": 704006001,
         "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3080122,
+        "Value2": null
+      },
+      {
+        "Id": 704006003,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3130127,
+        "Value2": null
+      },
+      {
+        "Id": 704006002,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704006004,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       }
     ]
@@ -9909,14 +10285,6 @@
     "Rarity": 5,
     "Cost": 130,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 704006107,
-        "Level": 7,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020134,
-        "Value2": null
-      },
       {
         "Id": 704006101,
         "Level": 1,
@@ -9964,6 +10332,14 @@
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
+      },
+      {
+        "Id": 704006107,
+        "Level": 7,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020134,
+        "Value2": null
       }
     ]
   },
@@ -9973,14 +10349,6 @@
     "Rarity": 5,
     "Cost": 98,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 704006207,
-        "Level": 7,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020105,
-        "Value2": null
-      },
       {
         "Id": 704006206,
         "Level": 6,
@@ -9998,6 +10366,30 @@
         "Value2": null
       },
       {
+        "Id": 704006204,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704006207,
+        "Level": 7,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020105,
+        "Value2": null
+      },
+      {
+        "Id": 704006202,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
         "Id": 704006201,
         "Level": 1,
         "EvolutionCount": 0,
@@ -10012,22 +10404,6 @@
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3030021,
         "Value2": null
-      },
-      {
-        "Id": 704006202,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 704006204,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
       }
     ]
   },
@@ -10038,6 +10414,14 @@
     "Cost": 140,
     "MFieldSkillLevelViewModels": [
       {
+        "Id": 704006306,
+        "Level": 6,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
         "Id": 704006305,
         "Level": 5,
         "EvolutionCount": 0,
@@ -10046,8 +10430,8 @@
         "Value2": null
       },
       {
-        "Id": 704006306,
-        "Level": 6,
+        "Id": 704006304,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -10059,14 +10443,6 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3020114,
-        "Value2": null
-      },
-      {
-        "Id": 704006303,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3180132,
         "Value2": null
       },
       {
@@ -10086,11 +10462,11 @@
         "Value2": null
       },
       {
-        "Id": 704006304,
-        "Level": 4,
+        "Id": 704006303,
+        "Level": 3,
         "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3180132,
         "Value2": null
       }
     ]
@@ -10174,6 +10550,14 @@
         "Value2": null
       },
       {
+        "Id": 704006507,
+        "Level": 7,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030109,
+        "Value2": null
+      },
+      {
         "Id": 704006505,
         "Level": 5,
         "EvolutionCount": 0,
@@ -10190,11 +10574,11 @@
         "Value2": null
       },
       {
-        "Id": 704006507,
-        "Level": 7,
+        "Id": 704006503,
+        "Level": 3,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030109,
+        "Value1": 3070121,
         "Value2": null
       },
       {
@@ -10212,14 +10596,6 @@
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3070135,
         "Value2": null
-      },
-      {
-        "Id": 704006503,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070121,
-        "Value2": null
       }
     ]
   },
@@ -10230,8 +10606,32 @@
     "Cost": 144,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704006606,
-        "Level": 6,
+        "Id": 704006601,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070137,
+        "Value2": null
+      },
+      {
+        "Id": 704006602,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704006603,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070138,
+        "Value2": null
+      },
+      {
+        "Id": 704006604,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -10246,8 +10646,8 @@
         "Value2": null
       },
       {
-        "Id": 704006604,
-        "Level": 4,
+        "Id": 704006606,
+        "Level": 6,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -10260,30 +10660,6 @@
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3140128,
         "Value2": null
-      },
-      {
-        "Id": 704006602,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 704006601,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070137,
-        "Value2": null
-      },
-      {
-        "Id": 704006603,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070138,
-        "Value2": null
       }
     ]
   },
@@ -10294,32 +10670,8 @@
     "Cost": 125,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704006701,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070140,
-        "Value2": null
-      },
-      {
-        "Id": 704006702,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 704006703,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030103,
-        "Value2": null
-      },
-      {
-        "Id": 704006704,
-        "Level": 4,
+        "Id": 704006706,
+        "Level": 6,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -10334,8 +10686,8 @@
         "Value2": null
       },
       {
-        "Id": 704006706,
-        "Level": 6,
+        "Id": 704006704,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -10348,6 +10700,30 @@
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3020136,
         "Value2": null
+      },
+      {
+        "Id": 704006702,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704006701,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070140,
+        "Value2": null
+      },
+      {
+        "Id": 704006703,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030103,
+        "Value2": null
       }
     ]
   },
@@ -10357,14 +10733,6 @@
     "Rarity": 5,
     "Cost": 130,
     "MFieldSkillLevelViewModels": [
-      {
-        "Id": 704006807,
-        "Level": 7,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070005,
-        "Value2": null
-      },
       {
         "Id": 704006806,
         "Level": 6,
@@ -10382,24 +10750,24 @@
         "Value2": null
       },
       {
-        "Id": 704006802,
-        "Level": 2,
+        "Id": 704006804,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
       },
       {
-        "Id": 704006803,
-        "Level": 3,
+        "Id": 704006807,
+        "Level": 7,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070149,
+        "Value1": 3070005,
         "Value2": null
       },
       {
-        "Id": 704006804,
-        "Level": 4,
+        "Id": 704006802,
+        "Level": 2,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -10411,6 +10779,14 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3070148,
+        "Value2": null
+      },
+      {
+        "Id": 704006803,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070149,
         "Value2": null
       }
     ]
@@ -10486,11 +10862,27 @@
     "Cost": 140,
     "MFieldSkillLevelViewModels": [
       {
+        "Id": 704007005,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070154,
+        "Value2": null
+      },
+      {
         "Id": 704007007,
         "Level": 7,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3020140,
+        "Value2": null
+      },
+      {
+        "Id": 704007004,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -10502,11 +10894,11 @@
         "Value2": null
       },
       {
-        "Id": 704007005,
-        "Level": 5,
+        "Id": 704007002,
+        "Level": 2,
         "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070154,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -10524,22 +10916,6 @@
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3030083,
         "Value2": null
-      },
-      {
-        "Id": 704007002,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 704007004,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
       }
     ]
   },
@@ -10550,16 +10926,32 @@
     "Cost": 150,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704007107,
-        "Level": 7,
+        "Id": 704007101,
+        "Level": 1,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020142,
+        "Value1": 3070157,
         "Value2": null
       },
       {
-        "Id": 704007106,
-        "Level": 6,
+        "Id": 704007102,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704007103,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3030108,
+        "Value2": null
+      },
+      {
+        "Id": 704007104,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -10574,35 +10966,19 @@
         "Value2": null
       },
       {
-        "Id": 704007101,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070157,
-        "Value2": null
-      },
-      {
-        "Id": 704007103,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3030108,
-        "Value2": null
-      },
-      {
-        "Id": 704007102,
-        "Level": 2,
+        "Id": 704007106,
+        "Level": 6,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
         "Value2": null
       },
       {
-        "Id": 704007104,
-        "Level": 4,
+        "Id": 704007107,
+        "Level": 7,
         "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020142,
         "Value2": null
       }
     ]
@@ -10614,32 +10990,8 @@
     "Cost": 148,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704007201,
-        "Level": 1,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070160,
-        "Value2": null
-      },
-      {
-        "Id": 704007202,
-        "Level": 2,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 704007203,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070055,
-        "Value2": null
-      },
-      {
-        "Id": 704007204,
-        "Level": 4,
+        "Id": 704007206,
+        "Level": 6,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -10654,8 +11006,8 @@
         "Value2": null
       },
       {
-        "Id": 704007206,
-        "Level": 6,
+        "Id": 704007204,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -10668,6 +11020,30 @@
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3070161,
         "Value2": null
+      },
+      {
+        "Id": 704007202,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704007201,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070160,
+        "Value2": null
+      },
+      {
+        "Id": 704007203,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070055,
+        "Value2": null
       }
     ]
   },
@@ -10678,6 +11054,14 @@
     "Cost": 145,
     "MFieldSkillLevelViewModels": [
       {
+        "Id": 704007306,
+        "Level": 6,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
         "Id": 704007305,
         "Level": 5,
         "EvolutionCount": 0,
@@ -10686,8 +11070,8 @@
         "Value2": null
       },
       {
-        "Id": 704007306,
-        "Level": 6,
+        "Id": 704007304,
+        "Level": 4,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -10699,14 +11083,6 @@
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3020136,
-        "Value2": null
-      },
-      {
-        "Id": 704007303,
-        "Level": 3,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070089,
         "Value2": null
       },
       {
@@ -10726,11 +11102,11 @@
         "Value2": null
       },
       {
-        "Id": 704007304,
-        "Level": 4,
+        "Id": 704007303,
+        "Level": 3,
         "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070089,
         "Value2": null
       }
     ]
@@ -10806,19 +11182,19 @@
     "Cost": 140,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 704007506,
-        "Level": 6,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
         "Id": 704007505,
         "Level": 5,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3070165,
+        "Value2": null
+      },
+      {
+        "Id": 704007507,
+        "Level": 7,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020145,
         "Value2": null
       },
       {
@@ -10830,11 +11206,11 @@
         "Value2": null
       },
       {
-        "Id": 704007507,
-        "Level": 7,
+        "Id": 704007506,
+        "Level": 6,
         "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 0,
-        "Value1": 3020145,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
         "Value2": null
       },
       {
@@ -10992,29 +11368,21 @@
     ]
   },
   {
-    "Id": 7050001,
-    "Name": "\u5e74\u521d\u3081\u306f\u304a\u307f\u304f\u3058\u3067\u904b\u8a66\u3057",
+    "Id": 7040078,
+    "Name": "\u5fa1\u4e00\u591c\u3092\u5b88\u308b\u305f\u3081\u306b\uff01",
     "Rarity": 5,
     "Cost": 135,
     "MFieldSkillLevelViewModels": [
       {
-        "Id": 705000105,
-        "Level": 5,
+        "Id": 704007807,
+        "Level": 7,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
-        "Value1": 3070081,
+        "Value1": 3140128,
         "Value2": null
       },
       {
-        "Id": 705000104,
-        "Level": 4,
-        "EvolutionCount": 0,
-        "FieldSkillLevelAbilityType": 1,
-        "Value1": 1,
-        "Value2": null
-      },
-      {
-        "Id": 705000106,
+        "Id": 704007806,
         "Level": 6,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
@@ -11022,8 +11390,120 @@
         "Value2": null
       },
       {
-        "Id": 705000102,
+        "Id": 704007805,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070091,
+        "Value2": null
+      },
+      {
+        "Id": 704007802,
         "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704007803,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070106,
+        "Value2": null
+      },
+      {
+        "Id": 704007801,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070171,
+        "Value2": null
+      },
+      {
+        "Id": 704007804,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      }
+    ]
+  },
+  {
+    "Id": 7040079,
+    "Name": "\u30cf\u30eb\u30c4\u7d44\u3068\u6d77\u3067\u30d0\u30ab\u30f3\u30b9\uff01",
+    "Rarity": 5,
+    "Cost": 135,
+    "MFieldSkillLevelViewModels": [
+      {
+        "Id": 704007907,
+        "Level": 7,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070176,
+        "Value2": null
+      },
+      {
+        "Id": 704007905,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3140128,
+        "Value2": null
+      },
+      {
+        "Id": 704007904,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704007906,
+        "Level": 6,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704007902,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 704007901,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070175,
+        "Value2": null
+      },
+      {
+        "Id": 704007903,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3020147,
+        "Value2": null
+      }
+    ]
+  },
+  {
+    "Id": 7050001,
+    "Name": "\u5e74\u521d\u3081\u306f\u304a\u307f\u304f\u3058\u3067\u904b\u8a66\u3057",
+    "Rarity": 5,
+    "Cost": 135,
+    "MFieldSkillLevelViewModels": [
+      {
+        "Id": 705000106,
+        "Level": 6,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 1,
         "Value1": 1,
@@ -11038,6 +11518,14 @@
         "Value2": null
       },
       {
+        "Id": 705000102,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
         "Id": 705000103,
         "Level": 3,
         "EvolutionCount": 0,
@@ -11046,11 +11534,91 @@
         "Value2": null
       },
       {
+        "Id": 705000104,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 705000105,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070081,
+        "Value2": null
+      },
+      {
         "Id": 705000107,
         "Level": 7,
         "EvolutionCount": 0,
         "FieldSkillLevelAbilityType": 0,
         "Value1": 3070089,
+        "Value2": null
+      }
+    ]
+  },
+  {
+    "Id": 7050002,
+    "Name": "\u6ce2\u306b\u3075\u308f\u3075\u308f\u63fa\u3089\u308c\u3066",
+    "Rarity": 5,
+    "Cost": 124,
+    "MFieldSkillLevelViewModels": [
+      {
+        "Id": 705000205,
+        "Level": 5,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070091,
+        "Value2": null
+      },
+      {
+        "Id": 705000204,
+        "Level": 4,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 705000206,
+        "Level": 6,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 705000202,
+        "Level": 2,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 1,
+        "Value1": 1,
+        "Value2": null
+      },
+      {
+        "Id": 705000201,
+        "Level": 1,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070180,
+        "Value2": null
+      },
+      {
+        "Id": 705000203,
+        "Level": 3,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 306006,
+        "Value2": null
+      },
+      {
+        "Id": 705000207,
+        "Level": 7,
+        "EvolutionCount": 0,
+        "FieldSkillLevelAbilityType": 0,
+        "Value1": 3070114,
         "Value2": null
       }
     ]

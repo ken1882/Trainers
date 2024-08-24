@@ -106,7 +106,7 @@ def set_cursor_pos(x, y, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUs
     y += rect[1]
   win32api.SetCursorPos((int(x),int(y)))
 
-def click(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUseMsg, hwnd=None):
+def click(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUseMsg, hwnd=None, time=0.05):
   if not hwnd:
     hwnd = _G.AppInputHwnd
   x = int(x)
@@ -114,13 +114,13 @@ def click(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputU
   if not use_msg and x and y:
     set_cursor_pos(x, y, app_offset)
   mouse_down(x, y, app_offset, use_msg, hwnd)
-  sleep(0.05)
+  sleep(time)
   mouse_up(x, y, app_offset, use_msg, hwnd)
 
-def rclick(x, y, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUseMsg, hwnd=None, rrange=_G.PosRandomRange):
+def rclick(x, y, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUseMsg, hwnd=None, rrange=_G.PosRandomRange, time=0.05):
   mx = int(x) + random.randint(-rrange[0], rrange[0])
   my = int(y) + random.randint(-rrange[1], rrange[1])
-  click(mx, my, app_offset, use_msg, hwnd)
+  click(mx, my, app_offset, use_msg, hwnd, time)
 
 def dclick(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUseMsg, hwnd=None):
   if not hwnd:
