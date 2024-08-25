@@ -97,6 +97,7 @@ def start_main():
       sleep(_G.FPS)
   finally:
     _G.FlagRunning = False
+    _G.FlagWorking = False
 
 if __name__ == "__main__":
   _G.SelfHwnd = utils.get_self_hwnd()
@@ -113,3 +114,4 @@ if __name__ == "__main__":
     start_main()
   except (KeyboardInterrupt, SystemExit):
     _G.FlagRunning = False
+    _G.FlagWorking = False

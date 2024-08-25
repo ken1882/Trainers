@@ -20,6 +20,14 @@ Enum = {
   'Combat': {
     'pos': ((1192, 661),(1220, 667),(43, 28),(528, 625),(1220, 558),),
     'color': ((255, 255, 255),(255, 255, 255),(221, 222, 234),(248, 248, 248),(255, 255, 255),)
+  },
+  'Combat2': {
+    'pos': ((1213, 666),(1193, 658),(1105, 663),(58, 665),),
+    'color': ((255, 255, 255),(255, 255, 255),(255, 255, 255),(255, 255, 255),)
+  },
+  'Combat3': {
+    'pos': ((247, 656),(1107, 657),(1196, 665),(1218, 666),),
+    'color': ((255, 255, 255),(255, 255, 255),(255, 255, 255),(255, 255, 255),)
   }
 }
 
@@ -50,3 +58,11 @@ def is_stage(stg):
     _G.log_info("Current stage:", s)
     LastStage = s
   return s and stg in s
+
+def is_mana_refill():
+  for name,pixstruct in Enum.items():
+    if 'ManaRefill' not in name:
+      continue
+    if graphics.is_pixel_match(pixstruct['pos'], pixstruct['color']):
+      return True
+  return False

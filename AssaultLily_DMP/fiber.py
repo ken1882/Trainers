@@ -12,15 +12,11 @@ from PIL import Image
 import combat
 
 def start_mana_refill_fiber():
-    def tap(x,y):
-        hwnd = _G.AppHwnd
-        Input.mouse_down(x, y, False, True, hwnd)
-        _G.wait(0.01)
-        Input.mouse_up(x, y, False, True, hwnd)
-    while True:
-        for pos in position.ManaCirclePos:
-            tap(*pos)
-            yield
+    cnt = 0    
+    while cnt < 30:
+        combat.collect_mana()
+        yield
+        cnt += 1
 
 def start_combat_fiber():
     yield from combat.main()
