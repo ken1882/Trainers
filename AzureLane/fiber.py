@@ -152,11 +152,12 @@ def start_arena_fiber():
             yield
         flag_chosen = False
         while not flag_chosen:
+            yield
             for pos in position.ArenaSelections:
                 yield from safe_click(*pos)
                 p = utils.str2int(utils.ocr_rect((930, 160, 980, 180), 'opower.png', num_only=1)) or 0
                 _G.log_info("Opponent power:", p)
-                if p > 6000:
+                if p < 13000:
                     flag_chosen = True
                     break
                 yield from safe_click(*position.GeneralBack)

@@ -90,11 +90,11 @@ RentalCycle = None
 
 UnmasteredCharacters = []
 UnmasteredSwapIndex  = [
-  0,
+  # 0,
   1,
   2,
   3,
-  # 4
+  4
 ]
 
 STATUS_MODIFIER_INC = 1
@@ -1238,13 +1238,10 @@ def swap_mastered_trains():
   global PartyId,StageId,UnmasteredCharacters,UnmasteredCharacters
   player.clear_cache()
   parties = player.get_current_parties()['UParties']
-  party = None
-  for p in parties:
-    if p['Id'] == PartyId:
-      party = p
-      break
+  party = next((p for p in parties if p['Id'] == PartyId), None)
   slots = party['UCharacterSlots']
   maxed = player.get_maxed_partymember(PartyId, StageId)
+  log_info("Maxed member:", maxed)
   for idx in UnmasteredSwapIndex:
     och = slots[idx]['UCharacter']
     if och['Id'] not in maxed:
@@ -1256,7 +1253,7 @@ def swap_mastered_trains():
       break
     schar = UnmasteredCharacters.pop()
     pcidx = player.get_character_party_index(PartyId, schar['MCharacterId'])
-    print(f"[{idx}]: {game.get_character_name(schar['MCharacterId'])} pidx: {pcidx}")
+    log_info(f"[{idx}]: {game.get_character_name(schar['MCharacterId'])} pidx: {pcidx}")
     if pcidx != None and idx != pcidx:
       log_info(f"Character {game.get_character_name(schar['MCharacterId'])} already in party, requeued")
       UnmasteredCharacters.insert(0, schar)

@@ -5,7 +5,8 @@ import stage, graphics
 from act import Act
 from collections import deque
 from threading import Thread
-from random import random
+from datetime import datetime, timedelta
+import random
 
 UPDATE_INTERVAL = 2
 STAGE_CHCEK_INTERVAL = 30
@@ -14,10 +15,11 @@ MANA_CHECK_INTERVAL = 3
 
 TickCnt = 0
 ManaCheckCnt = 0
-ManaVal = 0
+ManaVal = -999
 ManaCheckThread = None
 ManaRefillMode = False
 FlagLoopStarted = False
+LastRecoverTime = datetime(1970, 1, 1)
 ActionQueue = deque()
 
 
@@ -49,54 +51,98 @@ def collect_mana():
     for pos in position.ManaCirclePos:
         tap(*pos)
 
+def is_mp_enough(mp):
+    return mp >= 0 and mp > 300 and mp < 500
+
 def process_mana_refill():
-    global ManaRefillMode
+    global ManaRefillMode, ManaVal, LastRecoverTime
     _G.log_info("Processing mana refill")
-    ManaRefillMode = True
-    while not stage.mana_refill_stage():
+    while not stage.is_stage('ManaRefill'):
         Input.rclick(*position.EnterManaRefill)
         _G.wait(0.1)
         yield
+        if is_mp_enough(ManaVal):
+            yield from abort_mana_refill()
+            return
+    ManaRefillMode = True
+    _G.log_info("Collecting Mana")
+    exit_depth = 0
     if FLAG_CHECK_MANA_ASYNC:
-        while ManaVal >= 0 and ManaVal < 300:
+        while True:
             for _ in range(2):
                 collect_mana()
                 yield
+            if is_mp_enough(ManaVal):
+                break
+            if not stage.is_stage('ManaRefill'):
+                exit_depth += 1
+                if exit_depth > 3:
+                    break
+            else:
+                exit_depth = 0
     else:
         mp = None
         while mp == None:
             mp = get_mana(True)
             yield
-        while mp < 300:
+        while not is_mp_enough(mp):
             collect_mana()
             yield
+    LastRecoverTime = datetime.now()
+    yield from abort_mana_refill()
+
+def abort_mana_refill():
+    global ManaRefillMode
     _G.log_info("Exit mana refill")
-    for _ in range(3):
-        Input.rclick(*position.GeneralBack)
+    dep = 0
+    while dep < 5:
         yield
-        _G.wait(0.03)
+        for pos in position.ManaCirclePos:
+            Input.rclick(*position.GeneralBack)
+            yield
+            Input.rclick(*pos)
+            yield
+        if not stage.is_stage('ManaRefill'):
+            dep += 1
+        else:
+            dep = 0
     ManaRefillMode = False
 
 def is_skill_usable(x, y):
     return sum(graphics.get_pixel(x,y, True)) > 250
 
 def is_core_attack():
-    return False
+    return stage.is_stage('AttackPhase')
 
 def is_standby_phase():
-    return False
+    return stage.is_stage('StandbyPhase')
 
 def should_mana_refilled():
-    global ManaVal
+    global ManaVal, ManaCheckCnt, LastRecoverTime
+    if datetime.now() - LastRecoverTime < timedelta(seconds=15):
+        return False
+    ManaCheckCnt += 1
     if FLAG_CHECK_MANA_ASYNC:
-        return ManaVal >= 0 and ManaVal < 200
-    return get_mana()
+        if ManaVal >= 0 and ManaVal <= 100:
+            return True
+    elif ManaCheckCnt >= MANA_CHECK_INTERVAL:
+        mp = None
+        ManaCheckCnt = 0
+        while mp == None:
+            mp = get_mana()
+        if mp >= 0 and mp <= 100:
+            return True
+    return False
 
 def process_standby_buff():
-    yield
+    for pos in position.StandbyBuffPos:
+        Input.rclick(*pos)
+        yield
 
 def process_core_attack():
-    yield
+    for pos in position.MemoryCards[1:-1]:
+        Input.rclick(*pos)
+        yield
 
 def determine_memory_use():
     i = 0
@@ -108,29 +154,21 @@ def determine_memory_use():
                 return i
 
 def determine_mana_refill():
-    global ManaCheckCnt, ActionQueue
-    if 'MP_REFILL' in ActionQueue:
-        return
-    ManaCheckCnt += 1
-    if FLAG_CHECK_MANA_ASYNC:
-        if ManaVal >= 0 and ManaVal < 200:
-            ActionQueue.append(Act('FLAG', value='MP_REFILL'))
-            ManaCheckCnt = 0
-            return
-    elif ManaCheckCnt >= MANA_CHECK_INTERVAL:
-        mp = None
-        while mp == None:
-            mp = get_mana()
-            yield
-        if mp >= 0 and mp < 200:
-            ActionQueue.append(Act('FLAG', value='MP_REFILL'))
-            ManaCheckCnt = 0
-            return
-
+    global ActionQueue, ManaVal
+    if any(['MP_REFILL' == a for a in ActionQueue if a.kind == 'FLAG']):
+        return True
+    if should_mana_refilled():
+        _G.log_info("requested mana refill", ManaVal)
+        ActionQueue.append(Act('FLAG', value='MP_REFILL'))
+        return True
+    return False
+    
 def main_loop():
+    yield
     if _G.ARGV.tournment:
-        determine_mana_refill()
-        if is_core_attack():
+        if determine_mana_refill():
+            pass
+        elif is_core_attack():
             ActionQueue.append(Act('FLAG', value='ATTACK_PHASE'))
         elif is_standby_phase():
             ActionQueue.append(Act('FLAG', value='STANDBY_PHASE'))
@@ -138,7 +176,7 @@ def main_loop():
 
 def process_action():
     global ActionQueue
-    act = ActionQueue.popleft()
+    act = ActionQueue.popleft() if ActionQueue else Act('None')
     if act.kind == 'FLAG':
         if act.value == 'MP_REFILL':
             yield from process_mana_refill()
@@ -159,22 +197,23 @@ def process_action():
 
 def update_mana_async():
     global ManaVal,FlagLoopStarted
+    interval = MANA_CHECK_INTERVAL*0.1
     while FlagLoopStarted and _G.FlagRunning and _G.FlagWorking:
         if _G.FlagPaused:
             continue
         mp = None
         print("Refill mode:", ManaRefillMode)
         while mp == None:
+            _G.flush()
             mp = get_mana(ManaRefillMode)
-            _G.wait(0.3)
         ManaVal = mp
         _G.log_info("MP:", ManaVal)
-        _G.wait(MANA_CHECK_INTERVAL*0.1)
+        _G.wait(interval)
 
 def setup():
     global ManaCheckThread
-    if FLAG_CHECK_MANA_ASYNC:
-        ManaCheckThread = Thread(target=update_mana_async)
+    if FLAG_CHECK_MANA_ASYNC and _G.ARGV.tournment:
+        ManaCheckThread = Thread(target=update_mana_async, daemon=True)
         ManaCheckThread.start()
 
 def main():

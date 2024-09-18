@@ -5,6 +5,7 @@ import os
 import win32gui, win32process, win32console
 from time import sleep
 from random import random
+from concurrent.futures import ProcessPoolExecutor
 import traceback
 import os.path
 from PIL import Image
@@ -109,9 +110,12 @@ def ocr_rect(rect, fname, zoom=1.0, lang='jpn', config='--psm 12 --psm 13', **kw
   if zoom != 1.0:
     size = (int(img.size[0]*zoom), int(img.size[1]*zoom))
     graphics.resize_image(size, fname, fname)
-  sleep(0.3)
+  sleep(0.1)
   img.close()
-  return img2str(fname, lang, config).translate(str.maketrans('。',' ')).strip()
+  with ProcessPoolExecutor() as executor:
+    future = executor.submit(img2str, fname, lang, config)
+    ret = future.result()
+    return ret.translate(str.maketrans('。',' ')).strip()
 
 def diff_string(a,b):
   return SequenceMatcher(None,a,b).ratio()

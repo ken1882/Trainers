@@ -22,9 +22,9 @@ def EnumWindowCallback(hwnd, lparam):
   global AppCandidates
   if win32gui.IsWindowVisible(hwnd):
     title = win32gui.GetWindowText(hwnd)
-    if title == _G.AppWindowName:
-      AppCandidates.append(hwnd)
-      print(f"App found with HWND {hwnd} ({_G.AppWindowName}), pid={_G.AppPid}")
+    if diff_string(title, _G.AppWindowName) > 0.5:
+      AppCandidates.append((title, hwnd))
+      print(f"Candidate found with HWND {hwnd} ({title}), pid={_G.AppPid}")
 
 def EnumChildWindowCB(hwnd, lparam):
   clsname = win32gui.GetClassName(hwnd)
@@ -48,16 +48,16 @@ def find_app_window():
   win32gui.EnumWindows(EnumWindowCallback, None)
   if not AppCandidates:
     return
-  hwnd = AppCandidates[0]
-  if len(AppCandidates) > 1:
-    print("Multiple app found:")
-    for i,hw in enumerate(AppCandidates):
-      print(f"[{i}] hwnd={hw} {win32process.GetWindowThreadProcessId(hw)}")
-    sn = input("please select one: ")
-    hwnd = AppCandidates[sn]
+  hwnd = sorted(AppCandidates, key=lambda wh:diff_string(_G.AppWindowName, wh[0]))[-1][1]
+  # if len(AppCandidates) > 1:
+  #   print("Multiple app found:")
+  #   for i,hw in enumerate(AppCandidates):
+  #     print(f"[{i}] hwnd={hw} {win32process.GetWindowThreadProcessId(hw)}")
+  #   sn = input("please select one: ")
+  #   hwnd = AppCandidates[sn]
   _G.AppHwnd = hwnd
   _G.AppTid,_G.AppPid = win32process.GetWindowThreadProcessId(hwnd)
-  print(f"App found with HWND {hwnd} ({_G.AppWindowName}), pid={_G.AppPid}")
+  print(f"App found with HWND {hwnd} ({win32gui.GetWindowText(hwnd)}), pid={_G.AppPid}")
   update_app_rect()
 
 def find_child_window():

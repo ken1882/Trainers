@@ -1,5 +1,5 @@
 import re
-import win32con
+import win32con,win32gui
 import _G,stage
 from _G import resume, resume_from, pop_fiber_ret, wait, rwait, uwait, log_info
 import Input, position, graphics
@@ -37,3 +37,5 @@ def start_heartbeat_fiber():
         if cnt > interval:
             Input.rclick(125,110, use_msg=True, app_offset=False)
             cnt = 0
+            _G.wait(0.1)
+            win32gui.SetWindowPos(_G.AppHwnd, win32con.HWND_BOTTOM, 0,0,0,0, win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_NOACTIVATE)

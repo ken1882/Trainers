@@ -594,7 +594,7 @@ def parse_characterpiece_result(data):
 def parse_basestatus_result(data):
     return interpret_data((
         'MaxHp',
-        ('MaxStatuses', dict, OBJKEYS_STATUS),
+        ('MaxStatuses', list, OBJKEYS_STATUS),
     ), data)
 
 def parse_quest_prepare_result(data):

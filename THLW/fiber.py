@@ -188,7 +188,10 @@ def start_stage_selection_fiber():
   for _ in range(20):
     yield
     wait(0.5)
-  Input.rclick(762, 518)
+  if _G.ARGV.yukkuri:
+    Input.rclick(900, 500)
+  else:
+    Input.rclick(740, 500)
   wait(3)
   Input.rclick(*event_pos[_G.ARGV.jndex])
   wait(2)

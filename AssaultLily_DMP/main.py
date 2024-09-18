@@ -59,6 +59,8 @@ def update_input():
   if Input.is_trigger(win32con.VK_F5):
     print("Redetecting app window")
     detect_app_window()
+    _G.flush()
+    _G.log_info('Stage:', stage.get_current_stage())
   elif Input.is_trigger(win32con.VK_F6):
     res = graphics.get_mouse_pixel()
     if not _G.SelectedFiber:

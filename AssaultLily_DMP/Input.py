@@ -9,6 +9,8 @@ ScrollDelta = [1,5]
 
 keystate = [0 for _ in range(0xff)]
 
+Mocked = False
+
 def update():
   global keystate
   for i in range(0xff):
@@ -35,10 +37,14 @@ def get_cursor_pos(app_offset=True):
   return (mx, my)
 
 def key_down(*args):
+  if Mocked:
+    return
   for kid in args:
     win32api.keybd_event(kid, 0, 0, 0)
 
 def key_up(*args):
+  if Mocked:
+    return
   for kid in args:
     win32api.keybd_event(kid, 0, win32con.KEYEVENTF_KEYUP, 0)
 
@@ -58,6 +64,7 @@ def mouse_down(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppI
     win32api.SendMessage(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, make_lparam(x,y))
     if win32gui.GetForegroundWindow() != prev_focus:
       win32gui.SetForegroundWindow(prev_focus)
+    win32gui.SetWindowPos(hwnd, win32con.HWND_BOTTOM, 0,0,0,0, win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_NOACTIVATE)
     return
   rect = None
   if app_offset:
@@ -70,9 +77,10 @@ def mouse_down(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppI
     y = 0
   elif app_offset:
     y += rect[1]
-  if x or y:
+  if x or y and not Mocked:
     win32api.SetCursorPos((x,y))
-  win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,x,y,0,0)
+  if not Mocked:
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,x,y,0,0)
 
 def mouse_up(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUseMsg, hwnd=None):
   if not hwnd:
@@ -83,6 +91,7 @@ def mouse_up(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInp
     win32api.SendMessage(hwnd, win32con.WM_LBUTTONUP, win32con.MK_LBUTTON, make_lparam(x,y))
     if win32gui.GetForegroundWindow() != prev_focus:
       win32gui.SetForegroundWindow(prev_focus)
+    win32gui.SetWindowPos(hwnd, win32con.HWND_BOTTOM, 0,0,0,0, win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_NOACTIVATE)
     return
   rect = None
   if app_offset:
@@ -95,7 +104,7 @@ def mouse_up(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInp
     y = 0
   elif app_offset:
     y += rect[1]
-  if x or y :
+  if not Mocked and (x or y):
     win32api.SetCursorPos((x,y))
   win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,x,y,0,0)
 
@@ -110,7 +119,8 @@ def set_cursor_pos(x, y, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUs
     rect = graphics.get_content_rect()
     x += rect[0]
     y += rect[1]
-  win32api.SetCursorPos((int(x),int(y)))
+  if not Mocked:
+    win32api.SetCursorPos((int(x),int(y)))
 
 def click(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUseMsg, hwnd=None):
   if not hwnd:

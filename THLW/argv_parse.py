@@ -10,6 +10,7 @@ parser.add_argument("-j", '--jndex', default=0, type=int, help='Secondary index,
 parser.add_argument("-k", '--kndex', default=2, type=int, help='Third index, job-specific argument (fight difficulty)')
 parser.add_argument("-w", '--wait', default=300, type=int, help='Wait duration between fights in seconds')
 parser.add_argument("-b", '--battle-duration', default=0, type=int, help='Auto rematch duration in seconds, default=0 means until exhausted')
+parser.add_argument("-y", '--yukkuri', default=False, action='store_true')
 
 def load():
   args = parser.parse_args()
