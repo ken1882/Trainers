@@ -44,8 +44,8 @@ def start_initiate_fiber():
   lasts = []
   stack_size = 8
   diff_threshold = 30
-  startrail_threshold = 330
-  startring_threshold = 500
+  startrail_threshold = 420
+  startring_threshold = 450
   cnt = 0
   rcnt = 0
   while True:

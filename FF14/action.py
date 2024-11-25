@@ -44,7 +44,7 @@ def lockon_target():
   Input.trigger_key(win32con.VK_NUMPAD5)
 
 def interact():
-  return interact2()
+  # return interact2()
   Input.key_down(win32con.VK_SHIFT)
   Input.key_down(VK_E)
   sleep(0.03)
