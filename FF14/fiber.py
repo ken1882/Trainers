@@ -527,9 +527,6 @@ def start_logout_gathering_fiber():
       target_exists = graphics.is_color_ok(graphics.get_pixel(*target['hidden'][0], sync=1), target['hidden'][1])
       _G.log_info(f"Target exists: {target_exists}")
     if target_exists:
-      Input.rmoveto(*target['mpos'])
-      yield
-      Input.click(use_msg=False)
       sk = target.get('skill')
       if sk and sk in position.GatherSkillUsable:
         sp, sc = position.GatherSkillUsable[sk]
@@ -539,6 +536,9 @@ def start_logout_gathering_fiber():
           Input.trigger_key(ord(sk))
           uwait(1)
       uwait(0.1)
+      Input.rmoveto(*target['mpos'])
+      yield
+      Input.click(use_msg=False)
     elif 'alts' in target:
       for pos in target['alts']:
         Input.rmoveto(*pos)
