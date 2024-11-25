@@ -28,6 +28,9 @@ ActiveEnemyPosCols = (
   )
 )
 
+AutoGatherPos = (89, 628)
+AutoGatherEnabledColor = (255, 215, 79)
+
 GatherSkillUsable = {
   '1': ((715, 918), (205, 172, 172)),
   '2': ((759, 917), (164, 156, 148)),
@@ -48,12 +51,12 @@ OtherPlayerPosCol = (
 
 FishFullGPPosCol = (
   (1107, 1001),
-  (46, 30, 20)    
+  (46, 30, 20)
 )
 
 FishHalfGPPosCol = (
   (1041, 1001),
-  (51, 35, 23)    
+  (51, 35, 23)
 )
 
 MoochPosCol = (
@@ -220,7 +223,7 @@ LGT_DICT = {
 
 GT_ZincOre = [
   [
-    (23.0, 29.1), 
+    (23.0, 29.1),
     ('rotate', 1),
     ('forward', 7),
     ('rotate', -0.7)

@@ -517,7 +517,7 @@ def start_logout_gathering_fiber():
     uwait(0.5)
     yield
     # enable auto gather
-    if not graphics.is_color_ok(graphics.get_pixel(89, 628, sync=1), (255, 215, 79)):
+    if not graphics.is_color_ok(graphics.get_pixel(*position.AutoGatherPos, sync=1), position.AutoGatherEnabledColor):
       Input.rmoveto(89, 628)
       yield
       Input.click(use_msg=False)
@@ -555,31 +555,6 @@ def start_logout_gathering_fiber():
     if stage.is_player_targeted():
       _G.log_info("Other player detected")
       flag_crowded = True
-
-def start_minigame_punch_fiber():
-  action.interact2()
-  uwait(0.3)
-  action.interact2()
-  uwait(0.5)
-  action.menu_right()
-  uwait(0.3)
-  action.menu_up()
-  uwait(0.3)
-  action.interact2()
-  wait(5)
-  while True:
-    graphics.flush()
-    p  = graphics.get_pixel(886, 956, sync=1)
-    if graphics.is_color_ok(p, (69, 99, 56)):
-      continue
-    p3 = graphics.get_pixel(957, 957, sync=1)
-    if p3 != (61, 86, 63):
-      continue
-    p2 = graphics.get_pixel(924, 957, sync=1)
-    if p2 != (184, 149, 149):
-      action.interact2()
-      print(p, p2, p3)
-      break
 
 def start_minipick_fiber():
   while True:
