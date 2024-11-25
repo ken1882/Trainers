@@ -910,7 +910,23 @@
       154107504,
       154107505,
       154108503,
-      154108504
+      154108504,
+      155109304,
+      155109307,
+      155109309,
+      155110302,
+      155110305,
+      155110309,
+      155109403,
+      155109404,
+      155109405,
+      155110403,
+      155110404,
+      155109503,
+      155109504,
+      155109505,
+      155110503,
+      155110504
     ],
     "AssetKey": null
   },
@@ -1190,7 +1206,12 @@
       154107504,
       154107505,
       154108503,
-      154108504
+      154108504,
+      155109503,
+      155109504,
+      155109505,
+      155110503,
+      155110504
     ],
     "AssetKey": null
   },
@@ -1865,7 +1886,19 @@
       154107501,
       154107505,
       154108501,
-      154108505
+      154108505,
+      155109302,
+      155109309,
+      155110302,
+      155110309,
+      155109401,
+      155109405,
+      155110401,
+      155110405,
+      155109501,
+      155109505,
+      155110501,
+      155110505
     ],
     "AssetKey": null
   },
@@ -2309,7 +2342,15 @@
       154107501,
       154107505,
       154108501,
-      154108505
+      154108505,
+      155109401,
+      155109405,
+      155110401,
+      155110405,
+      155109501,
+      155109505,
+      155110501,
+      155110505
     ],
     "AssetKey": null
   },
@@ -2782,7 +2823,15 @@
       154108405,
       154107502,
       154108502,
-      154108505
+      154108505,
+      155109304,
+      155110304,
+      155109402,
+      155110402,
+      155110405,
+      155109502,
+      155110502,
+      155110505
     ],
     "AssetKey": null
   },
@@ -3121,7 +3170,13 @@
       154108405,
       154107502,
       154108502,
-      154108505
+      154108505,
+      155109402,
+      155110402,
+      155110405,
+      155109502,
+      155110502,
+      155110505
     ],
     "AssetKey": null
   },
@@ -3582,7 +3637,8 @@
       146092402,
       149097401,
       151101402,
-      153106401
+      153106401,
+      155110402
     ],
     "AssetKey": null
   },
@@ -3618,7 +3674,8 @@
       146092502,
       149097501,
       151101502,
-      153106501
+      153106501,
+      155110502
     ],
     "AssetKey": null
   },
@@ -4084,7 +4141,8 @@
       146091401,
       148095402,
       150100401,
-      152104402
+      152104402,
+      155109401
     ],
     "AssetKey": null
   },
@@ -4120,7 +4178,8 @@
       146091501,
       148095502,
       150100501,
-      152104502
+      152104502,
+      155109501
     ],
     "AssetKey": null
   },
@@ -4167,7 +4226,8 @@
       146091402,
       148096401,
       150100402,
-      153105401
+      153105401,
+      155109402
     ],
     "AssetKey": null
   },
@@ -4202,7 +4262,8 @@
       146091502,
       148096501,
       150100502,
-      153105501
+      153105501,
+      155109502
     ],
     "AssetKey": null
   },
@@ -4249,7 +4310,8 @@
       146092401,
       148096402,
       151101401,
-      153105402
+      153105402,
+      155110401
     ],
     "AssetKey": null
   },
@@ -4284,7 +4346,8 @@
       146092501,
       148096502,
       151101501,
-      153105502
+      153105502,
+      155110501
     ],
     "AssetKey": null
   },
@@ -5820,7 +5883,9 @@
       153105505,
       153106505,
       154107505,
-      154108505
+      154108505,
+      155109505,
+      155110505
     ],
     "AssetKey": null
   },
@@ -25941,6 +26006,42 @@
     "AssetKey": null
   },
   {
+    "Id": 1848,
+    "Name": "[\u98a8\u7d00\u59d4\u54e1\u9577\u3068\u3057\u3066\u306e\u5a01\u53b3]",
+    "Description": "Dr.\u30b0\u30ed\u30fc\u30ea\u30a2[\u98a8\u7d00\u59d4\u54e1\u9577\u3068\u3057\u3066\u306e\u5a01\u53b3]\u304cLv100\u306b\u5230\u9054\u3057\u305f\u3053\u3068\u3067\u7372\u5f97\u3067\u304d\u308b\u79f0\u53f7",
+    "ItemCategory": 19,
+    "Rarity": 1,
+    "SellPrice": 0,
+    "Viewable": true,
+    "PossesionLimit": 999,
+    "DropQuestIds": [],
+    "AssetKey": null
+  },
+  {
+    "Id": 1849,
+    "Name": "[\u4e0d\u601d\u8b70\u306e\u5c4b\u6577\u306e\u304a\u3070\u3051]",
+    "Description": "\u30aa\u30c3\u30af\u30b9\u30d5\u30a9\u30fc\u30c9[\u4e0d\u601d\u8b70\u306e\u5c4b\u6577\u306e\u304a\u3070\u3051]\u304cLv100\u306b\u5230\u9054\u3057\u305f\u3053\u3068\u3067\u7372\u5f97\u3067\u304d\u308b\u79f0\u53f7",
+    "ItemCategory": 19,
+    "Rarity": 1,
+    "SellPrice": 0,
+    "Viewable": true,
+    "PossesionLimit": 999,
+    "DropQuestIds": [],
+    "AssetKey": null
+  },
+  {
+    "Id": 1850,
+    "Name": "[\u7bb1\u5165\u308a\u5a18\u306e\u304a\u70b9\u524d]",
+    "Description": "\u30af\u30a2\u30e9\u30eb\u30f3[\u7bb1\u5165\u308a\u5a18\u306e\u304a\u70b9\u524d]\u304cLv100\u306b\u5230\u9054\u3057\u305f\u3053\u3068\u3067\u7372\u5f97\u3067\u304d\u308b\u79f0\u53f7",
+    "ItemCategory": 19,
+    "Rarity": 1,
+    "SellPrice": 0,
+    "Viewable": true,
+    "PossesionLimit": 999,
+    "DropQuestIds": [],
+    "AssetKey": null
+  },
+  {
     "Id": 1854,
     "Name": "\u6fc3\u9727\u6c7a\u6226\u6e96\u5099\u30ac\u30c1\u30e3\u30e1\u30c0\u30eb\u2160",
     "Description": "\u7279\u5b9a\u306e\u30ac\u30c1\u30e3\u3092\u5f15\u304f\u3053\u3068\u3067\r\n\u7372\u5f97\u3067\u304d\u308b\u30a2\u30a4\u30c6\u30e0\u3002\r\n\u5c02\u7528\u306e\u4ea4\u63db\u6240\u3067\r\n\u30a2\u30a4\u30c6\u30e0\u3084\u30ec\u30a4\u30e4\u30fc\u3068\u4ea4\u63db\u3059\u308b\u3053\u3068\u304c\u3067\u304d\u308b\u3002",
@@ -26311,6 +26412,18 @@
     "PossesionLimit": 9999999,
     "DropQuestIds": [],
     "AssetKey": "GachaMedalLimited_yellow"
+  },
+  {
+    "Id": 1886,
+    "Name": "4\u5468\u5e74\u30ac\u30c1\u30e3\u30e1\u30c0\u30eb\u2161",
+    "Description": "\u7279\u5b9a\u306e\u30ac\u30c1\u30e3\u3092\u5f15\u304f\u3053\u3068\u3067\r\n\u7372\u5f97\u3067\u304d\u308b\u30a2\u30a4\u30c6\u30e0\u3002\r\n\u5c02\u7528\u306e\u4ea4\u63db\u6240\u3067\r\n\u30a2\u30a4\u30c6\u30e0\u3084\u30ec\u30a4\u30e4\u30fc\u3068\u4ea4\u63db\u3059\u308b\u3053\u3068\u304c\u3067\u304d\u308b\u3002",
+    "ItemCategory": 11,
+    "Rarity": 1,
+    "SellPrice": 0,
+    "Viewable": true,
+    "PossesionLimit": 9999999,
+    "DropQuestIds": [],
+    "AssetKey": "GachaMedalLimited_red"
   },
   {
     "Id": 1889,
@@ -45756,6 +45869,54 @@
     "Id": 101633,
     "Name": "4\u5468\u5e74Limited\u30ac\u30c1\u30e3\u7b2c1\u5f3e_ticket",
     "Description": "4\u5468\u5e74Limited\u30ac\u30c1\u30e3\u7b2c1\u5f3e_ticket",
+    "ItemCategory": 0,
+    "Rarity": 0,
+    "SellPrice": 1,
+    "Viewable": false,
+    "PossesionLimit": null,
+    "DropQuestIds": [],
+    "AssetKey": null
+  },
+  {
+    "Id": 101634,
+    "Name": "4\u5468\u5e74Limited\u30ac\u30c1\u30e3\u7b2c2\u5f3e_ticket",
+    "Description": "4\u5468\u5e74Limited\u30ac\u30c1\u30e3\u7b2c2\u5f3e_ticket",
+    "ItemCategory": 0,
+    "Rarity": 0,
+    "SellPrice": 1,
+    "Viewable": false,
+    "PossesionLimit": null,
+    "DropQuestIds": [],
+    "AssetKey": null
+  },
+  {
+    "Id": 101635,
+    "Name": "4\u5468\u5e74Limited\u30ac\u30c1\u30e3\u7b2c2\u5f3e_ticket",
+    "Description": "4\u5468\u5e74Limited\u30ac\u30c1\u30e3\u7b2c2\u5f3e_ticket",
+    "ItemCategory": 0,
+    "Rarity": 0,
+    "SellPrice": 1,
+    "Viewable": false,
+    "PossesionLimit": null,
+    "DropQuestIds": [],
+    "AssetKey": null
+  },
+  {
+    "Id": 101636,
+    "Name": "4\u5468\u5e74Limited\u30ac\u30c1\u30e3\u7b2c2\u5f3e_ticket",
+    "Description": "4\u5468\u5e74Limited\u30ac\u30c1\u30e3\u7b2c2\u5f3e_ticket",
+    "ItemCategory": 0,
+    "Rarity": 0,
+    "SellPrice": 1,
+    "Viewable": false,
+    "PossesionLimit": null,
+    "DropQuestIds": [],
+    "AssetKey": null
+  },
+  {
+    "Id": 101637,
+    "Name": "4\u5468\u5e74Limited\u30ac\u30c1\u30e3\u7b2c2\u5f3e_ticket",
+    "Description": "4\u5468\u5e74Limited\u30ac\u30c1\u30e3\u7b2c2\u5f3e_ticket",
     "ItemCategory": 0,
     "Rarity": 0,
     "SellPrice": 1,

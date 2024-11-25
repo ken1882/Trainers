@@ -11,7 +11,7 @@ if sys.platform == 'win32':
 elif sys.platform == 'linux':
   IS_LINUX = True
 
-AppWindowName = "BlueStacks App Player 5"
+AppWindowName = "BlueStacks App Player"
 AppChildWindowName = "BlueStacks Android PluginAndroid_1"
 AppHwnd = 0
 AppRect = [0,0,0,0]
@@ -126,6 +126,14 @@ def wait(sec):
 
 def uwait(sec):
   sleep(sec + max(random() / 2, sec * random() / 5))
+
+def rwait(sec):
+  global WaitInterval,FPS
+  times = int(sec // (WaitInterval + FPS))
+  for _ in range(times):
+    wait(WaitInterval)
+    yield
+  wait(sec - times * (WaitInterval+FPS))
 
 def make_lparam(x, y):
   return (y << 16) | x

@@ -2369,7 +2369,8 @@
       136072403,
       140080403,
       145089403,
-      150100403
+      150100403,
+      155109403
     ],
     "PossibleSlotCounts": [
       1
@@ -2754,7 +2755,8 @@
       602003306,
       603006309,
       154108309,
-      605009306
+      605009306,
+      155110309
     ],
     "PossibleSlotCounts": [
       1
@@ -2856,7 +2858,8 @@
       135070403,
       140079403,
       144088403,
-      151101403
+      151101403,
+      155110403
     ],
     "PossibleSlotCounts": [
       1
@@ -3077,7 +3080,8 @@
       146092309,
       147094309,
       602004309,
-      605010309
+      605010309,
+      155110309
     ],
     "PossibleSlotCounts": [
       1
@@ -3157,7 +3161,8 @@
       150100305,
       603006305,
       151102305,
-      604007302
+      604007302,
+      155109302
     ],
     "PossibleSlotCounts": [
       1
@@ -3241,7 +3246,8 @@
       149098305,
       150100305,
       154107302,
-      605010305
+      605010305,
+      155109305
     ],
     "PossibleSlotCounts": [
       1
@@ -3405,7 +3411,8 @@
       149098305,
       604008302,
       153105302,
-      154107305
+      154107305,
+      155109305
     ],
     "PossibleSlotCounts": [
       1
@@ -3483,7 +3490,8 @@
       151101302,
       152103305,
       153105305,
-      154108302
+      154108302,
+      155110305
     ],
     "PossibleSlotCounts": [
       1
@@ -3565,7 +3573,8 @@
       152103302,
       153105305,
       154107305,
-      605010302
+      605010302,
+      155110302
     ],
     "PossibleSlotCounts": [
       1
@@ -3733,7 +3742,8 @@
       152103305,
       153106302,
       154108305,
-      605010305
+      605010305,
+      155110305
     ],
     "PossibleSlotCounts": [
       1
@@ -27584,6 +27594,98 @@
     "MSeriesSetId": 71,
     "DropQuestIds": [
       154108503
+    ],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 621,
+    "Name": "\u84b8\u6c17\u6a5f\u95a2\u306e\u9b54\u5177",
+    "Description": "\u672a\u77e5\u306e\u90e8\u54c1\u3092\u7d44\u307f\u5408\u308f\u305b\u3066\u4f5c\u3089\u308c\u305f\u9b54\u5177\u3002/n\u30b7\u30ea\u30fc\u30ba\u3067\u63c3\u3048\u3066\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u3055\u3089\u306a\u308b\u5f37\u529b\u306a\u52b9\u679c\u3092\u767a\u63ee\u3059\u308b\u3002/n\u6b66\u5668\u7a2e\u304c\u9b54\u5177\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "WeaponEquipType": 6,
+    "MWeaponType": {
+      "WeaponEquipType": 6,
+      "WeaponAttributeType": 1,
+      "NormalAttackMSkillId": -16
+    },
+    "EquipmentRarity": 4,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 4,
+      "EvolutionLimit": 4
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": 129,
+    "UniqueMSkillId": null,
+    "MSeriesSetId": 71,
+    "DropQuestIds": [
+      155109503
+    ],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 622,
+    "Name": "\u84b8\u6c17\u6a5f\u95a2\u306e\u97ad",
+    "Description": "\u672a\u77e5\u306e\u90e8\u54c1\u3092\u7d44\u307f\u5408\u308f\u305b\u3066\u4f5c\u3089\u308c\u305f\u97ad\u3002/n\u30b7\u30ea\u30fc\u30ba\u3067\u63c3\u3048\u3066\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u3055\u3089\u306a\u308b\u5f37\u529b\u306a\u52b9\u679c\u3092\u767a\u63ee\u3059\u308b\u3002/n\u6b66\u5668\u7a2e\u304c\u97ad\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "WeaponEquipType": 5,
+    "MWeaponType": {
+      "WeaponEquipType": 5,
+      "WeaponAttributeType": 2,
+      "NormalAttackMSkillId": -15
+    },
+    "EquipmentRarity": 4,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 4,
+      "EvolutionLimit": 4
+    },
+    "AttributeType": 0,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "ConditionResistGroup": {
+      "Confusion": 0,
+      "Paralysis": 0,
+      "Poison": 0,
+      "Sleep": 0,
+      "Silent": 0,
+      "Stun": 0,
+      "Blind": 0,
+      "Charm": 0
+    },
+    "MEquipmentSkillRateGroupId": 129,
+    "UniqueMSkillId": null,
+    "MSeriesSetId": 71,
+    "DropQuestIds": [
+      155110503
     ],
     "PossibleSlotCounts": [
       1

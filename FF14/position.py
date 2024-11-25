@@ -151,18 +151,18 @@ LGT_DICT = {
       ],
     ]
   },
-  'WindShard': {
-    'mpos': (254, 447),
-    'skill': 'E',
-    'disableLock': True,
-    'jump': True,
-    'nodes': [
-      [
-        [19.5, 26.0],
-        ('rotate', 0)
-      ],
-    ]
-  },
+  # 'WindShard': {
+  #   'mpos': (254, 447),
+  #   'skill': 'E',
+  #   'disableLock': True,
+  #   'jump': True,
+  #   'nodes': [
+  #     [
+  #       [19.5, 26.0],
+  #       ('rotate', 0)
+  #     ],
+  #   ]
+  # },
   'Cobalt': {
     'mpos': (244, 368),
     'skill': 'T',
@@ -203,6 +203,19 @@ LGT_DICT = {
       ],
     ]
   },
+  'HardSilver': {
+    'mpos': (248, 274),
+    'alts': [(229, 450)],
+    'hidden': ((453, 267), (14,14,14)),
+    'skill': 'T',
+    'mtime': 140,
+    'nodes': [
+      [
+        [24.9, 23.1],
+        ('rotate', 0)
+      ],
+    ]
+  },
 }
 
 GT_ZincOre = [
@@ -225,7 +238,7 @@ GT_ZincOre = [
   ],
   [
     (22.8, 28.0),
-    ('rotate', 1), 
+    ('rotate', 1),
     ('forward', 5),
     ('rotate', -0.5)
   ]

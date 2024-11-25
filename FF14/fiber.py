@@ -516,19 +516,36 @@ def start_logout_gathering_fiber():
     action.interact()
     uwait(0.5)
     yield
-    sk = target.get('skill')
-    if sk:
-      if sk in position.GatherSkillUsable:
-        sp, sc = position.GatherSkillUsable[sk]
-        uwait(0.3)
-        if graphics.is_pixel_match((sp,), (sc,), sync=True):
-          _G.log_info(f"Use gather skill {sk}")
-          Input.trigger_key(ord(sk))
-          uwait(1)
-    uwait(0.1)
-    Input.rmoveto(*target['mpos'])
-    yield
-    Input.click(use_msg=False)
+    # enable auto gather
+    if not graphics.is_color_ok(graphics.get_pixel(89, 628, sync=1), (255, 215, 79)):
+      Input.rmoveto(89, 628)
+      yield
+      Input.click(use_msg=False)
+      yield
+    target_exists = True
+    if 'hidden' in target:
+      target_exists = graphics.is_color_ok(graphics.get_pixel(*target['hidden'][0], sync=1), target['hidden'][1])
+      _G.log_info(f"Target exists: {target_exists}")
+    if target_exists:
+      Input.rmoveto(*target['mpos'])
+      yield
+      Input.click(use_msg=False)
+      sk = target.get('skill')
+      if sk:
+        if sk in position.GatherSkillUsable:
+          sp, sc = position.GatherSkillUsable[sk]
+          uwait(0.3)
+          if graphics.is_pixel_match((sp,), (sc,), sync=True):
+            _G.log_info(f"Use gather skill {sk}")
+            Input.trigger_key(ord(sk))
+            uwait(1)
+        uwait(0.1)
+    elif 'alts' in target:
+      for pos in target['alts']:
+        Input.rmoveto(*pos)
+        yield
+        Input.click(use_msg=False)
+        yield
     for _ in range(10):
       uwait(1)
       yield
@@ -538,3 +555,64 @@ def start_logout_gathering_fiber():
     if stage.is_player_targeted():
       _G.log_info("Other player detected")
       flag_crowded = True
+
+def start_minigame_punch_fiber():
+  action.interact2()
+  uwait(0.3)
+  action.interact2()
+  uwait(0.5)
+  action.menu_right()
+  uwait(0.3)
+  action.menu_up()
+  uwait(0.3)
+  action.interact2()
+  wait(5)
+  while True:
+    graphics.flush()
+    p  = graphics.get_pixel(886, 956, sync=1)
+    if graphics.is_color_ok(p, (69, 99, 56)):
+      continue
+    p3 = graphics.get_pixel(957, 957, sync=1)
+    if p3 != (61, 86, 63):
+      continue
+    p2 = graphics.get_pixel(924, 957, sync=1)
+    if p2 != (184, 149, 149):
+      action.interact2()
+      print(p, p2, p3)
+      break
+
+def start_minipick_fiber():
+  while True:
+    yield
+    action.interact2()
+    uwait(0.3)
+    action.interact2()
+    uwait(0.5)
+    action.menu_right()
+    uwait(0.3)
+    action.menu_up()
+    uwait(0.3)
+    action.interact2()
+    wait(1)
+    a = graphics.find_object('objs/miniball.png', 0.9)
+    if not a:
+      return
+    a = a[0]
+    px = a[0] - 805
+    py = 905 - a[1]
+    delta_ms_x = 0.15
+    delta_ms_y = 0.13
+    dtx = int(px / delta_ms_x)
+    dty = int(py / delta_ms_y)
+    _G.log_info(f"Press time X: {dtx}ms Y: {dty}ms")
+    action.interact_press(dtx)
+    wait(0.3)
+    action.interact_press(dty)
+    wait(5)
+    uwait(3)
+    if graphics.find_object('objs/minigame_success.png', 0.9):
+      _G.log_info(f"Minigame success")
+      Input.trigger_key(win32con.VK_ESCAPE)
+      uwait(1)
+    else:
+      _G.log_info(f"Minigame failed")

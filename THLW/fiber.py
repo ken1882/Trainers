@@ -193,6 +193,9 @@ def start_stage_selection_fiber():
   else:
     Input.rclick(740, 500)
   wait(3)
+  if _G.ARGV.yukkuri:
+    Input.rclick(*event_pos[0])
+    wait(2)
   Input.rclick(*event_pos[_G.ARGV.jndex])
   wait(2)
   depth = 0
@@ -326,8 +329,8 @@ def start_refight_fiber():
       wait(3)
     elif stage.is_stage('CombatPrepare'):
       wait(3)
-      Input.rclick(340, 510)
       log_info("Selecting party")
+      Input.rclick(450, 520)
       wait(5)
       pos = next(party_sel_cycle)
       Input.mouse_down(*pos[0])

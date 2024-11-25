@@ -1,34 +1,21 @@
-GoEnhanceShip = (649, 409)
-DockSelectFirst = (120, 160)
-DockSelectDelta = (125, 174)
-SelectionFilter = (887, 29)
-GeneralBack = (39, 43)
-EnhanceAutoSelect = (776, 493)
-EnhanceConfirms = ((902, 494),(735, 431),(624, 450),(472, 414),)
-RefightAgain = (701, 492)
-RefightCancel = (282, 489)
-ContinueAuto = (940, 445)
-GeneralConfirm = (607, 414)
-ToHomePage = (945, 32)
-HomeDock = (193, 544)
-GoMainQuest = ((836, 303),(264, 307),)
-StageChosen = (730, 409)
-StartRefights = ((665, 460),(670, 214),(630, 378),)
-FightingFlagRow = ((67, 174),(194, 174),(322, 173),(448, 173),(576, 173),(703, 174),(830, 173),)
-ArenaSelections = ((740, 234),(506, 231),(355, 227),(156, 221),)
-ArenaStart = ((492, 451),(857, 502),)
-ArenaDefeat = ((488, 359),(543, 450),(898, 523),(483, 485),)
-AutoBattleSetting = (931, 345)
-BattleTarget = ((386, 170),(494, 170),)
-SwapTeam = (806, 179)
-TeamSwaps = ((836, 297),(836, 329),(836, 360),(837, 397),)
-##
-EventStageClicks = (
-    (836, 296),
-    (583, 194),
-    (647, 278) # SP4
-)
-##
-MiniGameOrder = ((214, 355),(354, 357),(482, 356),(625, 358),(749, 358))
-MiniGameHit   = ((841, 528),(872, 458),(946, 410),) # BYR
-MiniHameHCol  = ((82, 137, 239),(247, 223, 115),(255, 150, 120),)
+BS_SETTINGS = (1890, 937)
+BS_FPS_POS = {
+    30: (1034, 579),
+    45: (1165, 579)
+}
+BS_FPS_UNSET_COLOR = (182, 184, 205)
+BS_SAVE_CHANGES = (1282, 807)
+BS_CONFIRM_RESTART = (1070, 558)
+BS_MAXIMIZE_WINDOW = (797, -12) # window will resized so negative
+BS_ROTATE_MENU = (1893, 399)
+BS_ROTATE_DISPLAY = (1838, 405)
+BS_BACK = (1888, 965)
+
+ENTER_GAME = (394, 524)
+UNLOCK_POWERSAVING = (256, 522)
+TRAVERN_PLAY = (1072, 794)
+TRAVERN_DRAW = (794, 765)
+TRAVERN_SIGN = (295, 253)
+MUSIC_REWARD_ORDER = ((1101, 797),(847, 786),)
+
+AD_REWARD_CLAIM = (738, 538)

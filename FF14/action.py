@@ -44,6 +44,7 @@ def lockon_target():
   Input.trigger_key(win32con.VK_NUMPAD5)
 
 def interact():
+  return interact2()
   Input.key_down(win32con.VK_SHIFT)
   Input.key_down(VK_E)
   sleep(0.03)
@@ -127,3 +128,31 @@ def logout():
   Input.rmoveto(*position.LogoutOK)
   uwait(0.1)
   Input.click(use_msg=False)
+
+def interact2():
+  Input.key_down(win32con.VK_SHIFT)
+  Input.key_down(win32con.VK_SPACE)
+  sleep(0.03)
+  Input.key_up(win32con.VK_SPACE)
+  Input.key_up(win32con.VK_SHIFT)
+
+def interact_press(ms):
+  Input.key_down(win32con.VK_SHIFT)
+  Input.key_down(win32con.VK_SPACE)
+  sleep(ms/1000.0)
+  Input.key_up(win32con.VK_SPACE)
+  Input.key_up(win32con.VK_SHIFT)
+
+def menu_up():
+  Input.key_down(win32con.VK_SHIFT)
+  Input.key_down(VK_W)
+  sleep(0.03)
+  Input.key_up(VK_W)
+  Input.key_up(win32con.VK_SHIFT)
+
+def menu_right():
+  Input.key_down(win32con.VK_SHIFT)
+  Input.key_down(VK_D)
+  sleep(0.03)
+  Input.key_up(VK_D)
+  Input.key_up(win32con.VK_SHIFT)

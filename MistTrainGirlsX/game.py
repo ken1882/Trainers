@@ -54,7 +54,7 @@ ServerList = (
   'https://mist-train-east3.azurewebsites.net',
 )
 
-STATIC_DATA_HOST = 'https://assets.mist-train-girls.com/production-client-web-static'
+STATIC_DATA_HOST = 'https://assets4.mist-train-girls.com/production-client-web-static'
 
 ServerLocation = ''
 

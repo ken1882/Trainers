@@ -320,3 +320,7 @@ def start_minigame_fiber():
         for c in cols:
             i = determine_minigame_hidx(c)
             Input.rclick(*position.MiniGameHit[i])
+
+def start_alas_resize_fiber():
+    utils.move_window(_G.AppRect[0], 0, 1346, 764)
+    yield

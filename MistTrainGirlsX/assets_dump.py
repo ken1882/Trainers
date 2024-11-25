@@ -4,8 +4,8 @@ import requests
 import json
 from glob import glob
 
-ASSET_HOST = 'https://assets.mist-train-girls.com/production-client-web-assets'
-STATIC_HOST = 'https://assets.mist-train-girls.com/production-client-web-static'
+ASSET_HOST = 'https://assets4.mist-train-girls.com/production-client-web-assets'
+STATIC_HOST = 'https://assets4.mist-train-girls.com/production-client-web-static'
 
 CharacterData = {}
 

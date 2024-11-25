@@ -57,13 +57,17 @@ def is_mp_enough(mp):
 def process_mana_refill():
     global ManaRefillMode, ManaVal, LastRecoverTime
     _G.log_info("Processing mana refill")
+    cnt = 0
     while not stage.is_stage('ManaRefill'):
         Input.rclick(*position.EnterManaRefill)
         _G.wait(0.1)
         yield
+        cnt += 1
         if is_mp_enough(ManaVal):
             yield from abort_mana_refill()
             return
+        if cnt % 3 == 0 and not stage.get_current_stage() and get_mana(True) > 0:
+            break
     ManaRefillMode = True
     _G.log_info("Collecting Mana")
     exit_depth = 0
@@ -193,6 +197,9 @@ def process_action():
             return
         _G.log_info(f"Use card#{midx}")
         Input.rclick(*position.MemoryCards[midx])
+        # foolproof
+        if random.random() > 0.4:
+            Input.rclick(*position.MemoryCards[2])
     yield
 
 def update_mana_async():

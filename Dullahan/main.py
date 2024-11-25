@@ -111,6 +111,7 @@ if __name__ == "__main__":
         log_info(f"Fiber set to {method}")
         break
   try:
+    _G.log_info(f"Stage: {stage.get_current_stage()}")
     start_main()
   except (KeyboardInterrupt, SystemExit):
     _G.FlagRunning = False
