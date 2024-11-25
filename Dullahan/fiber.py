@@ -35,37 +35,8 @@ def start_ad_reward_fiber():
             yield from rwait(60) # cooldown
         yield
 
-def start_daily_tavern_fiber():
-    ClickPos = ((1096, 756),(835, 811),)
-    flag_re = False
-    while True:
-        yield
-        curt = datetime.now()
-        if flag_re and curt.minute > 55:
-            utils.redetect_window()
-            flag_re = False
-        if curt.hour == 5 and curt.minute == 0:
-            while stage.is_stage('PowerSaving'):
-                yield from safe_click(256, 522)
-                curt = datetime.now()
-                if curt.hour > 6:
-                    break
-            while not stage.is_stage('Tavern'):
-                curt = datetime.now()
-                if curt.hour > 6:
-                    break
-                yield from safe_click(449, 84)
-            wait(1.5)
-            for pos in ClickPos:
-                yield from safe_click(*pos)
-            _G.log_info("Traven seat taken")
-            for _ in range(60):
-                wait(1)
-                yield
-        elif curt.hour == 4 and curt.minute > 55:
-            continue
-        wait(60)
-        flag_re = True
+def start_tavern_fiber():
+    yield from action.back_to_main()
 
 def start_arena_main_fiber():
     yield from action.back_to_main()

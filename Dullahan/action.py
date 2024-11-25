@@ -39,14 +39,17 @@ def restart_bs():
         Input.click(*position.BS_FPS_POS[45])
     else:
         Input.click(*position.BS_FPS_POS[30])
-    yield from rwait(2)
-    Input.click(*position.BS_SAVE_CHANGES)
     yield from rwait(1)
+    Input.click(*position.BS_SAVE_CHANGES)
+    yield from rwait(5)
     Input.click(*position.BS_CONFIRM_RESTART)
     old_hwnd = _G.AppHwnd
     yield from rwait(10)
+    prev_pos = _G.AppRect
     while True:
         utils.find_app_window()
+        yield
+        utils.move_window(*prev_pos[:2])
         yield from rwait(10)
         if _G.AppHwnd and _G.AppHwnd != old_hwnd:
             break
@@ -67,7 +70,12 @@ def restart_bs():
     Input.click(*position.BS_ROTATE_MENU)
     wait(0.3)
     Input.click(*position.BS_ROTATE_DISPLAY)
-    while not stage.is_stage('Main'):
+    while True:
+        stg = stage.get_current_stage()
+        if stage.is_stage('Main'):
+            break
+        elif stg and 'BS' not in stg:
+            yield from exit_to_main()
         Input.rclick(*position.ENTER_GAME)
         yield from rwait(2)
 
