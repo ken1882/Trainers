@@ -22,11 +22,13 @@ def safe_click(x, y, dur=1, **kwargs):
         yield
 
 def back_to_main():
-    while not stage.is_stage('Main'):
+    while not stage.is_stage('IdleMain'):
         if stage.is_stage('PowerSaving'):
             Input.click(*position.UNLOCK_POWERSAVING)
         else:
             Input.click(*position.BS_BACK)
+            yield
+            Input.click(*position.GENERAL_BACK)
         uwait(1)
         yield
 
@@ -72,7 +74,7 @@ def restart_bs():
     Input.click(*position.BS_ROTATE_DISPLAY)
     while True:
         stg = stage.get_current_stage()
-        if stage.is_stage('Main'):
+        if stage.is_stage('IdleMain'):
             break
         elif stg and 'BS' not in stg:
             yield from exit_to_main()
