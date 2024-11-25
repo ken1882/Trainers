@@ -35,7 +35,7 @@ def start_ad_reward_fiber():
             yield from rwait(60) # cooldown
         yield
 
-def start_daily_traven_fiber():
+def start_daily_tavern_fiber():
     ClickPos = ((1096, 756),(835, 811),)
     flag_re = False
     while True:
@@ -50,7 +50,7 @@ def start_daily_traven_fiber():
                 curt = datetime.now()
                 if curt.hour > 6:
                     break
-            while not stage.is_stage('Travern'):
+            while not stage.is_stage('Tavern'):
                 curt = datetime.now()
                 if curt.hour > 6:
                     break
@@ -66,3 +66,24 @@ def start_daily_traven_fiber():
             continue
         wait(60)
         flag_re = True
+
+def start_arena_main_fiber():
+    yield from action.back_to_main()
+
+def start_arena_companion_fiber():
+    yield from action.back_to_main()
+
+def start_arena_abyss_fiber():
+    yield from action.back_to_main()
+
+def start_daily_dungeons_fiber():
+    yield from action.back_to_main()
+
+def start_daily_rewards_fiber():
+    yield from action.back_to_main()
+
+def start_awaken_upgrade_fiber():
+    yield from action.back_to_main()
+
+def start_companion_gift_fiber():
+    yield from action.back_to_main()

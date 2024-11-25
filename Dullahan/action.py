@@ -21,9 +21,12 @@ def safe_click(x, y, dur=1, **kwargs):
         wait(0.05)
         yield
 
-def exit_to_main():
+def back_to_main():
     while not stage.is_stage('Main'):
-        Input.click(*position.BS_BACK)
+        if stage.is_stage('PowerSaving'):
+            Input.click(*position.UNLOCK_POWERSAVING)
+        else:
+            Input.click(*position.BS_BACK)
         uwait(1)
         yield
 
