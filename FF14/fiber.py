@@ -531,15 +531,14 @@ def start_logout_gathering_fiber():
       yield
       Input.click(use_msg=False)
       sk = target.get('skill')
-      if sk:
-        if sk in position.GatherSkillUsable:
-          sp, sc = position.GatherSkillUsable[sk]
-          uwait(0.3)
-          if graphics.is_pixel_match((sp,), (sc,), sync=True):
-            _G.log_info(f"Use gather skill {sk}")
-            Input.trigger_key(ord(sk))
-            uwait(1)
-        uwait(0.1)
+      if sk and sk in position.GatherSkillUsable:
+        sp, sc = position.GatherSkillUsable[sk]
+        uwait(1)
+        if graphics.is_pixel_match((sp,), (sc,), sync=True):
+          _G.log_info(f"Use gather skill {sk}")
+          Input.trigger_key(ord(sk))
+          uwait(1)
+      uwait(0.1)
     elif 'alts' in target:
       for pos in target['alts']:
         Input.rmoveto(*pos)
