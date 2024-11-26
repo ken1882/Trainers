@@ -105,14 +105,15 @@ def start_protagonist_arena_fiber():
     while not stage.is_stage('ArenaProtSelection'):
         Input.rclick(*position.ARENA_MAIN_ENTER)
         yield from rwait(3)
-    for i in range(3):
+    for i in range(4):
         _G.log_info(f"Start arena #{i}")
         while stage.is_stage('ArenaProtSelection'):
             Input.rclick(*position.ARENA_MAIN_OPPONENT_LIST[OPPONENT_INDEX])
             yield from rwait(3)
-        while not stage.is_stage('MatchVictory'):
+        while not stage.is_stage('MatchVictory') and not stage.is_stage('MatchDefeat'):
             yield from rwait(3)
-        while stage.is_stage('MatchVictory'):
+        _G.log_info("Match ended")
+        while stage.is_stage('MatchVictory') or stage.is_stage('MatchDefeat'):
             Input.rclick(*position.MATCH_END_CONFIRM)
             yield from rwait(3)
         while not stage.is_stage('ArenaProtSelection'):
@@ -138,21 +139,22 @@ def start_companion_arena_fiber():
     while not stage.is_stage('ArenaCompSelection'):
         Input.rclick(*position.ARENA_MAIN_ENTER)
         yield from rwait(3)
-    for i in range(3):
+    for i in range(4):
         _G.log_info(f"Start companion arena #{i}")
         while stage.is_stage('ArenaCompSelection'):
             Input.rclick(*position.ARENA_COMP_START)
+            yield from rwait(5)
+        while not stage.is_stage('MatchVictory') and not stage.is_stage('MatchDefeat'):
             yield from rwait(3)
-        while not stage.is_stage('MatchVictory'):
-            yield from rwait(3)
-        while stage.is_stage('MatchVictory'):
+        _G.log_info("Match ended")
+        while stage.is_stage('MatchVictory') or stage.is_stage('MatchDefeat'):
             Input.rclick(*position.MATCH_END_CONFIRM)
             yield from rwait(3)
         while not stage.is_stage('ArenaCompSelection'):
             yield from rwait(3)
     _G.log_info("Claim arena rewards")
     while not stage.is_stage('ArenaCompPage'):
-        Input.rclick(*position.ARENA_MAIN_CLOSE_LIST)
+        Input.rclick(*position.ARENA_COMP_CLOSE)
         yield from rwait(3)
     for pos in position.ARENA_MAIN_REWARD_POS_LIST:
         for _ in range(3):
@@ -165,6 +167,12 @@ def start_abyss_arena_fiber():
 
 def start_daily_dungeons_fiber():
     yield from action.back_to_main()
+    while not stage.is_stage('DungeonsMenu'):
+        Input.rclick(*position.MENU_MAIN_DUNGEON)
+        yield from rwait(3)
+    for pos in position.DUNGEON_SWEEP_POS_LIST:
+        Input.rclick(*pos)
+        yield from rwait(2)
 
 def start_daily_rewards_fiber():
     yield from action.back_to_main()
@@ -225,3 +233,43 @@ def start_companion_gift_fiber():
 
 def start_daily_mission_fiber():
     yield from action.back_to_main()
+    while not stage.is_stage('BackpackMenu'):
+        Input.rclick(*position.MENU_MAIN_BACKPACK)
+        yield from rwait(3)
+    for pos in position.DAILY_SYNTHESIS_POS_LIST:
+        for _ in range(3):
+            Input.rclick(*pos)
+            yield from rwait(2)
+    yield from action.back_to_main()
+    _G.log_info("Open chests")
+    while not stage.is_stage('ChestOpen'):
+        Input.rclick(*position.CHEST_OPEN_ENTER)
+        yield from rwait(3)
+    _G.log_info("Disable continious open")
+    for _ in range(3):
+        color = graphics.get_pixel(*position.CHEST_OPEN_CONTINIOUS, sync=1)
+        if graphics.is_color_ok(color, position.CHEST_OPEN_CONTINIOUS_COLOR):
+            Input.rclick(*position.CHEST_OPEN_CONTINIOUS)
+        yield from rwait(2)
+    _G.log_info("Open chest")
+    for _ in range(3):
+        Input.rclick(*position.CHEST_OPEN_CLAIM)
+        yield from rwait(2)
+    yield from action.back_to_main()
+    while not stage.is_stage('ExtraMenus'):
+        Input.rclick(*position.EXTRA_MENU)
+        yield from rwait(3)
+    for pos in position.CLAIM_DAILY_MISSION_POS_LIST:
+        for _ in range(3):
+            Input.rclick(*pos)
+            yield from rwait(2)
+
+
+def start_routtle_fiber():
+    yield from start_restart_fiber()
+    yield from start_tavern_fiber()
+    yield from start_daily_rewards_fiber()
+    yield from start_protagonist_arena_fiber()
+    yield from start_companion_arena_fiber()
+    yield from start_daily_mission_fiber()
+
