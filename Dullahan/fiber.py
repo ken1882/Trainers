@@ -45,7 +45,11 @@ def start_tavern_fiber():
     _G.log_info("Processing tavern music play")
     while not stage.is_stage('TavernPlay'):
         Input.rclick(*position.TAVERN_PLAY)
-        yield from rwait(3)
+        yield from rwait(1)
+        Input.rclick(*position.GENERAL_BACK)
+        yield from rwait(1)
+        Input.rclick(*position.TAVERN_PLAY)
+        yield from rwait(1)
     for pos in position.MUSIC_REWARD_ORDER:
         Input.rclick(*pos)
         yield from rwait(1)
@@ -263,10 +267,11 @@ def start_daily_mission_fiber():
         for _ in range(3):
             Input.rclick(*pos)
             yield from rwait(2)
+    yield from action.back_to_main()
 
 
 def start_routtle_fiber():
-    yield from start_restart_fiber()
+    # yield from start_restart_fiber()
     yield from start_tavern_fiber()
     yield from start_daily_rewards_fiber()
     yield from start_protagonist_arena_fiber()
