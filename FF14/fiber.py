@@ -223,7 +223,7 @@ def start_crafting_fiber():
   times = int(_G.ARGV.repeats)
   for i in range(times):
     _G.log_info(f"Start craft #{i+1}")
-    for _ in range(3):
+    for _ in range(4):
       action.interact()
       uwait(1)
     cp = mcp = int(_G.ARGV.crafting_cp)

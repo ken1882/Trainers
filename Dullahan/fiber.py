@@ -1,4 +1,4 @@
-import re
+import os
 import win32con
 import _G,stage
 from _G import resume, resume_from, pop_fiber_ret, wait, uwait, rwait, log_info
@@ -24,16 +24,15 @@ def start_restart_fiber():
     yield from action.restart_bs()
 
 def start_ad_chest_fiber():
-    while True:
-        graphics.flush()
-        a = graphics.find_object('assets/ad_reward.png')
-        if a:
-            Input.click(*a[0])
-            for _ in range(2):
-                yield from rwait(2)
-                Input.rclick(*position.AD_REWARD_CLAIM)
-            yield from rwait(60) # cooldown
-        yield
+    yield
+    graphics.flush()
+    a = graphics.find_object('assets/ad_reward.png')
+    if a:
+        Input.click(*a[0])
+        for _ in range(2):
+            yield from rwait(2)
+            Input.rclick(*position.AD_REWARD_CLAIM)
+        yield from rwait(60) # cooldown
 
 def start_tavern_fiber():
     TARGET_DRAW_REWARD_RANK = 2 # one point 6
@@ -46,8 +45,9 @@ def start_tavern_fiber():
     while not stage.is_stage('TavernPlay'):
         Input.rclick(*position.TAVERN_PLAY)
         yield from rwait(1)
-        Input.rclick(*position.GENERAL_BACK)
-        yield from rwait(1)
+        for _ in range(3):
+            Input.rclick(*position.GENERAL_BACK)
+            yield from rwait(0.3)
         Input.rclick(*position.TAVERN_PLAY)
         yield from rwait(1)
     for pos in position.MUSIC_REWARD_ORDER:
@@ -62,7 +62,8 @@ def start_tavern_fiber():
         yield from rwait(3)
     Input.rclick(*position.TAVERN_DRAW_FIRST)
     depth = 0
-    while True:
+    claimed = False
+    while not claimed:
         yield from rwait(5)
         depth += 1
         for i, pos in enumerate(position.TAVERN_DRAW_REWARD_POS):
@@ -72,6 +73,7 @@ def start_tavern_fiber():
                 if i >= TARGET_DRAW_REWARD_RANK:
                     _G.log_info(f"Claim reward")
                     Input.rclick(*position.TAVERN_DRAW_CLAIM)
+                    claimed = True
                     break
         else:
             if depth >= 3:
@@ -81,7 +83,7 @@ def start_tavern_fiber():
             else:
                 _G.log_info(f"Redraw")
                 Input.rclick(*position.TAVERN_DRAW_RE)
-                break
+    Input.rclick(*position.TAVERN_DRAW_CLAIM)
     yield from rwait(5)
     _G.log_info("Processing tavern sign in")
     while not stage.is_stage('TavernMain'):
@@ -271,10 +273,44 @@ def start_daily_mission_fiber():
 
 
 def start_routtle_fiber():
-    # yield from start_restart_fiber()
     yield from start_tavern_fiber()
     yield from start_daily_rewards_fiber()
+    yield from start_daily_dungeons_fiber()
     yield from start_protagonist_arena_fiber()
     yield from start_companion_arena_fiber()
     yield from start_daily_mission_fiber()
 
+def start_idle_fiber():
+    game_running = False
+    while True:
+        curt = datetime.now()
+        if curt.minute > 58:
+            _G.log_info("Heartbeat")
+            if curt.hour == 4:
+                wx, wy = _G.AppRect[:2]
+                if not utils.redetect_window():
+                    yield from action.start_bs(wx, wy)
+                else:
+                    yield from action.restart_bs()
+                game_running = True
+                yield from start_routtle_fiber()
+                yield from action.enable_power_saving()
+            elif curt.hour == 11:
+                game_running = False
+                _G.log_info("Closing app and wait for 5 minutes")
+                try:
+                    os.kill(_G.AppPid, 9)
+                except Exception:
+                    pass
+                yield from rwait(300)
+        elif game_running:
+            yield from start_ad_chest_fiber()
+        yield from rwait(10)
+
+def start_test_fiber():
+    wx, wy = _G.AppRect[:2]
+    if not utils.redetect_window():
+        yield from action.start_bs(wx, wy)
+    else:
+        yield from action.restart_bs()
+    yield from start_routtle_fiber()

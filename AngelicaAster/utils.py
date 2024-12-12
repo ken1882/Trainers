@@ -1,7 +1,6 @@
 import _G
 from _G import log_error,log_debug,log_info,log_warning,resume,wait,uwait
 import numpy as np
-import subprocess
 import os
 import win32gui, win32process, win32console
 from time import sleep
@@ -48,7 +47,7 @@ def find_app_window():
   AppCandidates = []
   win32gui.EnumWindows(EnumWindowCallback, None)
   if not AppCandidates:
-    return False
+    return
   hwnd = AppCandidates[0]
   if len(AppCandidates) > 1:
     print("Multiple app found:")
@@ -60,7 +59,6 @@ def find_app_window():
   _G.AppTid,_G.AppPid = win32process.GetWindowThreadProcessId(hwnd)
   print(f"App found with HWND {hwnd} ({_G.AppWindowName}), pid={_G.AppPid}")
   update_app_rect()
-  return True
 
 def find_child_window():
   log_info("Child windows:")
@@ -159,12 +157,3 @@ def is_focused():
     hwnd = win32gui.GetForegroundWindow()
     return hwnd == _G.SelfHwnd or hwnd == _G.AppHwnd
   return True
-
-def redetect_window():
-  try:
-    return graphics.get_content_rect()
-  except Exception:
-    return find_app_window()
-
-def start_process(cmd):
-  return subprocess.Popen(cmd)
