@@ -5,6 +5,7 @@ from random import sample
 from _G import uwait, rwait
 import Input
 import stage, position, graphics
+import audio
 
 def start_refight_fiber():
   n = _G.ARGV.repeats
@@ -37,3 +38,22 @@ def start_minigame_drop_fiber():
       yield from rwait(1)
       continue
     Input.rclick(635, 161)
+
+def start_fishing_fiber():
+  while True:
+    Input.rclick(1169, 379)
+    yield from rwait(2)
+    Input.rclick(616, 342)
+    yield from rwait(3)
+    audio.listen_fishing()
+    Input.rclick(616, 342)
+    if not stage.is_stage('FishingMind'):
+      _G.log_info("Failed")
+      yield from rwait(5)
+      Input.rclick(616, 342)
+      yield from rwait(3)
+      continue
+    _G.log_info("Success")
+    yield from rwait(15)
+    Input.rclick(616, 342)
+    uwait(1)

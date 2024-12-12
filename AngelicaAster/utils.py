@@ -157,3 +157,6 @@ def is_focused():
     hwnd = win32gui.GetForegroundWindow()
     return hwnd == _G.SelfHwnd or hwnd == _G.AppHwnd
   return True
+
+def chunk(it, n):
+  return [it[i * n:(i + 1) * n] for i in range((len(it) + n - 1) // n )]
