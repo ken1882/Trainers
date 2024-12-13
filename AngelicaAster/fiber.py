@@ -41,19 +41,22 @@ def start_minigame_drop_fiber():
 
 def start_fishing_fiber():
   while True:
-    Input.rclick(1169, 379)
-    yield from rwait(2)
+    while not stage.is_stage('FishingMind'):
+      Input.rclick(1169, 379)
+      yield from rwait(2)
     Input.rclick(616, 342)
     yield from rwait(3)
     audio.listen_fishing()
     Input.rclick(616, 342)
     if not stage.is_stage('FishingMind'):
       _G.log_info("Failed")
+      with open('.tmp/fish.log', 'a') as fp:
+        fp.write('\n'.join([str([int(n) for n in ar]) for ar in audio.DebugQueue]))
+        fp.write('-'*30+'\n')
       yield from rwait(5)
       Input.rclick(616, 342)
-      yield from rwait(3)
       continue
     _G.log_info("Success")
-    yield from rwait(15)
+    yield from rwait(10)
     Input.rclick(616, 342)
     uwait(1)
