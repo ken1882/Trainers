@@ -11,14 +11,18 @@ def start_refight_fiber():
   n = _G.ARGV.repeats
   n = n if n > 0 else 9999
   while n >= 0:
-    n -= 1
-    _G.log_info(f"Refights left: {n}")
     uwait(1)
     yield
-    while not stage.is_stage('CombatVictory'):
-      uwait(1)
-      yield
-    Input.rclick(*position.Refight)
+    if stage.is_stage('CombatVictory'):
+      Input.rclick(*position.Refight)
+      n -= 1
+      _G.log_info(f"Refights left: {n}")
+    elif stage.is_stage('GeneralOK'):
+      for _ in range(3):
+        Input.rclick(*position.GeneralOK)
+        yield from rwait(0.5)
+    else:
+      continue
     yield from rwait(3)
 
 def start_mdlpusher_fiber():
