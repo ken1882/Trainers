@@ -17,7 +17,7 @@ def start_refight_fiber():
       Input.rclick(*position.Refight)
       n -= 1
       _G.log_info(f"Refights left: {n}")
-    elif stage.is_stage('GeneralOK'):
+    elif stage.is_stage('GeneralOK') or stage.is_stage('ObtainRelic'):
       for _ in range(3):
         Input.rclick(*position.GeneralOK)
         yield from rwait(0.5)

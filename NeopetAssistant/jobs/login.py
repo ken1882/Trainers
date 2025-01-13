@@ -1,18 +1,19 @@
-import os
+import _G
 from jobs.base_job import BaseJob
+from datetime import datetime, timedelta
 from errors import NeoError
 
 class LoginJob(BaseJob):
-    def __init__(self):
-        super().__init__("login", "https://www.neopets.com/home")
+    def __init__(self, **kwargs):
+        super().__init__("login", "https://www.neopets.com/home", **kwargs)
 
     def execute(self):
-        print("Logging in...")
-        if not self.click_element('#neopass-method-login'):
-            raise NeoError(2, 'Failed to neopass login')
-        if not self.click_element('.signin-btn'):
-            raise NeoError(2, 'Failed to neopass redirect')
-        if not self.wait_until_elements_found(['button[type=submit]'], 10):
-            raise NeoError(2, 'Failed to find login button')
-        self.page.query_selector('input[name=email]').fill(os.getenv('NEO_EMAIL'))
-        self.page.query_selector('input[name=password]').fill(os.getenv('NEO_PASSWORD'))
+        if not self.wait_until_element_found('#navPetMenuIcon__2020', 3):
+            _G.logger.info("You're not logged in, please manually login")
+        if not self.wait_until_element_found('#navPetMenuIcon__2020', 86400):
+            _G.logger.info("Not logged in after 24 hours, stopping job")
+            raise NeoError(1, "Not logged in")
+
+    def calc_next_run(self):
+        self.next_run = datetime.now() + timedelta(days=1)
+        return self.next_run

@@ -1,40 +1,56 @@
-from _G import wait
-from datetime import datetime
+from _G import wait, logger
+import utils
+from datetime import datetime, timedelta
+from errors import NeoError
 
 class BaseJob:
-    def __init__(self, job_name:str, url:str, new_page:bool=True, **kwargs):
+    def __init__(self, job_name:str, url:str, new_page:bool=True,
+                 priority:int=0, page=None, context=None, next_run=None,
+                 **kwargs):
         self.job_name = job_name
         self.url = url
-        self.next_run = datetime(1970, 1, 1)
+        self.next_run = next_run if next_run else datetime.now()
         self.new_page = new_page
         self.page = None
         self.context = None
+        self.priority = priority
         self.args = {}
+        self.return_value = NeoError(0)
         for key, value in kwargs.items():
             self.args[key] = value
         self.signal = {}
+        self.set_context(context)
+        self.set_page(page)
 
-    def restart(self):
+    def run_now(self):
         self.next_run = datetime.now()
 
     def set_context(self, context):
         self.context = context
 
+    def set_page(self, page):
+        self.page = page
+
     def start(self):
+        # this function will run concurrently in generator
         if self.new_page:
-            self.page = self.context.new_page()
+            self.set_page(self.context.new_page())
+        logger.info("Waiting for page to load")
+        self.page.once("load", self.on_page_load)
+        yield
         self.page.goto(self.url)
-        self.page.on("load", self.on_page_load)
         while not self.signal.get('load', False):
             wait(0.1)
-        self.execute()
+            yield
+        logger.info("Page loaded")
+        yield from self.execute()
         self.stop()
 
     def on_page_load(self):
         self.signal['load'] = True
 
     def execute(self):
-        pass
+        yield
 
     def stop(self):
         if self.new_page and self.page:
@@ -71,5 +87,36 @@ class BaseJob:
         node = self.page.query_selector(selector)
         if node:
             node.click()
-            return True
-        return False
+            return node
+        return None
+
+    def calc_next_run(self, shortcut:str='daily'):
+        curt = datetime.now()
+        if shortcut == 'daily':
+            tomorrow = datetime(curt.year, curt.month, curt.day, 0, 0, 0) + timedelta(days=1)
+            self.next_run = utils.nst2localt(tomorrow)
+        elif shortcut == 'monthly':
+            next_month = curt.replace(day=1, hour=0, minute=0, second=0) + timedelta(days=31)
+            next_month = next_month.replace(day=1)
+            self.next_run = utils.nst2localt(next_month)
+        return self.next_run
+
+    def to_dict(self):
+        return {
+            'class': self.__class__.__name__,
+            'job_name': self.job_name,
+            'url': self.url,
+            'next_run': self.next_run.timestamp(),
+            'new_page': self.new_page,
+            'priority': self.priority,
+            'args': self.args
+        }
+
+    def load_data(self, data):
+        self.job_name = data['job_name']
+        self.url = data['url']
+        self.next_run = data['next_run']
+        self.new_page = data['new_page']
+        self.priority = data['priority']
+        self.args = data['args']
+        return self

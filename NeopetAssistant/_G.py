@@ -6,11 +6,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-logger = getLogger(__name__)
+FPS = (1 / 240)
+
+logger = getLogger('main')
 logger.setLevel(logging.DEBUG)
 ch = StreamHandler()
 ch.setLevel(logging.DEBUG)
-formatter = Formatter('%(asctime)s - [%(name)s] <%(levelname)s> %(message)s')
+formatter = Formatter('%(asctime)s - [%(levelname)s] %(message)s')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
