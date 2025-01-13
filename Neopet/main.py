@@ -5,10 +5,7 @@ from _G import (log_error,log_debug,log_info,log_warning,wait,uwait,resume)
 import utils, Input, graphics, stage
 import win32con,win32gui
 from threading import Thread
-from datetime import datetime
 import argv_parse
-import position
-import audio
 
 # Cache for pos/col records
 output_cache = []
@@ -29,12 +26,13 @@ def print_cache():
 
 def detect_app_window():
   utils.find_app_window()
-  # utils.find_child_window()
-  # _G.AppInputHwnd = _G.AppHwnd
+  _G.AppInputHwnd = _G.AppChildHwnd
 
 def update_detector():
   last_tick = 0
   while _G.FlagRunning:
+    if not utils.is_focused():
+      continue
     sleep(_G.FPS*2)
     if _G.FrameCount == last_tick:
       continue
@@ -56,15 +54,12 @@ def update_detector():
 
 def update_input():
   if not utils.is_focused():
-    return
+    return  
   Input.update()
   if Input.is_trigger(win32con.VK_F5):
     print("Redetecting app window")
     detect_app_window()
   elif Input.is_trigger(win32con.VK_F6):
-    with open('.tmp/fish.log', 'a') as fp:
-      fp.write('\n'.join([str([int(n) for n in ar]) for ar in audio.DebugQueue]))
-      fp.write('-'*30+'\n')
     res = graphics.get_mouse_pixel()
     if not _G.SelectedFiber:
       output_cache.extend(res)
@@ -82,15 +77,12 @@ def update_input():
     _G.FlagWorking = False
     _G.FlagRunning = False
     print_cache()
-  elif Input.is_trigger(win32con.VK_F10):
-    log_info("Snapshot taken") 
-    graphics.take_snapshot(position.ItemDescRect, f"{int(datetime.now().timestamp()*10)}.png", force=True)
   
 def main_loop():
   global output_cache
   _G.flush()
   update_input()
-  if not _G.FlagPaused and _G.Fiber and not resume(_G.Fiber):
+  if not _G.FlagPaused and _G.Fiber and _G.FlagWorking and not resume(_G.Fiber):
     log_info(f"Worker ended, return value: {_G.pop_fiber_ret()}")
     _G.Fiber = None 
     _G.FlagWorking = False
@@ -102,7 +94,7 @@ def start_main():
     while _G.FlagRunning:
       _G.FrameCount += 1
       main_loop()
-      # sleep(_G.FPS)
+      sleep(_G.FPS)
   finally:
     _G.FlagRunning = False
 
@@ -111,7 +103,6 @@ if __name__ == "__main__":
   detect_app_window()
   utils.resize_app_window()
   args = argv_parse.load()
-  _G.ARGV = args
   if args.job:
     for method in dir(fiber):
       if args.job in method and 'fiber' in method:

@@ -16,14 +16,15 @@ try:
 except Exception:
   log_warning("Pytesseract not available, OCRs won't be available")
 
+AppCandidates = []
+
 def EnumWindowCallback(hwnd, lparam):
+  global AppCandidates
   if win32gui.IsWindowVisible(hwnd):
     title = win32gui.GetWindowText(hwnd)
-    if title == _G.AppWindowName:
-      _G.AppHwnd = hwnd
-      _G.AppTid,_G.AppPid  = win32process.GetWindowThreadProcessId(hwnd)
-      print(f"App found with HWND {hwnd} ({_G.AppWindowName}), pid={_G.AppPid}")
-      update_app_rect()
+    if _G.AppWindowName in title:
+      AppCandidates.append((title, hwnd))
+      print(f"Candidate found with HWND {hwnd} ({title}), pid={_G.AppPid}")
 
 def EnumChildWindowCB(hwnd, lparam):
   clsname = win32gui.GetClassName(hwnd)
@@ -42,7 +43,22 @@ def update_app_rect():
   print(f"Rect updated: {_G.AppRect}")
 
 def find_app_window():
+  global AppCandidates
+  AppCandidates = []
   win32gui.EnumWindows(EnumWindowCallback, None)
+  if not AppCandidates:
+    return
+  hwnd = sorted(AppCandidates, key=lambda wh:diff_string(_G.AppWindowName, wh[0]))[-1][1]
+  # if len(AppCandidates) > 1:
+  #   print("Multiple app found:")
+  #   for i,hw in enumerate(AppCandidates):
+  #     print(f"[{i}] hwnd={hw} {win32process.GetWindowThreadProcessId(hw)}")
+  #   sn = input("please select one: ")
+  #   hwnd = AppCandidates[sn]
+  _G.AppHwnd = hwnd
+  _G.AppTid,_G.AppPid = win32process.GetWindowThreadProcessId(hwnd)
+  print(f"App found with HWND {hwnd} ({win32gui.GetWindowText(hwnd)}), pid={_G.AppPid}")
+  update_app_rect()
 
 def find_child_window():
   log_info("Child windows:")
@@ -72,7 +88,9 @@ def safe_execute_func(func, args=[], kwargs={}):
     handle_exception(err, err_info)
   return _G.MsgPipeError
 
-def handle_exception(err, errinfo):
+def handle_exception(err, errinfo=None):
+  if not errinfo:
+    errinfo = traceback.format_exc()
   _G.log_error(f"An error occured during runtime!\n{str(err)}\n{errinfo}")
 
 def img2str(image_file, lang='jpn', config='--psm 12 --psm 13'):
@@ -172,15 +190,3 @@ def is_focused():
     hwnd = win32gui.GetForegroundWindow()
     return hwnd == _G.SelfHwnd or hwnd == _G.AppHwnd
   return True
-
-def str2float(ss):
-  try:
-    a = ''
-    for c in ss:
-      if c == '.' and a and '.' not in a:
-        a += c
-      elif c in '0123456789':
-        a += c
-    return float(a)
-  except Exception:
-    return None

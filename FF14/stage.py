@@ -25,6 +25,10 @@ Enum = {
     'pos': ((45, 87),(45, 164),(45, 240),(1866, 146),(749, 43),(72, 1021),),
     'color': ((255, 255, 255),(255, 255, 255),(255, 255, 255),(255, 255, 255),(62, 53, 40),(173, 219, 239),)
   },
+  'CharacterSelection3': {
+    'pos': ((751, 41),(47, 84),(48, 163),(46, 551),(73, 1019),),
+    'color': ((235, 230, 222),(255, 255, 255),(255, 255, 255),(255, 255, 255),(255, 255, 255),)
+  },
   'SceneMap': {
     'pos': ((812, 1000),(971, 999),(1678, 989),(1712, 985),(1848, 1043),),
     'color': ((28, 83, 4),(7, 77, 108),(136, 102, 68),(119, 34, 34),(130, 103, 58),)
@@ -64,7 +68,12 @@ def get_distance(fallback=None):
   return fallback if ret == None else ret
 
 def get_coord(force_correct=False, depth=0, interval=3):
-  ss = utils.ocr_rect(position.CoordRect, fname='coord.png', whitelist='XYZ:.0123456789')
+  ss = utils.ocr_rect(
+    position.CoordRect,
+    fname='coord.png',
+    whitelist='XYZ:.0123456789',
+    binarization_colors=[(238, 225, 197),(136, 129, 113,),(222, 210, 184),(208, 197, 172),(189, 179, 157),(222, 210, 184),(190, 180, 158)]
+  )
   _G.log_info(ss)
   sp = ss.split(':')
   ret = []
@@ -75,9 +84,6 @@ def get_coord(force_correct=False, depth=0, interval=3):
     for ch in ss:
       if ch in '0123456789.':
         buffer += ch
-        # if len(buffer) >= 6:
-        #   ret.append(utils.str2float(buffer) % 100)
-        #   buffer = ''
       elif buffer:
         ret.append(utils.str2float(buffer) % 100)
         buffer = ''

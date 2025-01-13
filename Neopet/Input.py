@@ -1,5 +1,5 @@
 import _G, graphics
-import win32api, win32con 
+import win32api, win32con, win32gui
 import random, math
 from time import sleep
 from _G import (resume,wait,uwait,log_debug,log_error,log_info,log_warning,make_lparam)
@@ -41,7 +41,7 @@ def key_down(kid, use_msg=_G.AppInputUseMsg, hwnd=None):
     hwnd = _G.AppInputHwnd
   hwnd = hwnd if hwnd else _G.AppHwnd
   win32api.SendMessage(hwnd, win32con.WM_KEYDOWN, kid, 0)
-  
+
 def key_up(kid, use_msg=_G.AppInputUseMsg, hwnd=None):
   if not use_msg:
     return win32api.keybd_event(kid, 0, win32con.KEYEVENTF_KEYUP, 0)
@@ -50,20 +50,26 @@ def key_up(kid, use_msg=_G.AppInputUseMsg, hwnd=None):
   hwnd = hwnd if hwnd else _G.AppHwnd
   win32api.SendMessage(hwnd, win32con.WM_KEYUP, kid, 0)
 
-def trigger_key(kid, use_msg=_G.AppInputUseMsg, hwnd=None):
-  key_down(kid, use_msg=use_msg, hwnd=hwnd)
-  sleep(0.03)
-  key_up(kid, use_msg=use_msg, hwnd=hwnd)
+def trigger_key(*args, **kwargs):
+  duration = kwargs.pop('duration', 0.03)
+  for kid in args:
+    key_down(kid, **kwargs)
+  sleep(duration)
+  for kid in args:
+    key_up(kid, **kwargs)
 
-def mouse_down(x=None, y=None, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None, mright=False):
+def mouse_down(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUseMsg, hwnd=None):
   if not hwnd:
     hwnd = _G.AppInputHwnd
   if use_msg:
+    prev_focus = win32gui.GetForegroundWindow()
     hwnd = hwnd if hwnd else _G.AppHwnd
-    if mright:
-      win32api.SendMessage(hwnd, win32con.WM_RBUTTONDOWN, win32con.MK_RBUTTON, make_lparam(x,y))
-    else:
-      win32api.SendMessage(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, make_lparam(x,y))
+    win32api.SendMessage(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, make_lparam(x,y))
+    if win32gui.GetForegroundWindow() != prev_focus:
+      try:
+        win32gui.SetForegroundWindow(prev_focus)
+      except Exception:
+        pass
     return
   rect = None
   if app_offset:
@@ -78,17 +84,20 @@ def mouse_down(x=None, y=None, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=
     y += rect[1]
   if x or y:
     win32api.SetCursorPos((x,y))
-  win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTDOWN if mright else win32con.MOUSEEVENTF_LEFTDOWN,x,y,0,0)
+  win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,x,y,0,0)
 
-def mouse_up(x=None, y=None, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None, mright=False):
+def mouse_up(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUseMsg, hwnd=None):
   if not hwnd:
     hwnd = _G.AppInputHwnd
   if use_msg:
+    prev_focus = win32gui.GetForegroundWindow()
     hwnd = hwnd if hwnd else _G.AppHwnd
-    if mright:
-      win32api.SendMessage(hwnd, win32con.WM_RBUTTONUP, win32con.MK_RBUTTON, make_lparam(x,y))
-    else:
-      win32api.SendMessage(hwnd, win32con.WM_LBUTTONUP, win32con.MK_LBUTTON, make_lparam(x,y))
+    win32api.SendMessage(hwnd, win32con.WM_LBUTTONUP, win32con.MK_LBUTTON, make_lparam(x,y))
+    if win32gui.GetForegroundWindow() != prev_focus:
+      try:
+        win32gui.SetForegroundWindow(prev_focus)
+      except Exception:
+        pass
     return
   rect = None
   if app_offset:
@@ -103,9 +112,9 @@ def mouse_up(x=None, y=None, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=No
     y += rect[1]
   if x or y :
     win32api.SetCursorPos((x,y))
-  win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP if mright else win32con.MOUSEEVENTF_LEFTUP,x,y,0,0)
+  win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,x,y,0,0)
 
-def set_cursor_pos(x, y, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None, wparam=0):
+def set_cursor_pos(x, y, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUseMsg, hwnd=None, wparam=None):
   if not hwnd:
     hwnd = _G.AppInputHwnd
   if use_msg:
@@ -118,28 +127,32 @@ def set_cursor_pos(x, y, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None, 
     y += rect[1]
   win32api.SetCursorPos((int(x),int(y)))
 
-def click(x=None, y=None, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None, mright=False):
+def click(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUseMsg, hwnd=None):
   if not hwnd:
     hwnd = _G.AppInputHwnd
+  x = int(x)
+  y = int(y)
   if not use_msg and x and y:
     set_cursor_pos(x, y, app_offset)
-  mouse_down(x, y, app_offset, use_msg, hwnd, mright)
+  mouse_down(x, y, app_offset, use_msg, hwnd)
   sleep(0.05)
-  mouse_up(x, y, app_offset, use_msg, hwnd, mright)
+  mouse_up(x, y, app_offset, use_msg, hwnd)
 
-def rclick(x, y, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None, rrange=_G.PosRandomRange):
-  mx = x + random.randint(-rrange[0], rrange[0])
-  my = y + random.randint(-rrange[1], rrange[1])
+def rclick(x, y, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUseMsg, hwnd=None, rrange=_G.PosRandomRange):
+  if x+y == 0:
+    x, y = get_cursor_pos(False)
+  mx = int(x) + random.randint(-rrange[0], rrange[0])
+  my = int(y) + random.randint(-rrange[1], rrange[1])
   click(mx, my, app_offset, use_msg, hwnd)
 
-def dclick(x=None, y=None, app_offset=False, use_msg=_G.AppInputUseMsg, hwnd=None):
+def dclick(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUseMsg, hwnd=None):
   if not hwnd:
     hwnd = _G.AppInputHwnd
   click(x,y,app_offset, use_msg, hwnd)
   sleep(0.1)
   click(x,y,app_offset, use_msg, hwnd)
 
-def scroll_up(x, y, delta = 100, app_offset=True, haste=False):
+def scroll_up(x, y, delta = 100, app_offset=not _G.AppInputUseMsg, haste=False):
   mouse_down(x, y, app_offset)
   ty = y + delta
   sleep(0.01 if haste else 0.5)
@@ -149,7 +162,7 @@ def scroll_up(x, y, delta = 100, app_offset=True, haste=False):
     wait(0.01 if haste else ScrollTime)
   mouse_up(x, y, app_offset)
 
-def scroll_down(x, y, delta = 100, app_offset=True, haste=False):
+def scroll_down(x, y, delta = 100, app_offset=not _G.AppInputUseMsg, haste=False):
   mouse_down(x, y, app_offset)
   ty = y - delta
   sleep(0.01 if haste else 0.5)
@@ -159,7 +172,7 @@ def scroll_down(x, y, delta = 100, app_offset=True, haste=False):
     wait(0.01 if haste else ScrollTime)
   mouse_up(x, y, app_offset)
 
-def scroll_left(x, y, delta = 100, app_offset=True, haste=False):
+def scroll_left(x, y, delta = 100, app_offset=not _G.AppInputUseMsg, haste=False):
   mouse_down(x, y, app_offset)
   tx = x + delta
   sleep(0.01 if haste else 0.5)
@@ -169,7 +182,7 @@ def scroll_left(x, y, delta = 100, app_offset=True, haste=False):
     wait(0.01 if haste else ScrollTime)
   mouse_up(x, y, app_offset)
 
-def scroll_right(x, y, delta = 100, app_offset=True, haste=False):
+def scroll_right(x, y, delta = 100, app_offset=not _G.AppInputUseMsg, haste=False):
   mouse_down(x, y, app_offset)
   tx = x - delta
   sleep(0.01 if haste else 0.5)
@@ -179,8 +192,8 @@ def scroll_right(x, y, delta = 100, app_offset=True, haste=False):
     wait(0.01 if haste else ScrollTime)
   mouse_up(x, y, app_offset)
 
-def scroll_to(x, y, x2, y2, app_offset=True, haste=False, hold=True, slow=False, use_msg=False, mright=False):
-  mouse_down(x, y, app_offset, use_msg, mright=mright)
+def scroll_to(x, y, x2, y2, app_offset=not _G.AppInputUseMsg, haste=False, hold=True, slow=False):
+  mouse_down(x, y, app_offset)
   sleep(0.01 if haste else ScrollTime)
   tdx, tdy = abs(x2 - x), abs(y2 - y)
   try:
@@ -188,8 +201,7 @@ def scroll_to(x, y, x2, y2, app_offset=True, haste=False, hold=True, slow=False,
     pcx, pcy = min([max([pcx, 0.4]), 2]), min([max([pcy, 0.4]), 2])
   except Exception:
     pcx, pcy = 1, 1
-  x3 = x
-  y3 = y
+  
   while x != x2 or y != y2:
     dx = int((random.randint(*ScrollDelta) + haste * 2) * pcx)
     dy = int((random.randint(*ScrollDelta) + haste * 2) * pcy)
@@ -197,23 +209,17 @@ def scroll_to(x, y, x2, y2, app_offset=True, haste=False, hold=True, slow=False,
     dy = 1 if dy > 0 and slow else dy
     dx = 1 if dx == 0 and x != x2 else dx
     dy = 1 if dy == 0 and y != y2 else dy
-    x3 = min([x2, x+dx]) if x2 > x else max([x2, x-dx])
-    y3 = min([y2, y+dy]) if y2 > y else max([y2, y-dy])
-    if use_msg:
-      set_cursor_pos(x3, y3, app_offset, True, wparam=2 if mright else 1)
-    else:
-      win32api.mouse_event(win32con.MOUSEEVENTF_MOVE, x3-x, y3-y, 0, 0)
-    print(x3, y3)
+    x = min([x2, x+dx]) if x2 > x else max([x2, x-dx])
+    y = min([y2, y+dy]) if y2 > y else max([y2, y-dy])
+    set_cursor_pos(x, y, app_offset)
     wait(0.01 if haste else ScrollTime)
-    x = x3
-    y = y3
   if hold:
     sleep(1)
-  mouse_up(x3, y3, app_offset, use_msg, mright=mright)
+  mouse_up(x, y, app_offset)
 
 
 MaxMoveTimes = 42
-def moveto(x,y,speed=10,max_steps=MaxMoveTimes,app_offset=True,use_msg=False,aync=True,rand=True):
+def moveto(x,y,speed=10,max_steps=MaxMoveTimes,app_offset=not _G.AppInputUseMsg,aync=True,rand=True):
   global MaxMoveTimes
   if max_steps <= 0:
     max_steps = 0x7fffffff
@@ -240,9 +246,9 @@ def moveto(x,y,speed=10,max_steps=MaxMoveTimes,app_offset=True,use_msg=False,ayn
       ry = random.randint(-_G.PosRandomRange[1],_G.PosRandomRange[1]) // 2
       rx = rx // 2 if dx > dy else rx
       ry = ry // 2 if dy > dx else ry
-    set_cursor_pos(cx+rx, cy+ry, False, use_msg=use_msg)
+    set_cursor_pos(cx+rx, cy+ry, False)
     wait(0.01)
-  set_cursor_pos(x, y, False, use_msg=use_msg)
+  set_cursor_pos(x, y, False)
 
-def rmoveto(x,y,rrange=5,**kwargs):
+def rmoveto(x,y,rrange=10,**kwargs):
   moveto(x+random.randint(-rrange, rrange), y+random.randint(-rrange, rrange), **kwargs)

@@ -61,7 +61,7 @@ def listen_fishing(playback=True):
             fft_values = np.fft.rfft(samples)
             magnitudes = np.abs(fft_values)
             DebugQueue.append(magnitudes[-5:])
-            if magnitudes[-2] >= 15000:
+            if magnitudes[-2] >= 60000:
                 print([int(n) for n in magnitudes[-5:]])
                 break
     finally:

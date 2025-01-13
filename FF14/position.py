@@ -84,9 +84,9 @@ CRHQPosCol = (
   (134, 184, 169)
 )
 
-SystemMenu = (1855, 972)#(1853, 984)
+SystemMenu = (1855, 982)#(1853, 984)
 Logout     = (1724, 914)
-LogoutOK   = (906, 574)
+LogoutOK   = (906, 584)
 GameStart  = (957, 822)
 GeneralOK  = (904, 554)
 LoginOK    = (902, 608)
@@ -209,12 +209,27 @@ LGT_DICT = {
   'HardSilver': {
     'mpos': (248, 274),
     'alts': [(229, 450)],
-    'hidden': ((453, 267), (14,14,14)),
+    'hiddens': [(453, 267)],
     'skill': 'T',
     'mtime': 140,
     'nodes': [
       [
         [24.9, 23.1],
+        ('rotate', 0)
+      ],
+    ]
+  },
+  'ElvenSilver': {
+    'mpos': (248, 274),
+    'alts': [(229, 450)],
+    'hiddens': [
+      (101, 282),(101, 323),(103, 366),(103, 414),(102, 498)
+    ],
+    'skill': 'T',
+    'mtime': 140,
+    'nodes': [
+      [
+        [32.1, 13.9],
         ('rotate', 0)
       ],
     ]

@@ -514,17 +514,24 @@ def start_logout_gathering_fiber():
     uwait(1)
     yield
     action.interact()
-    uwait(0.5)
-    yield
+    for _ in range(3):
+      uwait(0.5)
+      yield
     # enable auto gather
     if not graphics.is_color_ok(graphics.get_pixel(*position.AutoGatherPos, sync=1), position.AutoGatherEnabledColor):
       Input.rmoveto(89, 628)
       yield
-      Input.click(use_msg=False)
-      yield
+      for _ in range(2):
+        Input.click(use_msg=False)
+        yield
     target_exists = True
-    if 'hidden' in target:
-      target_exists = graphics.is_color_ok(graphics.get_pixel(*target['hidden'][0], sync=1), target['hidden'][1])
+    if 'hiddens' in target:
+      for pos in target['hiddens']:
+        target_exists = not graphics.is_color_ok(graphics.get_pixel(*pos, sync=1), (64, 64, 64))
+        _G.log_debug(f"Hidden popup detection {pos}: {target_exists}")
+        if target_exists:
+          target['mpos'] = pos
+          break
       _G.log_info(f"Target exists: {target_exists}")
     if target_exists:
       sk = target.get('skill')
@@ -534,18 +541,20 @@ def start_logout_gathering_fiber():
         if graphics.is_pixel_match((sp,), (sc,), sync=True):
           _G.log_info(f"Use gather skill {sk}")
           Input.trigger_key(ord(sk))
-          uwait(1)
+          uwait(2)
       uwait(0.1)
       Input.rmoveto(*target['mpos'])
-      yield
-      Input.click(use_msg=False)
+      for _ in range(2):
+        yield
+        Input.click(use_msg=False)
     elif 'alts' in target:
       for pos in target['alts']:
         Input.rmoveto(*pos)
         yield
-        Input.click(use_msg=False)
-        yield
-    for _ in range(10):
+        for _ in range(2):
+          Input.click(use_msg=False)
+          yield
+    for _ in range(15):
       uwait(1)
       yield
     action.target_player()
