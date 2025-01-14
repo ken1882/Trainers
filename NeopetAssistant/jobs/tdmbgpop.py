@@ -12,4 +12,6 @@ class TDMBGPOPJob(BaseJob):
         super().__init__("tdmbgpop", "https://www.neopets.com/faerieland/tdmbgpop.phtml", **kwargs)
 
     def execute(self):
-        pass
+        node = self.page.query_selector_all('input[type=submit]')[-1]
+        node.click()
+        yield from _G.rwait(5)

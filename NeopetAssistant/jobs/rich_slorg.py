@@ -9,4 +9,4 @@ class RichSlorgJob(BaseJob):
         super().__init__("rich_slorg", "https://www.neopets.com/shop_of_offers.phtml?slorg_payout=yes", **kwargs)
 
     def execute(self):
-        pass
+        yield from _G.rwait(3)

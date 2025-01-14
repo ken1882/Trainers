@@ -4,6 +4,7 @@ import os
 from playwright.sync_api import sync_playwright
 from scheduler import JobScheduler
 from jobs.login import LoginJob
+from jobs.trudys_surprise import TrudysSurpriseJob
 
 KEYBOARD_ENABLED = False
 if os.geteuid() == 0:
@@ -20,6 +21,8 @@ def create_context(pw, id):
     return pw.chromium.launch_persistent_context(
         "./profile_{:04d}".format(id),
         headless=False,
+        handle_sigint=False,
+        channel='msedge',
         args=args
     )
 
@@ -41,7 +44,8 @@ def main_loop():
 def queue_jobs():
     global Scheduler
     jobs = (
-        LoginJob(email=os.getenv('NEO_EMAIL'), password=os.getenv('NEO_PASSWORD')),
+        # LoginJob(email=os.getenv('NEO_EMAIL'), password=os.getenv('NEO_PASSWORD')),
+        TrudysSurpriseJob(),
     )
     for job in jobs:
         Scheduler.queue_job(job, False)
@@ -60,7 +64,6 @@ def main():
     except (KeyboardInterrupt, SystemExit):
         _G.logger.info("Exiting...")
         Scheduler.stop()
-        
 
 if __name__ == '__main__':
     main()

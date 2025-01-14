@@ -59,11 +59,9 @@ class JobScheduler:
             self.queue_job(self.current_job, queue_next)
             self.current_job = None
         self.fiber = None
-    
+
     def resume(self, fiber):
         ret = None
-        if not fiber:
-            return False
         try:
             ret = next(fiber)
             if type(ret) == NeoError and ret.errno == 0:
@@ -73,15 +71,15 @@ class JobScheduler:
                     self.job_returns.append(job_ret)
                 self.stop_job()
                 return False
-        except StopIteration:
+        except StopIteration as ret:
             _G.logger.info("Job has stopped")
-            job_ret = self.current_job.return_value
+            job_ret = self.current_job.return_value or ret.value
             if type(job_ret) != NeoError and job_ret.errno != 0:
                 self.job_returns.append(job_ret)
             self.stop_job()
             return False
         return True
-    
+
     def queue_job(self, job, queue_next:bool=True):
         if queue_next:
             job.calc_next_run()
@@ -96,13 +94,13 @@ class JobScheduler:
         _G.logger.warning(f"Job stopped: {reason}")
         self.running = False
         self.stop_job(queue_next=False)
-    
+
     def save_status(self):
         _G.logger.info("Saving job scheduler status")
         savefile = f"./.job_scheduler_{self.name}.json"
         with open(savefile, 'w') as f:
             json.dump(self.to_dict(), f)
-    
+
     def load_status(self, filename:str):
         _G.logger.info("Loading job scheduler status")
         with open(filename, 'r') as f:
@@ -121,14 +119,14 @@ class JobScheduler:
                 job_instance = job_cls()
                 job_instance.load_data(job_data)
                 self.queued_jobs.append(job_instance)
-    
+
     def to_dict(self):
         return {
             'name': self.name,
             'pending_jobs': [job.to_dict() for job in self.pending_jobs],
             'queued_jobs': [job.to_dict() for job in self.queued_jobs],
         }
-    
+
     def terminate(self):
         _G.logger.info("Terminating job scheduler")
         self.stop('terminated')

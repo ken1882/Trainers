@@ -21,3 +21,12 @@ def wait(sec):
 
 def uwait(sec):
     sleep(sec + max(random() / 2, sec * random() / 5))
+
+WaitInterval = 0.1
+def rwait(sec):
+    global WaitInterval,FPS
+    times = int(sec // (WaitInterval + FPS))
+    for _ in range(times):
+        wait(WaitInterval)
+        yield
+    wait(sec - times * (WaitInterval+FPS))

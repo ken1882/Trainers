@@ -1,4 +1,4 @@
-from _G import wait, logger
+from _G import wait, rwait, logger
 import utils
 from datetime import datetime, timedelta
 from errors import NeoError
@@ -42,35 +42,40 @@ class BaseJob:
         while not self.signal.get('load', False):
             wait(0.1)
             yield
-        logger.info("Page loaded")
+        logger.info("Executing job")
         yield from self.execute()
         self.stop()
 
     def on_page_load(self):
+        logger.info("Page loaded")
         self.signal['load'] = True
 
     def execute(self):
         yield
 
     def stop(self):
+        logger.info(f"Stopping job {self.job_name}")
         if self.new_page and self.page:
             self.page.close()
 
-    def wait_until_elements_found(self, selectors:list, timeout:int=10):
+    def _wait_until_elements_found(self, selectors:list, timeout:int=10):
         '''
         Wait until all selectors are found.
         '''
         while timeout > 0:
+            ret = []
             for selector in selectors:
-                if not self.page.query_selector(selector):
+                ele = self.page.query_selector(selector)
+                if not ele:
                     break
+                ret.append(ele)
             else:
-                break
+                return ret
             timeout -= 1
-            wait(1)
-        return timeout > 0
+            yield from rwait(1)
+        return False
 
-    def wait_until_element_found(self, selectors:list, timeout:int=10):
+    def _wait_until_element_found(self, selectors:list, timeout:int=10):
         '''
         Wait until one of the selectors is found.
         '''
@@ -80,8 +85,24 @@ class BaseJob:
                 if node:
                     return node
             timeout -= 1
-            wait(1)
-        return None
+            yield from rwait(1)
+        return False
+
+    def wait_until_elements_found(self, success_callback, fail_callback, selectors:list, timeout:int=10):
+        while True:
+            r = yield from self._wait_until_elements_found(selectors, timeout)
+            if r == False:
+                return fail_callback()
+            elif r:
+                return success_callback(r)
+
+    def wait_until_element_found(self, success_callback, fail_callback, selectors:list, timeout:int=10):
+        while True:
+            r = yield from self._wait_until_element_found(selectors, timeout)
+            if r == False:
+                return fail_callback()
+            elif r:
+                return success_callback(r)
 
     def click_element(self, selector:str, nth_element:int=0):
         node = self.page.query_selector(selector)
