@@ -2,7 +2,7 @@ import _G, utils
 import os
 
 
-SAVE_DIR = './capcha'
+SAVE_DIR = './.capcha'
 
 def grab_capcha(page):
     if not os.path.exists(SAVE_DIR):
