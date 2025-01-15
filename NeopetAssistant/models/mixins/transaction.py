@@ -25,6 +25,7 @@ class Transaction:
         self.message      = message
         self.timestamp    = timestamp or datetime.now()
         self.kwargs       = kwargs
+        return self
 
     def log(self, disable_json_output=False):
         log_str = f"Transaction Log: {self.timestamp}\n"
@@ -41,6 +42,10 @@ class Transaction:
             with open(filename, 'a') as f:
                 f.write(json.dumps(self.to_dict()))
                 f.write('\n')
+        return self
+
+    def __str__(self):
+        return f"<Transaction: {self.to_dict()}>"
 
     def to_dict(self):
         return {

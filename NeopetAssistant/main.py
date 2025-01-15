@@ -5,6 +5,10 @@ from playwright.sync_api import sync_playwright
 from scheduler import JobScheduler
 from jobs.login import LoginJob
 from jobs.trudys_surprise import TrudysSurpriseJob
+from jobs.giant_jelly import GiantJellyJob
+from jobs.giant_omelette import GiantOmeletteJob
+from jobs.tdmbgpop import TDMBGPOPJob
+from jobs.tombola import TombolaJob
 
 
 Scheduler = None
