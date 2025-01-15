@@ -1,5 +1,3 @@
-keyboard
 pytest-playwright
-playwright-stealth
 tzlocal
 pytz

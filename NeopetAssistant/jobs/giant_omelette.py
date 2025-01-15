@@ -6,9 +6,9 @@ from errors import NeoError
 
 class GiantOmeletteJob(BaseJob):
     def __init__(self, **kwargs):
-        super().__init__("giant_omelet", "https://www.neopets.com/prehistoric/omelette.phtml", **kwargs)
+        super().__init__("giant_omelette", "https://www.neopets.com/prehistoric/omelette.phtml", **kwargs)
 
     def execute(self):
-        node = self.page.query_selector_all('input[type=submit]')[-1]
-        node.click()
+        yield from _G.rwait(2)
+        self.click_element('button[type=submit]', -1)
 

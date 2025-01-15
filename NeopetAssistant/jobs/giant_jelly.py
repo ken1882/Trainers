@@ -9,7 +9,5 @@ class GiantJellyJob(BaseJob):
         super().__init__("giant_jelly", "https://www.neopets.com/jelly/jelly.phtml", **kwargs)
 
     def execute(self):
-        node = self.page.query_selector_all('input[type=submit]')[-1]
-        node.click()
-
-
+        yield from _G.rwait(2)
+        self.click_element('input[type=submit]', -1)

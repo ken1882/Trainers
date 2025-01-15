@@ -1,19 +1,23 @@
 from _G import wait, rwait, logger
 import utils
+import page_action as action
 from datetime import datetime, timedelta
 from errors import NeoError
 
 class BaseJob:
     def __init__(self, job_name:str, url:str, new_page:bool=True,
                  priority:int=0, page=None, context=None, next_run=None,
+                 enabled=True, close_delay=5000,
                  **kwargs):
         self.job_name = job_name
         self.url = url
         self.next_run = next_run if next_run else datetime.now()
         self.new_page = new_page
-        self.page = None
-        self.context = None
-        self.priority = priority
+        self.page     = None
+        self.context     = None
+        self.priority    = priority
+        self.enabled     = enabled
+        self.close_delay = close_delay
         self.args = {}
         self.return_value = NeoError(0)
         for key, value in kwargs.items():
@@ -54,7 +58,8 @@ class BaseJob:
         yield
 
     def stop(self):
-        logger.info(f"Stopping job {self.job_name}")
+        logger.info(f"Stopping job {self.job_name}, delay={self.close_delay}ms")
+        wait(self.close_delay / 1000.0)
         if self.new_page and self.page:
             self.page.close()
 
@@ -112,15 +117,19 @@ class BaseJob:
                 print("Element found")
                 return success_callback(r)
 
-    def click_element(self, selector:str, nth_element:int=0):
-        node = self.page.query_selector(selector)
+    def click_element(self, selector:str, nth_element:int=None, **kwargs):
+        node = None
+        if nth_element != None:
+            node = self.page.query_selector_all(selector)[nth_element]
+        else:
+            node = self.page.query_selector(selector)
         if node:
-            node.click()
+            action.click_node(self.page, node, **kwargs)
             return node
         return None
 
     def calc_next_run(self, shortcut:str='daily'):
-        curt = datetime.now()
+        curt = utils.localt2nst(datetime.now())
         if shortcut == 'daily':
             tomorrow = datetime(curt.year, curt.month, curt.day, 0, 0, 0) + timedelta(days=1)
             self.next_run = utils.nst2localt(tomorrow)
@@ -138,14 +147,19 @@ class BaseJob:
             'next_run': self.next_run.timestamp(),
             'new_page': self.new_page,
             'priority': self.priority,
+            'enabled': self.enabled,
+            'close_delay': self.close_delay,
             'args': self.args
         }
 
     def load_data(self, data):
+        data = {**self.to_dict(), **data}
         self.job_name = data['job_name']
         self.url = data['url']
-        self.next_run = data['next_run']
+        self.next_run = datetime.fromtimestamp(data['next_run'])
         self.new_page = data['new_page']
         self.priority = data['priority']
+        self.close_delay = data['close_delay']
+        self.enanbled = data['enabled']
         self.args = data['args']
         return self

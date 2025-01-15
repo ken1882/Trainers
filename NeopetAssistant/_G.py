@@ -9,6 +9,8 @@ load_dotenv()
 ARGV = {}
 FPS = (1 / 240)
 
+IPC_FILE = '.ipc'
+
 logger = getLogger('main')
 logger.setLevel(logging.DEBUG)
 ch = StreamHandler()
@@ -16,6 +18,8 @@ ch.setLevel(logging.DEBUG)
 formatter = Formatter('%(asctime)s - [%(levelname)s] %(message)s')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
+
+FlagRunning = True
 
 def wait(sec):
     sleep(sec)

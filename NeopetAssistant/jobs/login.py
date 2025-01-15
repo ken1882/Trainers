@@ -6,12 +6,14 @@ from errors import NeoError
 class LoginJob(BaseJob):
     def __init__(self, **kwargs):
         super().__init__("login", "https://www.neopets.com/home", **kwargs)
+        self.priority = 9999 # always check login first
 
     def execute(self):
         r = []
         yield from self.wait_until_element_found(lambda: r.append(1), lambda: r, ['#navPetMenuIcon__2020'], 3)
         if not r:
             _G.logger.info("Not loggin in, please login manually first, then restart the program")
+            self.page.wait_for_url('https://www.neopets.com/home')
             while True:
                 yield from self.wait_until_element_found(lambda: r.append(1), lambda: r,['#navPetMenuIcon__2020'], 86400)
                 if not r:

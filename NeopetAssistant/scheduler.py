@@ -1,16 +1,17 @@
 import _G
 import json
 import jobs
-from jobs.base_job import BaseJob
 from errors import NeoError
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class JobScheduler:
     '''
     This class manages the execution of jobs.
     The jobs will executed concurrently with generators.
     '''
-    def __init__(self, playwright, context, name='default'):
+    def __init__(self, playwright, context, name='default', save_path='.',
+                    idle_log_interval=60, job_pick_interval=30
+                ):
         self.pending_jobs = []
         self.queued_jobs = []
         self.current_job = None
@@ -21,6 +22,11 @@ class JobScheduler:
         self.context = context
         self.name = name
         self.job_returns = []
+        self.idle_log_interval = idle_log_interval
+        self.last_idle_time = datetime.now() - timedelta(days=1)
+        self.save_path = save_path
+        self.job_pick_interval = job_pick_interval
+        self.last_scan_time = datetime.now() - timedelta(days=1)
 
     def add_job(self, job):
         self.pending_jobs.append(job)
@@ -32,29 +38,48 @@ class JobScheduler:
             if not self.resume(self.fiber):
                 self.stop_job(True)
             return
-        # Copy queued jobs to pending jobs
+        if (datetime.now() - self.last_scan_time).total_seconds() < self.job_pick_interval:
+            return
+        self.last_scan_time = datetime.now()
+        _G.logger.debug("Picking up jobs")
+        # Move queued jobs to pending jobs if ready
         curt = datetime.now()
         curt_tz = datetime.now().astimezone()
+        unprocessed = []
         for job in self.queued_jobs:
+            if not job.enabled or job == self.current_job:
+                unprocessed.append(job)
+                continue
             try:
                 if job.next_run < curt:
                     _G.logger.info(f"Pending job {job.job_name}")
-                    self.pending_jobs.append(job)
+                    self.add_job(job)
+                    continue
             except TypeError:
                 if job.next_run < curt_tz:
                     _G.logger.info(f"Pending job {job.job_name}")
-                    self.pending_jobs.append(job)
+                    self.add_job(job)
+                    continue
+            unprocessed.append(job)
+        self.queued_jobs = unprocessed
         # Pick highest priority pending job
         if self.pending_jobs:
-            self.pending_jobs.sort(key=lambda x: x.priority, reverse=True)
-            job = self.pending_jobs.pop(0)
-            self.execute_job(job)
+            self.pending_jobs.sort(key=lambda x: x.priority)
+            self.execute_job(self.pending_jobs.pop())
             return
+        else:
+            if (datetime.now() - self.last_idle_time).total_seconds() > self.idle_log_interval:
+                self.display_queue()
+                self.last_idle_time = datetime.now()
 
     def execute_job(self, job):
         if not job:
             _G.logger.warning("No job to execute!")
             return
+        msg = "Pending jobs:\n"
+        for j in self.pending_jobs:
+            msg += f"{j.job_name} next_run: {j.next_run}\n"
+        _G.logger.info(msg+'\n---\n')
         _G.logger.info(f"Executing job: {job.job_name}")
         self.current_job = job
         self.current_job.set_context(self.context)
@@ -75,14 +100,12 @@ class JobScheduler:
                 job_ret = self.current_job.return_value
                 if type(job_ret) != NeoError and job_ret.errno != 0:
                     self.job_returns.append(job_ret)
-                self.stop_job()
                 return False
         except StopIteration as ret:
             _G.logger.info("Job has stopped")
             job_ret = self.current_job.return_value or ret.value
             if type(job_ret) != NeoError and job_ret.errno != 0:
                 self.job_returns.append(job_ret)
-            self.stop_job()
             return False
         return True
 
@@ -103,34 +126,47 @@ class JobScheduler:
 
     def save_status(self):
         _G.logger.info("Saving job scheduler status")
-        savefile = f"./.job_scheduler_{self.name}.json"
+        savefile = f"{self.save_path}/.job_scheduler_{self.name}.json"
         with open(savefile, 'w') as f:
             json.dump(self.to_dict(), f)
 
-    def load_status(self, filename:str):
-        _G.logger.info("Loading job scheduler status")
+    def load_status(self, path_dir):
+        if self.current_job:
+            _G.logger.error(f"Unable to load while job is running!")
+            return
+        filename = f"{path_dir}/.job_scheduler_{self.name}.json"
+        _G.logger.info("Loading job scheduler data")
         with open(filename, 'r') as f:
             data = json.load(f)
             self.pending_jobs = []
-            self.queued_jobs = []
+            self.queued_jobs  = []
+            data = {**self.to_dict(), **data}
+            self.idle_log_interval = data['idle_log_interval']
+            self.job_pick_interval = data['job_pick_interval']
             for job_data in data['pending_jobs']:
-                job_module = getattr(jobs, job_data['name'])
+                job_module = getattr(jobs, job_data['job_name'])
                 job_cls  = getattr(job_module, job_data['class'])
                 job_instance = job_cls()
                 job_instance.load_data(job_data)
                 self.pending_jobs.append(job_instance)
             for job_data in data['queued_jobs']:
-                job_module = getattr(jobs, job_data['name'])
+                job_module = getattr(jobs, job_data['job_name'])
                 job_cls  = getattr(job_module, job_data['class'])
                 job_instance = job_cls()
                 job_instance.load_data(job_data)
                 self.queued_jobs.append(job_instance)
+        _G.logger.info("Data successfully loaded")
+        self.display_queue()
+        self.last_scan_time = datetime.now() - timedelta(days=1)
 
     def to_dict(self):
         return {
             'name': self.name,
             'pending_jobs': [job.to_dict() for job in self.pending_jobs],
             'queued_jobs': [job.to_dict() for job in self.queued_jobs],
+            'last_idle_time': self.last_idle_time.timestamp(),
+            'idle_log_interval': self.idle_log_interval,
+            'job_pick_interval': self.job_pick_interval,
         }
 
     def terminate(self):
@@ -143,3 +179,16 @@ class JobScheduler:
             self.playwright.stop()
         except Exception:
             pass
+
+    def display_queue(self):
+        msg  = '\n=== Job Queue ===\n'
+        msg2 = '\n--- Disabled Jobs ---\n'
+        for job in self.queued_jobs:
+            ss = f"{job.job_name} next_run: {job.next_run}\n"
+            if job.enabled:
+                msg += ss
+            else:
+                msg2 += ss
+        msg += msg2
+        msg += "\n=================\n"
+        _G.logger.info(msg)
