@@ -137,17 +137,17 @@ class NeoError(Exception):
         133: "Memory page has hardware error"
     }
 
-    def __init__(self, errno:int, message:str='', raise_exception:bool=True):
+    def __init__(self, errno:int, message:str='', critical:bool=False):
         super().__init__(message)
         self.errno = errno
         self.message = message if message else self.DEFAULT_MESSAGE_MAP.get(errno, 'Unknown error')
-        self.raise_exception = raise_exception
+        self.critical = critical
 
     def __str__(self):
         return f'{self.errno}: {self.message}'
 
     def raise_exception(self):
-        if self.raise_exception:
+        if self.critical:
             _G.logger.error('A critical error occurred and the job must be stopped')
             _G.logger.error(str(self))
             raise self

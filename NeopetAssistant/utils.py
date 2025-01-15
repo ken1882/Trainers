@@ -2,6 +2,7 @@ import _G
 import traceback
 from datetime import datetime
 import pytz, tzlocal
+from difflib import SequenceMatcher
 
 def handle_exception(err, errinfo=None):
     if not errinfo:
@@ -19,3 +20,12 @@ def pst2localt(pst: datetime):
     return local_time
 
 nst2localt = pst2localt # Neopets server time is in PST
+
+def diff_string(a,b):
+    return SequenceMatcher(None,a,b).ratio()
+
+def str2int(ss):
+    try:
+        return int("".join([n for n in ss if n.isdigit()]))
+    except ValueError:
+        return None

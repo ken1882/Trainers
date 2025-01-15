@@ -34,10 +34,16 @@ class JobScheduler:
             return
         # Copy queued jobs to pending jobs
         curt = datetime.now()
+        curt_tz = datetime.now().astimezone()
         for job in self.queued_jobs:
-            if job.next_run < curt:
-                _G.logger.info(f"Pending job {job.job_name}")
-                self.pending_jobs.append(job)
+            try:
+                if job.next_run < curt:
+                    _G.logger.info(f"Pending job {job.job_name}")
+                    self.pending_jobs.append(job)
+            except TypeError:
+                if job.next_run < curt_tz:
+                    _G.logger.info(f"Pending job {job.job_name}")
+                    self.pending_jobs.append(job)
         # Pick highest priority pending job
         if self.pending_jobs:
             self.pending_jobs.sort(key=lambda x: x.priority, reverse=True)

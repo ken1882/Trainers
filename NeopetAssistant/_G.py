@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+ARGV = {}
 FPS = (1 / 240)
 
 logger = getLogger('main')

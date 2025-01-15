@@ -65,7 +65,10 @@ class BaseJob:
         while timeout > 0:
             ret = []
             for selector in selectors:
-                ele = self.page.query_selector(selector)
+                try:
+                    ele = self.page.query_selector(selector)
+                except Exception as e:
+                    pass
                 if not ele:
                     break
                 ret.append(ele)
@@ -81,7 +84,10 @@ class BaseJob:
         '''
         while timeout > 0:
             for selector in selectors:
-                node = self.page.query_selector(selector)
+                try:
+                    node = self.page.query_selector(selector)
+                except Exception as e:
+                    pass
                 if node:
                     return node
             timeout -= 1
@@ -100,8 +106,10 @@ class BaseJob:
         while True:
             r = yield from self._wait_until_element_found(selectors, timeout)
             if r == False:
+                print("Element not found")
                 return fail_callback()
             elif r:
+                print("Element found")
                 return success_callback(r)
 
     def click_element(self, selector:str, nth_element:int=0):

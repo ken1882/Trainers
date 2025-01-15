@@ -1,3 +1,4 @@
+# copy-paste to python interactive shell to test
 import _G
 import utils
 import os
@@ -28,41 +29,9 @@ def create_context(pw, id, enable_extensions=True):
         args=args
     )
 
-def update_inputs():
-    return
 
-def main_loop():
-    global Scheduler
-    update_inputs()
-    try:
-        Scheduler.update()
-    except Exception as e:
-        _G.logger.error(f"Scheduler aborted with unhandled exception!")
-        utils.handle_exception(e)
-
-def queue_jobs():
-    global Scheduler
-    jobs = (
-        LoginJob(),
-        TrudysSurpriseJob(),
-    )
-    for job in jobs:
-        Scheduler.queue_job(job, False)
-
-def main():
-    global Scheduler
-    pw = sync_playwright().start()
-    context = create_context(pw, 1)
-    Scheduler = JobScheduler(pw, context)
-    queue_jobs()
-    Scheduler.start()
-    try:
-        while True:
-            _G.wait(_G.FPS*2)
-            main_loop()
-    except (KeyboardInterrupt, SystemExit):
-        _G.logger.info("Exiting...")
-        Scheduler.terminate()
-
-if __name__ == '__main__':
-    main()
+pw = sync_playwright().start()
+context = create_context(pw, 1)
+page = context.new_page()
+page.goto('https://www.neopets.com/objects.phtml?type=shop&obj_type=56')
+page.wait_for_load_state('networkidle')
