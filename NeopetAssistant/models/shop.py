@@ -102,7 +102,6 @@ class NeoShop:
         confirm = self.page.query_selector('#confirm-link')
         action.click_node(self.page, confirm)
         self.last_captcha_url = None
-        self.page.wait_for_url('https://www.neopets.com/haggle.phtml**')
         result = yield from self.haggle(good_info=good)
         if result:
             _G.log_info(f"Transaction success: {result}")

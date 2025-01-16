@@ -172,6 +172,8 @@ Use `__ret__` to return value.
             ch = self.getch()
         except KeyboardInterrupt:
             self.console_buffer = ''
+            self.line_buffer = ''
+            self.mouse_pos = 0
             print("KeyboardInterrupt\n>>> ", end='', flush=True)
         if ch and type(ch) == str:
             if ord(ch) == 27: # ESC
@@ -183,6 +185,7 @@ Use `__ret__` to return value.
             else:
                 self.line_buffer = self.line_buffer[:self.cursor_pos] + ch + self.line_buffer[self.cursor_pos:]
                 self.cursor_pos += 1
+                self.history_pos = 0
                 if self.cursor_pos == len(self.line_buffer)+1:
                     print(ch, end='', flush=True)
                 else:
@@ -198,7 +201,7 @@ Use `__ret__` to return value.
                 self.exec_namespace['__ret__'] = None
                 self.exec_namespace = {**globals(), **locals(), **self.exec_namespace}
                 exec(self.console_buffer, self.exec_namespace, self.exec_namespace)
-                print("<<< " + str(self.exec_namespace['__ret__']))
+                print("\n<<< " + str(self.exec_namespace['__ret__']))
             except Exception as e:
                 utils.handle_exception(e)
         self.console_buffer = ''
@@ -243,6 +246,13 @@ Use `__ret__` to return value.
             else:
                 raise KeyboardInterrupt
 
+    def reset(self):
+        self.console_buffer = ''
+        self.line_buffer = ''
+        self.cursor_pos = 0
+        self.history_pos = 0
+        self.refresh_line()
+
     def process_linewrap(self):
         self.console_buffer += self.line_buffer + '\n'
         self.line_history.appendleft(self.line_buffer)
@@ -281,20 +291,24 @@ Use `__ret__` to return value.
 
     def process_arrow_up(self):
         if self.history_pos < len(self.line_history):
+            tr = len(self.line_buffer)
             self.line_buffer = self.line_history[self.history_pos]
-            self.history_pos += 1
+            tr -= len(self.line_buffer)
+            self.history_pos = min(len(self.line_history)-1, self.history_pos + 1)
             self.cursor_pos = len(self.line_buffer)
-            self.refresh_line()
+            self.refresh_line(max(0, tr))
 
     def process_arrow_down(self):
         if self.history_pos > 0:
-            self.history_pos -= 1
+            self.history_pos = max(0, self.history_pos - 1)
+            tr = len(self.line_buffer)
             self.line_buffer = self.line_history[self.history_pos] if self.history_pos < len(self.line_history) else ''
+            tr -= len(self.line_buffer)
             self.cursor_pos = len(self.line_buffer)
-            self.refresh_line()
+            self.refresh_line(max(0, tr))
 
-    def refresh_line(self):
-        line  = f"\r>>> {self.line_buffer} "
+    def refresh_line(self, trailing_space=0):
+        line  = f"\r>>> {self.line_buffer} " + ' ' * trailing_space
         line += ' ' * (len(self.line_buffer) - self.cursor_pos)
         line += f"\r>>> {self.line_buffer[:self.cursor_pos]}"
         print(line, end='', flush=True)

@@ -12,6 +12,16 @@ def click_node(page, node, x_mul=0.5, y_mul=0.5, random_x=(-10, 10), random_y=(-
     my = bb['y'] + int(bb['height'] * y_mul) + randint(*random_y)
     page.mouse.click(mx, my)
 
+def locator_click(locator, x, y, button='left', modifiers=[], random_x=(-10, 10), random_y=(-10, 10)):
+    ''' https://playwright.dev/python/docs/api/class-locator#locator-click '''
+    mx = x + randint(*random_x)
+    my = y + randint(*random_y)
+    locator.click(
+        button=button,
+        modifiers=modifiers,
+        position={'x': mx, 'y': my}
+    )
+
 def get_availabe_np(page):
     global AvailableNp
     AvailableNp = utils.str2int(page.query_selector('#npanchor').text_content())

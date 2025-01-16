@@ -130,14 +130,23 @@ class BaseJob:
             return node
         return None
 
+    def scroll_to(self, x:int, y:int, node=None):
+        if node:
+            bb = node.bounding_box()
+            nx = 0
+            ny = y + bb['y'] - 100
+            return action.scroll_to(self.page, nx, ny)
+        return action.scroll_to(self.page, x, y)
+
     def calc_next_run(self, shortcut:str='daily'):
         curt = utils.localt2nst(datetime.now())
         if shortcut == 'daily':
             tomorrow = datetime(curt.year, curt.month, curt.day, 0, 0, 0) + timedelta(days=1)
             self.next_run = utils.nst2localt(tomorrow)
         elif shortcut == 'monthly':
-            next_month = curt.replace(day=1, hour=0, minute=0, second=0) + timedelta(days=31)
-            next_month = next_month.replace(day=1)
+            nm = curt.month + 1 if curt.month < 12 else 1
+            next_month = curt.replace(month=nm, day=1, hour=0, minute=0, second=0)
+            next_month = next_month + timedelta(hours=2)
             self.next_run = utils.nst2localt(next_month)
         return self.next_run
 

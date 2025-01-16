@@ -9,7 +9,7 @@ class MonthlyFreebiesJob(BaseJob):
         super().__init__("monthly_freebies", "https://www.neopets.com/freebies/index.phtml", **kwargs)
 
     def execute(self):
-        pass
+        yield from _G.rwait(5)
 
     def calc_next_run(self):
         return super().calc_next_run('monthly')

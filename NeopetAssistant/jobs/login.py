@@ -12,8 +12,7 @@ class LoginJob(BaseJob):
         r = []
         yield from self.wait_until_element_found(lambda _: r.append(1), lambda: r, ['#navPetMenuIcon__2020'], 3)
         if not r:
-            _G.log_info("Not loggin in, please login manually first, then restart the program")
-            self.page.wait_for_url('https://www.neopets.com/home')
+            _G.log_info("Not loggin in, please login manually first, and do not close the page or tab")
             while True:
                 yield from self.wait_until_element_found(lambda _: r.append(1), lambda: r,['#navPetMenuIcon__2020'], 86400)
                 if not r:

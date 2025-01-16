@@ -142,6 +142,7 @@ class JobScheduler:
             return
         with open(filename, 'r') as f:
             data = json.load(f)
+            queued_bak = [j for j in self.queued_jobs]
             self.pending_jobs = []
             self.queued_jobs  = []
             data = {**self.to_dict(), **data}
@@ -160,6 +161,15 @@ class JobScheduler:
                 job_instance.load_data(job_data)
                 self.queued_jobs.append(job_instance)
         _G.log_info("Data successfully loaded")
+        queued_job_names = [j.job_name for j in self.queued_jobs]
+        msg = "Queued jobs:\n" + '\n'.join(queued_job_names) + '\n---\n'
+        msg += "Expected jobs:\n"
+        for j in queued_bak:
+            msg += f"[{j.job_name in queued_job_names}] {j.job_name} next_run: {j.next_run}\n"
+            if j.job_name not in queued_job_names:
+                _G.log_info(f"Re-queuing job: {j.job_name} that not found in loaded data")
+                self.queued_jobs.append(j)
+        _G.log_info(msg)
         self.display_queue()
         self.last_scan_time = datetime.now() - timedelta(days=1)
 
