@@ -17,8 +17,8 @@ class TombolaJob(BaseJob):
             yield from _G.rwait(5)
             self.args['played_today'] = True
         except Exception as e:
-            _G.logger.warning(f"Error clicking on tombola: {e}")
-            _G.logger.warning("Probably not available yet, requeued for 1 hour")
+            _G.log_warning(f"Error clicking on tombola: {e}")
+            _G.log_warning("Probably not available yet, requeued for 1 hour")
 
     def calc_next_run(self):
         if self.args.get('played_today', False):

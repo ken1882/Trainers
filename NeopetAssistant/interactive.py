@@ -9,7 +9,7 @@ import page_action as action
 import captcha
 
 def create_context(pw, id, enable_extensions=True):
-    _G.logger.info(f"Creating browser context#{id}")
+    _G.log_info(f"Creating browser context#{id}")
     args = [
         '--disable-blink-features=AutomationControlled',
         '--disable-infobars',
@@ -18,7 +18,7 @@ def create_context(pw, id, enable_extensions=True):
     if enable_extensions:
         args.append(f"--disable-extensions-except={os.getenv('BROWSER_EXTENSION_PATHS')}")
         args.append(f"--load-extension={os.getenv('BROWSER_EXTENSION_PATHS')}")
-    _G.logger.info(f"Launching browser context#{id} with args: {args}")
+    _G.log_info(f"Launching browser context#{id} with args: {args}")
     return pw.chromium.launch_persistent_context(
         "./profiles/profile_{:04d}".format(id),
         headless=False,
@@ -48,7 +48,7 @@ def solve_captcha(page, debug=True):
     mx, my = pos
     mx += bb['x']
     my += bb['y']
-    _G.logger.info(f"Clicking captcha at {mx}, {my}")
+    _G.log_info(f"Clicking captcha at {mx}, {my}")
     if debug:
         action.draw_debug_point(page, mx, my)
     else:
@@ -80,7 +80,7 @@ def calc_numkey_interval(current, next):
     return ret
 
 if 'SOLD OUT!' in page.content():
-    _G.logger.info("Item is sold out")
+    _G.log_info("Item is sold out")
 
 
 last_price = 0

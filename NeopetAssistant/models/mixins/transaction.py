@@ -36,7 +36,7 @@ class Transaction:
         log_str += f"Items Gained: {'None' if not self.items_gained else ''}\n"
         for item in self.items_gained:
             log_str += f"\t{item.name} x{item.quantity}\n"
-        _G.logger.info(log_str)
+        _G.log_info(log_str)
         if not disable_json_output:
             filename = f"{TRANSACTION_HISTORY_DIR}/{self.timestamp.strftime('%Y-%m-%d')}.json"
             with open(filename, 'a') as f:

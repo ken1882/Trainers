@@ -24,20 +24,20 @@ def grab_captcha(page):
     if not os.path.exists(SAVE_DIR):
         os.mkdir(SAVE_DIR)
     if 'SOLD OUT!' in page.content():
-        _G.logger.info("Item is sold out")
+        _G.log_info("Item is sold out")
         return
     try:
         image_url = get_captcha_url(page)
         res = page.request.get(image_url)
         if res.status != 200:
-            _G.logger.warning(f"Failed to get captcha image ({res.status})")
+            _G.log_warning(f"Failed to get captcha image ({res.status})")
             return
         filename = f"{SAVE_DIR}/captcha_{int(datetime.now().timestamp())}.png"
         with open(filename, 'wb') as f:
             f.write(res.body())
         return filename
     except Exception as err:
-        _G.logger.warning("Error while getting captcha canvas")
+        _G.log_warning("Error while getting captcha canvas")
         utils.handle_exception(err)
         return
 

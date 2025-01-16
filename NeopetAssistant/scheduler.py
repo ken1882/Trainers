@@ -1,6 +1,7 @@
 import _G
 import json
 import jobs
+import os
 from errors import NeoError
 from datetime import datetime, timedelta
 
@@ -10,7 +11,7 @@ class JobScheduler:
     The jobs will executed concurrently with generators.
     '''
     def __init__(self, playwright, context, name='default', save_path='.',
-                    idle_log_interval=60, job_pick_interval=30
+                    idle_log_interval=60, job_pick_interval=10
                 ):
         self.pending_jobs = []
         self.queued_jobs = []
@@ -41,7 +42,7 @@ class JobScheduler:
         if (datetime.now() - self.last_scan_time).total_seconds() < self.job_pick_interval:
             return
         self.last_scan_time = datetime.now()
-        _G.logger.debug("Picking up jobs")
+        _G.log_debug("Picking up jobs")
         # Move queued jobs to pending jobs if ready
         curt = datetime.now()
         curt_tz = datetime.now().astimezone()
@@ -52,12 +53,12 @@ class JobScheduler:
                 continue
             try:
                 if job.next_run < curt:
-                    _G.logger.info(f"Pending job {job.job_name}")
+                    _G.log_info(f"Pending job {job.job_name}")
                     self.add_job(job)
                     continue
             except TypeError:
                 if job.next_run < curt_tz:
-                    _G.logger.info(f"Pending job {job.job_name}")
+                    _G.log_info(f"Pending job {job.job_name}")
                     self.add_job(job)
                     continue
             unprocessed.append(job)
@@ -74,13 +75,13 @@ class JobScheduler:
 
     def execute_job(self, job):
         if not job:
-            _G.logger.warning("No job to execute!")
+            _G.log_warning("No job to execute!")
             return
         msg = "Pending jobs:\n"
         for j in self.pending_jobs:
             msg += f"{j.job_name} next_run: {j.next_run}\n"
-        _G.logger.info(msg+'\n---\n')
-        _G.logger.info(f"Executing job: {job.job_name}")
+        _G.log_info(msg+'\n---\n')
+        _G.log_info(f"Executing job: {job.job_name}")
         self.current_job = job
         self.current_job.set_context(self.context)
         self.fiber = job.start()
@@ -96,13 +97,13 @@ class JobScheduler:
         try:
             ret = next(fiber)
             if type(ret) == NeoError and ret.errno == 0:
-                _G.logger.info("Job signaled return")
+                _G.log_info("Job signaled return")
                 job_ret = self.current_job.return_value
                 if type(job_ret) != NeoError and job_ret.errno != 0:
                     self.job_returns.append(job_ret)
                 return False
         except StopIteration as ret:
-            _G.logger.info("Job has stopped")
+            _G.log_info("Job has stopped")
             job_ret = self.current_job.return_value or ret.value
             if type(job_ret) != NeoError and job_ret.errno != 0:
                 self.job_returns.append(job_ret)
@@ -113,29 +114,32 @@ class JobScheduler:
         if queue_next:
             job.calc_next_run()
         self.queued_jobs.append(job)
-        _G.logger.info(f"Queued job: {job.job_name}, next run: {job.next_run}")
+        _G.log_info(f"Queued job: {job.job_name}, next run: {job.next_run}")
 
     def start(self):
-        _G.logger.info("Job scheduler started")
+        _G.log_info("Job scheduler started")
         self.running = True
 
     def stop(self, reason:str='manual stop'):
-        _G.logger.warning(f"Job stopped: {reason}")
+        _G.log_warning(f"Job stopped: {reason}")
         self.running = False
         self.stop_job(queue_next=False)
 
     def save_status(self):
-        _G.logger.info("Saving job scheduler status")
+        _G.log_info("Saving job scheduler status")
         savefile = f"{self.save_path}/.job_scheduler_{self.name}.json"
         with open(savefile, 'w') as f:
             json.dump(self.to_dict(), f)
 
     def load_status(self, path_dir):
         if self.current_job:
-            _G.logger.error(f"Unable to load while job is running!")
+            _G.log_error(f"Unable to load while job is running!")
             return
         filename = f"{path_dir}/.job_scheduler_{self.name}.json"
-        _G.logger.info("Loading job scheduler data")
+        _G.log_info(f"Loading job scheduler data from {filename}")
+        if not os.path.exists(filename):
+            _G.log_warning("Data file not found!")
+            return
         with open(filename, 'r') as f:
             data = json.load(f)
             self.pending_jobs = []
@@ -155,7 +159,7 @@ class JobScheduler:
                 job_instance = job_cls()
                 job_instance.load_data(job_data)
                 self.queued_jobs.append(job_instance)
-        _G.logger.info("Data successfully loaded")
+        _G.log_info("Data successfully loaded")
         self.display_queue()
         self.last_scan_time = datetime.now() - timedelta(days=1)
 
@@ -170,7 +174,7 @@ class JobScheduler:
         }
 
     def terminate(self):
-        _G.logger.info("Terminating job scheduler")
+        _G.log_info("Terminating job scheduler")
         self.stop('terminated')
         self.save_status()
         try:
@@ -191,4 +195,4 @@ class JobScheduler:
                 msg2 += ss
         msg += msg2
         msg += "\n=================\n"
-        _G.logger.info(msg)
+        _G.log_info(msg)

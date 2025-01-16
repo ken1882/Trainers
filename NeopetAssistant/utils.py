@@ -7,7 +7,7 @@ from difflib import SequenceMatcher
 def handle_exception(err, errinfo=None):
     if not errinfo:
         errinfo = traceback.format_exc()
-    _G.logger.error(f"An error occured during runtime!\n{str(err)}\n{errinfo}")
+    _G.log_error(f"An error occured during runtime!\n{str(err)}\n{errinfo}")
 
 def pst2localt(pst: datetime):
     pst_tz = pytz.timezone('US/Pacific')

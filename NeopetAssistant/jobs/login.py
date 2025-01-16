@@ -10,18 +10,18 @@ class LoginJob(BaseJob):
 
     def execute(self):
         r = []
-        yield from self.wait_until_element_found(lambda: r.append(1), lambda: r, ['#navPetMenuIcon__2020'], 3)
+        yield from self.wait_until_element_found(lambda _: r.append(1), lambda: r, ['#navPetMenuIcon__2020'], 3)
         if not r:
-            _G.logger.info("Not loggin in, please login manually first, then restart the program")
+            _G.log_info("Not loggin in, please login manually first, then restart the program")
             self.page.wait_for_url('https://www.neopets.com/home')
             while True:
-                yield from self.wait_until_element_found(lambda: r.append(1), lambda: r,['#navPetMenuIcon__2020'], 86400)
+                yield from self.wait_until_element_found(lambda _: r.append(1), lambda: r,['#navPetMenuIcon__2020'], 86400)
                 if not r:
-                    _G.logger.info("Not logged in after 24 hours, stopping job")
+                    _G.log_info("Not logged in after 24 hours, stopping job")
                     raise NeoError(1, "Not logged in")
                 elif r:
                     break
-        _G.logger.info("Logged in")
+        _G.log_info("Logged in")
 
 
     def calc_next_run(self):

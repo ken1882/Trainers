@@ -1,4 +1,4 @@
-from _G import wait, rwait, logger
+import _G
 import utils
 import page_action as action
 from datetime import datetime, timedelta
@@ -39,27 +39,29 @@ class BaseJob:
         # this function will run concurrently in generator
         if self.new_page:
             self.set_page(self.context.new_page())
-        logger.info("Waiting for page to load")
-        self.page.once("load", self.on_page_load)
-        yield
-        self.page.goto(self.url)
-        while not self.signal.get('load', False):
-            wait(0.1)
-            yield
-        logger.info("Executing job")
+        yield from self.goto(self.url)
+        _G.log_info("Executing job")
         yield from self.execute()
-        self.stop()
+        yield from self.stop()
+
+    def goto(self, url):
+        _G.log_info("Waiting for page to load")
+        self.page.goto(url, wait_until='commit')
+        self.page.once("load", self.on_page_load)
+        while not self.signal.get('load', False):
+            self.page.evaluate('document.readyState')
+            yield
 
     def on_page_load(self):
-        logger.info("Page loaded")
+        _G.log_info("Page loaded")
         self.signal['load'] = True
 
     def execute(self):
         yield
 
     def stop(self):
-        logger.info(f"Stopping job {self.job_name}, delay={self.close_delay}ms")
-        wait(self.close_delay / 1000.0)
+        _G.log_info(f"Stopping job {self.job_name}, delay={self.close_delay}ms")
+        yield from _G.rwait(self.close_delay / 1000.0)
         if self.new_page and self.page:
             self.page.close()
 
@@ -80,7 +82,7 @@ class BaseJob:
             else:
                 return ret
             timeout -= 1
-            yield from rwait(1)
+            yield from _G.rwait(1)
         return False
 
     def _wait_until_element_found(self, selectors:list, timeout:int=10):
@@ -96,7 +98,7 @@ class BaseJob:
                 if node:
                     return node
             timeout -= 1
-            yield from rwait(1)
+            yield from _G.rwait(1)
         return False
 
     def wait_until_elements_found(self, success_callback, fail_callback, selectors:list, timeout:int=10):

@@ -148,10 +148,10 @@ class NeoError(Exception):
 
     def raise_exception(self):
         if self.critical:
-            _G.logger.error('A critical error occurred and the job must be stopped')
-            _G.logger.error(str(self))
+            _G.log_error('A critical error occurred and the job must be stopped')
+            _G.log_error(str(self))
             raise self
         else:
-            _G.logger.warning('An error during job execution but the job will attempt to continue')
-            _G.logger.warning(str(self))
+            _G.log_warning('An error during job execution but the job will attempt to continue')
+            _G.log_warning(str(self))
             return self

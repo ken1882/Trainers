@@ -38,15 +38,27 @@ class NeoShop:
         self.purchase_limit = kwargs.get('purchase_limit', 0)
         self.transaction_history = []
 
+    def goto(self, url):
+        _G.log_info("Waiting for shop page to load")
+        self.page.once("load", self.on_page_load)
+        yield
+        self.page.goto(url, wait_until='commit')
+        while not self.signal.get('load', False):
+            yield
+
+    def on_page_load(self):
+        _G.log_info("Page loaded")
+        self.signal['load'] = True
+
     def visit(self):
-        self.page.goto(self.url)
+        yield from self.goto(self.url)
         self.last_visited   = datetime.now()
         next_visit_seconds  = randint(self.min_revisist_seconds, self.max_revisist_seconds)
         self.next_visit     = datetime.now() + timedelta(seconds=next_visit_seconds)
 
     def scan_goods(self):
         if not self.page:
-            _G.logger.error("Page not loaded")
+            _G.log_error("Page not loaded")
             return
         nodes = self.page.query_selector_all(".shop-item")
         self.goods = []
@@ -82,34 +94,35 @@ class NeoShop:
     def buy_good(self, good=None, index=None):
         if index:
             good = self.goods[index]
-        _G.logger.info(f"Buying {good['name']} ({good['price']} NP)")
+        _G.log_info(f"Buying {good['name']} ({good['price']} NP)")
         bb = good['node'].bounding_box()
         action.scroll_to(self.page, 0, max(bb['y'] - 100, 0))
-        action.click_node(self.page, good['node'], y_mul=0.3, random_x=(-20, 20), wait=randint(30, 100) / 100.0)
+        action.click_node(self.page, good['node'], y_mul=0.3, random_x=(-20, 20))
+        yield from _G.rwait(randint(30, 100) / 100.0)
         confirm = self.page.query_selector('#confirm-link')
         action.click_node(self.page, confirm)
         self.last_captcha_url = None
         self.page.wait_for_url('https://www.neopets.com/haggle.phtml**')
-        result = self.haggle(good_info=good)
+        result = yield from self.haggle(good_info=good)
         if result:
-            _G.logger.info(f"Transaction success: {result}")
+            _G.log_info(f"Transaction success: {result}")
         else:
-            _G.logger.info("Failed to purchase item")
+            _G.log_info("Failed to purchase item")
         return result
 
     def reload(self, page=None):
         self.page = page if page else self.page
         if not self.page:
-            _G.logger.warning("No page assigned")
+            _G.log_warning("No page assigned")
             return
         page.reload()
 
 
     def haggle(self, last_price=0, depth=0, good_info=None):
         if 'SOLD OUT!' in self.page.content():
-            _G.logger.info("Item is sold out")
+            _G.log_info("Item is sold out")
             return False
-        self.wait_until_captcha_updated()
+        yield from self.wait_until_captcha_updated()
         purpose_node = self.page.query_selector('#shopkeeper_makes_deal')
         action.scroll_to(self.page, 0, max(0, purpose_node.bounding_box()['y'] - 300))
         max_price = utils.str2int(purpose_node.text_content())
@@ -122,7 +135,7 @@ class NeoShop:
             if digit == 'E':
                 break
             self.page.keyboard.press(digit)
-            _G.wait(self.calc_numkey_interval(input_str[i], input_str[i+1]))
+            yield from _G.rwait(self.calc_numkey_interval(input_str[i], input_str[i+1]))
         self.solve_captcha()
 
         if 'accept' in self.page.content():
@@ -132,7 +145,7 @@ class NeoShop:
                 [NeoItem(item_name, item_name, 1)],
                 f"Purchased from Neopian Shop {self.name if self.name else 'Unknown'}",
             ).log()
-        return self.haggle(bargain_price, depth+1, good_info)
+        yield from self.haggle(bargain_price, depth+1, good_info)
 
     def determine_strategy(self, last_price, max_price, depth=0):
         if last_price < 3000:
@@ -172,13 +185,13 @@ class NeoShop:
         mx, my = pos
         mx += bb['x']
         my += bb['y']
-        _G.logger.info(f"Clicking captcha at {mx}, {my}")
+        _G.log_info(f"Clicking captcha at {mx}, {my}")
         self.page.mouse.click(mx, my)
 
     def wait_until_captcha_updated(self):
         url = '_'
         while url != self.last_captcha_url:
-            _G.wait(1)
+            yield from _G.wait(1)
             url = captcha.get_captcha_url(self.page)
         self.last_captcha_url = url
 

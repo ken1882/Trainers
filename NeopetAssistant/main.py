@@ -1,7 +1,6 @@
 import _G
 import utils
-import os, sys
-import code
+import os
 from playwright.sync_api import sync_playwright
 from scheduler import JobScheduler
 from jobs.login import LoginJob
@@ -10,12 +9,13 @@ from jobs.giant_jelly import GiantJellyJob
 from jobs.giant_omelette import GiantOmeletteJob
 from jobs.tdmbgpop import TDMBGPOPJob
 from jobs.tombola import TombolaJob
-from threading import Thread
+from console import NeoConsole
+from datetime import datetime, timedelta
 
 Scheduler = None
 
 def create_context(pw, id, enable_extensions=True):
-    _G.logger.info(f"Creating browser context#{id}")
+    _G.log_info(f"Creating browser context#{id}")
     args = [
         '--disable-blink-features=AutomationControlled',
         '--disable-infobars',
@@ -24,32 +24,21 @@ def create_context(pw, id, enable_extensions=True):
     if enable_extensions:
         args.append(f"--disable-extensions-except={os.getenv('BROWSER_EXTENSION_PATHS')}")
         args.append(f"--load-extension={os.getenv('BROWSER_EXTENSION_PATHS')}")
-    _G.logger.info(f"Launching browser context#{id} with args: {args}")
+    _G.log_info(f"Launching browser context#{id} with args: {args}")
     return pw.chromium.launch_persistent_context(
-        "./profiles/profile_{:04d}".format(id),
+        "{}/profile_{:04d}".format(_G.BROWSER_PROFILE_DIR, id),
         headless=False,
         handle_sigint=False,
         color_scheme='dark',
         args=args
     )
 
-def update_inputs():
-    return
-
-def start_interactive_console():
-    global Scheduler
-    console = code.InteractiveConsole(locals=dict(globals(), **locals()))
-    console.interact()
-    _G.logger.info("Shutting down")
-    _G.FlagRunning = False
-
 def main_loop():
     global Scheduler
-    update_inputs()
     try:
         Scheduler.update()
     except Exception as e:
-        _G.logger.error(f"Scheduler aborted with unhandled exception!")
+        _G.log_error(f"Scheduler aborted with unhandled exception!")
         utils.handle_exception(e)
 
 def queue_jobs():
@@ -64,25 +53,26 @@ def queue_jobs():
     )
     for job in jobs:
         Scheduler.queue_job(job, False)
-    Scheduler.load_status('.')
+    Scheduler.load_status(_G.BROWSER_PROFILE_DIR)
 
 def main():
     global Scheduler
+    last_tick_time = datetime.now()
     pw = sync_playwright().start()
     context = create_context(pw, 1)
-    Scheduler = JobScheduler(pw, context)
+    Scheduler = JobScheduler(pw, context, save_path=_G.BROWSER_PROFILE_DIR)
     queue_jobs()
+    _G.Console = NeoConsole(globals=globals(), locals=locals())
     Scheduler.start()
-    th = Thread(target=start_interactive_console)
-    th.start()
     try:
         while _G.FlagRunning:
-            _G.wait(_G.FPS*2)
-            main_loop()
+            _G.Console.update()
+            if (datetime.now() - last_tick_time).total_seconds() >= _G.FPS:
+                main_loop()
+                last_tick_time = datetime.now()
     except (KeyboardInterrupt, SystemExit):
-        _G.logger.info("Exiting...")
+        _G.log_info("Exiting...")
         Scheduler.terminate()
-        th.join()
 
 if __name__ == '__main__':
     main()
