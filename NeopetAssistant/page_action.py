@@ -22,7 +22,7 @@ def locator_click(locator, x, y, button='left', modifiers=[], random_x=(-10, 10)
         position={'x': mx, 'y': my}
     )
 
-def get_availabe_np(page):
+def get_availalbe_np(page):
     global AvailableNp
     AvailableNp = utils.str2int(page.query_selector('#npanchor').text_content())
     return AvailableNp

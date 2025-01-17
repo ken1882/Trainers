@@ -6,6 +6,7 @@ import utils
 from datetime import datetime, timedelta
 from errors import NeoError
 from models.mixins.transaction import Transaction, NeoItem
+from models.mixins.base_page import BasePage
 from random import randint
 
 NAME_DICT = {
@@ -20,15 +21,16 @@ NAME_DICT = {
     56: "merifoods",
 }
 
-class NeoShop:
+class NeoShop(BasePage):
     def __init__(self, id, **kwargs):
         if id not in NAME_DICT:
             raise NeoError(f"Invalid shop id: {id}")
         self.name = NAME_DICT[id]
-        self.url = f"https://www.neopets.com/objects.phtml?type=shop&obj_type={id}"
+        url = f"https://www.neopets.com/objects.phtml?type=shop&obj_type={id}"
+        page = kwargs.get('page', None)
+        super().__init__(page, url)
         self.last_visited = datetime.now() - timedelta(days=1)
         self.next_visit = datetime.now()
-        self.page = None
         self.goods = []
         self.currency = kwargs.get('currency', 'np')
         self.min_revisist_seconds = kwargs.get('min_revisist_seconds', 60*30)
@@ -38,20 +40,8 @@ class NeoShop:
         self.purchase_limit = kwargs.get('purchase_limit', 0)
         self.transaction_history = []
 
-    def goto(self, url):
-        _G.log_info("Waiting for shop page to load")
-        self.page.once("load", self.on_page_load)
-        yield
-        self.page.goto(url, wait_until='commit')
-        while not self.signal.get('load', False):
-            yield
-
-    def on_page_load(self):
-        _G.log_info("Page loaded")
-        self.signal['load'] = True
-
     def visit(self):
-        yield from self.goto(self.url)
+        yield from self.goto()
         self.last_visited   = datetime.now()
         next_visit_seconds  = randint(self.min_revisist_seconds, self.max_revisist_seconds)
         self.next_visit     = datetime.now() + timedelta(seconds=next_visit_seconds)
@@ -193,4 +183,3 @@ class NeoShop:
             yield from _G.wait(1)
             url = captcha.get_captcha_url(self.page)
         self.last_captcha_url = url
-

@@ -19,6 +19,8 @@ from jobs.monthly_freebies import MonthlyFreebiesJob
 from jobs.healing_springs import HealingSpringsJob
 from jobs.anchor_management import AnchorManagementJob
 from jobs.fruit_machine import FruitMachineJob
+from jobs.qasalan_expellibox import QasalanExpelliboxJob
+from jobs.game_room import GameRoomJob
 
 Scheduler = None
 
@@ -66,6 +68,8 @@ def queue_jobs():
         HealingSpringsJob(),
         AnchorManagementJob(),
         FruitMachineJob(),
+        QasalanExpelliboxJob(),
+        GameRoomJob(),
     )
     for job in jobs:
         Scheduler.queue_job(job, False)

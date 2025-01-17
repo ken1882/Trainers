@@ -3,12 +3,14 @@ import utils
 import page_action as action
 from datetime import datetime, timedelta
 from errors import NeoError
+from models.mixins.base_page import BasePage
 
-class BaseJob:
+class BaseJob(BasePage):
     def __init__(self, job_name:str, url:str, new_page:bool=True,
                  priority:int=0, page=None, context=None, next_run=None,
                  enabled=True, close_delay=5000,
                  **kwargs):
+        super().__init__(page, url, context)
         self.job_name = job_name
         self.url = url
         self.next_run = next_run if next_run else datetime.now()
@@ -22,39 +24,20 @@ class BaseJob:
         self.return_value = NeoError(0)
         for key, value in kwargs.items():
             self.args[key] = value
-        self.signal = {}
         self.set_context(context)
         self.set_page(page)
 
     def run_now(self):
         self.next_run = datetime.now()
 
-    def set_context(self, context):
-        self.context = context
-
-    def set_page(self, page):
-        self.page = page
-
     def start(self):
         # this function will run concurrently in generator
         if self.new_page:
             self.set_page(self.context.new_page())
-        yield from self.goto(self.url)
+        yield from self.goto()
         _G.log_info("Executing job")
         yield from self.execute()
         yield from self.stop()
-
-    def goto(self, url):
-        _G.log_info("Waiting for page to load")
-        self.page.goto(url, wait_until='commit')
-        self.page.once("load", self.on_page_load)
-        while not self.signal.get('load', False):
-            self.page.evaluate('document.readyState')
-            yield
-
-    def on_page_load(self):
-        _G.log_info("Page loaded")
-        self.signal['load'] = True
 
     def execute(self):
         yield
@@ -64,79 +47,6 @@ class BaseJob:
         yield from _G.rwait(self.close_delay / 1000.0)
         if self.new_page and self.page:
             self.page.close()
-
-    def _wait_until_elements_found(self, selectors:list, timeout:int=10):
-        '''
-        Wait until all selectors are found.
-        '''
-        while timeout > 0:
-            ret = []
-            for selector in selectors:
-                try:
-                    ele = self.page.query_selector(selector)
-                except Exception as e:
-                    pass
-                if not ele:
-                    break
-                ret.append(ele)
-            else:
-                return ret
-            timeout -= 1
-            yield from _G.rwait(1)
-        return False
-
-    def _wait_until_element_found(self, selectors:list, timeout:int=10):
-        '''
-        Wait until one of the selectors is found.
-        '''
-        while timeout > 0:
-            for selector in selectors:
-                try:
-                    node = self.page.query_selector(selector)
-                except Exception as e:
-                    pass
-                if node:
-                    return node
-            timeout -= 1
-            yield from _G.rwait(1)
-        return False
-
-    def wait_until_elements_found(self, success_callback, fail_callback, selectors:list, timeout:int=10):
-        while True:
-            r = yield from self._wait_until_elements_found(selectors, timeout)
-            if r == False:
-                return fail_callback()
-            elif r:
-                return success_callback(r)
-
-    def wait_until_element_found(self, success_callback, fail_callback, selectors:list, timeout:int=10):
-        while True:
-            r = yield from self._wait_until_element_found(selectors, timeout)
-            if r == False:
-                print("Element not found")
-                return fail_callback()
-            elif r:
-                print("Element found")
-                return success_callback(r)
-
-    def click_element(self, selector:str, nth_element:int=None, **kwargs):
-        node = None
-        if nth_element != None:
-            node = self.page.query_selector_all(selector)[nth_element]
-        else:
-            node = self.page.query_selector(selector)
-        if node:
-            action.click_node(self.page, node, **kwargs)
-            return node
-        return None
-
-    def scroll_to(self, x:int, y:int, node=None):
-        if node:
-            bb = node.bounding_box()
-            nx = 0
-            ny = y + bb['y'] - 100
-            return action.scroll_to(self.page, nx, ny)
-        return action.scroll_to(self.page, x, y)
 
     def calc_next_run(self, shortcut:str='daily'):
         curt = utils.localt2nst(datetime.now())

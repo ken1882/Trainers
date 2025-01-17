@@ -131,19 +131,39 @@ class NeoConsole(KBHit):
         'I': 'PAGE_UP',
         'Q': 'PAGE_DOWN',
         'R': 'INSERT',
+        ';': 'F1',
+        '<': 'F2',
+        '=': 'F3',
+        '>': 'F4',
+        '?': 'F5',
+        '@': 'F6',
+        'A': 'F7',
+        'B': 'F8',
+        'C': 'F9',
+        'D': 'F10',
     }
 
     UNIX_FUNCTION_CHAR = {
-        'A': 'UP',
-        'B': 'DOWN',
-        'D': 'LEFT',
-        'C': 'RIGHT',
-        '3': 'DEL',
-        'H': 'HOME',
-        'F': 'END',
-        '5': 'PAGE_UP',
-        '6': 'PAGE_DOWN',
-        '2': 'INSERT',
+        '[A': 'UP',
+        '[B': 'DOWN',
+        '[D': 'LEFT',
+        '[C': 'RIGHT',
+        '[3~': 'DEL',
+        '[H': 'HOME',
+        '[F~': 'END',
+        '[5~': 'PAGE_UP',
+        '[6~': 'PAGE_DOWN',
+        '[2~': 'INSERT',
+        'OP': 'F1',
+        'OQ': 'F2',
+        'OR': 'F3',
+        'OS': 'F4',
+        '[15~': 'F5',
+        '[17~': 'F6',
+        '[18~': 'F7',
+        '[19~': 'F8',
+        '[20~': 'F9',
+        '[21~': 'F10',
     }
 
     def __init__(self, nonblock=True, globals={}, locals={}):
@@ -175,7 +195,11 @@ Use `__ret__` to return value.
             self.line_buffer = ''
             self.mouse_pos = 0
             print("KeyboardInterrupt\n>>> ", end='', flush=True)
-        if ch and type(ch) == str:
+        if not ch:
+            return
+        if ord(ch) in [0, 224]: # function keys in windows
+            return self.process_function_keys(self.getch())
+        elif ch and type(ch) == str:
             if ord(ch) == 27: # ESC
                 self.process_escape()
             elif ord(ch) in [10, 13]: # Enter
@@ -190,9 +214,6 @@ Use `__ret__` to return value.
                     print(ch, end='', flush=True)
                 else:
                     self.refresh_line()
-        elif ch:
-            if ord(ch) == 224: # function keys in windows
-                return self.process_function_keys(self.getch())
 
     def execute(self):
         _G.log_info("Executing command:\n" + self.console_buffer.rstrip() + '\n---\n')
@@ -213,8 +234,12 @@ Use `__ret__` to return value.
         func = None
         if os.name == 'nt':
             func = NeoConsole.WINDOWS_FUNCTION_CHAR.get(key)
+            # print("Function key: ", key, func)
         else:
+            for _ in range(5):
+                key += self.getch() or ''
             func = NeoConsole.UNIX_FUNCTION_CHAR.get(key)
+            # print("Function key:", key, [ord(c) for c in key], func)
         if func == 'UP':
             self.process_arrow_up()
         elif func == 'DOWN':
@@ -235,14 +260,14 @@ Use `__ret__` to return value.
             self.process_page_down()
         elif func == 'INSERT':
             self.execute()
-        self.getch() # Skip the second key
 
     def process_escape(self):
         if os.name == 'nt':
             raise KeyboardInterrupt
         else:
-            if self.getch() == '[':  # May be function key in Unix
-                self.process_function_keys(self.getch())
+            nch = self.getch()
+            if nch:  # May be function key in Unix
+                self.process_function_keys(nch)
             else:
                 raise KeyboardInterrupt
 

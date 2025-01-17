@@ -27,10 +27,26 @@ def create_context(pw, id, enable_extensions=True):
         args=args
     )
 
+fiber = None
+def resume():
+    return next(fiber)
 
 pw = sync_playwright().start()
 context = create_context(pw, 1)
 page = context.new_page()
+
+import ruffle.fashion_fever as ff
+player = ff.FashionFever(page)
+fiber = player.run()
+
+page.goto('https://www.neopets.com/games/game.phtml?game_id=805&size=regular&quality=high&play=true')
+
+
+def pclick(x, y):
+    return page.frame_locator('#game_frame').locator('ruffle-embed').click(button='left', position={'x': x, 'y': y})
+
+pclick(450, 320)
+
 page.goto('https://www.neopets.com/objects.phtml?type=shop&obj_type=56')
 page.wait_for_load_state('networkidle')
 
