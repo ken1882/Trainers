@@ -5,22 +5,25 @@ import os
 from playwright.sync_api import sync_playwright
 from random import randint
 from errors import NeoError
+from models.mixins.transaction import Transaction, NeoItem
 import page_action as action
 import captcha
+import jellyneo as jn
 
-def create_context(pw, id, enable_extensions=True):
-    _G.log_info(f"Creating browser context#{id}")
+def create_context(pw, profile_name, enable_extensions=True):
+    _G.log_info(f"Creating browser context#{profile_name}")
     args = [
         '--disable-blink-features=AutomationControlled',
         '--disable-infobars',
         '--disable-features=IsolateOrigins,site-per-process',
+        '--auto-open-devtools-for-tabs',
     ]
     if enable_extensions:
         args.append(f"--disable-extensions-except={os.getenv('BROWSER_EXTENSION_PATHS')}")
         args.append(f"--load-extension={os.getenv('BROWSER_EXTENSION_PATHS')}")
-    _G.log_info(f"Launching browser context#{id} with args: {args}")
+    _G.log_info(f"Launching browser context#{profile_name} with args: {args}")
     return pw.chromium.launch_persistent_context(
-        "./profiles/profile_{:04d}".format(id),
+        f"{_G.BROWSER_PROFILE_DIR}/profile_{profile_name}",
         headless=False,
         handle_sigint=False,
         color_scheme='dark',
@@ -32,7 +35,7 @@ def resume():
     return next(fiber)
 
 pw = sync_playwright().start()
-context = create_context(pw, 1)
+context = create_context(pw, 'default')
 page = context.new_page()
 
 import ruffle.fashion_fever as ff
@@ -121,3 +124,22 @@ last_price = bargain_price
 depth += 1
 
 solve_captcha(page, 0)
+
+items = []
+nodes = page.query_selector_all('.petCare-itemgrid-item')
+for node in nodes:
+    name = node.get_attribute('data-itemname')
+    if not name:
+        continue
+    items.append(NeoItem(**{
+        'name': name,
+        'id': node.get_attribute('id'),
+        'image': node.get_attribute('data-image'),
+        'description': node.get_attribute('data-itemdesc'),
+        'rariry': node.get_attribute('data-rarity'),
+        'value_npc': node.get_attribute('data-itemvalue'),
+        'value_pc': 0,
+        'item_type': node.get_attribute('data-itemtype'),
+    }))
+
+jn.batch_search([item.name for item in items])

@@ -2,6 +2,7 @@ import _G
 import utils
 import os
 import page_action as action
+import argv_parse
 from playwright.sync_api import sync_playwright
 from scheduler import JobScheduler
 from console import NeoConsole
@@ -21,11 +22,19 @@ from jobs.anchor_management import AnchorManagementJob
 from jobs.fruit_machine import FruitMachineJob
 from jobs.qasalan_expellibox import QasalanExpelliboxJob
 from jobs.game_room import GameRoomJob
+from jobs.snowager import SnowagerJob
+from jobs.daily_quest import DailyQuestJob
+from jobs.daily_puzzle import DailyPuzzleJob
+from jobs.forgotten_shore import ForgottenShoreJob
+from jobs.apple_bobbing import AppleBobbingJob
+from jobs.deserted_tomb import DesertedTombJob
+from jobs.lunar_temple import LunarTempleJob
+from jobs.negg_cave import NeggCaveJob
 
 Scheduler = None
 
-def create_context(pw, id, enable_extensions=True):
-    _G.log_info(f"Creating browser context#{id}")
+def create_context(pw, profile_name, enable_extensions=True):
+    _G.log_info(f"Creating browser context#{profile_name}")
     args = [
         '--disable-blink-features=AutomationControlled',
         '--disable-infobars',
@@ -35,9 +44,9 @@ def create_context(pw, id, enable_extensions=True):
     if enable_extensions:
         args.append(f"--disable-extensions-except={os.getenv('BROWSER_EXTENSION_PATHS')}")
         args.append(f"--load-extension={os.getenv('BROWSER_EXTENSION_PATHS')}")
-    _G.log_info(f"Launching browser context#{id} with args: {args}")
+    _G.log_info(f"Launching browser context#{profile_name} with args: {args}")
     return pw.chromium.launch_persistent_context(
-        "{}/profile_{:04d}".format(_G.BROWSER_PROFILE_DIR, id),
+        f"{_G.BROWSER_PROFILE_DIR}/profile_{profile_name}",
         headless=False,
         handle_sigint=False,
         color_scheme='dark',
@@ -58,6 +67,7 @@ def queue_jobs():
         LoginJob(),
         MonthlyFreebiesJob(),
         TrudysSurpriseJob(),
+        DailyQuestJob(),
         GiantJellyJob(),
         GiantOmeletteJob(),
         TombolaJob(),
@@ -70,6 +80,13 @@ def queue_jobs():
         FruitMachineJob(),
         QasalanExpelliboxJob(),
         GameRoomJob(),
+        SnowagerJob(),
+        DailyPuzzleJob(),
+        ForgottenShoreJob(),
+        AppleBobbingJob(),
+        DesertedTombJob(),
+        LunarTempleJob(),
+        NeggCaveJob(),
     )
     for job in jobs:
         Scheduler.queue_job(job, False)
@@ -78,9 +95,10 @@ def queue_jobs():
 def main():
     global Scheduler
     last_tick_time = datetime.now()
+    profile_name = _G.ARGV.profile_name
     pw = sync_playwright().start()
-    context = create_context(pw, 1)
-    Scheduler = JobScheduler(pw, context, save_path=_G.BROWSER_PROFILE_DIR)
+    context = create_context(pw, profile_name)
+    Scheduler = JobScheduler(pw, context, profile_name, save_path=_G.BROWSER_PROFILE_DIR)
     queue_jobs()
     _G.Console = NeoConsole(globals=globals(), locals=locals())
     Scheduler.start()
@@ -95,4 +113,5 @@ def main():
         Scheduler.terminate()
 
 if __name__ == '__main__':
+    argv_parse.load()
     main()

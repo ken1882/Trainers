@@ -9,4 +9,6 @@ class AppleBobbingJob(BaseJob):
         super().__init__("apple_bobbing", "https://www.neopets.com/halloween/applebobbing.phtml", **kwargs)
 
     def execute(self):
-        pass
+        yield from _G.rwait(2)
+        self.click_element('#bob_button')
+

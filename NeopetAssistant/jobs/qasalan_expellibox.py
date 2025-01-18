@@ -8,17 +8,21 @@ from ruffle.qasalan_expellibox import QasalanExpellibox
 
 class QasalanExpelliboxJob(BaseJob):
     def __init__(self, **kwargs):
+        self.player = QasalanExpellibox(None)
         super().__init__("qasalan_expellibox", "http://ncmall.neopets.com/mall/shop.phtml?page=giveaway", **kwargs)
-        self.player = QasalanExpellibox(self.page)
+
+    def set_page(self, page):
+        super().set_page(page)
+        self.player.set_page(page)
 
     def execute(self):
-        yield from _G.rwait(2)
-        node = self.page.query_selector('#main_div')
-        self.scroll_to(node=node)
+        yield from _G.rwait(3)
+        self.scroll_to(node=self.page.query_selector('#show_NCGiveawayGame'))
         yield from _G.rwait(1)
-        self.player.find_flash()
+        self.click_element('#main_div')
+        yield from _G.rwait(3)
         yield from self.player.run()
-        yield from _G.rwait(5)
+        yield from _G.rwait(3)
 
     def calc_next_run(self):
         curt = datetime.now()

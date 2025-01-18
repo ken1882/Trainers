@@ -1,5 +1,6 @@
 import _G, utils
 import page_action as action
+from random import randint
 
 class BasePage():
     def __init__(self, page=None, url='about:blank', context=None):
@@ -22,9 +23,9 @@ class BasePage():
         yield from self.wait_until_page_load()
 
     def wait_until_page_load(self):
-        yield from _G.rwait(1)
         self.signal['load'] = False
         self.page.once("load", self.on_page_load)
+        yield from _G.rwait(3)
         while not self.signal.get('load', False):
             self.page.evaluate('document.readyState')
             yield
@@ -105,3 +106,21 @@ class BasePage():
             ny = y + bb['y'] - 100
             return action.scroll_to(self.page, nx, ny)
         return action.scroll_to(self.page, x, y)
+
+    def input_number(self, selector:str, number:int, nth_element:int=None):
+        self.click_element(selector, nth_element)
+        self.page.keyboard.press('Control+A')
+        input_str = str(number)+'E'
+        for i,digit in enumerate(input_str):
+            if digit == 'E':
+                break
+            self.page.keyboard.press(digit)
+            yield from _G.rwait(self.calc_numkey_interval(input_str[i], input_str[i+1]))
+
+    def calc_numkey_interval(self, current, next):
+        keys = '1234567890..........E'
+        delta = abs(keys.index(current) - keys.index(next))
+        ret = 0.2
+        for _ in range(delta):
+            ret += randint(10, 30) / 100.0
+        return ret

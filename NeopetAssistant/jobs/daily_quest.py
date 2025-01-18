@@ -3,7 +3,6 @@ import utils
 from jobs.base_job import BaseJob
 from datetime import datetime, timedelta
 from errors import NeoError
-from models import DailyQuest
 
 class DailyQuestJob(BaseJob):
     '''
@@ -24,8 +23,9 @@ class DailyQuestJob(BaseJob):
         self.auto_banking = kwargs.get("auto_banking", True)
         self.min_carrying_np = kwargs.get("min_carrying_np", 20000)
         self.max_carrying_np = kwargs.get("max_carrying_np", 50000)
-        super().__init__("daily_quest", "https://www.neopets.com/dailies/index.phtml", **kwargs)
-        self.priority = -99 # last job to run, normally
+        super().__init__("daily_quest", "https://www.neopets.com/questlog/", **kwargs)
+        self.priority = 99
 
     def execute(self):
-        pass
+        yield
+

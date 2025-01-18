@@ -11,6 +11,10 @@ class SnowagerJob(BaseJob):
 
     def execute(self):
         self.last_visit = datetime.now()
+        yield from _G.rwait(2)
+        self.scroll_to(0, 200)
+        yield from _G.rwait(1)
+        self.click_element('#process_snowager')
 
     def calc_next_run(self):
         timeslots = [6, 14, 22]

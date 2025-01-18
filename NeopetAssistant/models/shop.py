@@ -116,15 +116,7 @@ class NeoShop(BasePage):
         action.scroll_to(self.page, 0, max(0, purpose_node.bounding_box()['y'] - 300))
         max_price = utils.str2int(purpose_node.text_content())
         bargain_price = self.determine_strategy(last_price, max_price, depth)
-        inp_node = self.page.query_selector('input[name=current_offer]')
-        action.click_node(self.page, inp_node)
-        self.page.keyboard.press('Control+A')
-        input_str = str(bargain_price)+'E'
-        for i,digit in enumerate(input_str):
-            if digit == 'E':
-                break
-            self.page.keyboard.press(digit)
-            yield from _G.rwait(self.calc_numkey_interval(input_str[i], input_str[i+1]))
+        yield from self.input_number('input[name=current_offer]', bargain_price)
         self.solve_captcha()
 
         if 'accept' in self.page.content():

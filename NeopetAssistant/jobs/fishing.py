@@ -17,5 +17,5 @@ class FishingJob(BaseJob):
         yield
 
     def calc_next_run(self):
-        self.next_run = datetime.now() + timedelta(hours=3) + timedelta(minutes=randint(0, 60))
+        self.next_run = datetime.now() + timedelta(hours=6) + timedelta(minutes=randint(0, 60))
         return self.next_run

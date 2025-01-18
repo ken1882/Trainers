@@ -129,7 +129,7 @@ class JobScheduler:
         _G.log_info("Saving job scheduler status")
         savefile = f"{self.save_path}/.job_scheduler_{self.name}.json"
         with open(savefile, 'w') as f:
-            json.dump(self.to_dict(), f)
+            json.dump(self.to_dict(), f, indent=4)
 
     def load_status(self, path_dir):
         if self.current_job:

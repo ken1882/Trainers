@@ -1,7 +1,17 @@
 import _G, utils
+import os
 from random import randint
 
+JS_DIRECTORY = './js'
 AvailableNp = 0
+
+def eval_js(page, script_name):
+    path = f'{JS_DIRECTORY}/{script_name}.js'
+    if not os.path.exists(path):
+        _G.log_error(f"Script {script_name} not found!")
+        return
+    with open(path, 'r') as f:
+        page.evaluate(f.read())
 
 def scroll_to(page, x=0, y=0):
     page.evaluate(f"window.scrollTo({x}, {y})")
@@ -22,7 +32,7 @@ def locator_click(locator, x, y, button='left', modifiers=[], random_x=(-10, 10)
         position={'x': mx, 'y': my}
     )
 
-def get_availalbe_np(page):
+def get_available_np(page):
     global AvailableNp
     AvailableNp = utils.str2int(page.query_selector('#npanchor').text_content())
     return AvailableNp

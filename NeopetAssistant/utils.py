@@ -106,3 +106,6 @@ def ocr_rect(rect, fname, zoom=1.0, lang='jpn', config='--psm 12 --psm 13', **kw
             cropped_img.save(fname)
         img.close()
     return img2str(fname, lang, config).translate(str.maketrans('。',' ')).strip()
+
+def snake2pascal(snake_str):
+    return ''.join([word.capitalize() for word in snake_str.split('_')])

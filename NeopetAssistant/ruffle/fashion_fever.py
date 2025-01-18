@@ -8,7 +8,7 @@ class FashionFever(BaseFlash):
         super().__init__(page, "https://www.neopets.com/games/game.phtml?game_id=805")
 
     def start_loop(self):
-        for _ in range(3):
+        for _ in range(self.max_plays - self.played_times):
             yield from self.start_game()
             yield from self.send_score()
             yield from _G.rwait(1)

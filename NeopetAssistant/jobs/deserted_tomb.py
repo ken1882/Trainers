@@ -9,4 +9,10 @@ class DesertedTombJob(BaseJob):
         super().__init__("deserted_tomb", "https://www.neopets.com/worlds/geraptiku/tomb.phtml", **kwargs)
 
     def execute(self):
-        pass
+        yield from _G.rwait(2)
+        self.scroll_to(0, 100)
+        self.click_element('input[type=submit]', 1)
+        yield from _G.rwait(5)
+        self.scroll_to(0, 100)
+        self.click_element('input[type=submit]', 1)
+        yield from _G.rwait(2)

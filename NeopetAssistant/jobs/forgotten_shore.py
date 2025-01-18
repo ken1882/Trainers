@@ -9,4 +9,5 @@ class ForgottenShoreJob(BaseJob):
         super().__init__("forgotten_shore", "https://www.neopets.com/pirates/forgottenshore.phtml", **kwargs)
 
     def execute(self):
-        pass
+        yield from _G.rwait(2)
+        self.click_element('#shore_back')

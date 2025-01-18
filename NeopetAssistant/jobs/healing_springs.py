@@ -15,3 +15,7 @@ class HealingSpringsJob(BaseJob):
         yield from _G.rwait(randint(30, 100) / 100.0)
         self.click_element('input[type=submit]', -1)
         yield
+
+    def calc_next_run(self):
+        self.next_run = datetime.now() + timedelta(minutes=30+randint(1, 5))
+        return self.next_run

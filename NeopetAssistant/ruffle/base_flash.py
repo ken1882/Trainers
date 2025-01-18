@@ -9,15 +9,20 @@ from models.mixins.base_page import BasePage
 class BaseFlash(BasePage):
     def __init__(self, page, url):
         super().__init__(page, url)
+        self.frame = '#game_frame'
+        self.locator = 'ruffle-embed'
+        self.max_plays = 3
+        self.played_times = 3
 
-    def find_flash(self, frame='#game_frame', locator='ruffle-embed'):
-        if frame:
-            return self.page.frame_locator(frame).locator(locator)
-        return self.page.locator(locator)
+    def find_flash(self):
+        if self.frame:
+            return self.page.frame_locator(self.frame).locator(self.locator)
+        return self.page.locator(self.locator)
 
     def playable_count(self):
         try:
             played = int(self.page.query_selector('.sent-cont').text_content().split()[-1].split('/')[0])
+            self.played_times = played
             return 3 - played
         except Exception as err:
             utils.handle_exception(err)
@@ -36,8 +41,9 @@ class BaseFlash(BasePage):
     def click(self, x, y, button='left', modifiers=[], random_x=(-10, 10), random_y=(-10, 10), debug=False):
         dom = self.find_flash()
         if debug:
-            cx = dom.bounds['x'] + x
-            cy = dom.bounds['y'] + y
+            bb = dom.bounding_box()
+            cx = bb['x'] + x
+            cy = bb['y'] + y
             action.draw_debug_point(self.page, cx, cy)
         return action.locator_click(dom, x, y, button, modifiers, random_x, random_y)
 
@@ -51,6 +57,7 @@ class BaseFlash(BasePage):
 
     def run(self):
         yield from self.goto()
+        yield from _G.rwait(3)
         if self.playable_count() <= 0:
             _G.log_info("No more plays left today")
             return
