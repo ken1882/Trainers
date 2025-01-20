@@ -17,7 +17,7 @@ AppWindowName = 'twinkle_starknightsX'
 AppHwnd = 0
 AppRect = [0,0,0,0]
 AppPid  = 0
-AppTid  = 0 
+AppTid  = 0
 AppInputHwnd = 0
 
 AppInputUseMsg = False

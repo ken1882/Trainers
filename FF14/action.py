@@ -145,14 +145,18 @@ def interact_press(ms):
 
 def menu_up():
   Input.key_down(win32con.VK_SHIFT)
+  Input.key_down(win32con.VK_MENU)
   Input.key_down(VK_W)
   sleep(0.03)
   Input.key_up(VK_W)
+  Input.key_up(win32con.VK_MENU)
   Input.key_up(win32con.VK_SHIFT)
 
 def menu_right():
   Input.key_down(win32con.VK_SHIFT)
+  Input.key_down(win32con.VK_MENU)
   Input.key_down(VK_D)
   sleep(0.03)
   Input.key_up(VK_D)
+  Input.key_up(win32con.VK_MENU)
   Input.key_up(win32con.VK_SHIFT)
