@@ -26,6 +26,7 @@ from jobs.snowager import SnowagerJob
 from jobs.daily_quest import DailyQuestJob
 from jobs.daily_quest_touch import DailyQuestTouchJob
 from jobs.daily_puzzle import DailyPuzzleJob
+from jobs.stock_market import StockMarketJob
 from jobs.forgotten_shore import ForgottenShoreJob
 from jobs.apple_bobbing import AppleBobbingJob
 from jobs.deserted_tomb import DesertedTombJob
@@ -36,6 +37,8 @@ from jobs.wise_king import WiseKingJob
 from jobs.grumpy_king import GrumpyKingJob
 from jobs.altador_council import AltadorCouncilJob
 from jobs.faerie_crossword import FaerieCrosswordJob
+from jobs.pet_cares import PetCaresJob
+from jobs.quick_restock import QuickRestockJob
 
 Scheduler = None
 
@@ -84,6 +87,7 @@ def queue_jobs():
     jobs = (
         LoginJob(),
         DailyQuestTouchJob(),
+        DailyQuestJob(),
         MonthlyFreebiesJob(),
         TrudysSurpriseJob(),
         DailyQuestJob(),
@@ -111,6 +115,9 @@ def queue_jobs():
         GrumpyKingJob(),
         AltadorCouncilJob(),
         FaerieCrosswordJob(),
+        PetCaresJob(),
+        StockMarketJob(),
+        QuickRestockJob(),
     )
     for job in jobs:
         Scheduler.queue_job(job, False)

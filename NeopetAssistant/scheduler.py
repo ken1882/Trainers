@@ -122,6 +122,7 @@ class JobScheduler:
             return
         if queue_next:
             job.calc_next_run()
+        job.profile_name = self.name
         self.queued_jobs.append(job)
         _G.log_info(f"Queued job: {job.job_name}, next run: {job.next_run}")
 

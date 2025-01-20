@@ -8,7 +8,7 @@ from models.mixins.base_page import BasePage
 class BaseJob(BasePage):
     def __init__(self, job_name:str, url:str, new_page:bool=True,
                  priority:int=0, page=None, context=None, next_run=None,
-                 enabled=True, close_delay=5000,
+                 enabled=True, close_delay=5000, profile_name='',
                  **kwargs):
         super().__init__(page, url, context)
         self.job_name = job_name
@@ -20,6 +20,7 @@ class BaseJob(BasePage):
         self.priority    = priority
         self.enabled     = enabled
         self.close_delay = close_delay
+        self.profile_name = profile_name
         self.args = {}
         self.return_value = NeoError(0)
         for key, value in kwargs.items():

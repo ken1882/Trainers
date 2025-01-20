@@ -5,8 +5,6 @@ import json
 import jellyneo as jn
 from datetime import datetime, timedelta
 
-TRANSACTION_HISTORY_DIR = 'transaction_history'
-
 TRASH_NAME_REGEXES = [
     r"dung"
 ]
@@ -16,10 +14,10 @@ class NeoItem:
         self.name     = kwargs.get('name', 'Unknown Item')
         self.image    = kwargs.get('image', '')
         self.quantity = kwargs.get('quantity', 1)
-        self.value_npc = kwargs.get('value_npc', 10) # in-game data, mostly unaccurate
-        self.value_pc  = kwargs.get('value_pc', 10) # price from jellyneo
+        self.value_npc = kwargs.get('value_npc', 1) # in-game data, mostly unaccurate
+        self.value_pc  = kwargs.get('value_pc', 1) # price from jellyneo
         self.description = kwargs.get('description', '')
-        self.rarity = kwargs.get('rarity', 10)
+        self.rarity = kwargs.get('rarity', 1)
         self.item_type = kwargs.get('item_type', 'food')
         self.effects = []
 
@@ -49,6 +47,7 @@ class NeoItem:
         self.id = data.get('id', self.id)
         self.image = data.get('image', self.image)
         self.value_pc = data.get('price', self.value_pc)
+        self.value_npc = data.get('restock_price', self.value_npc)
         self.description = data.get('description', self.description)
         self.rarity = data.get('rarity', self.rarity)
         self.item_type = data.get('category', self.item_type)
@@ -60,6 +59,8 @@ class NeoItem:
             return 'food'
         if 'playable' in self.effects:
             return 'toy'
+        if 'readable' in self.effects:
+            return 'book'
         if self.item_type.lower() == 'grooming':
             return 'grooming'
         return 'other'
@@ -79,7 +80,7 @@ class Transaction:
         self.timestamp    = timestamp or datetime.now()
         self.kwargs       = kwargs
 
-    def log(self, disable_json_output=False):
+    def log(self, filename=None):
         log_str = f"Transaction Log: {self.timestamp}\n"
         log_str += f"Message: {self.message}\n"
         log_str += f"Items Spent: {'None' if not self.items_spent else ''}\n"
@@ -89,12 +90,17 @@ class Transaction:
         for item in self.items_gained:
             log_str += f"\t{item.name} x{item.quantity}\n"
         _G.log_info(log_str)
-        if not disable_json_output:
-            filename = f"{TRANSACTION_HISTORY_DIR}/{self.timestamp.strftime('%Y-%m-%d')}.json"
+        if filename:
             with open(filename, 'a') as f:
                 f.write(json.dumps(self.to_dict()))
                 f.write('\n')
         return self
+
+    def update_jn(self):
+        for item in self.items_spent + self.items_gained:
+            if item.name.lower() in ['np']:
+                continue
+            item.update_jn()
 
     def __str__(self):
         return f"<Transaction: {self.to_dict()}>"

@@ -16,15 +16,23 @@ class QuickRestockJob(BaseJob):
         self.deposite_value = 900000 # 900K
         self.restock_profit = 1000
         self.category_keeps = {
-            'food': 5,
+            'food': 8,
             'toy': 1,
             'grooming': 1,
         }
+        self.deposite_maplist = {
+            'category': ['book'],
+            'name': [
+                r"codestone",
+            ]
+        }
+        self.priority = -1
 
     def execute(self):
         yield from _G.rwait(2)
         yield from self.scan_all_items()
         yield from self.process_actions()
+        yield from self.process_restock()
 
     def scan_all_items(self):
         self.items = []
@@ -41,7 +49,7 @@ class QuickRestockJob(BaseJob):
                 'actions': available_acts,
                 'ref': None,
             })
-        jn.batch_search([item['name'] for item in self.items], False)
+        jn.batch_search(list(set([item['name'] for item in self.items])), False)
         jn_done = False
         while not jn_done:
             jn_done = not jn.FLAG_BUSY
@@ -49,30 +57,77 @@ class QuickRestockJob(BaseJob):
         for item in self.items:
             item['ref'] = NeoItem(name=item['name'])
             item['ref'].update_jn()
-        self.items = sorted(self.items, key=lambda x: x['ref'].value_pc)
 
     def process_actions(self):
         keeps = copy(self.category_keeps)
-        for item in self.items:
+        val_items = sorted(self.items, key=lambda x: x['ref'].value_pc)
+        for item in val_items:
             yield
+            act_name = 'deposit'
             cat = item['ref'].get_category()
-            if item['ref'].is_rubbish():
+            if any(re.search(regex, item['name'], re.I) for regex in self.deposite_maplist['name']):
                 pass
+            elif cat in self.deposite_maplist['category']:
+                pass
+            elif item['ref'].is_rubbish():
+                act_name = 'donate'
+            elif item['ref'].rarity > 300:
+                act_name = 'keep'
             elif item['ref'].value_pc >= self.deposite_value:
                 _G.log_info(f"High value item: {item['name']}")
+            elif item['ref'].value_pc - item['ref'].value_npc >= self.restock_profit:
+                _G.log_info(f"Profitable item: {item['name']}")
+                act_name = 'stock'
             elif cat in keeps and keeps[cat] > 0:
                 keeps[cat] -= 1
-                continue
+                act_name = 'keep'
+            item['act'] = act_name
+        row_height = 24
+        viewport_height = 400
+        viewport_y = 0
+        cur_y = 100
+        random_x = (0, 0)
+        random_y = (0, 0)
+        for item in self.items:
             for act in reversed(item['actions']):
                 aname = act.get_attribute('value')
-                if aname == 'closet':
-                    act.click()
+                if aname != item['act']:
+                    continue
+                _G.log_info(f"Processing {item['name']} with action {aname}")
+                if aname in ['closet', act_name]:
+                    self.click_element(node=act, random_x=random_x, random_y=random_y)
+                    yield from _G.rwait(0.2)
                     break
-                elif item['ref'].is_rubbish() and aname == 'donate':
-                    act.click()
-                    break
-                elif aname == 'deposit':
-                    act.click()
-                    break
+            cur_y += row_height
+            if cur_y > viewport_y + viewport_height:
+                viewport_y = cur_y
+                self.scroll_to(0, viewport_y)
+                yield from _G.rwait(1)
         yield from _G.rwait(2)
-        self.page.query_selector_all('input[type=submit]')[-1].click()
+        btn = self.page.query_selector_all('input[type=submit]')[1]
+        self.scroll_to(node=btn)
+        yield from _G.rwait(1)
+        self.click_element(node=btn)
+        yield from _G.rwait(2)
+
+    def process_restock(self):
+        yield from self.goto("https://www.neopets.com/market.phtml?type=your")
+        yield from _G.rwait(2)
+        rows = self.page.query_selector_all('form[action] > table > tbody > tr')
+        goods = rows[1:-1]
+        for good in goods:
+            self.scroll_to(node=good)
+            # yield from _G.rwait(0.5)
+            cells = good.query_selector_all('td')
+            name = cells[0].text_content().strip()
+            market_price = jn.get_item_details_by_name(name).get('price', 0)
+            adds = int(market_price * 0.03)
+            price = int(market_price + adds)
+            _G.log_info(f"Setting price for {name} to {price}")
+            if market_price <= 0:
+                continue
+            cells[4].query_selector('input').fill(str(price))
+            yield from _G.rwait(0.2)
+        yield from _G.rwait(1)
+        rows[-1].query_selector('input[type=submit]').click()
+        yield from _G.rwait(3)

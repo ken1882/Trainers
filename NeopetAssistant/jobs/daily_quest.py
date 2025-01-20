@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from errors import NeoError
 
 QUEST_MATCH_MAP = {
-    'shopping': [r"purchase(?:.|\s)*(\d+/\d+)?\s*$"],
+    # 'shopping': [r"purchase(?:.|\s)*(\d+/\d+)?\s*$"],
     'wheel': [r"spin the wheel (.*)"]
 }
 
@@ -27,7 +27,7 @@ class DailyQuestJob(BaseJob):
     def __init__(self, **kwargs):
         self.candidate_shop_ids = kwargs.get("candidate_shops", [])
         self.shop_refreshes = kwargs.get("shop_refreshes", 3)
-        self.refresh_interval = kwargs.get("refresh_interval", 30)
+        self.refresh_interval = kwargs.get("refresh_interval", 10)
         self.auto_deposit = kwargs.get("auto_deposit", False)
         self.inventory_keep_items = kwargs.get("inventory_keeps", [])
         self.skip_quests = kwargs.get("skip_quests", [])
@@ -43,12 +43,20 @@ class DailyQuestJob(BaseJob):
         nodes = self.page.query_selector_all('.ql-task')
         for node in nodes:
             line = node.text_content().strip().lower()
+            if node.query_selector('.ql-task-complete'):
+                _G.log_info(f"Quest {line} already completed")
+                continue
             self.quests.append(self.parse_quest(line))
         for quest in self.quests:
+            _G.log_info(f"Processing quest: {quest}")
             if quest['type'] == 'wheel':
                 yield from self.do_wheel_quest(quest['value'])
             elif quest['type'] == 'shopping':
                 yield from self.do_shopping_quest(quest['value'])
+            yield from _G.rwait(3)
+        yield from self.goto(self.url)
+        yield from _G.rwait(2)
+        yield from self.collect_rewards()
 
     def parse_quest(self, line):
         _G.log_info(f"Parsing quest: {line}")
@@ -72,11 +80,12 @@ class DailyQuestJob(BaseJob):
                     else:
                         ret['value'] = 1
                 elif quest_type == 'wheel':
-                    ret['value'] = match.group(1)
+                    ret['value'] = match.group(1).lower()
                 break
         return ret
 
     def do_wheel_quest(self, wheel_name):
+        _G.log_info(f"Spinning wheel: {wheel_name}")
         url = ''
         if 'excitement' in wheel_name:
             url = 'https://www.neopets.com/faerieland/wheel.phtml'
@@ -93,6 +102,12 @@ class DailyQuestJob(BaseJob):
         if not url:
             _G.log_warning(f"Wheel {wheel_name} not found or skipped")
             return
+        yield from self.goto(url)
+        yield from _G.rwait(2)
+        self.click_element('#wheelCanvas')
+        yield from _G.rwait(10) # pray for good luck
+        self.click_element('#wheelCanvas')
+        yield from _G.rwait(2)
 
     def do_shopping_quest(self, number):
         shops = []
@@ -100,13 +115,17 @@ class DailyQuestJob(BaseJob):
             if self.candidate_shop_ids and id not in self.candidate_shop_ids:
                 continue
             shops.append(shop.NeoShop(id))
+        _G.log_info(f"Buying {number} item(s) from shops: {[s.name for s in shops]}")
         for s in shops:
+            s.set_page(self.page)
             if number <= 0:
                 break
             for _ in range(self.shop_refreshes):
                 result = yield from self.do_shopping(s)
                 if result:
                     number -= 1
+                    filename = f"{_G.BROWSER_PROFILE_DIR}/profile_{self.profile_name}/transaction_history.json"
+                    s.transaction_history[-1].log(filename)
                 yield from _G.rwait(self.refresh_interval)
 
 
@@ -117,8 +136,26 @@ class DailyQuestJob(BaseJob):
         yield from nshop.lookup_goods_details()
         target = nshop.get_profitable_goods()[0]
         result = False
-        if target['profit'] >= 2000:
+        _G.log_info(f"Target: {target} profit: {target['profit']}")
+        if target['profit'] >= 3000:
             result = yield from nshop.buy_good(index=target['index'], immediate=True)
         elif target['profit'] >= 1000:
             result = yield from nshop.buy_good(index=target['index'])
+        else:
+            _G.log_info(f"Nothing to buy from {nshop.name}")
         return result
+
+    def collect_rewards(self):
+        nodes = self.page.query_selector_all('.ql-claim')
+        self.scroll_to(0, 250)
+        for n in nodes:
+            yield from _G.rwait(2)
+            self.click_element(node=n)
+            yield from _G.rwait(3)
+            self.page.query_selector('#QuestLogRewardPopup').query_selector('button').click()
+        yield from _G.rwait(2)
+        self.click_element('#QuestLogDailyBonus')
+        yield from _G.rwait(3)
+        self.click_element('.ql-weekly-label')
+        yield from _G.rwait(1)
+        self.click_element('#QuestLogWeeklyBonus')

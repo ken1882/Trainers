@@ -11,5 +11,5 @@ class QasalanExpellibox(BaseFlash):
 
     def run(self):
         yield from _G.rwait(1)
-        self.click(350, 500, debug=1)
+        self.click(350, 450, debug=1)
         yield from _G.rwait(3)

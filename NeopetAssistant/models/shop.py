@@ -120,6 +120,7 @@ class NeoShop(BasePage):
         _G.log_info(f"Buying {good['name']} ({good['price']} NP)")
         bb = good['node'].bounding_box()
         action.scroll_to(self.page, 0, max(bb['y'] - 100, 0))
+        yield from _G.rwait(0.1)
         action.click_node(self.page, good['node'], y_mul=0.3, random_x=(-20, 20))
         yield from _G.rwait(randint(30, 100) / 100.0)
         confirm = self.page.query_selector('#confirm-link')
@@ -142,11 +143,14 @@ class NeoShop(BasePage):
 
     def haggle(self, last_price=0, depth=0, last_max=10**8, good_info=None, immediate=False):
         yield from _G.rwait(1.5)
-        if 'SOLD OUT!' in self.page.content():
+        if 'SOLD OUT' in self.page.content():
             _G.log_info("Item is sold out")
             return False
         _G.log_info(f"Haggling with {self.name}")
         yield from self.wait_until_captcha_updated()
+        if 'SOLD OUT' in self.page.content():
+            _G.log_info("Item is sold out")
+            return False
         purpose_node = self.page.query_selector('#shopkeeper_makes_deal')
         action.scroll_to(self.page, 0, max(0, purpose_node.bounding_box()['y'] - 300))
         text = purpose_node.text_content().strip()
@@ -165,11 +169,14 @@ class NeoShop(BasePage):
         yield from _G.rwait(1.5)
         if 'accept your offer' in self.page.content():
             item_name = good_info['name'] if 'name' in good_info else 'Unknown'
-            return Transaction(
+            log = Transaction(
                 [NeoItem(name='NP', quantity=bargain_price)],
                 [NeoItem(name=item_name)],
                 f"Purchased from Neopian Shop {self.name if self.name else 'Unknown'}",
-            ).log()
+            )
+            log.update_jn()
+            self.transaction_history.append(log)
+            return log
         yield from self.haggle(bargain_price, depth+1, max_price, good_info)
 
     def determine_strategy(self, last_price, max_price, depth=0):
@@ -216,6 +223,7 @@ class NeoShop(BasePage):
     def wait_until_captcha_updated(self):
         url = '_'
         while url == self.last_captcha_url:
-            yield from _G.rwait(1)
+            yield from _G.rwait(0.1)
             url = captcha.get_captcha_url(self.page)
+        yield from _G.rwait(1)
         self.last_captcha_url = url

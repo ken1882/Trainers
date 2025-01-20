@@ -117,12 +117,12 @@ class BasePage():
                 print("Element found")
                 return success_callback(r)
 
-    def click_element(self, selector:str, nth_element:int=None, **kwargs):
-        node = None
-        if nth_element != None:
-            node = self.page.query_selector_all(selector)[nth_element]
-        else:
-            node = self.page.query_selector(selector)
+    def click_element(self, selector:str='', nth_element:int=None, node=None, **kwargs):
+        if not node:
+            if nth_element != None:
+                node = self.page.query_selector_all(selector)[nth_element]
+            else:
+                node = self.page.query_selector(selector)
         if node:
             self.do('click_node', self.page, node, **kwargs)
             return node

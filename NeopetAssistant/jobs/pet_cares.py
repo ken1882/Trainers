@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from errors import NeoError
 from models.mixins.transaction import NeoItem
 from collections import defaultdict
+from pprint import pformat
 import jellyneo as jn
 
 FEED_BLACKLIST = [
@@ -47,6 +48,7 @@ class PetCaresJob(BaseJob):
         self.scan_all_pets()
         pets_num = len(self.pets)
         for i in range(pets_num):
+            _G.log_info(f"Careing {self.pets[i]['name']}")
             while self.is_hungry():
                 self.select_pet(i)
                 yield from _G.rwait(1)
@@ -60,6 +62,7 @@ class PetCaresJob(BaseJob):
             yield from _G.rwait(1)
             yield from self.groom()
             yield from _G.rwait(1)
+        _G.log_info("Customising")
         self.select_pet(0)
         yield from self.customise()
 
@@ -83,6 +86,9 @@ class PetCaresJob(BaseJob):
                 'active': node.get_attribute('data-active'),
                 'node': node
             })
+        msg = f"Found {len(self.pets)} pets:"
+        msg += "\n" + pformat(self.pets)
+        _G.log_info(msg)
         return self.pets
 
     def scan_usable_items(self):
@@ -94,16 +100,18 @@ class PetCaresJob(BaseJob):
             if not name:
                 continue
             item_names.append(name)
-            self.items.append(NeoItem({
-                'name': name,
-                'id': node.get_attribute('id'),
-                'image': node.get_attribute('data-image'),
-                'description': node.get_attribute('data-itemdesc'),
-                'rariry': node.get_attribute('data-rarity'),
-                'value_npc': node.get_attribute('data-itemvalue'),
-                'value_pc': 0,
-                'item_type': node.get_attribute('data-itemtype'),
-            }))
+            item = NeoItem(
+                name=name,
+                id=node.get_attribute('id'),
+                image=node.get_attribute('data-image'),
+                description=node.get_attribute('data-itemdesc'),
+                rariry=node.get_attribute('data-rarity'),
+                value_npc=node.get_attribute('data-itemvalue'),
+                value_pc=0,
+                item_type=node.get_attribute('data-itemtype'),
+            )
+            item.node = node
+            self.items.append(item)
         jn.batch_search(item_names, False)
         jn_done = False
         while not jn_done:
@@ -127,6 +135,7 @@ class PetCaresJob(BaseJob):
         self.page.mouse.click(50+randint(-10, 10), 200+randint(-10, 100))
 
     def use_item(self, index):
+        _G.log_info(f"Using item: {self.items[index].name}")
         self.items[index].node.click()
         yield from _G.rwait(0.5)
         self.page.query_selector('#petCareUseItem').click()
@@ -150,9 +159,11 @@ class PetCaresJob(BaseJob):
         container.query_selector('.npcma-icon-close').click()
         yield from _G.rwait(1)
         self.page.query_selector('.npcma-icon-save-snap').click()
-        yield from _G.rwait(3)
+        yield from _G.rwait(5)
         self.page.query_selector('.npcma-ok_button').click()
         yield from _G.rwait(0.5)
+        switch.click()
+        yield from _G.rwait(3)
         self.page.query_selector('.header-input').fill(item_name)
         yield from _G.rwait(1)
         la = self.page.locator('.ddcontainer')
@@ -171,14 +182,16 @@ class PetCaresJob(BaseJob):
         self.page.query_selector('#petCareLinkFeed').click()
         yield from _G.rwait(5)
         yield from self.scan_usable_items()
-        item_index = self.determine_feed_item()
+        item_index = self.determine_item_to_feed()
         yield from self.use_item(item_index)
         self.update_hunger()
+        yield from _G.rwait(1)
 
     def update_hunger(self):
         line = self.page.query_selector('#petCareResult').query_selector_all('div > p')[-1].text_content().lower()
         for word in reversed(HUNGER_LEVEL_MAP.keys()):
             if word in line:
+                _G.log_info(f"Pet hunger: {word}")
                 self.selected_pet['hunger'] = word
                 break
 

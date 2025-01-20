@@ -52,6 +52,7 @@ def get_item_details_by_name(item_name, full_price_history=False, forced=False, 
         "id": "",
         "name": "",
         "price": 0,
+        "restock_price": 0,
         "price_timestamp": datetime(1999, 11, 15).timestamp(),
         "recent_prices": [],
         "price_dates": [],
@@ -86,6 +87,7 @@ def get_item_details_by_name(item_name, full_price_history=False, forced=False, 
         grids = ul.select('.text-center')
         ret["rarity"] = utils.str2int(grids[0].text.strip())
         ret["category"] = grids[1].text.strip()
+        ret["restock_price"] = utils.str2int(grids[2].text.strip())
         ret["image"] = grids[-1].select('a')[0]['href']
     except Exception as e:
         utils.handle_exception(e)
