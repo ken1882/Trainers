@@ -1,10 +1,11 @@
 # copy-paste to python interactive shell to test
 import _G
 import utils
-import os
+import os, re
 import argv_parse
 from playwright.sync_api import sync_playwright
 from random import randint
+from collections import defaultdict
 from errors import NeoError
 from models.mixins.transaction import Transaction, NeoItem
 from models import shop
@@ -14,6 +15,33 @@ import jellyneo as jn
 argv_parse.load()
 
 import importlib
+
+FEED_BLACKLIST = [
+    r"poison",
+    r"rotten",
+    r"dung",
+    r"glowing",
+    r"clay",
+    r"smelly",
+]
+
+MAX_FEED_VALUE = 1000
+MAX_FEED_LEVEL = 8 # full up
+
+HUNGER_LEVEL_MAP = defaultdict(lambda: 10, {
+    "dying": 0,
+    "starving": 1,
+    "famished": 2,
+    "very hungry": 3,
+    "hungry": 4,
+    "not hungry": 5,
+    "fine": 6,
+    "satiated": 7,
+    "full up": 8,
+    "very full": 9,
+    "bloated": 10,
+    "very bloated": 11,
+})
 
 def create_context(pw, profile_name, enable_extensions=True):
     _G.log_info(f"Creating browser context#{profile_name}")
@@ -59,6 +87,129 @@ pw = sync_playwright().start()
 context = create_context(pw, 'main')
 page = context.new_page()
 page.goto('https://www.neopets.com/home/')
+
+
+pets = []
+selected_pet = None
+
+def scan_all_pets():
+    global pets
+    pets = []
+    nodes = page.query_selector_all('.hp-carousel-nameplate')
+    for node in nodes:
+        name = node.get_attribute('data-name')
+        if not name:
+            continue
+        pets.append({
+            'name': name,
+            'health': node.get_attribute('data-health'),
+            'max_health': node.get_attribute('data-maxhealth'),
+            'hunger': node.get_attribute('data-hunger'),
+            'level': node.get_attribute('data-level'),
+            'species': node.get_attribute('data-species'),
+            'color': node.get_attribute('data-color'),
+            'mood': node.get_attribute('data-mood'),
+            'active': node.get_attribute('data-active'),
+            'node': node
+        })
+
+def select_pet(index):
+    global selected_pet
+    if index < 0 or index >= len(pets):
+        _G.log_warning(f"Invalid pet index: {index} (total pets: {len(pets)})")
+        return
+    if selected_pet:
+        unselect()
+    selected_pet = pets[index]
+    pets[index]['node'].click()
+
+def unselect():
+    global selected_pet
+    selected_pet = None
+    page.mouse.click(50+randint(-10, 10), 200+randint(-10, 100))
+
+items = []
+def scan_usable_items():
+    global items
+    items = []
+    nodes = page.query_selector_all('.petCare-itemgrid-item')
+    items_names = []
+    for node in nodes:
+        name = node.get_attribute('data-itemname')
+        if not name:
+            continue
+        items_names.append(name)
+        item = NeoItem(**{
+            'name': name,
+            'id': node.get_attribute('id'),
+            'image': node.get_attribute('data-image'),
+            'description': node.get_attribute('data-itemdesc'),
+            'rariry': node.get_attribute('data-rarity'),
+            'value_npc': node.get_attribute('data-itemvalue'),
+            'value_pc': 0,
+            'item_type': node.get_attribute('data-itemtype'),
+        })
+        item.node = node
+        items.append(item)
+    jn.batch_search(items_names)
+    for item in items:
+        item.update_jn()
+
+def determine_item_to_feed():
+    if not items:
+        return
+    candidates = []
+    for item in items:
+        if item.is_rubbish():
+            continue
+        if any(re.search(pattern, item.name, re.I) for pattern in FEED_BLACKLIST):
+            continue
+        candidates.append(item)
+    for item in sorted(candidates, key=lambda x: x.value_pc):
+        if item.value_pc < 1000:
+            return items.index(item)
+    return -1
+
+def is_hungry():
+    if not selected_pet:
+        return False
+    return HUNGER_LEVEL_MAP[selected_pet['hunger']] < MAX_FEED_LEVEL
+
+def update_pet(index):
+    if index < 0 or index >= len(pets):
+        _G.log_warning(f"Invalid pet index: {index} (total pets: {len(pets)})")
+        return
+    node = pets[index]['node']
+    pets[index] = {
+        'name': node.get_attribute('data-name'),
+        'health': node.get_attribute('data-health'),
+        'max_health': node.get_attribute('data-maxhealth'),
+        'hunger': node.get_attribute('data-hunger'),
+        'level': node.get_attribute('data-level'),
+        'species': node.get_attribute('data-species'),
+        'color': node.get_attribute('data-color'),
+        'mood': node.get_attribute('data-mood'),
+        'active': node.get_attribute('data-active'),
+        'node': node
+    }
+    return pets[index]
+
+page.query_selector('#petCareLinkFeed').click()
+scan_usable_items()
+item_index = determine_item_to_feed()
+items[item_index].click()
+page.query_selector('#petCareUseItem').click()
+
+page.locator('.ddcontainer').hover()
+page.mouse.down()
+bb = page.locator('#npcma_neopetcustomise').bounding_box()
+mx = bb['x'] + randint(20, 50)
+my = bb['y'] + randint(20, 50)
+page.mouse.move(mx, my, steps=9)
+page.mouse.up()
+
+
+# ---
 
 def buy(id):
     global fiber

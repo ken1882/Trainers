@@ -24,6 +24,7 @@ from jobs.qasalan_expellibox import QasalanExpelliboxJob
 from jobs.game_room import GameRoomJob
 from jobs.snowager import SnowagerJob
 from jobs.daily_quest import DailyQuestJob
+from jobs.daily_quest_touch import DailyQuestTouchJob
 from jobs.daily_puzzle import DailyPuzzleJob
 from jobs.forgotten_shore import ForgottenShoreJob
 from jobs.apple_bobbing import AppleBobbingJob
@@ -82,6 +83,7 @@ def queue_jobs():
     global Scheduler
     jobs = (
         LoginJob(),
+        DailyQuestTouchJob(),
         MonthlyFreebiesJob(),
         TrudysSurpriseJob(),
         DailyQuestJob(),

@@ -44,7 +44,7 @@ class QuickRestockJob(BaseJob):
         jn.batch_search([item['name'] for item in self.items], False)
         jn_done = False
         while not jn_done:
-            jn_done = jn.FLAG_BUSY
+            jn_done = not jn.FLAG_BUSY
             yield
         for item in self.items:
             item['ref'] = NeoItem(name=item['name'])

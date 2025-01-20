@@ -19,7 +19,7 @@ FEED_BLACKLIST = [
 ]
 
 MAX_FEED_VALUE = 1000
-MAX_FEED_LEVEL = 8
+MAX_FEED_LEVEL = 8 # full up
 
 HUNGER_LEVEL_MAP = defaultdict(lambda: 10, {
     "dying": 0,
@@ -45,6 +45,24 @@ class PetCaresJob(BaseJob):
 
     def execute(self):
         self.scan_all_pets()
+        pets_num = len(self.pets)
+        for i in range(pets_num):
+            while self.is_hungry():
+                self.select_pet(i)
+                yield from _G.rwait(1)
+                yield from self.feed()
+                yield from _G.rwait(1)
+            self.select_pet(i)
+            yield from _G.rwait(1)
+            yield from self.play()
+            yield from _G.rwait(1)
+            self.select_pet(i)
+            yield from _G.rwait(1)
+            yield from self.groom()
+            yield from _G.rwait(1)
+        self.select_pet(0)
+        yield from self.customise()
+
 
     def scan_all_pets(self):
         self.pets = []
@@ -70,10 +88,12 @@ class PetCaresJob(BaseJob):
     def scan_usable_items(self):
         self.items = []
         nodes = self.page.query_selector_all('.petCare-itemgrid-item')
+        item_names = []
         for node in nodes:
             name = node.get_attribute('data-itemname')
             if not name:
                 continue
+            item_names.append(name)
             self.items.append(NeoItem({
                 'name': name,
                 'id': node.get_attribute('id'),
@@ -84,75 +104,121 @@ class PetCaresJob(BaseJob):
                 'value_pc': 0,
                 'item_type': node.get_attribute('data-itemtype'),
             }))
+        jn.batch_search(item_names, False)
+        jn_done = False
+        while not jn_done:
+            jn_done = not jn.FLAG_BUSY
+            yield
+        for item in self.items:
+            item.update_jn()
         return self.items
 
     def select_pet(self, index):
         if index < 0 or index >= len(self.pets):
             _G.log_warning(f"Invalid pet index: {index} (total pets: {len(self.pets)})")
             return
+        if self.selected_pet:
+            self.unselect()
         self.selected_pet = self.pets[index]
-    
+        self.pets[index]['node'].click()
+
     def unselect(self):
         self.selected_pet = None
         self.page.mouse.click(50+randint(-10, 10), 200+randint(-10, 100))
 
+    def use_item(self, index):
+        self.items[index].node.click()
+        yield from _G.rwait(0.5)
+        self.page.query_selector('#petCareUseItem').click()
+        yield from _G.rwait(2)
+
     def customise(self):
+        '''
+        For daily mission, basically take off a thing and wear it back
+        '''
         if not self.selected_pet:
             return
-        node = self.page.query_selector('#petCareCustomiseLink')
-    
+        self.page.query_selector('#petCareCustomiseLink').click()
+        yield from _G.rwait(10)
+        switch = self.page.query_selector('.npcma-slider')
+        switch.click()
+        yield from _G.rwait(2)
+        container = self.page.query_selector('#npcma_AppliedpetItems')
+        item_name = container.query_selector('div > span').text_content()
+        if not item_name:
+            raise NeoError(1, "Please wear at least one item")
+        container.query_selector('.npcma-icon-close').click()
+        yield from _G.rwait(1)
+        self.page.query_selector('.npcma-icon-save-snap').click()
+        yield from _G.rwait(3)
+        self.page.query_selector('.npcma-ok_button').click()
+        yield from _G.rwait(0.5)
+        self.page.query_selector('.header-input').fill(item_name)
+        yield from _G.rwait(1)
+        la = self.page.locator('.ddcontainer')
+        lb = self.page.locator('#npcma_neopetcustomise')
+        self.drag_to(la, lb, steps=2, random_y=(50, 200))
+        yield from _G.rwait(2)
+        self.page.query_selector('.npcma-icon-save-snap').click()
+        yield from _G.rwait(3)
+
     def read(self):
         if not self.selected_pet:
             return
         node = self.page.query_selector('#petCareLinkRead')
-    
+
     def feed(self):
-        if not self.selected_pet:
-            return
-        node = self.page.query_selector('#petCareLinkFeed')
-        node.click()
+        self.page.query_selector('#petCareLinkFeed').click()
         yield from _G.rwait(5)
-        self.scan_usable_items()
-        item_index = yield from self.determine_feed_item()
-    
-    def determind_item_to_feed(self):
-        yield
+        yield from self.scan_usable_items()
+        item_index = self.determine_feed_item()
+        yield from self.use_item(item_index)
+        self.update_hunger()
+
+    def update_hunger(self):
+        line = self.page.query_selector('#petCareResult').query_selector_all('div > p')[-1].text_content().lower()
+        for word in reversed(HUNGER_LEVEL_MAP.keys()):
+            if word in line:
+                self.selected_pet['hunger'] = word
+                break
+
+    def determine_item_to_feed(self):
         if not self.items:
             return
-        candiates = []
+        candidates = []
         for item in self.items:
             if item.is_rubbish():
                 continue
             if any(re.search(pattern, item.name, re.I) for pattern in FEED_BLACKLIST):
                 continue
-            candiates.append(item)
-        # update jellyneo data
-        jn.batch_search([item.name for item in candiates], False)
-        jn_done = False
-        while not jn_done:
-            jn_done = jn.FLAG_BUSY
-            yield
-        [item.update_jn() for item in candiates]
-        candiates = [item for item in candiates if "disease" not in item.effects]
-        for i, item in enumerate(sorted(candiates, key=lambda x: x.value_pc)):
+            candidates.append(item)
+        for item in sorted(candidates, key=lambda x: x.value_pc):
             if item.value_pc < MAX_FEED_VALUE:
-                return i
+                return self.items.index(item)
         return -1
 
     def play(self):
         if not self.selected_pet:
             return
-        node = self.page.query_selector('#petCareLinkPlay')
-    
+        self.page.query_selector('#petCareLinkPlay').click()
+        yield from _G.rwait(5)
+        yield from self.scan_usable_items()
+        yield from self.use_item(0)
+
     def groom(self):
         if not self.selected_pet:
             return
-        node = self.page.query_selector('#petCareLinkGroom')
-    
+        self.page.query_selector('#petCareLinkGroom').click()
+        yield from _G.rwait(5)
+        yield from self.scan_usable_items()
+        yield from self.use_item(0)
+
     def heal(self):
         if not self.selected_pet:
             return
         node = self.page.query_selector('#petCareLinkHeal')
-    
-    def determine_feed_item(self):
-        pass
+
+    def is_hungry(self):
+        if not self.selected_pet:
+            return False
+        return HUNGER_LEVEL_MAP[self.selected_pet['hunger']] < MAX_FEED_LEVEL

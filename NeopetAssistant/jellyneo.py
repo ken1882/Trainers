@@ -4,6 +4,7 @@ import os
 from bs4 import BeautifulSoup as BS
 from datetime import datetime, timedelta
 from threading import Thread, Lock
+from urllib.parse import quote
 import json
 import requests
 
@@ -60,7 +61,7 @@ def get_item_details_by_name(item_name, full_price_history=False, forced=False, 
         "restock_shop_link": "",
         "effects": [],
     }
-    item_name = item_name.replace(" ", "+")
+    item_name = quote(item_name)
     url = f"https://items.jellyneo.net/search?name={item_name}&name_type=3"
     response = agent.get(url)
     page = BS(response.content, "html.parser")

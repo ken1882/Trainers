@@ -51,3 +51,13 @@ def draw_debug_point(page, x, y, radius=5, timeout=3000):
         document.body.appendChild(marker);
         setTimeout(() => marker.remove(), {timeout});
     """)
+
+def drag_to(page, locator_a, locator_b, steps=5, random_x=(-10, 10), random_y=(-10, 10)):
+    locator_a.hover()
+    page.mouse.down()
+    bb = locator_b.bounding_box()
+    mx = (bb['x'] + bb['width']) // 2 + randint(*random_x)
+    my = (bb['y'] + bb['height']) // 2 + randint(*random_y)
+    page.mouse.move(mx, my, steps=steps)
+    page.mouse.up()
+

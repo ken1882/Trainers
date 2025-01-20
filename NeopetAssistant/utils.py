@@ -46,8 +46,11 @@ def diff_string(a,b):
     return SequenceMatcher(None,a,b).ratio()
 
 def str2int(ss):
+    neg_mul = 1
+    if ss.strip().startswith('-'):
+        neg_mul = -1
     try:
-        return int("".join([n for n in ss if n.isdigit()]))
+        return int("".join([n for n in ss if n.isdigit()])) * neg_mul
     except ValueError:
         return None
 

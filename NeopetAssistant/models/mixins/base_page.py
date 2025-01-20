@@ -26,6 +26,7 @@ class BasePage():
         self.assume_loaded_time = datetime.now() + timedelta(seconds=self.max_load_time)
         yield from self.wait_until_page_load()
 
+
     def do(self, method, *args, **kwargs):
         '''
         Call a method in page_action, retry 3 times if failed
@@ -37,6 +38,9 @@ class BasePage():
                 _G.log_error(f"Error: {e}")
                 _G.wait(0.5)
         return None
+
+    def drag_to(self, locator_a, locator_b, steps=5, random_x=(-10, 10), random_y=(-10, 10)):
+        self.do('drag_to', self.page, locator_a, locator_b, steps, random_x, random_y)
 
     def run_js(self, script_name):
         return self.do('eval_js', self.page, script_name)
