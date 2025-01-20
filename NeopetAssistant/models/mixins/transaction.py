@@ -78,7 +78,6 @@ class Transaction:
         self.message      = message
         self.timestamp    = timestamp or datetime.now()
         self.kwargs       = kwargs
-        return self
 
     def log(self, disable_json_output=False):
         log_str = f"Transaction Log: {self.timestamp}\n"

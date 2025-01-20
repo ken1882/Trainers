@@ -30,6 +30,11 @@ from jobs.apple_bobbing import AppleBobbingJob
 from jobs.deserted_tomb import DesertedTombJob
 from jobs.lunar_temple import LunarTempleJob
 from jobs.negg_cave import NeggCaveJob
+from jobs.bank_interest import BankInterestJob
+from jobs.wise_king import WiseKingJob
+from jobs.grumpy_king import GrumpyKingJob
+from jobs.altador_council import AltadorCouncilJob
+from jobs.faerie_crossword import FaerieCrosswordJob
 
 Scheduler = None
 
@@ -45,12 +50,24 @@ def create_context(pw, profile_name, enable_extensions=True):
         args.append(f"--disable-extensions-except={os.getenv('BROWSER_EXTENSION_PATHS')}")
         args.append(f"--load-extension={os.getenv('BROWSER_EXTENSION_PATHS')}")
     _G.log_info(f"Launching browser context#{profile_name} with args: {args}")
+    kwargs = {
+        'headless': False,
+        'handle_sigint': False,
+        'color_scheme': 'dark',
+        'args': args
+    }
+    proxy = _G.ARGV.proxy
+    if not proxy:
+        proxy = os.getenv(f"PROFILE_PROXY_{profile_name.upper()}")
+    if proxy:
+        kwargs['proxy'] = {'server': proxy, 'bypass': 'neopass.neopets.com'}
+        auth = os.getenv(f"PROFILE_PROXY_{profile_name.upper()}_AUTH")
+        if auth:
+            kwargs['proxy']['username'] = auth.split(':')[0]
+            kwargs['proxy']['password'] = auth.split(':')[1]
     return pw.chromium.launch_persistent_context(
         f"{_G.BROWSER_PROFILE_DIR}/profile_{profile_name}",
-        headless=False,
-        handle_sigint=False,
-        color_scheme='dark',
-        args=args
+        **kwargs
     )
 
 def main_loop():
@@ -87,6 +104,11 @@ def queue_jobs():
         DesertedTombJob(),
         LunarTempleJob(),
         NeggCaveJob(),
+        BankInterestJob(),
+        WiseKingJob(),
+        GrumpyKingJob(),
+        AltadorCouncilJob(),
+        FaerieCrosswordJob(),
     )
     for job in jobs:
         Scheduler.queue_job(job, False)

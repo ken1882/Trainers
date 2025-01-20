@@ -14,6 +14,9 @@ class GrumpyKingJob(BaseJob):
         if 'outtolunch.gif' in self.page.content():
             _G.log_info("Grumpy King is unavailable, return after 1 hour")
             return
+        self.scroll_to(0, 250)
+        self.click_element('button[type=submit]', -1)
+        self.presented = True
 
     def calc_next_run(self):
         if self.presented:

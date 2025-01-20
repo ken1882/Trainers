@@ -1,6 +1,7 @@
 import _G, utils
 import page_action as action
 from random import randint
+from datetime import datetime, timedelta
 
 class BasePage():
     def __init__(self, page=None, url='about:blank', context=None):
@@ -8,6 +9,8 @@ class BasePage():
         self.context = context
         self.page = page
         self.url  = url
+        self.max_load_time = 10
+        self.assume_loaded_time = datetime.now()
 
     def set_context(self, context):
         self.context = context
@@ -20,14 +23,36 @@ class BasePage():
             url = self.url
         _G.log_info(f"Goto {url}, Waiting for page to load")
         self.page.goto(url, wait_until='commit')
+        self.assume_loaded_time = datetime.now() + timedelta(seconds=self.max_load_time)
         yield from self.wait_until_page_load()
+
+    def do(self, method, *args, **kwargs):
+        '''
+        Call a method in page_action, retry 3 times if failed
+        '''
+        for _ in range(3):
+            try:
+                return getattr(action, method)(*args, **kwargs)
+            except Exception as e:
+                _G.log_error(f"Error: {e}")
+                _G.wait(0.5)
+        return None
+
+    def run_js(self, script_name):
+        return self.do('eval_js', self.page, script_name)
 
     def wait_until_page_load(self):
         self.signal['load'] = False
         self.page.once("load", self.on_page_load)
         yield from _G.rwait(3)
         while not self.signal.get('load', False):
-            self.page.evaluate('document.readyState')
+            try:
+                self.page.evaluate('document.readyState')
+            except Exception:
+                pass
+            if datetime.now() > self.assume_loaded_time:
+                _G.log_warning("Page load timeout, assume main content loaded")
+                break
             yield
 
     def on_page_load(self):
@@ -95,17 +120,16 @@ class BasePage():
         else:
             node = self.page.query_selector(selector)
         if node:
-            action.click_node(self.page, node, **kwargs)
+            self.do('click_node', self.page, node, **kwargs)
             return node
         return None
 
     def scroll_to(self, x:int=0, y:int=0, node=None):
         if node:
             bb = node.bounding_box()
-            nx = 0
-            ny = y + bb['y'] - 100
-            return action.scroll_to(self.page, nx, ny)
-        return action.scroll_to(self.page, x, y)
+            x = 0
+            y = y + bb['y'] - 100
+        return self.do('scroll_to', self.page, x, y)
 
     def input_number(self, selector:str, number:int, nth_element:int=None):
         self.click_element(selector, nth_element)

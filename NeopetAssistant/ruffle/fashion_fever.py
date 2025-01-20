@@ -22,4 +22,4 @@ class FashionFever(BaseFlash):
     def send_score(self):
         self.click(500, 320)
         yield from _G.rwait(5)
-        self.click(500, 248, random_y=(-5, 5))
+        self.click(500, 248, random_y=(-3, 3))

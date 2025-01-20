@@ -85,12 +85,15 @@ class JobScheduler:
         self.current_job = job
         self.current_job.set_context(self.context)
         self.fiber = job.start()
+        self.job_returns = []
 
     def stop_job(self, queue_next:bool=True):
         if self.current_job:
-            self.queue_job(self.current_job, queue_next)
+            job = self.current_job
             self.current_job = None
+            self.queue_job(job, queue_next)
         self.fiber = None
+        self.save_status()
 
     def resume(self, fiber):
         ret = None
@@ -111,6 +114,12 @@ class JobScheduler:
         return True
 
     def queue_job(self, job, queue_next:bool=True):
+        if self.current_job and job.job_name == self.current_job.job_name:
+            _G.log_warning(f"Job {job.job_name} already running")
+            return
+        if job.job_name in [j.job_name for j in self.queued_jobs+self.pending_jobs]:
+            _G.log_warning(f"Job {job.job_name} already in queue")
+            return
         if queue_next:
             job.calc_next_run()
         self.queued_jobs.append(job)
@@ -148,18 +157,12 @@ class JobScheduler:
             data = {**self.to_dict(), **data}
             self.idle_log_interval = data['idle_log_interval']
             self.job_pick_interval = data['job_pick_interval']
-            for job_data in data['pending_jobs']:
+            for job_data in data['queued_jobs']+data['pending_jobs']:
                 job_module = getattr(jobs, job_data['job_name'])
                 job_cls  = getattr(job_module, job_data['class'])
                 job_instance = job_cls()
                 job_instance.load_data(job_data)
-                self.pending_jobs.append(job_instance)
-            for job_data in data['queued_jobs']:
-                job_module = getattr(jobs, job_data['job_name'])
-                job_cls  = getattr(job_module, job_data['class'])
-                job_instance = job_cls()
-                job_instance.load_data(job_data)
-                self.queued_jobs.append(job_instance)
+                self.queue_job(job_instance, False)
         _G.log_info("Data successfully loaded")
         queued_job_names = [j.job_name for j in self.queued_jobs]
         msg = "Queued jobs:\n" + '\n'.join(queued_job_names) + '\n---\n'

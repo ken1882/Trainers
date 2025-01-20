@@ -193,7 +193,7 @@ Use `__ret__` to return value.
         except KeyboardInterrupt:
             self.console_buffer = ''
             self.line_buffer = ''
-            self.mouse_pos = 0
+            self.cursor_pos = 0
             print("KeyboardInterrupt\n>>> ", end='', flush=True)
         if not ch:
             return

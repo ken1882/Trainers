@@ -17,6 +17,8 @@ class QasalanExpelliboxJob(BaseJob):
 
     def execute(self):
         yield from _G.rwait(3)
+        if 'back tomorrow' in self.page.content():
+            return
         self.scroll_to(node=self.page.query_selector('#show_NCGiveawayGame'))
         yield from _G.rwait(1)
         self.click_element('#main_div')

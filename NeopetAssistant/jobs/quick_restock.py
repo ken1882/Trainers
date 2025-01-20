@@ -13,7 +13,8 @@ import jellyneo as jn
 class QuickRestockJob(BaseJob):
     def __init__(self, **kwargs):
         super().__init__("quick_restock", "https://www.neopets.com/quickstock.phtml", **kwargs)
-        self.deposite_value = 10000
+        self.deposite_value = 900000 # 900K
+        self.restock_profit = 1000
         self.category_keeps = {
             'food': 5,
             'toy': 1,

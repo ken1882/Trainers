@@ -8,6 +8,7 @@ from errors import NeoError
 from models.mixins.transaction import Transaction, NeoItem
 from models.mixins.base_page import BasePage
 from random import randint
+import jellyneo as jn
 
 NAME_DICT = {
     1: "fresh_foods",
@@ -18,6 +19,13 @@ NAME_DICT = {
     7: "magical_bookshop",
     8: "collectable_card_shop",
     9: "battle_magic",
+    14: "chocolate_factory",
+    15: "the_bakery",
+    16: "smoothie_shop",
+    34: "coffee_cave",
+    35: "slushie_shop",
+    39: "faerie_foods",
+    46: "huberts_hotdogs",
     56: "merifoods",
 }
 
@@ -52,14 +60,27 @@ class NeoShop(BasePage):
             return
         nodes = self.page.query_selector_all(".shop-item")
         self.goods = []
-        for node in nodes:
+        for i, node in enumerate(nodes):
             stock, price = node.query_selector_all('.item-stock')
             self.goods.append({
+                'index': i,
                 'name': node.query_selector('.item-name').text_content(),
                 'stock': utils.str2int(stock.text_content().split()[0]),
                 'price': utils.str2int(price.text_content().split()[1]),
-                'node': node
+                'ref': None,
+                'node': node,
+                'profit': 0,
             })
+
+    def lookup_goods_details(self):
+        goods_names = [good['name'] for good in self.goods]
+        jn.batch_search(goods_names, False)
+        jn_done = False
+        while not jn_done:
+            jn_done = not jn.FLAG_BUSY
+            yield
+        for good in self.goods:
+            good['ref'] = jn.get_item_details_by_name(good['name'])
 
     def is_purchase_limited(self):
         if not self.purchase_limit:
@@ -71,6 +92,18 @@ class NeoShop(BasePage):
         # check cooldown
         return (curt - latest_purchase_time).total_seconds() < self.limit_reset_seconds
 
+    def get_profitable_goods(self):
+        ret = []
+        for good in self.goods:
+            try:
+                profit = good['ref']['price'] - good['price']
+            except Exception:
+                profit = 0
+            if profit > 0:
+                good['profit'] = profit
+                ret.append(good)
+        return sorted(ret, key=lambda x: x['profit'], reverse=True)
+
     def is_good_buyable(self, good=None, index=None):
         if self.is_purchase_limited():
             return False
@@ -81,7 +114,7 @@ class NeoShop(BasePage):
         NeoError(1, f"Unsupported currency: {self.currency}").raise_exception()
         return False
 
-    def buy_good(self, good=None, index=None):
+    def buy_good(self, good=None, index=None, immediate=False):
         if index:
             good = self.goods[index]
         _G.log_info(f"Buying {good['name']} ({good['price']} NP)")
@@ -92,7 +125,7 @@ class NeoShop(BasePage):
         confirm = self.page.query_selector('#confirm-link')
         action.click_node(self.page, confirm)
         self.last_captcha_url = None
-        result = yield from self.haggle(good_info=good)
+        result = yield from self.haggle(good_info=good, immediate=immediate)
         if result:
             _G.log_info(f"Transaction success: {result}")
         else:
@@ -107,26 +140,37 @@ class NeoShop(BasePage):
         page.reload()
 
 
-    def haggle(self, last_price=0, depth=0, good_info=None):
+    def haggle(self, last_price=0, depth=0, last_max=10**8, good_info=None, immediate=False):
+        yield from _G.rwait(1.5)
         if 'SOLD OUT!' in self.page.content():
             _G.log_info("Item is sold out")
             return False
+        _G.log_info(f"Haggling with {self.name}")
         yield from self.wait_until_captcha_updated()
         purpose_node = self.page.query_selector('#shopkeeper_makes_deal')
         action.scroll_to(self.page, 0, max(0, purpose_node.bounding_box()['y'] - 300))
-        max_price = utils.str2int(purpose_node.text_content())
-        bargain_price = self.determine_strategy(last_price, max_price, depth)
+        text = purpose_node.text_content().strip()
+        max_price = utils.str2int(text)
+        if max_price > last_max:
+            max_price = utils.str2int(' '.join(text.split()[-5:]))
+            if not max_price:
+                max_price = utils.str2int(' '.join(text.split()[-8:]))
+        bargain_price = max_price
+        _G.log_info(f"Last price: {last_price}, Max price: {max_price}, Depth: {depth}")
+        if not immediate and max_price < last_max:
+            bargain_price = self.determine_strategy(last_price, max_price, depth)
+        _G.log_info(f"Making deal with {bargain_price} NP")
         yield from self.input_number('input[name=current_offer]', bargain_price)
         self.solve_captcha()
-
-        if 'accept' in self.page.content():
+        yield from _G.rwait(1.5)
+        if 'accept your offer' in self.page.content():
             item_name = good_info['name'] if 'name' in good_info else 'Unknown'
             return Transaction(
-                [NeoItem(0, 'NP', bargain_price)],
-                [NeoItem(item_name, item_name, 1)],
+                [NeoItem(name='NP', quantity=bargain_price)],
+                [NeoItem(name=item_name)],
                 f"Purchased from Neopian Shop {self.name if self.name else 'Unknown'}",
             ).log()
-        yield from self.haggle(bargain_price, depth+1, good_info)
+        yield from self.haggle(bargain_price, depth+1, max_price, good_info)
 
     def determine_strategy(self, last_price, max_price, depth=0):
         if last_price < 3000:
@@ -152,9 +196,9 @@ class NeoShop(BasePage):
     def calc_numkey_interval(self, current, next):
         keys = '1234567890..........E'
         delta = abs(keys.index(current) - keys.index(next))
-        ret = 0.2
+        ret = 0.1
         for _ in range(delta):
-            ret += randint(10, 30) / 100.0
+            ret += randint(20, 50) / 1000.0
         return ret
 
     def solve_captcha(self):
@@ -171,7 +215,7 @@ class NeoShop(BasePage):
 
     def wait_until_captcha_updated(self):
         url = '_'
-        while url != self.last_captcha_url:
-            yield from _G.wait(1)
+        while url == self.last_captcha_url:
+            yield from _G.rwait(1)
             url = captcha.get_captcha_url(self.page)
         self.last_captcha_url = url

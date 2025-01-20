@@ -81,6 +81,6 @@ class BaseJob(BasePage):
         self.new_page = data['new_page']
         self.priority = data['priority']
         self.close_delay = data['close_delay']
-        self.enanbled = data['enabled']
+        self.enabled = data['enabled']
         self.args = data['args']
         return self

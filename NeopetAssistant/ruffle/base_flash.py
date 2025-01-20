@@ -23,6 +23,7 @@ class BaseFlash(BasePage):
         try:
             played = int(self.page.query_selector('.sent-cont').text_content().split()[-1].split('/')[0])
             self.played_times = played
+            _G.log_info(f"Played times: {played}")
             return 3 - played
         except Exception as err:
             utils.handle_exception(err)
@@ -31,6 +32,7 @@ class BaseFlash(BasePage):
     def play_game(self):
         self.click_element('.play-text')
         yield from self.wait_until_page_load()
+        _G.log_info("Waiting 30 seconds for flash to load")
         yield from _G.rwait(30) # wait for flash to load
         self.scroll_to(node=self.page.query_selector('#game_cont'))
         if not self.find_flash():

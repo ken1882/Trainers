@@ -19,7 +19,7 @@ class LunarTempleJob(BaseJob):
         yield from _G.rwait(2)
         self.scroll_to(0, 300)
         yield from _G.rwait(1)
-        action.eval_js(self.page, 'lunar_temple')
+        self.run_js('lunar_temple')
         yield from _G.rwait(1)
         self.page.query_selector('#answer').query_selector('input').click()
         yield from _G.rwait(2)

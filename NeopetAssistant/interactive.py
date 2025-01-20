@@ -2,13 +2,18 @@
 import _G
 import utils
 import os
+import argv_parse
 from playwright.sync_api import sync_playwright
 from random import randint
 from errors import NeoError
 from models.mixins.transaction import Transaction, NeoItem
+from models import shop
 import page_action as action
 import captcha
 import jellyneo as jn
+argv_parse.load()
+
+import importlib
 
 def create_context(pw, profile_name, enable_extensions=True):
     _G.log_info(f"Creating browser context#{profile_name}")
@@ -22,21 +27,57 @@ def create_context(pw, profile_name, enable_extensions=True):
         args.append(f"--disable-extensions-except={os.getenv('BROWSER_EXTENSION_PATHS')}")
         args.append(f"--load-extension={os.getenv('BROWSER_EXTENSION_PATHS')}")
     _G.log_info(f"Launching browser context#{profile_name} with args: {args}")
+    kwargs = {
+        'headless': False,
+        'handle_sigint': False,
+        'color_scheme': 'dark',
+        'args': args
+    }
+    proxy = _G.ARGV.proxy
+    if not proxy:
+        proxy = os.getenv(f"PROFILE_PROXY_{profile_name.upper()}")
+    if proxy:
+        kwargs['proxy'] = {'server': proxy, 'bypass': 'neopass.neopets.com'}
     return pw.chromium.launch_persistent_context(
         f"{_G.BROWSER_PROFILE_DIR}/profile_{profile_name}",
-        headless=False,
-        handle_sigint=False,
-        color_scheme='dark',
-        args=args
+        **kwargs
     )
 
 fiber = None
 def resume():
     return next(fiber)
 
+def wait_for_fiber():
+    while True:
+        try:
+            resume()
+        except StopIteration:
+            break
+        _G.wait(0.1)
+
 pw = sync_playwright().start()
-context = create_context(pw, 'default')
+context = create_context(pw, 'main')
 page = context.new_page()
+page.goto('https://www.neopets.com/home/')
+
+def buy(id):
+    global fiber
+    importlib.reload(shop)
+    s = shop.NeoShop(id, page=page)
+    fiber = s.visit()
+    wait_for_fiber()
+    s.scan_goods()
+    fiber = s.lookup_goods_details()
+    wait_for_fiber()
+    gs = s.get_profitable_goods()
+    if gs:
+        print(gs[0]['name'], gs[0]['profit'])
+        if gs[0]['profit'] > 1000:
+            fiber = s.buy_good(index=gs[0]['index'])
+            wait_for_fiber()
+
+for id in shop.NAME_DICT:
+    buy(id)
 
 import ruffle.fashion_fever as ff
 player = ff.FashionFever(page)
