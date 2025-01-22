@@ -36,7 +36,7 @@ class RestockingJob(BaseJob):
         self.inventory_keep_items = self.args.get("inventory_keeps", [])
         self.skip_quests = self.args.get("skip_quests", [])
         self.auto_banking = self.args.get("auto_banking", True)
-        self.min_profit = self.args.get("min_profit", 3000)
+        self.min_profit = self.args.get("min_profit", 2000)
         self.immediate_profit = self.args.get("immediate_profit", 3000)
         self.min_carrying_np = self.args.get("min_carrying_np", 20000)
         return self.args
