@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from errors import NeoError
 
 QUEST_MATCH_MAP = {
-    # 'shopping': [r"purchase(?:.|\s)*(\d+/\d+)?\s*$"],
+    'shopping': [r"purchase(?:.|\s)*(\d+/\d+)?\s*$"],
     'wheel': [r"spin the wheel (.*)"]
 }
 
@@ -25,19 +25,22 @@ class DailyQuestJob(BaseJob):
     - `max_carrying_np:int=50000` maximum carrying np, will deposit to bank if carrying more than this
     '''
     def __init__(self, **kwargs):
-        self.candidate_shop_ids = kwargs.get("candidate_shops", [])
-        self.shop_refreshes = kwargs.get("shop_refreshes", 3)
-        self.refresh_interval = kwargs.get("refresh_interval", 10)
-        self.auto_deposit = kwargs.get("auto_deposit", False)
-        self.inventory_keep_items = kwargs.get("inventory_keeps", [])
-        self.skip_quests = kwargs.get("skip_quests", [])
-        self.auto_banking = kwargs.get("auto_banking", True)
-        self.min_carrying_np = kwargs.get("min_carrying_np", 20000)
-        self.max_carrying_np = kwargs.get("max_carrying_np", 50000)
         super().__init__("daily_quest", "https://www.neopets.com/questlog/", **kwargs)
         self.quests = []
         self.priority = -9
 
+    def load_args(self):
+        self.candidate_shop_ids = self.args.get("candidate_shops", [])
+        self.shop_refreshes = self.args.get("shop_refreshes", 3)
+        self.refresh_interval = self.args.get("refresh_interval", 10)
+        self.auto_deposit = self.args.get("auto_deposit", False)
+        self.inventory_keep_items = self.args.get("inventory_keeps", [])
+        self.skip_quests = self.args.get("skip_quests", [])
+        self.auto_banking = self.args.get("auto_banking", True)
+        self.min_carrying_np = self.args.get("min_carrying_np", 20000)
+        self.max_carrying_np = self.args.get("max_carrying_np", 50000)
+        return self.args
+    
     def execute(self):
         yield from _G.rwait(2)
         nodes = self.page.query_selector_all('.ql-task')
@@ -134,6 +137,9 @@ class DailyQuestJob(BaseJob):
         yield from _G.rwait(2)
         nshop.scan_goods()
         yield from nshop.lookup_goods_details()
+        if not nshop.goods:
+            _G.log_info(f"No goods in {nshop.name}")
+            return False
         target = nshop.get_profitable_goods()[0]
         result = False
         _G.log_info(f"Target: {target} profit: {target['profit']}")
@@ -156,6 +162,8 @@ class DailyQuestJob(BaseJob):
         yield from _G.rwait(2)
         self.click_element('#QuestLogDailyBonus')
         yield from _G.rwait(3)
+        self.page.query_selector('#QuestLogRewardPopup').query_selector('button').click()
+        yield from _G.rwait(2)
         self.click_element('.ql-weekly-label')
         yield from _G.rwait(1)
         self.click_element('#QuestLogWeeklyBonus')

@@ -7,6 +7,7 @@ from errors import NeoError
 class DesertedTombJob(BaseJob):
     def __init__(self, **kwargs):
         super().__init__("deserted_tomb", "https://www.neopets.com/worlds/geraptiku/tomb.phtml", **kwargs)
+        self.priority = 111
 
     def execute(self):
         yield from _G.rwait(2)

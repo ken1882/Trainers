@@ -21,7 +21,7 @@ class QuickRestockJob(BaseJob):
             'grooming': 1,
         }
         self.deposite_maplist = {
-            'category': ['book'],
+            'category': [],
             'name': [
                 r"codestone",
             ]
@@ -46,8 +46,9 @@ class QuickRestockJob(BaseJob):
                 break
             self.items.append({
                 'name': name,
-                'actions': available_acts,
                 'ref': None,
+                'node': node,
+                'act': 'keep',
             })
         jn.batch_search(list(set([item['name'] for item in self.items])), False)
         jn_done = False
@@ -65,19 +66,20 @@ class QuickRestockJob(BaseJob):
             yield
             act_name = 'deposit'
             cat = item['ref'].get_category()
+            _G.log_info(f"{item['name']} G:{item['ref'].value_pc - item['ref'].value_npc}")
             if any(re.search(regex, item['name'], re.I) for regex in self.deposite_maplist['name']):
                 pass
+            elif item['ref'].value_pc >= self.deposite_value:
+                _G.log_info(f"High value item: {item['name']}")
+            elif item['ref'].value_pc - item['ref'].value_npc >= self.restock_profit:
+                _G.log_info(f"Profitable item: {item['name']}")
+                act_name = 'stock'
             elif cat in self.deposite_maplist['category']:
                 pass
             elif item['ref'].is_rubbish():
                 act_name = 'donate'
             elif item['ref'].rarity > 300:
                 act_name = 'keep'
-            elif item['ref'].value_pc >= self.deposite_value:
-                _G.log_info(f"High value item: {item['name']}")
-            elif item['ref'].value_pc - item['ref'].value_npc >= self.restock_profit:
-                _G.log_info(f"Profitable item: {item['name']}")
-                act_name = 'stock'
             elif cat in keeps and keeps[cat] > 0:
                 keeps[cat] -= 1
                 act_name = 'keep'
@@ -89,12 +91,11 @@ class QuickRestockJob(BaseJob):
         random_x = (0, 0)
         random_y = (0, 0)
         for item in self.items:
-            for act in reversed(item['actions']):
+            acts = item['node'].query_selector_all('input')
+            for act in reversed(acts):
                 aname = act.get_attribute('value')
-                if aname != item['act']:
-                    continue
-                _G.log_info(f"Processing {item['name']} with action {aname}")
-                if aname in ['closet', act_name]:
+                if aname in ['closet', item['act']]:
+                    _G.log_info(f"Processing {item['name']} with action {aname}")
                     self.click_element(node=act, random_x=random_x, random_y=random_y)
                     yield from _G.rwait(0.2)
                     break
@@ -105,10 +106,10 @@ class QuickRestockJob(BaseJob):
                 yield from _G.rwait(1)
         yield from _G.rwait(2)
         btn = self.page.query_selector_all('input[type=submit]')[1]
-        self.scroll_to(node=btn)
         yield from _G.rwait(1)
+        self.page.on("dialog", lambda dialog: dialog.accept())
         self.click_element(node=btn)
-        yield from _G.rwait(2)
+        yield from _G.rwait(3)
 
     def process_restock(self):
         yield from self.goto("https://www.neopets.com/market.phtml?type=your")
@@ -121,9 +122,9 @@ class QuickRestockJob(BaseJob):
             cells = good.query_selector_all('td')
             name = cells[0].text_content().strip()
             market_price = jn.get_item_details_by_name(name).get('price', 0)
-            adds = int(market_price * 0.03)
+            adds = int(market_price * self.args.get('marketprice_adds_rate', 0.01))
             price = int(market_price + adds)
-            _G.log_info(f"Setting price for {name} to {price}")
+            _G.log_info(f"Setting price for {name} to {price} ({market_price} + {adds})")
             if market_price <= 0:
                 continue
             cells[4].query_selector('input').fill(str(price))

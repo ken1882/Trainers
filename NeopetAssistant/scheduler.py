@@ -152,13 +152,16 @@ class JobScheduler:
             return
         with open(filename, 'r') as f:
             data = json.load(f)
-            queued_bak = [j for j in self.queued_jobs]
+            self.queued_jobs += self.pending_jobs
             self.pending_jobs = []
-            self.queued_jobs  = []
+            queued_bak = [j for j in self.queued_jobs]
             data = {**self.to_dict(), **data}
             self.idle_log_interval = data['idle_log_interval']
             self.job_pick_interval = data['job_pick_interval']
             for job_data in data['queued_jobs']+data['pending_jobs']:
+                if job_data['job_name'] in [j.job_name for j in self.queued_jobs]:
+                    next(j for j in self.queued_jobs if j.job_name == job_data['job_name']).load_data(job_data)
+                    continue
                 job_module = getattr(jobs, job_data['job_name'])
                 job_cls  = getattr(job_module, job_data['class'])
                 job_instance = job_cls()
@@ -210,3 +213,10 @@ class JobScheduler:
         msg += msg2
         msg += "\n=================\n"
         _G.log_info(msg)
+
+    def trigger_job(self, name):
+        _G.log_info(f"Triggering job {name}")
+        for job in self.queued_jobs:
+            if job.job_name == name:
+                job.next_run = datetime.now()
+                return

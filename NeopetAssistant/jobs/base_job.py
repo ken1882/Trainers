@@ -25,9 +25,13 @@ class BaseJob(BasePage):
         self.return_value = NeoError(0)
         for key, value in kwargs.items():
             self.args[key] = value
+        self.load_args()
         self.set_context(context)
         self.set_page(page)
 
+    def load_args(self):
+        pass
+    
     def run_now(self):
         self.next_run = datetime.now()
 
@@ -84,4 +88,5 @@ class BaseJob(BasePage):
         self.close_delay = data['close_delay']
         self.enabled = data['enabled']
         self.args = data['args']
+        self.load_args()
         return self

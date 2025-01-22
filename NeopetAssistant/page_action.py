@@ -58,6 +58,7 @@ def drag_to(page, locator_a, locator_b, steps=5, random_x=(-10, 10), random_y=(-
     bb = locator_b.bounding_box()
     mx = (bb['x'] + bb['width']) // 2 + randint(*random_x)
     my = (bb['y'] + bb['height']) // 2 + randint(*random_y)
+    _G.log_info(f"Drag to: {mx},{my}")
     page.mouse.move(mx, my, steps=steps)
     page.mouse.up()
 

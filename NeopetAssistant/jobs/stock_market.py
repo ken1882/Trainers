@@ -24,19 +24,21 @@ class StockMarketJob(BaseJob):
         table = self.page.query_selector('#postForm')
         companies = table.query_selector_all('tr[id]')
         sold = False
-        for com in companies:
-            for row in com.query_selector_all('tr')[1:]:
-                cells = row.query_selector_all('td')
-                code  = cells[1].text_content()
-                ratio = utils.str2int(cells[-2].text_content()) / 100.0
-                _G.log_info(f'{code} has {ratio:.2f} profit')
-                if ratio < 0.2:
-                    continue
-                _G.log_info(f'Selling {code} with {ratio:.2f} profit')
-                shares = utils.str2int(cells[0].text_content())
-                cells[-1].query_selector('input').fill(str(shares))
-                sold = True
-            yield
+        try:
+            for com in companies:
+                for row in com.query_selector_all('tr')[1:]:
+                    cells = row.query_selector_all('td')
+                    code  = cells[1].text_content()
+                    ratio = utils.str2int(cells[-2].text_content()) / 100.0
+                    if ratio < 20:
+                        continue
+                    _G.log_info(f'Selling {code} with {ratio:.2f} profit')
+                    shares = utils.str2int(cells[0].text_content())
+                    cells[-1].query_selector('input').fill(str(shares))
+                    sold = True
+                yield
+        except Exception:
+            pass
         if sold:
             self.page.query_selector_all('input[type=submit]')[1].click()
             yield from _G.rwait(2)
@@ -85,7 +87,7 @@ class StockMarketJob(BaseJob):
                 if quota <= 0:
                     break
                 cn = len(candidates_bear[p])
-                buys = 1000 // cn
+                buys = quota // cn
                 for c in candidates_bear[p]:
                     inv_table[c] = buys
                     quota -= buys

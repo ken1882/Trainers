@@ -30,7 +30,7 @@ class NeggCaveJob(BaseJob):
         shape_base = '#mnc_parch_ui_symbol_{:d}'
         color_base = '#mnc_parch_ui_color_{:d}'
         negg_grid  = '#mnc_grid_cell_{:d}_{:d}'
-        last_shape, last_color = 0,0
+        last_shape, last_color = -1,-1
         for idx, num in enumerate(answer):
             shape = num % 3
             if shape != last_shape:

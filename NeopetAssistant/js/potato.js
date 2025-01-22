@@ -19,16 +19,7 @@
         });
 
         // Calculate the delay based on the total count
-        const finalDelay = totalCount * 50; // 100 milliseconds per potato count
-
-        // Check if the delay exceeds 20 seconds and refresh the page if necessary
-        if (finalDelay > 20000) {
-            console.log(`Delay of ${finalDelay} milliseconds exceeds 20 seconds. Refreshing the page.`);
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000); // Refresh after 1 second to give time for the log message
-            return; // Exit the function to prevent further actions
-        }
+        const finalDelay = totalCount * 10;
 
         // Ensure the overlay is updated after the calculated delay
         setTimeout(() => {
@@ -61,6 +52,5 @@
         overlay.textContent = message;
     }
 
-    // Run the countImages function after the page is fully loaded
-    window.addEventListener('load', countImages);
+    countImages();
 })();

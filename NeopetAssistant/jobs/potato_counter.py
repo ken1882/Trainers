@@ -10,4 +10,13 @@ class PotatoCounterJob(BaseJob):
         super().__init__("potato_counter", "https://www.neopets.com/medieval/potatocounter.phtml", **kwargs)
 
     def execute(self):
-        pass
+        for _ in range(3):
+            yield from _G.rwait(2)
+            self.run_js('potato')
+            yield from _G.rwait(5)
+            ans = utils.str2int(self.page.query_selector('#potato-counter-overlay').text_content())
+            field = self.page.query_selector('#content').query_selector('center > form')
+            field.query_selector('input[type=text]').fill(str(ans))
+            yield from _G.rwait(1)
+            field.query_selector('input[type=submit]').click()
+            yield from self.goto()

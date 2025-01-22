@@ -39,6 +39,8 @@ from jobs.altador_council import AltadorCouncilJob
 from jobs.faerie_crossword import FaerieCrosswordJob
 from jobs.pet_cares import PetCaresJob
 from jobs.quick_restock import QuickRestockJob
+from jobs.restocking import RestockingJob
+from jobs.potato_counter import PotatoCounterJob
 
 Scheduler = None
 
@@ -48,8 +50,9 @@ def create_context(pw, profile_name, enable_extensions=True):
         '--disable-blink-features=AutomationControlled',
         '--disable-infobars',
         '--disable-features=IsolateOrigins,site-per-process',
-        '--auto-open-devtools-for-tabs',
     ]
+    if _G.ARGV.debug:
+        args.append('--auto-open-devtools-for-tabs')
     if enable_extensions:
         args.append(f"--disable-extensions-except={os.getenv('BROWSER_EXTENSION_PATHS')}")
         args.append(f"--load-extension={os.getenv('BROWSER_EXTENSION_PATHS')}")
@@ -118,6 +121,8 @@ def queue_jobs():
         PetCaresJob(),
         StockMarketJob(),
         QuickRestockJob(),
+        PotatoCounterJob(),
+        RestockingJob(scheduler=Scheduler),
     )
     for job in jobs:
         Scheduler.queue_job(job, False)

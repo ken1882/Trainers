@@ -3,6 +3,7 @@ import captcha
 import page_action as action
 import re
 import utils
+import math
 from datetime import datetime, timedelta
 from errors import NeoError
 from models.mixins.transaction import Transaction, NeoItem
@@ -126,12 +127,15 @@ class NeoShop(BasePage):
         confirm = self.page.query_selector('#confirm-link')
         action.click_node(self.page, confirm)
         self.last_captcha_url = None
-        result = yield from self.haggle(good_info=good, immediate=immediate)
-        if result:
-            _G.log_info(f"Transaction success: {result}")
+        last_tlen = len(self.transaction_history)
+        yield from self.haggle(good_info=good, immediate=immediate)
+        if last_tlen < len(self.transaction_history):
+            ret = self.transaction_history[-1]
+            _G.log_info(f"Transaction success: {ret}")
+            return ret
         else:
             _G.log_info("Failed to purchase item")
-        return result
+            return False
 
     def reload(self, page=None):
         self.page = page if page else self.page
@@ -143,12 +147,14 @@ class NeoShop(BasePage):
 
     def haggle(self, last_price=0, depth=0, last_max=10**8, good_info=None, immediate=False):
         yield from _G.rwait(1.5)
-        if 'SOLD OUT' in self.page.content():
+        if self.has_content('SOLD OUT'):
             _G.log_info("Item is sold out")
             return False
         _G.log_info(f"Haggling with {self.name}")
         yield from self.wait_until_captcha_updated()
-        if 'SOLD OUT' in self.page.content():
+        if self.has_content('accept your offer'):
+            return self.finalize_haggle(max_price, good_info)
+        elif self.has_content('SOLD OUT'):
             _G.log_info("Item is sold out")
             return False
         purpose_node = self.page.query_selector('#shopkeeper_makes_deal')
@@ -166,21 +172,36 @@ class NeoShop(BasePage):
         _G.log_info(f"Making deal with {bargain_price} NP")
         yield from self.input_number('input[name=current_offer]', bargain_price)
         self.solve_captcha()
-        yield from _G.rwait(1.5)
-        if 'accept your offer' in self.page.content():
-            item_name = good_info['name'] if 'name' in good_info else 'Unknown'
-            log = Transaction(
-                [NeoItem(name='NP', quantity=bargain_price)],
-                [NeoItem(name=item_name)],
-                f"Purchased from Neopian Shop {self.name if self.name else 'Unknown'}",
-            )
-            log.update_jn()
-            self.transaction_history.append(log)
-            return log
+        yield from _G.rwait(2)
+        while True:
+            yield from _G.rwait(0.1)
+            try:
+                if self.has_content('accept your offer'):
+                    return self.finalize_haggle(bargain_price, good_info)
+                elif self.has_content('SOLD OUT'):
+                    _G.log_info("Item is sold out")
+                    return False
+                else:
+                    break
+            except Exception as e:
+                pass
         yield from self.haggle(bargain_price, depth+1, max_price, good_info)
 
+    def finalize_haggle(self, price, good_info):
+        item_name = good_info['name'] if 'name' in good_info else 'Unknown'
+        log = Transaction(
+            [NeoItem(name='NP', quantity=price)],
+            [NeoItem(name=item_name)],
+            f"Purchased from Neopian Shop {self.name if self.name else 'Unknown'}",
+        )
+        log.update_jn()
+        self.transaction_history.append(log)
+        return log
+
     def determine_strategy(self, last_price, max_price, depth=0):
-        if last_price < 3000:
+        if max_price > 100000: # usually very rare items
+            return max_price
+        if last_price < 10000:
             return self.rounded_up(last_price, max_price, depth)
         raise NeoError(1, f"No strategy defined for price {last_price} {max_price}")
 
@@ -191,9 +212,13 @@ class NeoShop(BasePage):
             return int(max_price * 0.4 // 10 * 10)
         delta = max_price - last_price
         step  = 20
-        if delta > 500:
+        if delta > 3000:
+            step = 1000
+        elif delta > 1500:
+            step = 500
+        elif delta > 300:
             step = 100
-        elif delta > 100:
+        elif delta > 150:
             step = 50
         ret = max(1, min(max_price, last_price + int(delta * 0.4 // step * step)))
         if ret == last_price:

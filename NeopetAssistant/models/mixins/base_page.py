@@ -59,6 +59,13 @@ class BasePage():
                 break
             yield
 
+    def has_content(self, content:str):
+        while True:
+            try:
+                return content in self.page.content()
+            except Exception:
+                return
+
     def on_page_load(self):
         _G.log_info("Page loaded")
         self.signal['load'] = True
