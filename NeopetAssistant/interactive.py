@@ -84,7 +84,7 @@ def wait_for_fiber():
         _G.wait(0.1)
 
 pw = sync_playwright().start()
-context = create_context(pw, 'main')
+context = create_context(pw, 'default')
 page = context.new_page()
 page.goto('https://www.neopets.com/home/')
 

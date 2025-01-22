@@ -44,9 +44,12 @@ def get_item_details_by_name(item_name, full_price_history=False, forced=False, 
     global Database, Agent
     if not agent:
         agent = Agent
-    if not forced and item_name.lower() in Database and \
-        (datetime.now() - datetime.fromtimestamp(Database[item_name.lower()]["price_timestamp"])).total_seconds() < CACHE_TTL:
-        return Database[item_name]
+    if not forced and item_name.lower() in Database:
+        ret = Database[item_name]
+        if ret['rarity'] > 300: # cash item
+            return ret
+        if (datetime.now() - datetime.fromtimestamp(Database[item_name.lower()]["price_timestamp"])).total_seconds() < CACHE_TTL:
+            return ret
     _G.log_info(f"Getting item details for {item_name}")
     ret = {
         "id": "",
@@ -78,7 +81,7 @@ def get_item_details_by_name(item_name, full_price_history=False, forced=False, 
         ret["price"] = utils.str2int(pn.text)
         ret["price_timestamp"] = datetime.strptime(pn.attrs['title'], "%B %d, %Y").timestamp()
     except Exception:
-        _G.log_warning(f"Failed to get price for {item_name}, probably cash item")
+        _G.log_warning(f"Failed to get price for {item_name}, probably cash item or heavily inflated")
     res = agent.get(link)
     doc = BS(res.content, "html.parser")
     try:

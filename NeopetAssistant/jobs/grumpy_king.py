@@ -15,6 +15,8 @@ class GrumpyKingJob(BaseJob):
             _G.log_info("Grumpy King is unavailable, return after 1 hour")
             return
         self.scroll_to(0, 250)
+        self.run_js('king_autofill')
+        yield from _G.rwait(1)
         self.click_element('button[type=submit]', -1)
         self.presented = True
 
