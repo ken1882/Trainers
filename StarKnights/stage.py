@@ -28,6 +28,10 @@ Enum = {
     'pos': ((639, 561),(759, 271),(750, 703),(841, 359),),
     'color': ((255, 255, 255),(255, 255, 255),(68, 215, 189),(255, 255, 255),)
   },
+  'CombatInitiate2': {
+    'pos': ((576, 271),(438, 361),(841, 361),(102, 698),(1268, 698),(1240, 61),),
+    'color': ((255, 255, 255),(255, 255, 255),(255, 255, 255),(255, 153, 255),(24, 162, 255),(33, 51, 129),)
+  },
   'EventBoss': {
     'pos': ((149, 644),(51, 659),(137, 627),(1028, 672),(954, 638),),
     'color': ((255, 105, 137),(255, 255, 255),(247, 0, 99),(82, 53, 35),(129, 186, 253),)
@@ -58,9 +62,13 @@ def get_current_stage():
 def check_pixels(pixstruct):
   return graphics.is_pixel_match(pixstruct['pos'], pixstruct['color'])
 
+LastStage = '_'
 def is_stage(stg):
+  global LastStage
   s = get_current_stage()
-  # print(s)
+  if s != LastStage:
+    _G.log_info("Current stage:", s)
+    LastStage = s
   return s and stg in s
 
 if __name__ == '__main__':
