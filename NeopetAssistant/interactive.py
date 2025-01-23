@@ -47,9 +47,9 @@ def create_context(pw, profile_name, enable_extensions=True):
     _G.log_info(f"Creating browser context#{profile_name}")
     args = [
         '--disable-blink-features=AutomationControlled',
-        '--disable-infobars',
-        '--disable-features=IsolateOrigins,site-per-process',
-        '--auto-open-devtools-for-tabs',
+        # '--disable-infobars',
+        # '--disable-features=IsolateOrigins,site-per-process',
+        # '--auto-open-devtools-for-tabs',
     ]
     if enable_extensions:
         args.append(f"--disable-extensions-except={os.getenv('BROWSER_EXTENSION_PATHS')}")
@@ -84,9 +84,37 @@ def wait_for_fiber():
         _G.wait(0.1)
 
 pw = sync_playwright().start()
-context = create_context(pw, 'default')
+context = create_context(pw, 'main')
 page = context.new_page()
-page.goto('https://www.neopets.com/home/')
+page.goto('https://www.neopets.com/faerieland/employ/employment.phtml')
+
+def scan_quests():
+    panel = page.query_selector('.content')
+    nodes = panel.query_selector_all('tr > td')
+    idx = 3
+    quests = []
+    jn_args = []
+    while idx < len(nodes):
+        eles = nodes[idx].inner_html().split('<br>')
+        name = eles[0].split('</b>')[-1].strip()
+        amount = utils.str2int(eles[0].split('</b>')[0].strip())
+        reward = utils.str2int(eles[-1].split('</b>')[-1].strip())
+        jn_args.append(name)
+        quests.append({
+            'name': name,
+            'amount': amount,
+            'reward': reward,
+            'cost': 0,
+        })
+        idx += 5
+    jn.batch_search(jn_args)
+    for quest in quests:
+        item = jn.get_item_details_by_name(quest['name'])
+        if item:
+            quest['cost'] = item['price'] * quest['amount']
+    quests = sorted(quests, key=lambda x: x['reward'] - x['cost'], reverse=True)
+    for q in quests:
+        print(f"{q['name']} {q['reward'] - q['cost']} (mkt: {q['cost']})")
 
 
 pets = []
@@ -335,3 +363,4 @@ for node in nodes:
     }))
 
 jn.batch_search([item.name for item in items])
+

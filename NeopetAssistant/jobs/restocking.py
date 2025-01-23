@@ -1,11 +1,12 @@
 import _G
 import utils
 import re
-from random import randint
+from random import randint, shuffle
 from jobs.base_job import BaseJob
 from models import shop
 from datetime import datetime, timedelta
 from errors import NeoError
+from models import player
 import page_action as action
 
 class RestockingJob(BaseJob):
@@ -56,22 +57,28 @@ class RestockingJob(BaseJob):
             if self.candidate_shop_ids and id not in self.candidate_shop_ids:
                 continue
             shops.append(shop.NeoShop(id))
+        shuffle(shops)
         _G.log_info(f"Restocking from shops: {[s.name for s in shops]}")
-        for s in shops:
-            s.set_page(self.page)
-            for _ in range(self.shop_refreshes):
-                _G.log_info(f"Inventory free space left: {number}")
+        try:
+            for s in shops:
                 if number < 0 or self.is_lacking_np():
-                    return
-                result = yield from self.do_shopping(s)
-                if result:
-                    filename = f"{_G.BROWSER_PROFILE_DIR}/profile_{self.profile_name}/transaction_history.json"
-                    s.transaction_history[-1].log(filename)
-                    number -= 1
-                elif result == False:
-                    yield from _G.rwait(self.refresh_interval+randint(1, 5))
-                else: # result is None (empty shop)
                     break
+                s.set_page(self.page)
+                for _ in range(self.shop_refreshes):
+                    _G.log_info(f"Inventory free space left: {number}")
+                    if number < 0 or self.is_lacking_np():
+                        break
+                    result = yield from self.do_shopping(s)
+                    if result:
+                        filename = f"{_G.BROWSER_PROFILE_DIR}/profile_{self.profile_name}/transaction_history.json"
+                        s.transaction_history[-1].log(filename)
+                        number -= 1
+                    elif result == False:
+                        yield from _G.rwait(self.refresh_interval+randint(1, 5))
+                    else: # result is None (empty shop)
+                        break
+        except Exception as e:
+            utils.handle_exception(e)
         # trigger quick restocking job
         if self.scheduler:
             self.scheduler.trigger_job("quick_restock")
@@ -90,7 +97,19 @@ class RestockingJob(BaseJob):
         if not nshop.goods:
             _G.log_info(f"No goods in {nshop.name}")
             return None
-        target = nshop.get_profitable_goods()[0]
+        goods = nshop.get_profitable_goods()
+        target = None
+        for g in goods:
+            gn = g['name']
+            if gn in player.data.shop_inventory:
+                if player.data.shop_inventory[gn]['amount'] >= 3:
+                    _G.log_info(f"Shop already stocked {gn}")
+                    continue
+            target = g
+            break
+        if not target:
+            _G.log_info(f"Nothing to buy from {nshop.name}")
+            return None
         result = False
         _G.log_info(f"Target: {target} profit: {target['profit']}")
         if target['profit'] >= self.immediate_profit:

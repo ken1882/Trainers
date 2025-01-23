@@ -41,6 +41,7 @@ from jobs.pet_cares import PetCaresJob
 from jobs.quick_restock import QuickRestockJob
 from jobs.restocking import RestockingJob
 from jobs.potato_counter import PotatoCounterJob
+from jobs.market_price import MarketPriceJob
 
 Scheduler = None
 
@@ -123,6 +124,7 @@ def queue_jobs():
         QuickRestockJob(),
         PotatoCounterJob(),
         RestockingJob(scheduler=Scheduler),
+        MarketPriceJob(),
     )
     for job in jobs:
         Scheduler.queue_job(job, False)

@@ -13,7 +13,7 @@ HTTP_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
 }
 
-WORKER_COUNT = 5
+WORKER_COUNT = 20
 DB_LOCK = Lock()
 FLAG_BUSY = False
 WorkerThreads = []
@@ -82,6 +82,8 @@ def get_item_details_by_name(item_name, full_price_history=False, forced=False, 
         ret["price_timestamp"] = datetime.strptime(pn.attrs['title'], "%B %d, %Y").timestamp()
     except Exception:
         _G.log_warning(f"Failed to get price for {item_name}, probably cash item or heavily inflated")
+        ret["price"] = 10**10
+        ret["price_timestamp"] = datetime.now().timestamp()
     res = agent.get(link)
     doc = BS(res.content, "html.parser")
     try:
@@ -157,3 +159,21 @@ def batch_search(items, join=True):
     finally:
         FLAG_BUSY = False
     return ret
+
+def update_item_price(item, price):
+    global Database
+    _G.log_info(f"Updating price for {item} to {price}")
+    item = item.lower()
+    if item in Database:
+        Database[item]["price"] = price
+        Database[item]["price_timestamp"] = datetime.now().timestamp()
+        save_cache()
+        return True
+    else:
+        item = get_item_details_by_name(item)
+        if item:
+            item["price"] = price
+            item["price_timestamp"] = datetime.now().timestamp()
+            save_cache(item)
+            return True
+    return False

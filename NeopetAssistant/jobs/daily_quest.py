@@ -5,6 +5,7 @@ from jobs.base_job import BaseJob
 from models import shop
 from datetime import datetime, timedelta
 from errors import NeoError
+from models import player
 
 QUEST_MATCH_MAP = {
     'shopping': [r"purchase(?:.|\s)*(\d+/\d+)?\s*$"],
@@ -39,6 +40,8 @@ class DailyQuestJob(BaseJob):
         self.auto_banking = self.args.get("auto_banking", True)
         self.min_carrying_np = self.args.get("min_carrying_np", 20000)
         self.max_carrying_np = self.args.get("max_carrying_np", 50000)
+        self.min_profit = self.args.get("min_profit", 1000)
+        self.immediate_profit = self.args.get("immediate_profit", 3000)
         return self.args
     
     def execute(self):
@@ -129,8 +132,9 @@ class DailyQuestJob(BaseJob):
                     number -= 1
                     filename = f"{_G.BROWSER_PROFILE_DIR}/profile_{self.profile_name}/transaction_history.json"
                     s.transaction_history[-1].log(filename)
+                elif result == None:
+                    break
                 yield from _G.rwait(self.refresh_interval)
-
 
     def do_shopping(self, nshop):
         yield from nshop.visit()
@@ -139,16 +143,29 @@ class DailyQuestJob(BaseJob):
         yield from nshop.lookup_goods_details()
         if not nshop.goods:
             _G.log_info(f"No goods in {nshop.name}")
-            return False
-        target = nshop.get_profitable_goods()[0]
+            return None
+        goods = nshop.get_profitable_goods()
+        target = None
+        for g in goods:
+            gn = g['name']
+            if gn in player.data.shop_inventory:
+                if player.data.shop_inventory[gn]['amount'] >= 3:
+                    _G.log_info(f"Shop already stocked {gn}")
+                    continue
+            target = g
+            break
+        if not target:
+            _G.log_info(f"Nothing to buy from {nshop.name}")
+            return None
         result = False
         _G.log_info(f"Target: {target} profit: {target['profit']}")
-        if target['profit'] >= 3000:
+        if target['profit'] >= self.immediate_profit:
             result = yield from nshop.buy_good(index=target['index'], immediate=True)
-        elif target['profit'] >= 1000:
+        elif target['profit'] >= self.min_profit:
             result = yield from nshop.buy_good(index=target['index'])
         else:
             _G.log_info(f"Nothing to buy from {nshop.name}")
+            return None
         return result
 
     def collect_rewards(self):
@@ -160,10 +177,14 @@ class DailyQuestJob(BaseJob):
             yield from _G.rwait(3)
             self.page.query_selector('#QuestLogRewardPopup').query_selector('button').click()
         yield from _G.rwait(2)
-        self.click_element('#QuestLogDailyBonus')
+        self.page.locator('#QuestLogDailyAlert').hover()
+        self.page.mouse.down()
+        self.click_element('#QuestLogDailyAlert')
         yield from _G.rwait(3)
-        self.page.query_selector('#QuestLogRewardPopup').query_selector('button').click()
+        self.page.mouse.click(30, 150)
         yield from _G.rwait(2)
         self.click_element('.ql-weekly-label')
         yield from _G.rwait(1)
-        self.click_element('#QuestLogWeeklyBonus')
+        self.page.locator('#QuestLogWeeklyAlert').hover()
+        self.page.mouse.down()
+        self.click_element('#QuestLogWeeklyAlert')

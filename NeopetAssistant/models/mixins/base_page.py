@@ -2,6 +2,7 @@ import _G, utils
 import page_action as action
 from random import randint
 from datetime import datetime, timedelta
+from playwright._impl._errors import TimeoutError
 
 class BasePage():
     def __init__(self, page=None, url='about:blank', context=None):
@@ -18,12 +19,19 @@ class BasePage():
     def set_page(self, page):
         self.page = page
 
-    def goto(self, url=None):
+    def goto(self, url=None, depth=0):
         if not url:
             url = self.url
         _G.log_info(f"Goto {url}, Waiting for page to load")
-        self.page.goto(url, wait_until='commit')
-        self.assume_loaded_time = datetime.now() + timedelta(seconds=self.max_load_time)
+        while True:
+            try:
+                self.page.goto(url, wait_until='commit')
+                break
+            except TimeoutError as e:
+                _G.log_error(f"Page timeout, retrying {depth}")
+                depth += 1
+                if depth > 3:
+                    raise e
         yield from self.wait_until_page_load()
 
 
@@ -48,6 +56,7 @@ class BasePage():
     def wait_until_page_load(self):
         self.signal['load'] = False
         self.page.once("load", self.on_page_load)
+        self.assume_loaded_time = datetime.now() + timedelta(seconds=self.max_load_time)
         yield from _G.rwait(3)
         while not self.signal.get('load', False):
             try:
@@ -76,6 +85,7 @@ class BasePage():
         '''
         while timeout > 0:
             ret = []
+            ele = None
             for selector in selectors:
                 try:
                     ele = self.page.query_selector(selector)
@@ -95,6 +105,7 @@ class BasePage():
         Wait until one of the selectors is found.
         '''
         while timeout > 0:
+            node = None
             for selector in selectors:
                 try:
                     node = self.page.query_selector(selector)

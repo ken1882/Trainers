@@ -2,6 +2,7 @@ import _G
 import json
 import jobs
 import os
+from models import player
 from errors import NeoError
 from datetime import datetime, timedelta
 
@@ -152,6 +153,9 @@ class JobScheduler:
             return
         with open(filename, 'r') as f:
             data = json.load(f)
+            self.idle_log_interval = data.get('idle_log_interval', self.idle_log_interval)
+            self.job_pick_interval = data.get('job_pick_interval', self.job_pick_interval)
+            player.data.load_data(data.get('player_data', {}))
             self.queued_jobs += self.pending_jobs
             self.pending_jobs = []
             queued_bak = [j for j in self.queued_jobs]
@@ -188,6 +192,7 @@ class JobScheduler:
             'last_idle_time': self.last_idle_time.timestamp(),
             'idle_log_interval': self.idle_log_interval,
             'job_pick_interval': self.job_pick_interval,
+            'player_data': player.data.to_dict()
         }
 
     def terminate(self):

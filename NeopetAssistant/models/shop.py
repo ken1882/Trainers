@@ -20,14 +20,30 @@ NAME_DICT = {
     7: "magical_bookshop",
     8: "collectable_card_shop",
     9: "battle_magic",
+    12: "neopian_garden_centre",
     14: "chocolate_factory",
     15: "the_bakery",
     16: "smoothie_shop",
+    20: "tropical_food",
+    25: "neopian_petpet_shop",
     34: "coffee_cave",
     35: "slushie_shop",
     39: "faerie_foods",
+    40: "faerieland_petpets",
+    41: "neopian_furniture",
+    42: "tyrannian_foods",
+    44: "tyrannian_petpets",
     46: "huberts_hotdogs",
+    50: "peopatra_petpets",
+    55: "osiris_pottery",
     56: "merifoods",
+    57: "ye_olde_petpets",
+    61: "wintery_petpets",
+    81: "brightvale_fruits",
+    95: "exquisite_ambrosia",
+    97: "legendary_petpets",
+    101: "exotic_foods",
+    103: "fanciful_fauna"
 }
 
 class NeoShop(BasePage):
@@ -153,7 +169,7 @@ class NeoShop(BasePage):
         _G.log_info(f"Haggling with {self.name}")
         yield from self.wait_until_captcha_updated()
         if self.has_content('accept your offer'):
-            return self.finalize_haggle(max_price, good_info)
+            return self.finalize_haggle(last_max, good_info)
         elif self.has_content('SOLD OUT'):
             _G.log_info("Item is sold out")
             return False

@@ -7,14 +7,13 @@ from jobs.base_job import BaseJob
 from datetime import datetime, timedelta
 from errors import NeoError
 from models.mixins.transaction import NeoItem
+from models import player
 from collections import defaultdict
 import jellyneo as jn
 
 class QuickRestockJob(BaseJob):
     def __init__(self, **kwargs):
         super().__init__("quick_restock", "https://www.neopets.com/quickstock.phtml", **kwargs)
-        self.deposite_value = 900000 # 900K
-        self.restock_profit = 1000
         self.category_keeps = {
             'food': 8,
             'toy': 1,
@@ -27,6 +26,13 @@ class QuickRestockJob(BaseJob):
             ]
         }
         self.priority = -1
+
+    def load_args(self):
+        self.deposite_value = self.args.get('deposite_value', 90000)
+        self.restock_profit = self.args.get('restock_profit', 1000)
+        self.high_value_threshold = self.args.get('high_value_threshold', 10000)
+        self.marketprice_adds_rate = self.args.get('marketprice_adds_rate', 0.01)
+        self.high_value_adds_rate  = self.args.get('high_value_adds_rate', 0.03)
 
     def execute(self):
         yield from _G.rwait(2)
@@ -65,10 +71,16 @@ class QuickRestockJob(BaseJob):
         for item in val_items:
             yield
             act_name = 'deposit'
+            available_acts = [act.get_attribute('value') for act in item['node'].query_selector_all('input')]
             cat = item['ref'].get_category()
             _G.log_info(f"{item['name']} G:{item['ref'].value_pc - item['ref'].value_npc}")
             if any(re.search(regex, item['name'], re.I) for regex in self.deposite_maplist['name']):
                 pass
+            elif item['ref'].rarity == 500:
+                _G.log_info(f"Cash item: {item['name']}")
+                act_name = 'keep'
+            elif item['ref'].rarity == 200:
+                _G.log_info(f"Artifact: {item['name']}")
             elif item['ref'].value_pc >= self.deposite_value:
                 _G.log_info(f"High value item: {item['name']}")
             elif item['ref'].value_pc - item['ref'].value_npc >= self.restock_profit:
@@ -83,6 +95,8 @@ class QuickRestockJob(BaseJob):
             elif cat in keeps and keeps[cat] > 0:
                 keeps[cat] -= 1
                 act_name = 'keep'
+            elif 'closet' in available_acts:
+                act_name = 'closet'
             item['act'] = act_name
         row_height = 24
         viewport_height = 400
@@ -94,7 +108,7 @@ class QuickRestockJob(BaseJob):
             acts = item['node'].query_selector_all('input')
             for act in reversed(acts):
                 aname = act.get_attribute('value')
-                if aname in ['closet', item['act']]:
+                if aname == item['act']:
                     _G.log_info(f"Processing {item['name']} with action {aname}")
                     self.click_element(node=act, random_x=random_x, random_y=random_y)
                     yield from _G.rwait(0.2)
@@ -114,21 +128,44 @@ class QuickRestockJob(BaseJob):
     def process_restock(self):
         yield from self.goto("https://www.neopets.com/market.phtml?type=your")
         yield from _G.rwait(2)
-        rows = self.page.query_selector_all('form[action] > table > tbody > tr')
-        goods = rows[1:-1]
-        for good in goods:
-            self.scroll_to(node=good)
-            # yield from _G.rwait(0.5)
-            cells = good.query_selector_all('td')
-            name = cells[0].text_content().strip()
-            market_price = jn.get_item_details_by_name(name).get('price', 0)
-            adds = int(market_price * self.args.get('marketprice_adds_rate', 0.01))
-            price = int(market_price + adds)
-            _G.log_info(f"Setting price for {name} to {price} ({market_price} + {adds})")
-            if market_price <= 0:
-                continue
-            cells[4].query_selector('input').fill(str(price))
-            yield from _G.rwait(0.2)
-        yield from _G.rwait(1)
-        rows[-1].query_selector('input[type=submit]').click()
-        yield from _G.rwait(3)
+        player.data.shop_inventory = {}
+        while True:
+            rows = self.page.query_selector_all('form[action] > table > tbody > tr')
+            goods = rows[1:-1]
+            for good in goods:
+                self.scroll_to(node=good)
+                # yield from _G.rwait(0.5)
+                cells = good.query_selector_all('td')
+                name = cells[0].text_content().strip()
+                amount = utils.str2int(cells[2].text_content().strip())
+                market_price = jn.get_item_details_by_name(name).get('price', 0)
+                adds = int(market_price * self.marketprice_adds_rate)
+                if market_price >= self.high_value_threshold:
+                    adds = int(market_price * self.high_value_adds_rate)
+                price = int(market_price + adds)
+                _G.log_info(f"Setting price for {name} to {price} ({market_price} + {adds})")
+                player.data.shop_inventory[name] = {
+                    'name': name,
+                    'amount': amount,
+                    'price': price,
+                }
+                if market_price <= 0:
+                    continue
+                cells[4].query_selector('input').fill(str(price))
+                yield from _G.rwait(0.2)
+            yield from _G.rwait(1)
+            rows[-1].query_selector('input[type=submit]').click()
+            yield from self.wait_until_page_load()
+            yield from _G.rwait(1)
+            btn = self.page.query_selector('input[name=subbynext]')
+            _G.log_info(f"Next page: {btn}")
+            if not btn:
+                break
+            disabled = btn.get_property('disabled').json_value()
+            _G.log_info(f"Last page: {disabled}")
+            if disabled:
+                break
+            self.scroll_to(node=btn)
+            yield from _G.rwait(0.5)
+            btn.click()
+            yield from _G.rwait(3)
