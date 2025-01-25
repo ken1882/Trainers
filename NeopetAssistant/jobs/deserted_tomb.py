@@ -13,7 +13,7 @@ class DesertedTombJob(BaseJob):
         yield from _G.rwait(2)
         self.scroll_to(0, 100)
         self.click_element('input[type=submit]', 1)
-        yield from _G.rwait(5)
+        yield from self.wait_until_page_load()
         self.scroll_to(0, 100)
         self.click_element('input[type=submit]', 1)
         yield from _G.rwait(2)

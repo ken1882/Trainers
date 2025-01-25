@@ -149,9 +149,12 @@ class BasePage():
     def scroll_to(self, x:int=0, y:int=0, node=None):
         if node:
             bb = node.bounding_box()
+            if not bb: # element not visiable
+                return
             x = 0
             y = y + bb['y'] - 100
-        return self.do('scroll_to', self.page, x, y)
+        self.do('scroll_to', self.page, x, y)
+        return (x, y)
 
     def input_number(self, selector:str, number:int, nth_element:int=None):
         self.click_element(selector, nth_element)

@@ -11,10 +11,10 @@ def eval_js(page, script_name):
         _G.log_error(f"Script {script_name} not found!")
         return
     with open(path, 'r') as f:
-        page.evaluate(f.read())
+        return page.evaluate(f.read())
 
 def scroll_to(page, x=0, y=0):
-    page.evaluate(f"window.scrollTo({x}, {y})")
+    return page.evaluate(f"window.scrollTo({x}, {y})")
 
 def click_node(page, node, x_mul=0.5, y_mul=0.5, random_x=(-10, 10), random_y=(-10, 10)):
     bb = node.bounding_box()
@@ -26,7 +26,7 @@ def locator_click(locator, x, y, button='left', modifiers=[], random_x=(-10, 10)
     ''' https://playwright.dev/python/docs/api/class-locator#locator-click '''
     mx = x + randint(*random_x)
     my = y + randint(*random_y)
-    locator.click(
+    return locator.click(
         button=button,
         modifiers=modifiers,
         position={'x': mx, 'y': my}
@@ -38,7 +38,7 @@ def get_available_np(page):
     return AvailableNp
 
 def draw_debug_point(page, x, y, radius=5, timeout=3000):
-    page.evaluate(f"""
+    return page.evaluate(f"""
         const marker = document.createElement('div');
         marker.style.width = '{radius*2}px';
         marker.style.height = '{radius*2}px';
@@ -61,4 +61,5 @@ def drag_to(page, locator_a, locator_b, steps=5, random_x=(-10, 10), random_y=(-
     _G.log_info(f"Drag to: {mx},{my}")
     page.mouse.move(mx, my, steps=steps)
     page.mouse.up()
+    return True
 

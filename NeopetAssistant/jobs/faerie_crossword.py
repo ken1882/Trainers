@@ -9,6 +9,10 @@ class FaerieCrosswordJob(BaseJob):
         super().__init__("faerie_crossword", "https://www.neopets.com/games/crossword/index.phtml", **kwargs)
         self.priority = 10
 
+    def load_args(self):
+        super().load_args()
+        self.last_completed_timestamp = self.args.get('last_completed_timestamp', 0)
+
     def execute(self):
         yield from _G.rwait(2)
         self.click_element('input[type=submit]', 1)
@@ -31,6 +35,14 @@ class FaerieCrosswordJob(BaseJob):
             btn = table.query_selector('center > table > tbody > tr > td > form > input[type=submit]')
             btn.click()
             cur_idx += 1
+        self.last_completed_timestamp = int(datetime.now().timestamp())
+        self.args['last_completed_timestamp'] = self.last_completed_timestamp
 
     def calc_next_run(self):
-        return super().calc_next_run('daily')
+        last_completed = datetime.fromtimestamp(self.last_completed_timestamp)
+        curt = datetime.now()
+        if curt.day != last_completed.day:
+            self.next_run = curt
+        else:
+            return super().calc_next_run()
+        return self.next_run

@@ -14,17 +14,6 @@ import jellyneo as jn
 class QuickRestockJob(BaseJob):
     def __init__(self, **kwargs):
         super().__init__("quick_restock", "https://www.neopets.com/quickstock.phtml", **kwargs)
-        self.category_keeps = {
-            'food': 8,
-            'toy': 1,
-            'grooming': 1,
-        }
-        self.deposite_maplist = {
-            'category': [],
-            'name': [
-                r"codestone",
-            ]
-        }
         self.priority = -1
 
     def load_args(self):
@@ -33,6 +22,19 @@ class QuickRestockJob(BaseJob):
         self.high_value_threshold = self.args.get('high_value_threshold', 10000)
         self.marketprice_adds_rate = self.args.get('marketprice_adds_rate', 0.01)
         self.high_value_adds_rate  = self.args.get('high_value_adds_rate', 0.03)
+        self.category_keeps = self.args.get('category_keeps', {})
+        if type(self.category_keeps) == str:
+            string = self.category_keeps
+            self.category_keeps = {}
+            for pair in string.split(','):
+                k, v = pair.split(':')
+                self.category_keeps[k.strip()] = int(v)
+        self.deposite_blacklist = self.args.get('deposite_blacklist', [])
+        if type(self.deposite_blacklist) == str:
+            self.deposite_blacklist = [s.lower() for s in self.deposite_blacklist.split(',')]
+        self.deposite_whitelist = self.args.get('deposite_whitelist', [])
+        if type(self.deposite_whitelist) == str:
+            self.deposite_whitelist = [s.lower() for s in self.deposite_whitelist.split(',')]
 
     def execute(self):
         yield from _G.rwait(2)
@@ -74,10 +76,12 @@ class QuickRestockJob(BaseJob):
             available_acts = [act.get_attribute('value') for act in item['node'].query_selector_all('input')]
             cat = item['ref'].get_category()
             _G.log_info(f"{item['name']} G:{item['ref'].value_pc - item['ref'].value_npc}")
-            if any(re.search(regex, item['name'], re.I) for regex in self.deposite_maplist['name']):
+            if any(re.search(regex, item['name'], re.I) for regex in self.deposite_whitelist):
                 pass
             elif item['ref'].rarity == 500:
                 _G.log_info(f"Cash item: {item['name']}")
+                act_name = 'keep'
+            if any(re.search(regex, item['name'], re.I) for regex in self.deposite_blacklist):
                 act_name = 'keep'
             elif item['ref'].rarity == 200:
                 _G.log_info(f"Artifact: {item['name']}")
@@ -86,17 +90,18 @@ class QuickRestockJob(BaseJob):
             elif item['ref'].value_pc - item['ref'].value_npc >= self.restock_profit:
                 _G.log_info(f"Profitable item: {item['name']}")
                 act_name = 'stock'
-            elif cat in self.deposite_maplist['category']:
-                pass
             elif item['ref'].is_rubbish():
                 act_name = 'donate'
             elif item['ref'].rarity > 300:
                 act_name = 'keep'
-            elif cat in keeps and keeps[cat] > 0:
-                keeps[cat] -= 1
-                act_name = 'keep'
             elif 'closet' in available_acts:
                 act_name = 'closet'
+            if cat in keeps:
+                if keeps[cat] > 0:
+                    act_name = 'keep'
+                if act_name == 'keep':
+                    keeps[cat] -= 1
+
             item['act'] = act_name
         row_height = 24
         viewport_height = 400

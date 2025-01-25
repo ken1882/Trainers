@@ -41,9 +41,10 @@ class DailyQuestJob(BaseJob):
         self.min_carrying_np = self.args.get("min_carrying_np", 20000)
         self.max_carrying_np = self.args.get("max_carrying_np", 50000)
         self.min_profit = self.args.get("min_profit", 1000)
+        self.max_cost = self.args.get("max_cost", 1000000)
         self.immediate_profit = self.args.get("immediate_profit", 3000)
         return self.args
-    
+
     def execute(self):
         yield from _G.rwait(2)
         nodes = self.page.query_selector_all('.ql-task')
@@ -148,6 +149,9 @@ class DailyQuestJob(BaseJob):
         target = None
         for g in goods:
             gn = g['name']
+            if g['price'] > self.max_cost:
+                _G.log_info(f"Skipping {gn} due to high price ({g['price']} > {self.max_cost})")
+                continue
             if gn in player.data.shop_inventory:
                 if player.data.shop_inventory[gn]['amount'] >= 3:
                     _G.log_info(f"Shop already stocked {gn}")
@@ -185,6 +189,10 @@ class DailyQuestJob(BaseJob):
         yield from _G.rwait(2)
         self.click_element('.ql-weekly-label')
         yield from _G.rwait(1)
-        self.page.locator('#QuestLogWeeklyAlert').hover()
+        loc = self.page.locator('#QuestLogWeeklyAlert')
+        if not loc.is_visible():
+            return
+        loc.hover()
         self.page.mouse.down()
+        yield from _G.rwait(0.5)
         self.click_element('#QuestLogWeeklyAlert')

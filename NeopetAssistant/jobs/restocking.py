@@ -38,8 +38,9 @@ class RestockingJob(BaseJob):
         self.skip_quests = self.args.get("skip_quests", [])
         self.auto_banking = self.args.get("auto_banking", True)
         self.min_profit = self.args.get("min_profit", 2000)
-        self.immediate_profit = self.args.get("immediate_profit", 3000)
-        self.min_carrying_np = self.args.get("min_carrying_np", 20000)
+        self.immediate_profit = self.args.get("immediate_profit", 3500)
+        self.min_carrying_np = self.args.get("min_carrying_np", 30000)
+        self.max_cost = self.args.get("max_cost", 1000000)
         return self.args
 
     def execute(self):
@@ -102,6 +103,9 @@ class RestockingJob(BaseJob):
         for g in goods:
             gn = g['name']
             if gn in player.data.shop_inventory:
+                if g['price'] > self.max_cost:
+                    _G.log_info(f"Skipping {gn} due to high price ({g['price']} > {self.max_cost})")
+                    continue
                 if player.data.shop_inventory[gn]['amount'] >= 3:
                     _G.log_info(f"Shop already stocked {gn}")
                     continue

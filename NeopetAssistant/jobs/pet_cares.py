@@ -135,8 +135,12 @@ class PetCaresJob(BaseJob):
         self.page.mouse.click(50+randint(-10, 10), 200+randint(-10, 100))
 
     def use_item(self, index):
-        _G.log_info(f"Using item: {self.items[index].name}")
-        self.items[index].node.click()
+        try:
+            _G.log_info(f"Using item: {self.items[index].name}")
+            self.items[index].node.click()
+        except IndexError:
+            _G.log_error(f"Invalid item index: {index} (total items: {len(self.items)})")
+            return
         yield from _G.rwait(0.5)
         self.page.query_selector('#petCareUseItem').click()
         yield from _G.rwait(2)
@@ -180,7 +184,7 @@ class PetCaresJob(BaseJob):
 
     def feed(self):
         self.page.query_selector('#petCareLinkFeed').click()
-        yield from _G.rwait(5)
+        yield from _G.rwait(10)
         yield from self.scan_usable_items()
         item_index = self.determine_item_to_feed()
         yield from self.use_item(item_index)
@@ -214,7 +218,7 @@ class PetCaresJob(BaseJob):
         if not self.selected_pet:
             return
         self.page.query_selector('#petCareLinkPlay').click()
-        yield from _G.rwait(5)
+        yield from _G.rwait(10)
         yield from self.scan_usable_items()
         yield from self.use_item(0)
 
@@ -222,7 +226,7 @@ class PetCaresJob(BaseJob):
         if not self.selected_pet:
             return
         self.page.query_selector('#petCareLinkGroom').click()
-        yield from _G.rwait(5)
+        yield from _G.rwait(10)
         yield from self.scan_usable_items()
         yield from self.use_item(0)
 

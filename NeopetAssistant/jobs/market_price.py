@@ -15,6 +15,7 @@ class MarketPriceJob(BaseJob):
     def __init__(self, **kwargs):
         super().__init__("market_price", "https://www.neopets.com/shops/wizard.phtml", **kwargs)
         self.priority = -9999
+        self.rate_limited = False
 
     def load_args(self):
         self.rescan_count = self.args.get('rescan_count', 3)
@@ -65,15 +66,19 @@ class MarketPriceJob(BaseJob):
             if price and price < 10**10:
                 jn.update_item_price(item_name, price)
 
-    def search_item(self, item_name):
+    def search_item(self, item_name, depth=0, lowest=10**10):
         _G.log_info(f"Searching item: {item_name}")
+        if self.has_content('too many searches'):
+            return
         self.page.query_selector('#shopwizard').fill(item_name)
         yield from _G.rwait(0.5)
         self.click_element('#submit_wizard')
+        yield from _G.rwait(2)
+        if self.has_content('too many searches'):
+            return
         yield from self.wait_until_element_found(lambda _: None, lambda: None, '.wizard-results-text')
-        lowest = 10**10
-        num = 0
-        while num < self.rescan_count:
+        self.rate_limited = False
+        while depth < self.rescan_count:
             yield from _G.rwait(2)
             yield from self.wait_until_element_found(lambda _: None, lambda: None, '#resubmitWizard')
             rows = self.page.query_selector_all('.wizard-results-price')
@@ -81,16 +86,26 @@ class MarketPriceJob(BaseJob):
                 price = utils.str2int(rows[0].text_content())
                 if price < lowest:
                     lowest = price
-                    num = 0
-            num += 1
+                    depth = 0
+            _G.log_info(f"Lowest price: {lowest} (depth={depth})")
             btn = self.page.query_selector('#resubmitWizard')
-            self.scroll_to(node=btn)
+            visible = self.scroll_to(node=btn)
             yield from _G.rwait(self.refresh_interval)
-            self.click_element(node=btn)
-            _G.log_info(f"Lowest price: {lowest}")
+            if not visible: # probably a bad idea
+                yield from self.goto()
+                ret = yield from self.search_item(item_name, depth+1, lowest)
+                lowest = min(lowest, ret)
+                return lowest
+            if btn:
+                self.click_element(node=btn)
+            else:
+                self.click_element('#resubmitWizard')
+            depth += 1
         yield from self.goto()
         return lowest
 
     def calc_next_run(self):
         self.next_run = datetime.now() + timedelta(seconds=self.scan_interval)
+        if self.rate_limited:
+            self.next_run += timedelta(minutes=30)
         return self.next_run
