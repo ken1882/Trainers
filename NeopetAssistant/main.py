@@ -92,6 +92,7 @@ def main_loop():
 def queue_jobs():
     global Scheduler
     jobs = (
+        LoginJob(),
         DailyQuestTouchJob(),
         DailyQuestJob(),
         MonthlyFreebiesJob(),
@@ -132,7 +133,8 @@ def queue_jobs():
         Scheduler.queue_job(job, False)
     Scheduler.load_status(_G.BROWSER_PROFILE_DIR)
     # always check login first
-    Scheduler.queue_job(LoginJob(), False)
+    login_job = Scheduler.get_job("login")
+    login_job.calc_next_run('now')
 
 def main():
     global Scheduler

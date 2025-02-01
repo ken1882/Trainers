@@ -6,6 +6,7 @@ from jobs.base_job import BaseJob
 from models import shop
 from datetime import datetime, timedelta
 from errors import NeoError
+from models.mixins.transaction import Transaction, NeoItem
 import page_action as action
 import jellyneo as jn
 

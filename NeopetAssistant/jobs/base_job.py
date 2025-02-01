@@ -55,7 +55,9 @@ class BaseJob(BasePage):
 
     def calc_next_run(self, shortcut:str='daily'):
         curt = utils.localt2nst(datetime.now())
-        if shortcut == 'daily':
+        if shortcut == 'now':
+            self.next_run = curt
+        elif shortcut == 'daily':
             tomorrow = datetime(curt.year, curt.month, curt.day, 0, 0, 0) + timedelta(days=1)
             self.next_run = utils.nst2localt(tomorrow)
         elif shortcut == 'monthly':

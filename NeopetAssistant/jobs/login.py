@@ -23,6 +23,8 @@ class LoginJob(BaseJob):
         _G.log_info("Logged in")
 
 
-    def calc_next_run(self):
-        self.next_run = datetime.now() + timedelta(days=1)
+    def calc_next_run(self, shortcut=None):
+        if shortcut:
+            return super().calc_next_run(shortcut)
+        self.next_run = datetime.now() + timedelta(days=30)
         return self.next_run

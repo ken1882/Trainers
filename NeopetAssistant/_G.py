@@ -11,7 +11,7 @@ load_dotenv()
 ARGV = {}
 FPS = (1 / 240)
 
-BROWSER_PROFILE_DIR = './profiles'
+BROWSER_PROFILE_DIR = os.path.realpath(os.path.join(os.getcwd(), './profiles'))
 
 Console = None
 

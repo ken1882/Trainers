@@ -127,6 +127,14 @@ class JobScheduler:
         self.queued_jobs.append(job)
         _G.log_info(f"Queued job: {job.job_name}, next run: {job.next_run}")
 
+    def get_job(self, name):
+        if self.current_job and self.current_job.job_name == name:
+            return self.current_job
+        for job in self.queued_jobs+self.pending_jobs:
+            if job.job_name == name:
+                return job
+        return None
+
     def start(self):
         _G.log_info("Job scheduler started")
         self.running = True
