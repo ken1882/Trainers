@@ -24,7 +24,7 @@ class GarageSaleJob(BaseJob):
         jn.batch_search(list(set([item['name'] for item in self.items])), False)
         jn_done = False
         while not jn_done:
-            jn_done = not jn.FLAG_BUSY
+            jn_done = not jn.is_busy()
             yield
         for item in self.items:
             item['ref'] = NeoItem(name=item['name'])

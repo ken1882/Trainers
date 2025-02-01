@@ -28,9 +28,13 @@ class RestockingJob(BaseJob):
         super().__init__("restocking", "https://www.neopets.com/inventory.phtml", **kwargs)
         self.quests = []
         self.priority = -99
+        self.inventory_free = 0
+        self.stock_free = 0
 
     def load_args(self):
         self.candidate_shop_ids = self.args.get("candidate_shops", [])
+        if type(self.candidate_shop_ids) == str:
+            self.candidate_shop_ids = [int(i) for i in self.candidate_shop_ids.split(',')]
         self.shop_refreshes = self.args.get("shop_refreshes", 3)
         self.refresh_interval = self.args.get("refresh_interval", 10)
         self.auto_deposit = self.args.get("auto_deposit", False)
@@ -41,6 +45,7 @@ class RestockingJob(BaseJob):
         self.immediate_profit = self.args.get("immediate_profit", 3500)
         self.min_carrying_np = self.args.get("min_carrying_np", 30000)
         self.max_cost = self.args.get("max_cost", 1000000)
+        self.keep_stock = self.args.get("keep_stock", 5)
         return self.args
 
     def execute(self):
@@ -49,10 +54,18 @@ class RestockingJob(BaseJob):
             return
         line = self.page.query_selector('.inv-total-count').text_content().strip()
         r = re.search(r"(\d+) / (\d+)", line)
-        number = 0
+        self.inventory_free = 0
         if r:
             cur, total = r.groups()
-            number = int(total) - int(cur)
+            self.inventory_free = int(total) - int(cur)
+        yield from self.goto("https://www.neopets.com/market.phtml?type=your")
+        node = self.page.locator('img[name=keeperimage]')
+        if not node:
+            _G.log_warning("It seems you haven't created a shop yet, skipping restocking")
+            return
+        self.stock_free = int(node.locator('..').inner_text().strip().split()[-1])
+        if not self.should_restocking():
+            return
         shops = []
         for id in shop.NAME_DICT:
             if self.candidate_shop_ids and id not in self.candidate_shop_ids:
@@ -62,18 +75,19 @@ class RestockingJob(BaseJob):
         _G.log_info(f"Restocking from shops: {[s.name for s in shops]}")
         try:
             for s in shops:
-                if number < 0 or self.is_lacking_np():
+                if not self.should_restocking():
                     break
                 s.set_page(self.page)
                 for _ in range(self.shop_refreshes):
-                    _G.log_info(f"Inventory free space left: {number}")
-                    if number < 0 or self.is_lacking_np():
+                    _G.log_info(f"Inventory/Stock free space left: {self.inventory_free} / {self.stock_free}")
+                    if not self.should_restocking():
                         break
                     result = yield from self.do_shopping(s)
                     if result:
                         filename = f"{_G.BROWSER_PROFILE_DIR}/profile_{self.profile_name}/transaction_history.json"
                         s.transaction_history[-1].log(filename)
-                        number -= 1
+                        self.inventory_free -= 1
+                        self.stock_free -= 1
                     elif result == False:
                         yield from _G.rwait(self.refresh_interval+randint(1, 5))
                     else: # result is None (empty shop)
@@ -83,6 +97,18 @@ class RestockingJob(BaseJob):
         # trigger quick restocking job
         if self.scheduler:
             self.scheduler.trigger_job("quick_restock")
+
+    def should_restocking(self):
+        if self.is_lacking_np():
+            _G.log_info(f"Carrying np is less than {self.min_carrying_np}, skipping restocking")
+            return False
+        if self.inventory_free <= 5:
+            _G.log_info(f"Inventory is almost full, skipping restocking")
+            return False
+        if self.stock_free <= self.keep_stock:
+            _G.log_info(f"Stock is almost full, skipping restocking")
+            return False
+        return True
 
     def is_lacking_np(self):
         np = action.get_available_np(self.page)

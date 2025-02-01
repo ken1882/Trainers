@@ -227,6 +227,7 @@ def start_refight_fiber():
   flag_check_errands = False
   flag_rebooting = False
   flag_fighting = False
+  reboot_timestamp = datetime.now()
   end_rematch_timestamp = datetime.now()
   battle_duration = int(_G.ARGV.battle_duration)
   for _ in range(int(_G.ARGV.index)):
@@ -242,7 +243,7 @@ def start_refight_fiber():
       else:
         StageDepth = 0
       LastStage = stg
-    if StageDepth > 100:
+    if StageDepth > 100 or (flag_rebooting and datetime.now() > reboot_timestamp+timedelta(minutes=10)):
       _G.log_info(f"Stage {stg} too deep, close game")
       StageDepth = 0
       close_game()
@@ -258,12 +259,14 @@ def start_refight_fiber():
       for _ in range(10):
         wait(1)
         yield
+      reboot_timestamp = datetime.now()
       flag_fighting = False
       flag_rebooting = True
       continue
     elif stage.is_stage('Crashed'):
       close_game()
       wait(3)
+      reboot_timestamp = datetime.now()
       flag_rebooting = True
     elif flag_rebooting:
       if not stage.is_stage('HomePage'):

@@ -32,6 +32,8 @@ class DailyQuestJob(BaseJob):
 
     def load_args(self):
         self.candidate_shop_ids = self.args.get("candidate_shops", [])
+        if type(self.candidate_shop_ids) == str:
+            self.candidate_shop_ids = [int(i) for i in self.candidate_shop_ids.split(',')]
         self.shop_refreshes = self.args.get("shop_refreshes", 3)
         self.refresh_interval = self.args.get("refresh_interval", 10)
         self.auto_deposit = self.args.get("auto_deposit", False)

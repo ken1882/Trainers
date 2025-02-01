@@ -49,12 +49,13 @@ class PetCaresJob(BaseJob):
         pets_num = len(self.pets)
         for i in range(pets_num):
             _G.log_info(f"Careing {self.pets[i]['name']}")
+            self.select_pet(i)
+            yield from _G.rwait(1)
             while self.is_hungry():
-                self.select_pet(i)
                 yield from _G.rwait(1)
                 yield from self.feed()
                 yield from _G.rwait(1)
-            self.select_pet(i)
+                self.select_pet(i)
             yield from _G.rwait(1)
             yield from self.play()
             yield from _G.rwait(1)
@@ -94,12 +95,12 @@ class PetCaresJob(BaseJob):
     def scan_usable_items(self):
         self.items = []
         nodes = self.page.query_selector_all('.petCare-itemgrid-item')
-        item_names = []
+        item_names = set()
         for node in nodes:
             name = node.get_attribute('data-itemname')
             if not name:
                 continue
-            item_names.append(name)
+            item_names.add(name)
             item = NeoItem(
                 name=name,
                 id=node.get_attribute('id'),
@@ -115,7 +116,7 @@ class PetCaresJob(BaseJob):
         jn.batch_search(item_names, False)
         jn_done = False
         while not jn_done:
-            jn_done = not jn.FLAG_BUSY
+            jn_done = not jn.is_busy()
             yield
         for item in self.items:
             item.update_jn()

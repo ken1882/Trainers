@@ -15,8 +15,8 @@ HTTP_HEADERS = {
 
 WORKER_COUNT = 20
 DB_LOCK = Lock()
-FLAG_BUSY = False
 WorkerThreads = []
+WorkerFlags   = [False] * WORKER_COUNT
 
 Agent = requests.Session()
 Agent.headers.update(HTTP_HEADERS)
@@ -27,7 +27,7 @@ for i in range(WORKER_COUNT):
     AgentPool[-1].headers.update(HTTP_HEADERS)
 
 CACHE_FILE = "cache/items.json"
-CACHE_TTL  = 60*60*24*7
+CACHE_TTL  = 60*60*24*3
 
 Database = {}
 
@@ -125,39 +125,44 @@ def save_cache(item=None):
             f.write(json.dumps(Database))
 
 def batch_search_worker(items, ret, worker_id):
-    global AgentPool, Database
+    global AgentPool, Database, WorkerFlags
     _G.logger.info(f"Worker#{worker_id} started: {items}")
-    for item in items:
-        ret_idx = next((i for i, x in enumerate(ret) if x["name"] == item), 0)
-        if item.lower() in Database:
-            ret[ret_idx] = Database[item.lower()]
-        else:
-            ret[ret_idx] = get_item_details_by_name(item, agent=AgentPool[worker_id])
+    try:
+        for item in items:
+            ret_idx = next((i for i, x in enumerate(ret) if x["name"] == item), 0)
+            if item.lower() in Database:
+                ret[ret_idx] = Database[item.lower()]
+            else:
+                ret[ret_idx] = get_item_details_by_name(item, agent=AgentPool[worker_id])
+    finally:
+        WorkerFlags[worker_id] = False
+        _G.logger.info(f"Worker#{worker_id} finished: {items}")
+
+def is_busy():
+    global WorkerFlags
+    return any(WorkerFlags)
 
 def batch_search(items, join=True):
     '''
     Multi-threaded batch search for item details. Note that if `join=False`,
-    the function will return immediately and you'll need to fetch the results later after `FLAG_BUSY=False`.
+    the function will return immediately and you'll need to fetch the results later using  `is_busy()`.
     '''
-    global Database, WorkerThreads, FLAG_BUSY
-    if FLAG_BUSY:
+    global Database, WorkerThreads, WorkerFlags
+    if is_busy():
         _G.log_warning("Search workers are busy")
         return None
-    FLAG_BUSY = True
-    try:
-        ret = [{'name': item} for item in items]
-        thread_args = [[] for _ in range(WORKER_COUNT)]
-        for i, item in enumerate(items):
-            thread_args[i % WORKER_COUNT].append(item)
-        for i in range(WORKER_COUNT):
-            if thread_args[i]:
-                WorkerThreads.append(Thread(target=batch_search_worker, args=(thread_args[i], ret, i)))
-                WorkerThreads[-1].start()
-        if join:
-            for t in WorkerThreads:
-                t.join()
-    finally:
-        FLAG_BUSY = False
+    ret = [{'name': item} for item in items]
+    thread_args = [[] for _ in range(WORKER_COUNT)]
+    for i, item in enumerate(items):
+        thread_args[i % WORKER_COUNT].append(item)
+    for i in range(WORKER_COUNT):
+        if thread_args[i]:
+            WorkerThreads.append(Thread(target=batch_search_worker, args=(thread_args[i], ret, i)))
+            WorkerFlags[i] = True
+            WorkerThreads[-1].start()
+    if join:
+        for t in WorkerThreads:
+            t.join()
     return ret
 
 def update_item_price(item, price):

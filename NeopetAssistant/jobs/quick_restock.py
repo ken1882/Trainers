@@ -22,7 +22,7 @@ class QuickRestockJob(BaseJob):
         self.high_value_threshold = self.args.get('high_value_threshold', 10000)
         self.marketprice_adds_rate = self.args.get('marketprice_adds_rate', 0.01)
         self.high_value_adds_rate  = self.args.get('high_value_adds_rate', 0.03)
-        self.category_keeps = self.args.get('category_keeps', {})
+        self.category_keeps = self.args.get('category_keeps', {"food": 5, "grooming": 1, "toy": 1})
         if type(self.category_keeps) == str:
             string = self.category_keeps
             self.category_keeps = {}
@@ -38,9 +38,11 @@ class QuickRestockJob(BaseJob):
 
     def execute(self):
         yield from _G.rwait(2)
+        self._stocked = False
         yield from self.scan_all_items()
         yield from self.process_actions()
-        yield from self.process_restock()
+        if self._stocked:
+            yield from self.process_restock()
 
     def scan_all_items(self):
         self.items = []
@@ -61,7 +63,7 @@ class QuickRestockJob(BaseJob):
         jn.batch_search(list(set([item['name'] for item in self.items])), False)
         jn_done = False
         while not jn_done:
-            jn_done = not jn.FLAG_BUSY
+            jn_done = not jn.is_busy()
             yield
         for item in self.items:
             item['ref'] = NeoItem(name=item['name'])
@@ -90,6 +92,7 @@ class QuickRestockJob(BaseJob):
             elif item['ref'].value_pc - item['ref'].value_npc >= self.restock_profit:
                 _G.log_info(f"Profitable item: {item['name']}")
                 act_name = 'stock'
+                self._stocked = True
             elif item['ref'].is_rubbish():
                 act_name = 'donate'
             elif item['ref'].rarity > 300:
@@ -154,7 +157,8 @@ class QuickRestockJob(BaseJob):
                     'amount': amount,
                     'price': price,
                 }
-                if market_price <= 0:
+                old_price = utils.str2int(cells[4].text_content().strip())
+                if market_price <= 0 or old_price == price:
                     continue
                 cells[4].query_selector('input').fill(str(price))
                 yield from _G.rwait(0.2)

@@ -64,6 +64,9 @@ def create_context(pw, profile_name, enable_extensions=True):
         'color_scheme': 'dark',
         'args': args
     }
+    ch = os.getenv('DRIVER_CHANNEL')
+    if ch:
+        kwargs['channel'] = ch
     proxy = _G.ARGV.proxy
     if not proxy:
         proxy = os.getenv(f"PROFILE_PROXY_{profile_name.upper()}")
@@ -89,7 +92,6 @@ def main_loop():
 def queue_jobs():
     global Scheduler
     jobs = (
-        LoginJob(),
         DailyQuestTouchJob(),
         DailyQuestJob(),
         MonthlyFreebiesJob(),
@@ -129,6 +131,8 @@ def queue_jobs():
     for job in jobs:
         Scheduler.queue_job(job, False)
     Scheduler.load_status(_G.BROWSER_PROFILE_DIR)
+    # always check login first
+    Scheduler.queue_job(LoginJob(), False)
 
 def main():
     global Scheduler

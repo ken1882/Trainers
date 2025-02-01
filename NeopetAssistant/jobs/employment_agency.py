@@ -46,7 +46,7 @@ class EmploymentAgencyJob(BaseJob):
         jn.batch_search(jn_args, False)
         while jn_working:
             yield
-            jn_working = jn.FLAG_BUSY
+            jn_working = jn.is_busy()
         for quest in self.quests:
             item = jn.get_item_details_by_name(quest['name'])
             if item:

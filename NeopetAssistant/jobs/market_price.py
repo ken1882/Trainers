@@ -26,6 +26,9 @@ class MarketPriceJob(BaseJob):
 
     def execute(self):
         yield from _G.rwait(2)
+        if self.has_content('working for a faerie'):
+            player.data.flag_on_faerie_quest = True
+            return
         self.collect_items()
         yield from self.scan_all()
 
@@ -69,15 +72,24 @@ class MarketPriceJob(BaseJob):
     def search_item(self, item_name, depth=0, lowest=10**10):
         _G.log_info(f"Searching item: {item_name}")
         if self.has_content('too many searches'):
+            self.rate_limited = True
+            return
+        if self.has_content('working for a faerie'):
+            player.data.flag_on_faerie_quest = True
             return
         self.page.query_selector('#shopwizard').fill(item_name)
         yield from _G.rwait(0.5)
         self.click_element('#submit_wizard')
         yield from _G.rwait(2)
         if self.has_content('too many searches'):
+            self.rate_limited = True
+            return
+        if self.has_content('working for a faerie'):
+            player.data.flag_on_faerie_quest = True
             return
         yield from self.wait_until_element_found(lambda _: None, lambda: None, '.wizard-results-text')
         self.rate_limited = False
+        player.data.flag_on_faerie_quest = False
         while depth < self.rescan_count:
             yield from _G.rwait(2)
             yield from self.wait_until_element_found(lambda _: None, lambda: None, '#resubmitWizard')
@@ -106,6 +118,7 @@ class MarketPriceJob(BaseJob):
 
     def calc_next_run(self):
         self.next_run = datetime.now() + timedelta(seconds=self.scan_interval)
-        if self.rate_limited:
+        if self.rate_limited or player.data.flag_on_faerie_quest:
+            _G.log_info(f"Rate limited or on faerie quest, next run in 30 minutes")
             self.next_run += timedelta(minutes=30)
         return self.next_run

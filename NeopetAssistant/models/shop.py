@@ -94,7 +94,7 @@ class NeoShop(BasePage):
         jn.batch_search(goods_names, False)
         jn_done = False
         while not jn_done:
-            jn_done = not jn.FLAG_BUSY
+            jn_done = not jn.is_busy()
             yield
         for good in self.goods:
             good['ref'] = jn.get_item_details_by_name(good['name'])
