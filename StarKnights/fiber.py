@@ -98,3 +98,25 @@ def start_daily_fiber():
   for pos in pos_list:
     Input.click(*pos)
     yield from _G.rwait(5)
+
+def start_exchange_fiber():
+  while True:
+    yield
+    pos = (533, 281)
+    if not graphics.is_color_ok(graphics.get_pixel(*pos, True), (252, 253, 253)):
+      _G.log_info("Items are all exchanged")
+      return
+    Input.rclick(*pos)
+    yield from _G.rwait(1)
+    pos = (697, 610)
+    if not graphics.is_color_ok(graphics.get_pixel(*pos, True), (242, 237, 118)):
+      _G.log_info("Not enough tokens")
+      return
+    for _ in range(3):
+      Input.rclick(853, 334)
+      yield
+    Input.rclick(*pos)
+    while not stage.is_stage('PurchaseComplete'):
+      yield
+    Input.rclick(647, 23)
+    yield from _G.rwait(1)

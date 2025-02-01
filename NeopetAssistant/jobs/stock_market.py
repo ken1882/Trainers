@@ -18,13 +18,13 @@ class StockMarketJob(BaseJob):
         '''
         Selling shares with over 20% profit
         '''
-        for n in self.page.query_selector_all('img[id]'):
-            n.click()
-        yield from _G.rwait(2)
-        table = self.page.query_selector('#postForm')
-        companies = table.query_selector_all('tr[id]')
-        sold = False
         try:
+            for n in self.page.query_selector_all('img[id]'):
+                n.click()
+            yield from _G.rwait(2)
+            table = self.page.query_selector('#postForm')
+            companies = table.query_selector_all('tr[id]')
+            sold = False
             for com in companies:
                 for row in com.query_selector_all('tr')[1:]:
                     cells = row.query_selector_all('td')
@@ -37,8 +37,9 @@ class StockMarketJob(BaseJob):
                     cells[-1].query_selector('input').fill(str(shares))
                     sold = True
                 yield
-        except Exception:
-            pass
+        except Exception as e:
+            utils.handle_exception(e)
+            _G.log_warning("Seems no shares to sell")
         if sold:
             self.page.query_selector_all('input[type=submit]')[1].click()
             yield from _G.rwait(2)

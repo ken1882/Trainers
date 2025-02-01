@@ -1,6 +1,7 @@
 import _G
 import utils
 import os
+import json
 import page_action as action
 import argv_parse
 from playwright.sync_api import sync_playwright
@@ -55,8 +56,25 @@ def create_context(pw, profile_name, enable_extensions=True):
     if _G.ARGV.debug:
         args.append('--auto-open-devtools-for-tabs')
     if enable_extensions:
-        args.append(f"--disable-extensions-except={os.getenv('BROWSER_EXTENSION_PATHS')}")
-        args.append(f"--load-extension={os.getenv('BROWSER_EXTENSION_PATHS')}")
+        bases = os.getenv('BROWSER_EXTENSION_PATHS') or ''
+        ext_paths = []
+        for path in bases.split(','):
+            path.replace('\\', '/')
+            version = utils.str2int(path.split('/')[-1])
+            if not version:
+                versions = os.listdir(path)
+                latest = max(versions, key=lambda x: utils.str2int(x))
+                path = os.path.join(path, latest)
+            if not os.path.exists(path):
+                _G.log_warning(f"Extension path not found: {path}")
+                continue
+            with open(os.path.join(path, 'manifest.json'), 'r') as f:
+                manifest = json.load(f)
+                _G.log_info(f"Loading extension: {manifest['name']} {manifest['version']}")
+                ext_paths.append(path)
+            ext_paths.append(path)
+        args.append(f"--disable-extensions-except={','.join(ext_paths)}")
+        args.append(f"--load-extension={','.join(ext_paths)}")
     _G.log_info(f"Launching browser context#{profile_name} with args: {args}")
     kwargs = {
         'headless': False,
