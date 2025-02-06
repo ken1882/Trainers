@@ -28,6 +28,9 @@ ActiveEnemyPosCols = (
   )
 )
 
+AutoGatherPos = (89, 628)
+AutoGatherEnabledColor = (255, 215, 79)
+
 GatherSkillUsable = {
   '1': ((715, 918), (205, 172, 172)),
   '2': ((759, 917), (164, 156, 148)),
@@ -48,12 +51,12 @@ OtherPlayerPosCol = (
 
 FishFullGPPosCol = (
   (1107, 1001),
-  (46, 30, 20)    
+  (46, 30, 20)
 )
 
 FishHalfGPPosCol = (
   (1041, 1001),
-  (51, 35, 23)    
+  (51, 35, 23)
 )
 
 MoochPosCol = (
@@ -81,9 +84,9 @@ CRHQPosCol = (
   (134, 184, 169)
 )
 
-SystemMenu = (1855, 972)#(1853, 984)
+SystemMenu = (1855, 982)#(1853, 984)
 Logout     = (1724, 914)
-LogoutOK   = (906, 574)
+LogoutOK   = (906, 584)
 GameStart  = (957, 822)
 GeneralOK  = (904, 554)
 LoginOK    = (902, 608)
@@ -151,18 +154,18 @@ LGT_DICT = {
       ],
     ]
   },
-  'WindShard': {
-    'mpos': (254, 447),
-    'skill': 'E',
-    'disableLock': True,
-    'jump': True,
-    'nodes': [
-      [
-        [19.5, 26.0],
-        ('rotate', 0)
-      ],
-    ]
-  },
+  # 'WindShard': {
+  #   'mpos': (254, 447),
+  #   'skill': 'E',
+  #   'disableLock': True,
+  #   'jump': True,
+  #   'nodes': [
+  #     [
+  #       [19.5, 26.0],
+  #       ('rotate', 0)
+  #     ],
+  #   ]
+  # },
   'Cobalt': {
     'mpos': (244, 368),
     'skill': 'T',
@@ -203,11 +206,39 @@ LGT_DICT = {
       ],
     ]
   },
+  'HardSilver': {
+    'mpos': (248, 274),
+    'alts': [(229, 450)],
+    'hiddens': [(453, 267)],
+    'skill': 'T',
+    'mtime': 140,
+    'nodes': [
+      [
+        [24.9, 23.1],
+        ('rotate', 0)
+      ],
+    ]
+  },
+  'ElvenSilver': {
+    'mpos': (248, 274),
+    'alts': [(229, 450)],
+    'hiddens': [
+      (101, 282),(101, 323),(103, 366),(103, 414),(102, 498)
+    ],
+    'skill': 'T',
+    'mtime': 140,
+    'nodes': [
+      [
+        [32.1, 13.9],
+        ('rotate', 0)
+      ],
+    ]
+  },
 }
 
 GT_ZincOre = [
   [
-    (23.0, 29.1), 
+    (23.0, 29.1),
     ('rotate', 1),
     ('forward', 7),
     ('rotate', -0.7)
@@ -225,7 +256,7 @@ GT_ZincOre = [
   ],
   [
     (22.8, 28.0),
-    ('rotate', 1), 
+    ('rotate', 1),
     ('forward', 5),
     ('rotate', -0.5)
   ]

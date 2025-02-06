@@ -18,7 +18,7 @@ def print_cache():
   print(output_cache)
   for i,ss in enumerate(output_cache):
     if i & 1 == 0:
-      pos += ss 
+      pos += ss
     else:
       col += ss
   print('-'*42)
@@ -64,7 +64,7 @@ def update_input():
     res = graphics.get_mouse_pixel()
     if not _G.SelectedFiber:
       output_cache.extend(res)
-    print(Input.get_cursor_pos(), res) 
+    print(Input.get_cursor_pos(), res)
   elif Input.is_trigger(win32con.VK_F7):
     log_info("Worker unpaused" if _G.FlagPaused else "Worker paused")
     _G.FlagPaused ^= True
@@ -74,11 +74,11 @@ def update_input():
     _G.FlagWorking ^= True
     _G.Fiber = _G.SelectedFiber()
   elif Input.is_trigger(win32con.VK_F9):
-    log_info("Stop program requested") 
+    log_info("Stop program requested")
     _G.FlagWorking = False
     _G.FlagRunning = False
     print_cache()
-  
+
 def main_loop():
   global output_cache
   _G.flush()
@@ -89,7 +89,7 @@ def main_loop():
     exit()
   if not _G.FlagPaused and _G.Fiber and not resume(_G.Fiber):
     log_info(f"Worker ended, return value: {_G.pop_fiber_ret()}")
-    _G.Fiber = None 
+    _G.Fiber = None
     _G.FlagWorking = False
 
 def start_main():

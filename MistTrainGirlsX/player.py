@@ -498,12 +498,14 @@ def get_suitable_equpiments(character, slot_idx):
   global SWAP_GEAR_ID
   key_chb = 'MCharacterBase'
   key_wp  = 'WeaponEquipType'
-  if key_chb in character:
+  if 'MCharacterId' in character:
+    wtype = game.get_character_base(character['MCharacterId'])[key_wp]
+  elif key_chb in character:
     wtype = character[key_chb][key_wp]
   elif 'MCharacter' in character:
     wtype = character['MCharacter'][key_chb][key_wp]
   else:
-    return get_suitable_equpiments(game.get_character_base(character['MCharacterId']), slot_idx)
+    raise RuntimeError(f"Unprocessable character data:\n{character}")
   ret_wp = None
   ret_ar = None
   ret_ac = None

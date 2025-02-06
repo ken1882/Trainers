@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-import win32gui
+import win32gui, win32con
 from desktopmagic.screengrab_win32 import getRectAsImage
 from PIL import Image
 
@@ -160,15 +160,3 @@ def find_object_with_rates(objimg_path, threshold=CVMatchHardRate):
   objects = filter_local_templates(res, threshold)
   rates = [res[y][x] for x,y in objects]
   return (objects, rates)
-
-def get_difficulty():
-  diffculty = [
-    [(314, 507), (42, 84, 170)],
-    [(314, 507), (215, 76, 0)],
-    [(314, 507), (137, 88, 161)],
-  ]
-  for i,o in enumerate(diffculty):
-    p,c = o
-    if is_color_ok(get_pixel(*p, True), c):
-      return i
-  return -1

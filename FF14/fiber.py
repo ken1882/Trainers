@@ -223,7 +223,7 @@ def start_crafting_fiber():
   times = int(_G.ARGV.repeats)
   for i in range(times):
     _G.log_info(f"Start craft #{i+1}")
-    for _ in range(3):
+    for _ in range(4):
       action.interact()
       uwait(1)
     cp = mcp = int(_G.ARGV.crafting_cp)
@@ -514,22 +514,47 @@ def start_logout_gathering_fiber():
     uwait(1)
     yield
     action.interact()
-    uwait(0.5)
-    yield
-    sk = target.get('skill')
-    if sk:
-      if sk in position.GatherSkillUsable:
+    for _ in range(3):
+      uwait(0.5)
+      yield
+    # enable auto gather
+    if not graphics.is_color_ok(graphics.get_pixel(*position.AutoGatherPos, sync=1), position.AutoGatherEnabledColor):
+      Input.rmoveto(89, 628)
+      yield
+      for _ in range(2):
+        Input.click(use_msg=False)
+        yield
+    target_exists = True
+    if 'hiddens' in target:
+      for pos in target['hiddens']:
+        target_exists = not graphics.is_color_ok(graphics.get_pixel(*pos, sync=1), (64, 64, 64))
+        _G.log_debug(f"Hidden popup detection {pos}: {target_exists}")
+        if target_exists:
+          target['mpos'] = pos
+          break
+      _G.log_info(f"Target exists: {target_exists}")
+    if target_exists:
+      sk = target.get('skill')
+      if sk and sk in position.GatherSkillUsable:
         sp, sc = position.GatherSkillUsable[sk]
-        uwait(0.3)
+        uwait(1)
         if graphics.is_pixel_match((sp,), (sc,), sync=True):
           _G.log_info(f"Use gather skill {sk}")
           Input.trigger_key(ord(sk))
-          uwait(1)
-    uwait(0.1)
-    Input.rmoveto(*target['mpos'])
-    yield
-    Input.click(use_msg=False)
-    for _ in range(10):
+          uwait(2)
+      uwait(0.1)
+      Input.rmoveto(*target['mpos'])
+      for _ in range(2):
+        yield
+        Input.click(use_msg=False)
+    elif 'alts' in target:
+      for pos in target['alts']:
+        Input.rmoveto(*pos)
+        yield
+        for _ in range(2):
+          Input.click(use_msg=False)
+          yield
+    for _ in range(15):
       uwait(1)
       yield
     action.target_player()
@@ -538,3 +563,39 @@ def start_logout_gathering_fiber():
     if stage.is_player_targeted():
       _G.log_info("Other player detected")
       flag_crowded = True
+
+def start_minipick_fiber():
+  while True:
+    yield
+    action.interact2()
+    uwait(0.3)
+    action.interact2()
+    uwait(0.5)
+    action.menu_right()
+    uwait(0.3)
+    action.menu_up()
+    uwait(0.3)
+    action.interact2()
+    wait(1)
+    a = graphics.find_object('objs/miniball.png', 0.9)
+    if not a:
+      return
+    a = a[0]
+    px = a[0] - 805
+    py = 905 - a[1]
+    delta_ms_x = 0.15
+    delta_ms_y = 0.13
+    dtx = int(px / delta_ms_x)
+    dty = int(py / delta_ms_y)
+    _G.log_info(f"Press time X: {dtx}ms Y: {dty}ms")
+    action.interact_press(dtx)
+    wait(0.3)
+    action.interact_press(dty)
+    wait(5)
+    uwait(3)
+    if graphics.find_object('objs/minigame_success.png', 0.9):
+      _G.log_info(f"Minigame success")
+      Input.trigger_key(win32con.VK_ESCAPE)
+      uwait(1)
+    else:
+      _G.log_info(f"Minigame failed")

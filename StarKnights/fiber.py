@@ -44,8 +44,8 @@ def start_initiate_fiber():
   lasts = []
   stack_size = 8
   diff_threshold = 30
-  startrail_threshold = 330
-  startring_threshold = 500
+  startrail_threshold = 420
+  startring_threshold = 450
   cnt = 0
   rcnt = 0
   while True:
@@ -92,3 +92,31 @@ def start_initiate_fiber():
 def start_test_fiber():
   while True:
     print(graphics.get_pixel(*position.RocketStartPos, True))
+
+def start_daily_fiber():
+  pos_list = ((357, 659),(635, 408),(875, 218),(875, 218),(1069, 508),(859, 355),(793, 484),(319, 32),(246, 32),(909, 371),(919, 200),(1100, 508),(860, 354),(775, 484),(340, 39),(295, 39),(46, 34),(649, 547),(887, 220),(868, 202),(1084, 510),(862, 353),(804, 473),(302, 38),(257, 38),(877, 362),(905, 200),(1069, 514),(863, 354),(783, 478),(350, 38),(232, 38),(891, 507),(870, 221),(895, 194),(1068, 506),(847, 360),(795, 475),(310, 31),(157, 42),(152, 663),(1106, 555),(1125, 573),)
+  for pos in pos_list:
+    Input.click(*pos)
+    yield from _G.rwait(5)
+
+def start_exchange_fiber():
+  while True:
+    yield
+    pos = (533, 281)
+    if not graphics.is_color_ok(graphics.get_pixel(*pos, True), (252, 253, 253)):
+      _G.log_info("Items are all exchanged")
+      return
+    Input.rclick(*pos)
+    yield from _G.rwait(1)
+    pos = (697, 610)
+    if not graphics.is_color_ok(graphics.get_pixel(*pos, True), (242, 237, 118)):
+      _G.log_info("Not enough tokens")
+      return
+    for _ in range(3):
+      Input.rclick(853, 334)
+      yield
+    Input.rclick(*pos)
+    while not stage.is_stage('PurchaseComplete'):
+      yield
+    Input.rclick(647, 23)
+    yield from _G.rwait(1)

@@ -102,7 +102,7 @@ def start_main():
 if __name__ == "__main__":
   _G.SelfHwnd = utils.get_self_hwnd()
   detect_app_window()
-  utils.resize_app_window()
+  # utils.resize_app_window()
   args = argv_parse.load()
   if args.job:
     for method in dir(fiber):
@@ -110,6 +110,10 @@ if __name__ == "__main__":
         _G.SelectedFiber = getattr(fiber,method)
         log_info(f"Fiber set to {method}")
         break
+  try:
+    _G.log_info(f"Stage: {stage.get_current_stage()}")
+  except Exception:
+    pass
   try:
     start_main()
   except (KeyboardInterrupt, SystemExit):

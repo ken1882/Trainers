@@ -188,12 +188,18 @@ def start_stage_selection_fiber():
   for _ in range(20):
     yield
     wait(0.5)
-  Input.rclick(762, 518)
+  if _G.ARGV.yukkuri:
+    Input.rclick(900, 500)
+  else:
+    Input.rclick(740, 500)
   wait(3)
+  if _G.ARGV.yukkuri:
+    Input.rclick(*event_pos[0])
+    wait(2)
   Input.rclick(*event_pos[_G.ARGV.jndex])
   wait(2)
   depth = 0
-  while graphics.get_difficulty() != 2:
+  while graphics.get_difficulty() != _G.ARGV.kndex:
     if stage.StageDepth > 30:
       close_game()
     if stage.is_stage('BSHome'):
@@ -209,11 +215,19 @@ StageDepth = 0
 LastStage  = None
 def start_refight_fiber():
   global StageDepth,LastStage
+  StageScrolls = (
+    (942, 170),
+    (942, 220),
+    (942, 300),
+    (942, 380),
+    (942, 460),
+  )
   target_name = _G.ARGV.stage
   party_sel_cycle = itertools.cycle(PARTY_SEL_POS)
   flag_check_errands = False
   flag_rebooting = False
   flag_fighting = False
+  reboot_timestamp = datetime.now()
   end_rematch_timestamp = datetime.now()
   battle_duration = int(_G.ARGV.battle_duration)
   for _ in range(int(_G.ARGV.index)):
@@ -229,7 +243,7 @@ def start_refight_fiber():
       else:
         StageDepth = 0
       LastStage = stg
-    if StageDepth > 100:
+    if StageDepth > 100 or (flag_rebooting and datetime.now() > reboot_timestamp+timedelta(minutes=10)):
       _G.log_info(f"Stage {stg} too deep, close game")
       StageDepth = 0
       close_game()
@@ -245,12 +259,14 @@ def start_refight_fiber():
       for _ in range(10):
         wait(1)
         yield
+      reboot_timestamp = datetime.now()
       flag_fighting = False
       flag_rebooting = True
       continue
     elif stage.is_stage('Crashed'):
       close_game()
       wait(3)
+      reboot_timestamp = datetime.now()
       flag_rebooting = True
     elif flag_rebooting:
       if not stage.is_stage('HomePage'):
@@ -298,20 +314,26 @@ def start_refight_fiber():
         flag_check_errands = False
         wait(1.5)
         yield
-      for pos,name in get_stage_names():
-        if target_name not in name:
-          continue
-        Input.rclick(pos[0]+150, pos[1]+50)
-        for _ in range(6):
-          wait(0.8)
-          yield
+      for spos in StageScrolls:
+        Input.click(*spos)
+        wait(0.5)
+        yield
+        for pos,name in get_stage_names():
+          if target_name not in name:
+            continue
+          Input.rclick(pos[0]+150, pos[1]+50)
+          for _ in range(6):
+            wait(0.8)
+            yield
+        wait(1)
+        yield
     elif stage.is_stage('HelperSelect'):
       Input.rclick(477, 201)
       wait(3)
     elif stage.is_stage('CombatPrepare'):
       wait(3)
-      Input.rclick(340, 510)
       log_info("Selecting party")
+      Input.rclick(450, 520)
       wait(5)
       pos = next(party_sel_cycle)
       Input.mouse_down(*pos[0])

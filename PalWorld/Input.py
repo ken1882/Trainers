@@ -118,14 +118,14 @@ def set_cursor_pos(x, y, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None, 
     y += rect[1]
   win32api.SetCursorPos((int(x),int(y)))
 
-def click(x=None, y=None, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None):
+def click(x=None, y=None, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None, mright=False):
   if not hwnd:
     hwnd = _G.AppInputHwnd
   if not use_msg and x and y:
     set_cursor_pos(x, y, app_offset)
-  mouse_down(x, y, app_offset, use_msg, hwnd)
+  mouse_down(x, y, app_offset, use_msg, hwnd, mright)
   sleep(0.05)
-  mouse_up(x, y, app_offset, use_msg, hwnd)
+  mouse_up(x, y, app_offset, use_msg, hwnd, mright)
 
 def rclick(x, y, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None, rrange=_G.PosRandomRange):
   mx = x + random.randint(-rrange[0], rrange[0])

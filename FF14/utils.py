@@ -94,23 +94,32 @@ def ocr_rect(rect, fname, zoom=1.0, lang='jpn', config='--psm 12 --psm 13', **kw
   if zoom != 1.0:
     size = (int(img.size[0]*zoom), int(img.size[1]*zoom))
     graphics.resize_image(size, fname, fname)
-  bin_th = kwargs.get('binarization')
+  bin_colors = kwargs.get('binarization_colors')
+  tolerance = kwargs.get('bias_tolerance', 15)
   img.close()
-  if bin_th:
+  if bin_colors:
     img = Image.open(fname)
-    img = img.convert('L')
+    img = img.convert('RGB')
     a = np.array(img)
-    a[a < bin_th] = 0
-    a[a >= bin_th] = 0xff
+    # Convert matched colors to white (255, 255, 255), everything else to black (0, 0, 0)
+    mask = np.zeros_like(a[..., 0], dtype=bool)
+    for color in bin_colors:
+      mask |= (
+          (a[..., 0] >= color[0] - tolerance) & (a[..., 0] <= color[0] + tolerance) &
+          (a[..., 1] >= color[1] - tolerance) & (a[..., 1] <= color[1] + tolerance) &
+          (a[..., 2] >= color[2] - tolerance) & (a[..., 2] <= color[2] + tolerance)
+      )
+    a[~mask] = [0, 0, 0]  # Set unmatched pixels to black
+    a[mask]  = [255, 255, 255]  # Set matched pixels to white
     img = Image.fromarray(a)
     img.save(fname)
     if kwargs.get('trim'):
       PADDING = 2
-      a2 = np.where(a > bin_th, 255, 0).astype(np.uint8)
+      a2 = np.where(mask, 255, 0).astype(np.uint8)
       nonzero_cols = np.argwhere(a2.max(axis=0) > 0)
       left_col = nonzero_cols.min()
       right_col = nonzero_cols.max()
-      bbox = (left_col-PADDING, 0, right_col+1+PADDING, a2.shape[0])
+      bbox = (left_col - PADDING, 0, right_col + 1 + PADDING, a2.shape[0])
       cropped_img = img.crop(bbox)
       cropped_img.save(fname)
     img.close()

@@ -17,7 +17,7 @@ AppWindowName = 'twinkle_starknightsX'
 AppHwnd = 0
 AppRect = [0,0,0,0]
 AppPid  = 0
-AppTid  = 0 
+AppTid  = 0
 AppInputHwnd = 0
 
 AppInputUseMsg = False
@@ -212,7 +212,16 @@ def wait(sec):
 def uwait(sec):
   sleep(sec + max(random() / 2, sec * random() / 5))
 
-def termiante():
+WaitInterval = 0.1
+def rwait(sec):
+    global WaitInterval,FPS
+    times = int(sec // (WaitInterval + FPS))
+    for _ in range(times):
+        wait(WaitInterval)
+        yield
+    wait(sec - times * (WaitInterval+FPS))
+
+def terminate():
   global ChildPipe,ChildProcess
   for name,proc in ChildProcess.items():
     try:
