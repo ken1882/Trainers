@@ -6,7 +6,6 @@ from errors import NeoError
 class LoginJob(BaseJob):
     def __init__(self, **kwargs):
         super().__init__("login", "https://www.neopets.com/home", **kwargs)
-        self.priority = 9999 # always check login first
 
     def execute(self):
         r = []

@@ -10,15 +10,16 @@ from ruffle.roodoku import Roodoku
 class GameRoomJob(BaseJob):
     def __init__(self, **kwargs):
         super().__init__("game_room", "https://www.neopets.com/games", **kwargs)
-        self.priority = -1
 
     def load_args(self):
         self.enabled_games = self.args.get('enabled_games', ['fashion_fever'])
+        if type(self.enabled_games) == str:
+            self.enabled_games = self.enabled_games.split(',')
         return self.args
 
     def load_games(self):
         self.games = {
-            "fashion_ferver": FashionFever(self.page),
+            "fashion_fever": FashionFever(self.page),
             "roodoku": Roodoku(self.page),
         }
 

@@ -14,14 +14,42 @@ class EmploymentAgencyJob(BaseJob):
     - `max_cost:int=10000` maximum cost for the job to accept
     '''
     def __init__(self, **kwargs):
-        self.jellyneo = kwargs.get("jellyneo", True)
-        self.sw_loops = kwargs.get("sw_loops", 5)
-        self.min_profit = kwargs.get("min_profit", 3000)
-        self.max_cost   = kwargs.get("max_cost", 10000)
-        super().__init__("employment_agency", "https://www.neopets.com/faerieland/employ/employment.phtml", **kwargs)
+        super().__init__("employment_agency", "https://www.neopets.com/faerieland/employ/employment.phtml?type=jobs&voucher=basic", **kwargs)
+
+    def load_args(self):
+        self.sw_loops = self.args.get("sw_loops", 5)
+        self.min_profit = self.args.get("min_profit", 4000)
+        self.max_cost = self.args.get("max_cost", 20000)
+        self.estimated_market_multipler = self.args.get("estimated_market_multipler", 2.0)
+        return self.args
+
+    @property
+    def last_completed_timestamp(self):
+        return self.args.get("last_completed_timestamp", 0)
+
+    @last_completed_timestamp.setter
+    def last_completed_timestamp(self, value):
+        self.args['last_completed_timestamp'] = value
+
+    @property
+    def today_completed(self):
+        return self.args.get("today_completed", 0)
+
+    @today_completed.setter
+    def today_completed(self, value):
+        self.args['today_completed'] = value
 
     def execute(self):
         yield from _G.rwait(2)
+        self.job_done = False
+        self.page_index = 0
+        target_offer = None
+        while not target_offer:
+            yield from self.scan_offers()
+            self.page_index += 10
+            yield from self.goto(self.url + f"&start={self.page_index}")
+            if self.has_content('page is empty'):
+                break
 
     def scan_quests(self):
         panel = self.page.query_selector('.content')
@@ -39,7 +67,7 @@ class EmploymentAgencyJob(BaseJob):
                 'name': name,
                 'amount': amount,
                 'reward': reward,
-                'cost': 0,
+                'cost': 10**8,
             })
             idx += 5
         jn_working = True
@@ -51,6 +79,13 @@ class EmploymentAgencyJob(BaseJob):
             item = jn.get_item_details_by_name(quest['name'])
             if item:
                 quest['cost'] = item['price'] * quest['amount']
+        self.quests = sorted(self.quests, key=lambda x: x['reward'] - x['cost'], reverse=True)
+        msg = "Quests:\n"
+        for q in self.quests:
+            msg += f"{q['name']} {q['reward'] - q['cost']} <="
+            msg += f" - ({q['cost'] // q['amount']} * {q['amount']} -> {q['cost']})"
+            msg += f" + {q['reward']}\n"
+        _G.log_info(msg)
 
     def search_sw(self, name, max_price):
         yield from self.page.goto('https://www.neopets.com/shops/wizard.phtml')
@@ -59,3 +94,22 @@ class EmploymentAgencyJob(BaseJob):
         self.page.query_selector('#shopwizard').fill(name)
         self.page.query_selector('#max_price').fill(str(max_price))
         self.click_element('#submit_wizard')
+
+    def turn_in(self):
+        if not self.target_offer:
+            return
+        if not self.job_done:
+            return
+        last_completed_time = datetime.fromtimestamp(self.last_completed_timestamp)
+        curt = utils.localt2nst(datetime.now())
+        if last_completed_time.day == curt.day and last_completed_time.month == curt.month and last_completed_time.year == curt.year:
+            self.today_completed += 1
+        else:
+            self.today_completed = 1
+        self.last_completed_timestamp = utils.localt2nst(datetime.now()).timestamp()
+
+    def calc_next_run(self, shortcut=None):
+        if shortcut:
+            return super().calc_next_run(shortcut)
+        if self.today_completed >= 5:
+            return super().calc_next_run('daily')

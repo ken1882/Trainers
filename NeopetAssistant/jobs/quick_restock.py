@@ -14,7 +14,6 @@ import jellyneo as jn
 class QuickRestockJob(BaseJob):
     def __init__(self, **kwargs):
         super().__init__("quick_restock", "https://www.neopets.com/quickstock.phtml", **kwargs)
-        self.priority = -1
 
     def load_args(self):
         self.deposite_value = self.args.get('deposite_value', 90000)

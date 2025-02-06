@@ -80,7 +80,7 @@ class JobScheduler:
             return
         msg = "Pending jobs:\n"
         for j in self.pending_jobs:
-            msg += f"{j.job_name} next_run: {j.next_run}\n"
+            msg += f"{j.job_name} ({j.priority}) next_run: {j.next_run}\n"
         _G.log_info(msg+'\n---\n')
         _G.log_info(f"Executing job: {job.job_name}")
         self.current_job = job
@@ -134,6 +134,14 @@ class JobScheduler:
             if job.job_name == name:
                 return job
         return None
+
+    def run_job(self, name):
+        job = self.get_job(name)
+        if not job:
+            _G.log_error(f"Job {name} not found!")
+            return
+        job.calc_next_run('now')
+        return
 
     def start(self):
         _G.log_info("Job scheduler started")
@@ -218,7 +226,7 @@ class JobScheduler:
         msg  = '\n=== Job Queue ===\n'
         msg2 = '\n--- Disabled Jobs ---\n'
         for job in self.queued_jobs:
-            ss = f"{job.job_name} next_run: {job.next_run}\n"
+            ss = f"{job.job_name} ({job.priority}) next_run: {job.next_run}\n"
             if job.enabled:
                 msg += ss
             else:

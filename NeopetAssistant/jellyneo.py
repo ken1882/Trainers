@@ -26,30 +26,22 @@ for i in range(WORKER_COUNT):
     AgentPool.append(requests.Session())
     AgentPool[-1].headers.update(HTTP_HEADERS)
 
+REDIS_CACHE = os.getenv("REDIS_CACHE", None)
+if REDIS_CACHE:
+    import redis
+
 CACHE_FILE = "cache/items.json"
-CACHE_TTL  = 60*60*24*3
+CACHE_TTL  = 60*60*24*7
 
 Database = {}
-
-if os.path.exists(CACHE_FILE):
-    try:
-        with open(CACHE_FILE, 'r') as f:
-            Database = json.loads(f.read())
-    except Exception as e:
-        utils.handle_exception(e)
-        _G.log_warning("Failed to load jellyneo item cache file")
 
 def get_item_details_by_name(item_name, full_price_history=False, forced=False, agent=None):
     item_name = item_name.lower()
     global Database, Agent
     if not agent:
         agent = Agent
-    if not forced and item_name.lower() in Database:
-        ret = Database[item_name]
-        if ret['rarity'] > 300: # cash item
-            return ret
-        if (datetime.now() - datetime.fromtimestamp(Database[item_name.lower()]["price_timestamp"])).total_seconds() < CACHE_TTL:
-            return ret
+    if not forced and is_cached(item_name):
+        return Database[item_name]
     _G.log_info(f"Getting item details for {item_name}")
     ret = {
         "id": "",
@@ -116,8 +108,31 @@ def get_item_details_by_name(item_name, full_price_history=False, forced=False, 
     save_cache(ret)
     return ret
 
-def save_cache(item=None, padding=True):
+def load_cache(force_local=False):
+    global Database
+    if REDIS_CACHE and not force_local:
+        redis_conn = redis.Redis.from_url(REDIS_CACHE)
+        if redis_conn.exists("jellyneo_itemdb"):
+            Database = json.loads(redis_conn.get("jellyneo_itemdb"))
+            return Database
+    if os.path.exists(CACHE_FILE):
+        try:
+            with open(CACHE_FILE, 'r') as f:
+                Database = json.loads(f.read())
+        except Exception as e:
+            utils.handle_exception(e)
+            _G.log_warning("Failed to load jellyneo item cache file")
+    return Database
+
+def save_cache(item=None, padding=True, save_local=False):
     global Database, DB_LOCK
+    if REDIS_CACHE:
+        if item:
+            Database[item["name"].lower()] = item
+        redis_conn = redis.Redis.from_url(REDIS_CACHE)
+        redis_conn.set("jellyneo_itemdb", json.dumps(Database))
+        if not save_local:
+            return
     with DB_LOCK:
         if item:
             Database[item["name"].lower()] = item
@@ -127,13 +142,23 @@ def save_cache(item=None, padding=True):
             else:
                 json.dump(Database, f)
 
+def is_cached(item_name):
+    iname = item_name.lower()
+    if iname not in Database:
+        return False
+    if Database[iname]["rarity"] > 300:
+        return True
+    if (datetime.now() - datetime.fromtimestamp(Database[iname]["price_timestamp"])).total_seconds() > CACHE_TTL:
+        return False
+    return True
+
 def batch_search_worker(items, ret, worker_id):
     global AgentPool, Database, WorkerFlags
     _G.logger.info(f"Worker#{worker_id} started: {items}")
     try:
         for item in items:
             ret_idx = next((i for i, x in enumerate(ret) if x["name"] == item), 0)
-            if item.lower() in Database:
+            if is_cached(item):
                 ret[ret_idx] = Database[item.lower()]
             else:
                 ret[ret_idx] = get_item_details_by_name(item, agent=AgentPool[worker_id])

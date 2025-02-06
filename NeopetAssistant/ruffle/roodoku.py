@@ -61,6 +61,7 @@ class Roodoku(BaseFlash):
             yield from _G.rwait(1)
 
     def start_game(self):
+        _G.log_info("Starting game")
         self.click(120, 500)
         yield from _G.rwait(2)
         self.click(230, 355)
@@ -72,6 +73,9 @@ class Roodoku(BaseFlash):
         yield from self.send_score()
 
     def send_score(self):
+        _G.log_info("Sending score")
+        yield from _G.rwait(1)
+        self.click(300, 350)
         yield from _G.rwait(1)
         self.click(300, 350)
         yield from _G.rwait(10)
