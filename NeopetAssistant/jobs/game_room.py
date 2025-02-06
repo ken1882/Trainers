@@ -5,15 +5,21 @@ from datetime import datetime, timedelta
 from errors import NeoError
 import page_action as action
 from ruffle.fashion_fever import FashionFever
+from ruffle.roodoku import Roodoku
 
 class GameRoomJob(BaseJob):
     def __init__(self, **kwargs):
         super().__init__("game_room", "https://www.neopets.com/games", **kwargs)
         self.priority = -1
 
+    def load_args(self):
+        self.enabled_games = self.args.get('enabled_games', ['fashion_fever'])
+        return self.args
+
     def load_games(self):
         self.games = {
             "fashion_ferver": FashionFever(self.page),
+            "roodoku": Roodoku(self.page),
         }
 
     def execute(self):
@@ -22,6 +28,8 @@ class GameRoomJob(BaseJob):
 
     def play_all(self):
         for name, game in self.games.items():
+            if name not in self.enabled_games:
+                continue
             _G.logger.info(f"Playing game: {name}")
             yield from game.run()
             yield from _G.rwait(3)

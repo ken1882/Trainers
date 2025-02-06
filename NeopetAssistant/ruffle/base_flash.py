@@ -32,9 +32,9 @@ class BaseFlash(BasePage):
     def play_game(self):
         self.click_element('.play-text')
         yield from self.wait_until_page_load()
+        self.scroll_to(node=self.page.query_selector('#game_cont'))
         _G.log_info("Waiting 30 seconds for flash to load")
         yield from _G.rwait(30) # wait for flash to load
-        self.scroll_to(node=self.page.query_selector('#game_cont'))
         if not self.find_flash():
             raise NeoError(1, "Flash player not found")
         _G.log_info("Starting game")
@@ -49,12 +49,15 @@ class BaseFlash(BasePage):
             action.draw_debug_point(self.page, cx, cy)
         return action.locator_click(dom, x, y, button, modifiers, random_x, random_y)
 
+    def hover(self, x, y, random_x=(-10, 10), random_y=(-10, 10)):
+        return action.locator_hover(self.find_flash(), x, y, random_x, random_y)
+
     def press(self, key, delay=100, rand_delay=True):
         if rand_delay:
             delay += randint(-20, 50)
         return self.find_flash().press(key, delay=delay)
 
-    def snapshot(self, path):
+    def screenshot(self, path):
         return self.find_flash().screenshot(path=path)
 
     def run(self):

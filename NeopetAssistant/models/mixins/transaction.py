@@ -68,7 +68,7 @@ class NeoItem:
     def is_rubbish(self):
         if any(re.search(regex, self.name, re.I) for regex in TRASH_NAME_REGEXES):
             return True
-        if 'diseases' in self.effects:
+        if all([e in self.effects for e in ['diseases','edible']]):
             return True
         return False
 

@@ -1,6 +1,7 @@
 import _G
 import traceback
 import os
+import io
 import pytz, tzlocal
 import numpy as np
 from datetime import datetime
@@ -54,61 +55,156 @@ def str2int(ss):
     except ValueError:
         return None
 
-def resize_image(size, src_fname, dst_fname):
-    img = Image.open(src_fname)
-    ret = img.resize(size)
-    ret.save(dst_fname)
-    return ret
+def resize_image(size, img:Image=None, src_file=None, dst_file=None):
+    if src_file and dst_file:
+        img = Image.open(src_file)
+        img = img.resize(size)
+        img.save(dst_file)
+        return img
+    return img.resize(size)
 
-def img2str(image_file, lang='jpn', config='--psm 12 --psm 13'):
-    if not os.path.exists(image_file) and not image_file.startswith(_G.DCTmpFolder):
-        image_file = f"{_G.DCTmpFolder}/{image_file}"
-    return pytesseract.image_to_string(image_file, lang=lang, config=config) or ''
+def img2str(image:Image=None, buffer:bytes=None, file:str=None, lang='jpn', config='--psm 12 --psm 13'):
+    if file:
+        if not os.path.exists(file):
+            raise FileNotFoundError(f"Image file not found: {file}")
+        image = Image.open(file)
+    if buffer:
+        image = Image.open(io.BytesIO(buffer))
+    if not image:
+        raise ValueError("No image provided")
+    return pytesseract.image_to_string(image, lang=lang, config=config) or ''
 
-def ocr_rect(rect, fname, zoom=1.0, lang='jpn', config='--psm 12 --psm 13', **kwargs):
-    _G.log_info(f"Processing OCR for {fname}")
-    if kwargs.get('num_only'):
-        lang = 'eng'
-        config += ' -c tessedit_char_whitelist=1234567890'
-    elif kwargs.get('whitelist'):
-        lang = 'eng'
-        config += f" -c tessedit_char_whitelist={kwargs.get('whitelist')}"
-    if not os.path.exists(fname):
-        fname = f"{_G.DCTmpFolder}/{fname}"
-        img = graphics.take_snapshot(rect, fname)
+def preprocess_image(
+        image:Image=None, buffer:bytes=None, file:str=None, rect:tuple=(),
+        zoom=1.0, bin_colors=[], bin_tolerance=15, trim=False, output:str=None
+    ):
+    """
+    Preprocess an image for OCR, including loading, resizing, cropping, binarization, and trimming.
+
+    Parameters:
+    - image: The image object to process.
+    - buffer: Image data in bytes format.
+    - file: Path to the image file.
+    - rect: coordinates for cropping the image (left, upper, right, lower).
+    - output: If provided, saves the processed image to this path.
+    - zoom: Scale factor for resizing the image before OCR (default is 1.0).
+    - lang: Language code for Tesseract OCR (default is 'jpn').
+    - config: Additional configurations for Tesseract OCR.
+    - bin_colors: List of RGB tuples for color-based binarization.
+    - bin_tolerance: Color tolerance for binarization (default is 15).
+    - num_only: If True, restricts OCR to numbers only.
+    - char_whitelist: List of allowed characters for OCR.
+    - trim: If True, automatically trims unnecessary empty space.
+    - output: If provided, saves the processed image to this path.
+
+    Returns:
+        PIL.Image: The preprocessed image.
+    """
+    # Load the image from file or buffer if provided
+    if buffer:
+        image = Image.open(io.BytesIO(buffer))
+    elif file:
+        image = Image.open(file)
+    # Make a copy to avoid modifying the original image
+    if image:
+        image = image.copy()
+    # Resize if zoom is different from 1.0
     if zoom != 1.0:
-        size = (int(img.size[0]*zoom), int(img.size[1]*zoom))
-        resize_image(size, fname, fname)
-    bin_colors = kwargs.get('binarization_colors')
-    tolerance = kwargs.get('bias_tolerance', 15)
-    img.close()
+        size = (int(image.size[0] * zoom), int(image.size[1] * zoom))
+        image = image.resize(size, Image.ANTIALIAS)
+    # Crop if `rect` is provided
+    if rect:
+        image = image.crop(rect)
+    # Apply binarization if colors are provided
     if bin_colors:
-        img = Image.open(fname)
-        img = img.convert('RGB')
-        a = np.array(img)
-        # Convert matched colors to white (255, 255, 255), everything else to black (0, 0, 0)
+        image = image.convert('RGB')
+        a = np.array(image)
+        # Create a mask for colors within the specified tolerance
         mask = np.zeros_like(a[..., 0], dtype=bool)
         for color in bin_colors:
             mask |= (
-                (a[..., 0] >= color[0] - tolerance) & (a[..., 0] <= color[0] + tolerance) &
-                (a[..., 1] >= color[1] - tolerance) & (a[..., 1] <= color[1] + tolerance) &
-                (a[..., 2] >= color[2] - tolerance) & (a[..., 2] <= color[2] + tolerance)
+                (a[..., 0] >= color[0] - bin_tolerance) & (a[..., 0] <= color[0] + bin_tolerance) &
+                (a[..., 1] >= color[1] - bin_tolerance) & (a[..., 1] <= color[1] + bin_tolerance) &
+                (a[..., 2] >= color[2] - bin_tolerance) & (a[..., 2] <= color[2] + bin_tolerance)
             )
-        a[~mask] = [0, 0, 0]  # Set unmatched pixels to black
-        a[mask]  = [255, 255, 255]  # Set matched pixels to white
-        img = Image.fromarray(a)
-        img.save(fname)
-        if kwargs.get('trim'):
+        # Convert matching colors to white and everything else to black
+        a[~mask] = [0, 0, 0]  # Black
+        a[mask] = [255, 255, 255]  # White
+        image = Image.fromarray(a)
+        # Trim whitespace around the detected text
+        if trim:
             PADDING = 2
             a2 = np.where(mask, 255, 0).astype(np.uint8)
             nonzero_cols = np.argwhere(a2.max(axis=0) > 0)
             left_col = nonzero_cols.min()
             right_col = nonzero_cols.max()
             bbox = (left_col - PADDING, 0, right_col + 1 + PADDING, a2.shape[0])
-            cropped_img = img.crop(bbox)
-            cropped_img.save(fname)
-        img.close()
-    return img2str(fname, lang, config).translate(str.maketrans('。',' ')).strip()
+            image = image.crop(bbox)
+    if output:
+        image.save(output)
+    return image
+
+def ocr_rect(
+        image:Image=None, buffer:bytes=None, file:str=None, rect:tuple[4]=(), output:str=None,
+        zoom=1.0, lang='jpn', config='--psm 12 --psm 13',
+        bin_colors=[], bin_tolerance=15, num_only=False, char_whitelist=[],
+        trim=False
+    ):
+    '''
+    Perform OCR (Optical Character Recognition) on an image, allowing pre-processing such as cropping,
+    zooming, binarization, and trimming.
+
+    Parameters:
+    - image: The image object to process.
+    - buffer: Image data in bytes format.
+    - file: Path to the image file.
+    - rect: coordinates for cropping the image (left, upper, right, lower).
+    - output: If provided, saves the processed image to this path.
+    - zoom: Scale factor for resizing the image before OCR (default is 1.0).
+    - lang: Language code for Tesseract OCR (default is 'jpn').
+    - config: Additional configurations for Tesseract OCR.
+    - binarize_colors: List of RGB tuples for color-based binarization.
+    - tolerance: Color tolerance for binarization (default is 15).
+    - num_only: If True, restricts OCR to numbers only.
+    - char_whitelist: List of allowed characters for OCR.
+    - trim: If True, automatically trims unnecessary empty space.
+
+    Returns:
+        str: The recognized text from the image.
+
+    Notes:
+        - One of `image` `buffer` `file` must be provided.
+        - If `zoom` is different from 1.0, the image is resized before OCR.
+        - If `rect` is specified, the image is cropped before OCR.
+        - If `binarize_colors` is used, only matching colors remain visible.
+    '''
+    _G.log_info(f"Processing OCR")
+    if num_only:
+        lang = 'eng'
+        config += ' -c tessedit_char_whitelist=1234567890'
+    elif char_whitelist:
+        lang = 'eng'
+        config += f" -c tessedit_char_whitelist={char_whitelist}"
+    image = preprocess_image(
+        image=image, buffer=buffer, file=file, rect=rect, zoom=zoom,
+        bin_colors=bin_colors, bin_tolerance=bin_tolerance, trim=trim,
+        output=output
+    )
+    try:
+        return img2str(image, lang=lang, config=config).translate(str.maketrans('。',' ')).strip()
+    finally:
+        image.close()
 
 def snake2pascal(snake_str):
     return ''.join([word.capitalize() for word in snake_str.split('_')])
+
+def ensure_dir_exist(path):
+    path = path.split('/')
+    path.pop()
+    if len(path) == 0:
+        return
+    pwd = ""
+    for dir in path:
+        pwd += f"{dir}/"
+        if not os.path.exists(pwd):
+            os.mkdir(pwd)

@@ -43,6 +43,7 @@ from jobs.quick_restock import QuickRestockJob
 from jobs.restocking import RestockingJob
 from jobs.potato_counter import PotatoCounterJob
 from jobs.market_price import MarketPriceJob
+from jobs.scratchcards import ScratchcardsJob
 
 Scheduler = None
 
@@ -59,6 +60,8 @@ def create_context(pw, profile_name, enable_extensions=True):
         bases = os.getenv('BROWSER_EXTENSION_PATHS') or ''
         ext_paths = []
         for path in bases.split(','):
+            if not path:
+                continue
             path.replace('\\', '/')
             version = utils.str2int(path.split('/')[-1])
             if not version:
@@ -146,6 +149,7 @@ def queue_jobs():
         PotatoCounterJob(),
         RestockingJob(scheduler=Scheduler),
         MarketPriceJob(),
+        ScratchcardsJob(),
     )
     for job in jobs:
         Scheduler.queue_job(job, False)
