@@ -11,7 +11,6 @@ class DailyQuestTouchJob(BaseJob):
     '''
     def __init__(self, **kwargs):
         super().__init__("daily_quest_touch", "https://www.neopets.com/questlog/", **kwargs)
-        self.priority = 99
 
     def execute(self):
         yield

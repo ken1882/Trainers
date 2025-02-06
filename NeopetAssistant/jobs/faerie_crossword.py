@@ -7,11 +7,17 @@ from errors import NeoError
 class FaerieCrosswordJob(BaseJob):
     def __init__(self, **kwargs):
         super().__init__("faerie_crossword", "https://www.neopets.com/games/crossword/index.phtml", **kwargs)
-        self.priority = 10
 
     def load_args(self):
         super().load_args()
-        self.last_completed_timestamp = self.args.get('last_completed_timestamp', 0)
+
+    @property
+    def last_completed_timestamp(self):
+        return self.args.get('last_completed_timestamp', 0)
+
+    @last_completed_timestamp.setter
+    def last_completed_timestamp(self, value):
+        self.args['last_completed_timestamp'] = value
 
     def execute(self):
         yield from _G.rwait(2)
@@ -36,7 +42,6 @@ class FaerieCrosswordJob(BaseJob):
             btn.click()
             cur_idx += 1
         self.last_completed_timestamp = int(datetime.now().timestamp())
-        self.args['last_completed_timestamp'] = self.last_completed_timestamp
 
     def calc_next_run(self):
         last_completed = datetime.fromtimestamp(self.last_completed_timestamp)

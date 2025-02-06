@@ -28,7 +28,6 @@ class DailyQuestJob(BaseJob):
     def __init__(self, **kwargs):
         super().__init__("daily_quest", "https://www.neopets.com/questlog/", **kwargs)
         self.quests = []
-        self.priority = -9
 
     def load_args(self):
         self.candidate_shop_ids = self.args.get("candidate_shops", [])

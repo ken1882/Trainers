@@ -4,10 +4,10 @@ import page_action as action
 from datetime import datetime, timedelta
 from errors import NeoError
 from models.mixins.base_page import BasePage
-
+from jobs.priority_table import PriorityTable
 class BaseJob(BasePage):
     def __init__(self, job_name:str, url:str, new_page:bool=True,
-                 priority:int=0, page=None, context=None, next_run=None,
+                 priority:int=None, page=None, context=None, next_run=None,
                  enabled=True, close_delay=5000, profile_name='',
                  **kwargs):
         super().__init__(page, url, context)
@@ -16,13 +16,13 @@ class BaseJob(BasePage):
         self.next_run = next_run if next_run else datetime.now()
         self.new_page = new_page
         self.page     = None
-        self.context     = None
-        self.priority    = priority
-        self.enabled     = enabled
-        self.close_delay = close_delay
+        self.context  = None
+        self.priority = priority
+        self.enabled  = enabled
+        self.close_delay  = close_delay
         self.profile_name = profile_name
-        self.args = {}
         self.return_value = NeoError(0)
+        self.args = {}
         for key, value in kwargs.items():
             self.args[key] = value
         self.load_args()
@@ -31,7 +31,17 @@ class BaseJob(BasePage):
 
     def load_args(self):
         pass
-    
+
+    @property
+    def priority(self):
+        if self._priority is None:
+            return PriorityTable.get(self.job_name, 0)
+        return self._priority
+
+    @priority.setter
+    def priority(self, value):
+        self._priority = value
+
     def run_now(self):
         self.next_run = datetime.now()
 
@@ -40,12 +50,21 @@ class BaseJob(BasePage):
         if self.new_page:
             self.set_page(self.context.new_page())
         yield from self.goto()
+        if self.check_maintenance():
+            _G.log_info(f"Job {self.job_name} detected maintenance, run after a hour")
+            self.next_run = datetime.now() + timedelta(hours=1)
+            return self.next_run
         _G.log_info("Executing job")
         yield from self.execute()
         yield from self.stop()
 
     def execute(self):
         yield
+
+    def check_maintenance(self):
+        if self.has_content('maintenance') and self.has_content('this site'):
+            return True
+        return False
 
     def stop(self):
         _G.log_info(f"Stopping job {self.job_name}, delay={self.close_delay}ms")
@@ -74,7 +93,7 @@ class BaseJob(BasePage):
             'url': self.url,
             'next_run': self.next_run.timestamp(),
             'new_page': self.new_page,
-            'priority': self.priority,
+            'priority': self._priority,
             'enabled': self.enabled,
             'close_delay': self.close_delay,
             'args': self.args

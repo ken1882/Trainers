@@ -68,9 +68,11 @@ class BasePage():
                 break
             yield
 
-    def has_content(self, content:str):
+    def has_content(self, content:str, ignore_case=True):
         while True:
             try:
+                if ignore_case:
+                    return content.lower() in self.page.content().lower()
                 return content in self.page.content()
             except Exception:
                 return

@@ -27,7 +27,6 @@ class RestockingJob(BaseJob):
             self.scheduler = kwargs.pop('scheduler')
         super().__init__("restocking", "https://www.neopets.com/inventory.phtml", **kwargs)
         self.quests = []
-        self.priority = -99
         self.inventory_free = 0
         self.stock_free = 0
 

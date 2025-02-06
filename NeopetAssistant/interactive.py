@@ -89,8 +89,12 @@ def scan_quests():
         if item:
             quest['cost'] = item['price'] * quest['amount']
     quests = sorted(quests, key=lambda x: x['reward'] - x['cost'], reverse=True)
+    msg = 'Quests:\n'
     for q in quests:
-        print(f"{q['name']} {q['reward'] - q['cost']} (mkt: {q['cost']})")
+        msg += f"{q['name']} {q['reward'] - q['cost']} <="
+        msg += f" - ({q['cost'] // q['amount']} * {q['amount']} -> {q['cost']})"
+        msg += f" + {q['reward']}\n"
+    _G.log_info(msg)
 
 
 pets = []
@@ -437,3 +441,10 @@ def go_sudoku():
                 action.locator_hover(find_flash(), 20, 200)
                 wt = randint(100, 500) / 1000.0
                 _G.wait(wt)
+
+action.locator_click(find_flash(), 300, 350)
+action.locator_click(find_flash(), 300, 341, random_x=(-20, 20), random_y=(-2, 2))
+bb = find_flash().bounding_box()
+mx = bb['x'] + 300
+my = bb['y'] + 341
+page.mouse.click(mx, my)

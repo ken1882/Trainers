@@ -14,7 +14,6 @@ import jellyneo as jn
 class MarketPriceJob(BaseJob):
     def __init__(self, **kwargs):
         super().__init__("market_price", "https://www.neopets.com/shops/wizard.phtml", **kwargs)
-        self.priority = -9999
         self.rate_limited = False
 
     def load_args(self):
