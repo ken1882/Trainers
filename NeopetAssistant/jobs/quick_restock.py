@@ -89,21 +89,20 @@ class QuickRestockJob(BaseJob):
                 _G.log_info(f"Artifact: {item['name']}")
             elif item['ref'].value_pc >= self.deposite_value:
                 _G.log_info(f"High value item: {item['name']}")
-            elif item['ref'].value_pc - item['ref'].value_npc >= self.restock_profit:
-                _G.log_info(f"Profitable item: {item['name']}")
-                act_name = 'stock'
-                self._stocked = True
             elif item['ref'].is_rubbish():
+                _G.log_info(f"Trash item: {item['name']}")
                 act_name = 'donate'
-            elif item['ref'].rarity > 300:
-                act_name = 'keep'
-            elif 'closet' in available_acts:
-                act_name = 'closet'
-            if cat in keeps:
+            elif cat in keeps:
                 if keeps[cat] > 0:
                     act_name = 'keep'
                 if act_name == 'keep':
                     keeps[cat] -= 1
+            elif item['ref'].value_pc - item['ref'].value_npc >= self.restock_profit:
+                _G.log_info(f"Profitable item: {item['name']}")
+                act_name = 'stock'
+                self._stocked = True
+            elif 'closet' in available_acts:
+                act_name = 'closet'
 
             item['act'] = act_name
         row_height = 24

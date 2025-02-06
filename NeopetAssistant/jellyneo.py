@@ -116,13 +116,16 @@ def get_item_details_by_name(item_name, full_price_history=False, forced=False, 
     save_cache(ret)
     return ret
 
-def save_cache(item=None):
+def save_cache(item=None, padding=True):
     global Database, DB_LOCK
     with DB_LOCK:
         if item:
             Database[item["name"].lower()] = item
         with open(CACHE_FILE, 'w') as f:
-            f.write(json.dumps(Database))
+            if padding:
+                json.dump(Database, f, indent=4)
+            else:
+                json.dump(Database, f)
 
 def batch_search_worker(items, ret, worker_id):
     global AgentPool, Database, WorkerFlags

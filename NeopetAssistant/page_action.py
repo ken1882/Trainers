@@ -24,13 +24,19 @@ def click_node(page, node, x_mul=0.5, y_mul=0.5, random_x=(-10, 10), random_y=(-
 
 def locator_click(locator, x, y, button='left', modifiers=[], random_x=(-10, 10), random_y=(-10, 10)):
     ''' https://playwright.dev/python/docs/api/class-locator#locator-click '''
-    mx = x + randint(*random_x)
-    my = y + randint(*random_y)
+    mx = max(0, x + randint(*random_x))
+    my = max(0, y + randint(*random_y))
     return locator.click(
         button=button,
         modifiers=modifiers,
         position={'x': mx, 'y': my}
     )
+
+def locator_hover(locator, x, y, random_x=(-10, 10), random_y=(-10, 10)):
+    ''' https://playwright.dev/python/docs/api/class-locator#locator-hover '''
+    mx = x + randint(*random_x)
+    my = y + randint(*random_y)
+    return locator.hover(position={'x': mx, 'y': my})
 
 def get_available_np(page):
     global AvailableNp
