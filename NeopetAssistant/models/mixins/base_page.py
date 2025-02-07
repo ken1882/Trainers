@@ -18,6 +18,15 @@ class BasePage():
 
     def set_page(self, page):
         self.page = page
+        if page == None:
+            return
+        self.page.on("framenavigated", self.on_navigation)
+        self.page.on("load", self.on_page_load)
+
+    def on_navigation(self, _):
+        _G.log_info("Page navigation detected")
+        self.signal['loading'] = True
+        self.signal['load'] = False
 
     def goto(self, url=None, depth=0):
         if not url:
@@ -33,7 +42,6 @@ class BasePage():
                 if depth > 3:
                     raise e
         yield from self.wait_until_page_load()
-
 
     def do(self, method, *args, **kwargs):
         '''
@@ -54,10 +62,9 @@ class BasePage():
         return self.do('eval_js', self.page, script_name)
 
     def wait_until_page_load(self):
-        self.signal['load'] = False
-        self.page.once("load", self.on_page_load)
+        while not self.signal.get('loading', False):
+            yield
         self.assume_loaded_time = datetime.now() + timedelta(seconds=self.max_load_time)
-        yield from _G.rwait(3)
         while not self.signal.get('load', False):
             try:
                 self.page.evaluate('document.readyState')
@@ -77,9 +84,9 @@ class BasePage():
             except Exception:
                 return
 
-    def on_page_load(self):
+    def on_page_load(self, _):
         _G.log_info("Page loaded")
-        self.signal['load'] = True
+        self.signal.update({'loading': False, 'load': True})
 
     def _wait_until_elements_found(self, selectors:list, timeout:int=10):
         '''
