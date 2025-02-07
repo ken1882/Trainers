@@ -23,6 +23,7 @@ class BaseJob(BasePage):
         self.profile_name = profile_name
         self.return_value = NeoError(0)
         self.args = {}
+        self.flag_maintenance = False
         for key, value in kwargs.items():
             self.args[key] = value
         self.load_args()
@@ -52,17 +53,18 @@ class BaseJob(BasePage):
         yield from self.goto()
         if self.check_maintenance():
             _G.log_info(f"Job {self.job_name} detected maintenance, run after a hour")
-            self.next_run = datetime.now() + timedelta(hours=1)
-            return self.next_run
-        _G.log_info("Executing job")
-        yield from self.execute()
+            self.flag_maintenance = True
+        else:
+            _G.log_info("Executing job")
+            self.flag_maintenance = False
+            yield from self.execute()
         yield from self.stop()
 
     def execute(self):
         yield
 
     def check_maintenance(self):
-        if self.has_content('maintenance') and self.has_content('this site'):
+        if self.has_content('maintenance') and self.has_content('the site is undergoing'):
             return True
         return False
 
@@ -73,6 +75,9 @@ class BaseJob(BasePage):
             self.page.close()
 
     def calc_next_run(self, shortcut:str='daily'):
+        if self.flag_maintenance:
+            self.next_run = datetime.now() + timedelta(hours=1)
+            return self.next_run
         curt = utils.localt2nst(datetime.now())
         if shortcut == 'now':
             self.next_run = curt
