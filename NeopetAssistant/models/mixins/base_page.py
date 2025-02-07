@@ -8,10 +8,10 @@ class BasePage():
     def __init__(self, page=None, url='about:blank', context=None):
         self.signal = {}
         self.context = context
-        self.page = page
         self.url  = url
         self.max_load_time = 10
         self.assume_loaded_time = datetime.now()
+        self.set_page(page)
 
     def set_context(self, context):
         self.context = context
@@ -23,10 +23,12 @@ class BasePage():
         self.page.on("framenavigated", self.on_navigation)
         self.page.on("load", self.on_page_load)
 
-    def on_navigation(self, _):
-        _G.log_info("Page navigation detected")
-        self.signal['loading'] = True
-        self.signal['load'] = False
+    def on_navigation(self, frame):
+        # print(frame == self.page.main_frame, self.page.main_frame, frame)
+        if frame != self.page.main_frame:
+            return
+        _G.log_info("Page navigated")
+        self.signal.update({'loading': True, 'load': False})
 
     def goto(self, url=None, depth=0):
         if not url:
