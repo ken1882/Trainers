@@ -127,11 +127,7 @@ def check_login():
   global Session,ServerLocation
   log_info("Trying to connect to server:", ServerLocation)
   url = f"{ServerLocation}/api/Login"
-<<<<<<< Updated upstream
-  res = Session.post(url=url, timeout=NetworkPostTimeout)
-=======
   res = Session.post(url=url, headers=GAME_POST_HEADERS, timeout=NetworkPostTimeout)
->>>>>>> Stashed changes
   if type(res) == dict or res.status_code == 401:
     log_warning("Failed login into game:", res, res.content)
     return _G.ERRNO_FAILED
@@ -204,14 +200,9 @@ def get_request(url, depth=1):
       return get_request(url)
     elif errno == 500:
       return None
-<<<<<<< Updated upstream
     else:
       # exit()
       return None
-=======
-    elif _G.ExitOnError:
-      exit()
->>>>>>> Stashed changes
   if not res.content:
     return None
   return unpack(res.content)
@@ -257,14 +248,9 @@ def post_request(url, data=None, depth=1):
       return post_request(url, data, depth=depth)
     elif errno == 500:
       return None
-<<<<<<< Updated upstream
     else:
       # exit()
       return None
-=======
-    elif _G.ExitOnError:
-      exit()
->>>>>>> Stashed changes
   if not res.content:
     return None
   return unpack(res.content)
@@ -411,7 +397,6 @@ def load_database(forced=False):
   global ConsumableDatabase,WeaponDatabase,ArmorDatabase,AccessoryDatabase,GearDatabase
   global FieldSkillDatabase,QuestDatabase,ABStoneDatabase,SceneDatabase,PotionExpiration
   links = [
-<<<<<<< Updated upstream
     '/MasterData/MCharacterViewModel.json',
     '/MasterData/MEnemyViewModel.json',
     '/MasterData/MFormationViewModel.json',
@@ -428,24 +413,6 @@ def load_database(forced=False):
     '/MasterData/MAbilityStoneViewModel.json',
     '/MasterData/MSceneViewModel.json',
     '/MasterData/MApRecoveryItemViewModel.json',
-=======
-    'https://assets4.mist-train-girls.com/production-client-web-static/MasterData/MCharacterViewModel.json',
-    'https://assets4.mist-train-girls.com/production-client-web-static/MasterData/MEnemyViewModel.json',
-    'https://assets4.mist-train-girls.com/production-client-web-static/MasterData/MFormationViewModel.json',
-    'https://assets4.mist-train-girls.com/production-client-web-static/MasterData/MSkillViewModel.json',
-    'https://assets4.mist-train-girls.com/production-client-web-static/MasterData/MLinkSkillViewModel.json',
-    'https://assets4.mist-train-girls.com/production-client-web-static/MasterData/MItemViewModel.json',
-    'https://assets4.mist-train-girls.com/production-client-web-static/MasterData/MWeaponViewModel.json',
-    'https://assets4.mist-train-girls.com/production-client-web-static/MasterData/MArmorViewModel.json',
-    'https://assets4.mist-train-girls.com/production-client-web-static/MasterData/MAccessoryViewModel.json',
-    'https://assets4.mist-train-girls.com/production-client-web-static/MasterData/MCharacterPieceViewModel.json',
-    'https://assets4.mist-train-girls.com/production-client-web-static/MasterData/MFieldSkillViewModel.json',
-    'https://assets4.mist-train-girls.com/production-client-web-static/MasterData/MQuestViewModel.json',
-    'https://assets4.mist-train-girls.com/production-client-web-static/MasterData/MCharacterGearLevelViewModel.json',
-    'https://assets4.mist-train-girls.com/production-client-web-static/MasterData/MAbilityStoneViewModel.json',
-    'https://assets4.mist-train-girls.com/production-client-web-static/MasterData/MSceneViewModel.json',
-    'https://assets4.mist-train-girls.com/production-client-web-static/MasterData/MApRecoveryItemViewModel.json',
->>>>>>> Stashed changes
   ]
   for i,link in enumerate(links):
     path = f"{STATIC_FILE_DIRECTORY}/{link.split('/')[-1]}"

@@ -151,5 +151,5 @@ class RestockingJob(BaseJob):
         return result
 
     def calc_next_run(self):
-        self.next_run = datetime.now() + timedelta(seconds=60*10+randint(30, 60*30))
+        self.next_run = datetime.now() + timedelta(seconds=60*10+randint(30, 60*10))
         return self.next_run

@@ -33,7 +33,7 @@ FLAG_AUTO_VOTE = False
 VOTE_TARGET = (12, 180)
 VotedCount  = 0
 
-FlagTurnLimited = False
+TurnLimit = 0
 
 CurrentParty = {}
 PartyId  = 0
@@ -648,10 +648,10 @@ def log_player_profile(data):
   log_info(string)
 
 def is_defeated(data):
-  global StageId, FlagTurnLimited
+  global StageId, TurnLimit
   if len(get_alive_characters(data['BattleState']['Characters'])) == 0:
     return True
-  if data['Version'] >= 10 and FlagTurnLimited or StageId in stage.TurnLimitedStages:
+  if TurnLimit and data['Version'] >= TurnLimit or StageId in stage.TurnLimitedStages:
     return True
   return False
 
@@ -1263,10 +1263,10 @@ def swap_mastered_trains():
     log_info("Charcaters in queue:")
     print(player.format_character_data(UnmasteredCharacters))
 
-def main(times=0, raid=False, turn_limited=False):
+def main(times=0, raid=False, turn_limit=0):
   global PartyId,StageId,RentalUid,AvailableFriendRentals,RentalCycle
-  global FlagRequestReEnter,ReportDetail,UnmasteredCharacters,FLAG_INTERACTIVE,VotedCount,FlagTurnLimited
-  FlagTurnLimited = turn_limited
+  global FlagRequestReEnter,ReportDetail,UnmasteredCharacters,FLAG_INTERACTIVE,VotedCount,TurnLimit
+  TurnLimit = turn_limit
   _G.FlagRunning = True
   FlagRequestReEnter = False
   log_info("Program initialized")
@@ -1340,7 +1340,7 @@ def main(times=0, raid=False, turn_limited=False):
     log_info("Battle Ended")
     if signal == SIG_COMBAT_STOP:
       break
-    if _G.FlagTrainSwap and (signal == SIG_COMBAT_WON or turn_limited):
+    if _G.FlagTrainSwap and (signal == SIG_COMBAT_WON or turn_limit):
       log_info("Checking skin maxed")
       swap_mastered_trains()
     uwait(1)

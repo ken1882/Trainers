@@ -64,15 +64,22 @@ class BasePage():
         return self.do('eval_js', self.page, script_name)
 
     def wait_until_page_load(self):
+        self.assume_loaded_time = datetime.now() + timedelta(seconds=self.max_load_time) // 2
         while not self.signal.get('loading', False):
+            if datetime.now() > self.assume_loaded_time:
+                _G.log_warning("Page load timeout, assume loading started")
+                break
             yield
         self.assume_loaded_time = datetime.now() + timedelta(seconds=self.max_load_time)
-        while not self.signal.get('load', False):
+        min_load_time = datetime.now() + timedelta(seconds=2)
+        curt = datetime.now()
+        while curt < min_load_time or not self.signal.get('load', False):
+            curt = datetime.now()
             try:
                 self.page.evaluate('document.readyState')
             except Exception:
                 pass
-            if datetime.now() > self.assume_loaded_time:
+            if curt> self.assume_loaded_time:
                 _G.log_warning("Page load timeout, assume main content loaded")
                 break
             yield
