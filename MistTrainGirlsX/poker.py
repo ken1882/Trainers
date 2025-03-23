@@ -1,6 +1,7 @@
 import _G
 from _G import *
 import game
+import subprocess
 
 JokerColor = '$'
 PokerColors  = ['C', 'D', 'H', 'S']
@@ -48,9 +49,7 @@ def start_game():
 def game_over(submit_result):
   log_info("Game Over")
   res = game.post_request('/api/Casino/Poker')
-  rjs = res['r']
-  print(rjs)
-  won,have = rjs['WinCoinCount'],rjs['UserCoinCount']
+  won,have = res[3],res[-1]
   if submit_result:
     res = game.post_request('/api/Casino/Poker/Result')
     print(res)
@@ -61,9 +60,8 @@ def place_bet():
   bets = FinalBets if FlagLastRound else InitBets
   res = game.post_request(f'/api/Casino/Poker/Bet?type={BetRate}&betCoin={bets}')
   print(res)
-  cards = res['r']
-  log_info("Drew cards:", cards)
-  return cards
+  log_info("Drew cards:", res)
+  return res
 
 def determine_card_keep(cards):
   colors  = []
@@ -117,20 +115,19 @@ def exchange_cards(indicies):
     params.append(f"changeIndexes={i}")
   res = game.post_request(url+'&'.join(params))
   print(res)
-  return res['r']['RewardCoinCount']
+  return res[2]
 
 def start_doubleup():
   res = game.post_request('/api/Casino/Poker/DoubleUp/Start')
   print(res)
-  return PokerWeight[res['r'][1]]
+  return PokerWeight[res[1]]
 
 def continue_doubleup(ch):
   # 1=higher 2=lower
   log_info(f"Double up guessed {'higher' if ch == 1 else 'lower'}")
   res = game.post_request(f'/api/Casino/Poker/DoubleUp/Choose?choice={ch}')
   print(res)
-  rjs = res['r']
-  return (rjs['Result'] == 3, PokerWeight[rjs['DrawCard'][1]], rjs['RewardCoinCount'])
+  return (res[2] == 3, PokerWeight[res[1][1]], res[3])
 
 def process_doubleup():
   global CurrentEarnedBets,FlagLastRound
@@ -183,8 +180,7 @@ def start():
 
 def get_won_progress():
   res = game.get_request('/api/Casino/GetCasinoTop')
-  print(res)
-  return res['r']['TodayCasinoCoinStatus']['GetCoinValueToday']
+  return res[1][1]
 
 def main():
   global CurrentEarnedBets,FlagLastRound
@@ -197,10 +193,12 @@ def main():
       log_info("Last round")
     start()
     log_info(f"Today's progress: {CurrentEarnedBets}")
-    uwait(0.5)
     if _G.Throttling:
       uwait(1)
     CurrentEarnedBets = get_won_progress() 
+
+def spawn_async():
+  subprocess.run(["python", "poker.py"])
 
 if __name__ == "__main__":
   game.init()

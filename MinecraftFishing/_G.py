@@ -16,7 +16,7 @@ elif sys.platform == 'linux':
 
 ARGV = {}
 
-AppWindowName = "Minecraft Forge* 1.20.1 - Multiplayer (3rd-party Server)"
+AppWindowName = "Valhelsia 6"
 AppChildWindowName = ""
 AppHwnd = 0
 AppRect = [0,0,0,0]

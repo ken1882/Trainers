@@ -19,7 +19,7 @@ except Exception:
 def EnumWindowCallback(hwnd, lparam):
   if win32gui.IsWindowVisible(hwnd):
     title = win32gui.GetWindowText(hwnd)
-    if title == _G.AppWindowName:
+    if _G.AppWindowName in title:
       _G.AppHwnd = hwnd
       _G.AppTid,_G.AppPid  = win32process.GetWindowThreadProcessId(hwnd)
       print(f"App found with HWND {hwnd} ({_G.AppWindowName}), pid={_G.AppPid}")

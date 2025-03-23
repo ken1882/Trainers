@@ -33,7 +33,17 @@ if REDIS_CACHE:
 CACHE_FILE = "cache/items.json"
 CACHE_TTL  = 60*60*24*7
 
+REQUEST_TIMEOUT = 10
+
 Database = {}
+
+def get_request(agent, url, depth=0, timeout=REQUEST_TIMEOUT):
+    try:
+        return agent.get(url, timeout=timeout)
+    except Exception as e:
+        if depth > 5:
+            raise e
+        return get_request(agent, url, depth+1, timeout)
 
 def get_item_details_by_name(item_name, full_price_history=False, forced=False, agent=None):
     item_name = item_name.lower()
@@ -59,7 +69,7 @@ def get_item_details_by_name(item_name, full_price_history=False, forced=False, 
     }
     item_name = quote(item_name)
     url = f"https://items.jellyneo.net/search?name={item_name}&name_type=3"
-    response = agent.get(url)
+    response = get_request(agent, url)
     page = BS(response.content, "html.parser")
     try:
         reg = re.search(r"items\.jellyneo\.net\/item\/(\d+)", str(page))
@@ -76,7 +86,7 @@ def get_item_details_by_name(item_name, full_price_history=False, forced=False, 
         _G.log_warning(f"Failed to get price for {item_name}, probably cash item or heavily inflated")
         ret["price"] = 10**10
         ret["price_timestamp"] = datetime.now().timestamp()
-    res = agent.get(link)
+    res = get_request(agent, link)
     doc = BS(res.content, "html.parser")
     try:
         ret["name"] = doc.select('h1')[0].text.strip()

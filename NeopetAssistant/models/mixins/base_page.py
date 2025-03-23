@@ -11,6 +11,7 @@ class BasePage():
         self.url  = url
         self.max_load_time = 10
         self.assume_loaded_time = datetime.now()
+        self.page = None
         self.set_page(page)
 
     def set_context(self, context):
@@ -20,6 +21,9 @@ class BasePage():
         self.page = page
         if page == None:
             return
+        if hasattr(self.page, '_load_listener_set'):
+            return
+        page._load_listener_set = True
         self.page.on("framenavigated", self.on_navigation)
         self.page.on("load", self.on_page_load)
 

@@ -377,12 +377,12 @@ def start_refight_fiber():
     else:
       if battle_duration and flag_fighting and end_rematch_timestamp < datetime.now():
         log_info("Attempt end rematch")
-        Input.mouse_down(495, 86)
+        Input.mouse_down(875, 85)
         StageDepth += 10
         for _ in range(10):
           wait(0.5)
           yield
-        Input.mouse_up(495, 86)
+        Input.mouse_down(875, 85)
         end_rematch_timestamp = datetime.now() + timedelta(seconds=30)
 
 def start_rhythm_fiber():
