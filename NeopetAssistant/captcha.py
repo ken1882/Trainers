@@ -21,20 +21,25 @@ def get_captcha_url(page):
         return ''
 
 def grab_captcha(page):
+    PADDING = 4
     if not os.path.exists(SAVE_DIR):
         os.mkdir(SAVE_DIR)
     if 'SOLD OUT!' in page.content():
         _G.log_info("Item is sold out")
         return
     try:
-        image_url = get_captcha_url(page)
-        res = page.request.get(image_url)
-        if res.status != 200:
-            _G.log_warning(f"Failed to get captcha image ({res.status})")
-            return
+        # image_url = get_captcha_url(page)
+        # res = page.request.get(image_url)
+        # if res.status != 200:
+        #     _G.log_warning(f"Failed to get captcha image {image_url} ({res.status})")
+        #     return
+        captcha = page.query_selector('input[type="image"][src*="/captcha_show.phtml"]')
         filename = f"{SAVE_DIR}/captcha_{int(datetime.now().timestamp())}.png"
         with open(filename, 'wb') as f:
-            f.write(res.body())
+            f.write(captcha.screenshot(path=filename))
+        img = Image.open(filename)
+        cropped_img = img.crop((PADDING, PADDING, img.width - PADDING, img.height - PADDING))
+        cropped_img.save(filename)
         return filename
     except Exception as err:
         _G.log_warning("Error while getting captcha canvas")

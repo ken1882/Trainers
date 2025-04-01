@@ -112,9 +112,9 @@ class DailyQuestJob(BaseJob):
             return
         yield from self.goto(url)
         yield from _G.rwait(2)
-        self.click_element('#wheelCanvas')
+        self.click_element('#wheel-box')
         yield from _G.rwait(10) # pray for good luck
-        self.click_element('#wheelCanvas')
+        self.click_element('#wheel-box')
         yield from _G.rwait(2)
 
     def do_shopping_quest(self, number):

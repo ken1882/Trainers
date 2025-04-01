@@ -77,3 +77,12 @@ def start_climb_fiber():
 
 def start_walk_fiber():
   Input.key_down(ord('W'))
+
+def start_fulfill_fiber():
+  use_msg = True
+  while _G.FlagWorking:
+    sy = 340
+    sx = 840
+    Input.click(sx, sy, use_msg=use_msg)
+    yield
+    wait(1)
