@@ -697,15 +697,13 @@ def dump_profiles(st=1, filter=None):
     file.close()
 
 def roll_raid_gacha(raid_id, token_amount):
-  raise RuntimeError("Unimplemented")
   num = 1
   while num > 0:
     res = game.get_request(f"/api/Event/{raid_id}/RaidBoxGacha")['r']
-    num = min(token_amount // res['requireItemQuantity'], res['RemaignBoxItemCount'])
-    token_amount -= num * res['requireItemQuantity']
+    cost = res[2]
+    num = res[3]
+    token_amount -= cost * num
     if num == 0:
-      break
-    log_info(f"Roll {num} times, left: {token_amount}")
-    game.post_request(f"/api/Event/{raid_id}/RaidBoxGacha/Roll?rollCount={num}")
-    if num >= res['RemaignBoxItemCount']:
       game.post_request(f"/api/Event/{raid_id}/RaidBoxGacha/Reset")
+    log_info(f"Roll {res[4]} times, tokens left: {token_amount}")
+    game.post_request(f"/api/Event/{raid_id}/RaidBoxGacha/Roll?rollCount={num}")
