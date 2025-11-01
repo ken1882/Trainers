@@ -20,7 +20,7 @@ def start_click_fiber():
     if _G.ARGV.jndex:
         ox, oy = Input.get_cursor_pos(False)
         print(ox, oy)
-    while times and flag_working and utils.is_focused():
-        Input.rclick(ox, oy, use_msg=False, app_offset=False, rrange=rrange)
-        yield from rwait(interval)
+    while times and flag_working:
+        Input.click(ox, oy, use_msg=False, app_offset=False)
+        wait(interval)
         yield

@@ -34,20 +34,26 @@ def get_cursor_pos(app_offset=True):
     my = my - _G.AppRect[1] - _G.WinTitleBarSize[1] - _G.WinDesktopBorderOffset[1]
   return (mx, my)
 
-def key_down(*args):
-  for kid in args:
-    win32api.keybd_event(kid, 0, 0, 0)
+def key_down(*keys, use_msg=False, hwnd=None):
+  for kid in keys:
+    if use_msg and hwnd:
+      win32api.SendMessage(hwnd, win32con.WM_KEYDOWN, kid, 0)
+    else:
+      win32api.keybd_event(kid, 0, 0, 0)
 
-def key_up(*args):
-  for kid in args:
-    win32api.keybd_event(kid, 0, win32con.KEYEVENTF_KEYUP, 0)
+def key_up(*keys, use_msg=False, hwnd=None):
+  for kid in keys:
+    if use_msg and hwnd:
+      win32api.SendMessage(hwnd, win32con.WM_KEYUP, kid, 0)
+    else:
+      win32api.keybd_event(kid, 0, win32con.KEYEVENTF_KEYUP, 0)
 
-def trigger_key(*args):
-  for kid in args:
-    key_down(kid)
+def trigger_key(*keys, **kwargs):
+  for kid in keys:
+    key_down(kid, **kwargs)
   sleep(0.03)
-  for kid in args:
-    key_up(kid)
+  for kid in keys:
+    key_up(kid, **kwargs)
 
 def mouse_down(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUseMsg, hwnd=None):
   if not hwnd:

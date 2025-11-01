@@ -64,3 +64,10 @@ def start_fishing_fiber():
     yield from rwait(10)
     Input.rclick(616, 342)
     uwait(1)
+
+def start_click_fiber():
+  while _G.FlagWorking:
+    if not utils.is_focused():
+      yield
+    Input.click()
+    yield

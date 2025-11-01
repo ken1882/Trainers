@@ -3,7 +3,7 @@ import _G
 from _G import log_error,log_debug,log_info,log_warning,resume,wait,uwait
 import numpy as np
 import os
-import win32gui, win32process, win32console
+import win32gui, win32process, win32console, win32con
 from time import sleep
 from random import random
 import traceback
@@ -32,17 +32,36 @@ def update_app_rect():
 def find_app_window():
   win32gui.EnumWindows(EnumWindowCallback, None)
 
-def move_window(x=None,y=None,w=None,h=None):
-  x = x if x else _G.AppRect[0]
-  y = y if y else _G.AppRect[1]
-  w = w if w else _G.AppRect[2]
-  h = h if h else _G.AppRect[3]
-  win32gui.MoveWindow(_G.AppHwnd, x, y, w, h, False)
-  sleep(0.1)
-  update_app_rect()
+def move_window(x=None,y=None,w=None,h=None,boardless=False):
+  x = x if x != None else _G.AppRect[0]
+  y = y if y != None else _G.AppRect[1]
+  w = w if w != None else _G.AppRect[2]
+  h = h if h != None else _G.AppRect[3]
+  if boardless: # warning: irreversible
+    _G.WinTitleBarSize = (0, 0)
+    _G.WinDesktopBorderOffset = (0, 0)
+    ws = win32gui.GetWindowLong(_G.AppHwnd, win32con.GWL_STYLE)
+    ws = ws & ~(win32con.WS_CAPTION | win32con.WS_DLGFRAME | win32con.WS_SYSMENU)
+    ws = ws & ~(win32con.WS_MINIMIZEBOX | win32con.WS_MAXIMIZEBOX | win32con.WS_THICKFRAME)
+    ws = ws & ~(win32con.WS_EX_DLGMODALFRAME  | win32con.WS_EX_CLIENTEDGE | win32con.WS_EX_STATICEDGE)
+    win32gui.SetWindowLong(_G.AppHwnd, win32con.GWL_STYLE, ws)
+    win32gui.SetWindowPos(
+      _G.AppHwnd, win32con.HWND_TOP,
+      0, 0, 0, 0,
+      win32con.SWP_FRAMECHANGED | win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_NOZORDER | win32con.SWP_NOOWNERZORDER
+    )
 
-def resize_app_window():
-  move_window(_G.AppRect[0], 0, _G.WindowWidth, _G.WindowHeight)
+def resize_app_window(x=None, y=None, w=None, h=None, boardless=False):
+  update_app_rect()
+  if x == None:
+    x = _G.AppRect[0]
+  if y == None:
+    y = 0
+  if w == None:
+    w = _G.WindowWidth
+  if h == None:
+    h = _G.WindowHeight
+  move_window(x, y, w, h, boardless)
   sleep(0.1)
   update_app_rect()
 

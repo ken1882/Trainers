@@ -37,7 +37,7 @@ def start_refight_fiber():
       _G.log_info(f"Refight, times left: {n}")
       for _ in range(10):
         yield
-        sleep(0.5)
+        sleep(1)
         Input.click(*position.StartBattle)
 
 def start_initiate_fiber():
@@ -120,3 +120,10 @@ def start_exchange_fiber():
       yield
     Input.rclick(647, 23)
     yield from _G.rwait(1)
+
+def start_record_fiber():
+  utils.redetect_window()
+  utils.resize_app_window(0, -1080, 1920, 1080, boardless=True)
+  yield from _G.rwait(1)
+  _G.FlagRunning = False
+  return

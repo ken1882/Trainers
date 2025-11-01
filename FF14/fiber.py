@@ -150,8 +150,8 @@ def start_fish_fiber():
   last_mov  = 0
   last_brg  = 255
   cnt       = 1
-  pf_key    = _G.ARGV.patience_fishing
-  flag_patience = False
+  pf_key    = _G.ARGV.patience_key
+  flag_patience = _G.ARGV.patience
   flag_mooch    = False
   try:
     times = int(_G.ARGV.repeats)
@@ -166,7 +166,7 @@ def start_fish_fiber():
     # print(last_brg, brg)
     if brg - last_brg > 15:
       _G.log_info("Pull line")
-      if flag_patience and pf_key:
+      if flag_patience:
         vk = ord('5' if flag_mooch else pf_key)
         Input.trigger_key(vk)
       uwait(0.1)

@@ -12,9 +12,10 @@ def start_press_fiber():
 
 def start_interact_fiber():
   k = _G.ARGV.key.upper()
-  Input.trigger_key(ord(k), True)
-  sleep(0.7)
-  Input.key_down(ord(k), True)
+  while _G.FlagRunning:
+    Input.trigger_key(ord(k), True)
+    sleep(0.7)
+    Input.key_down(ord(k), True)
 
 LastRow = 0
 LastCol = 0
@@ -73,44 +74,118 @@ def start_production_fiber():
   while True:
     yield
     if Input.is_trigger(win32con.VK_MBUTTON):
-      for pos in ((1385, 811),(1234, 905),):
+      for pos in ((1410, 776),(1247, 867),):
+        Input.click(*pos, use_msg=0)
+        sleep(0.1)
+        yield
+
+def start_buying_fiber():
+  while True:
+    yield
+    if Input.is_trigger(win32con.VK_MBUTTON):
+      for pos in ((1392, 703),(1397, 823),):
         Input.click(*pos, use_msg=0)
         sleep(0.1)
         yield
 
 def start_expedition_fiber():
-  st_posarr = ((1115, 198),(1157, 594),(767, 502),(544, 890),(969, 893))
+  # st_posarr = ((1052, 165),(1149, 590),(707, 380),(538, 867),(978, 865),)
+  st_posarr = ((1153, 164),(1165, 613),(727, 342),(454, 866),(950, 866),)
   while True:
     yield
     # start expedition
+    depth = 0
     action.interact(0.5)
     action.close(0.5)
+    action.interact(0.5)
+    while not stage.is_stage('SelectExpedition') and not stage.is_stage('ExpeditionPrepare'):
+      yield
+      depth += 1
+      wait(0.5)
+      if depth > 10:
+        action.close(0.5)
+        action.interact(0.5)
+        depth = 0
     action.interact(0.5)
     for pos in st_posarr:
       Input.click(*pos, use_msg=0)
       yield from _G.rwait(2)
-    action.walk_left(3.2)
-    # start expedition 2
-    action.interact(0.5)
-    action.close(0.5)
-    action.interact(0.5)
-    for pos in st_posarr:
-      Input.click(*pos, use_msg=0)
-      yield from _G.rwait(2)
+    # action.walk_left(3.2)
+    # action.walk_backward(1)
+    # # start expedition 2
+    # depth = 0
+    # action.interact(0.5)
+    # action.close(0.5)
+    # action.interact(0.5)
+    # while not stage.is_stage('SelectExpedition') and not stage.is_stage('ExpeditionPrepare'):
+    #   yield
+    #   depth += 1
+    #   wait(0.5)
+    #   if depth > 10:
+    #     action.close(0.5)
+    #     action.interact(0.5)
+    #     depth = 0
+    # for pos in st_posarr:
+    #   Input.click(*pos, use_msg=0)
+    #   yield from _G.rwait(2)
     # wait for complete
-    action.walk_right(3.2)
-    yield from _G.rwait(360)
+    # action.walk_right(3.2)
+    # action.walk_backward(1)
+    _G.log_info("Expedition started, waiting for completion")
+    yield from _G.rwait(39*60+5)
     # claim reward
-    Input.trigger_key(ord('F'))
-    _G.wait(1)
+    _G.log_info("Expedition finished, claiming reward")
+    depth = 0
+    action.interact(0.5)
+    while not stage.is_stage('ExpeditionLoots'):
+      yield
+      depth += 1
+      wait(0.5)
+      if depth > 10:
+        action.close(0.5)
+        action.interact(0.5)
+        depth = 0
     Input.trigger_key(ord('X'))
     _G.wait(1)
-    Input.trigger_key(win32con.VK_ESCAPE)
-    action.walk_left(3.2)
-    # claim reward 2
-    Input.trigger_key(ord('F'))
-    _G.wait(1)
-    Input.trigger_key(ord('X'))
-    _G.wait(1)
-    Input.trigger_key(win32con.VK_ESCAPE)
-    action.walk_right(3.2)
+    action.close(0.5)
+    # action.walk_left(3.2)
+    # action.walk_backward(1)
+    # # claim reward 2
+    # depth = 0
+    # action.interact(0.5)
+    # while not stage.is_stage('ExpeditionLoots'):
+    #   yield
+    #   depth += 1
+    #   wait(0.5)
+    #   if depth > 10:
+    #     action.close(0.5)
+    #     action.interact(0.5)
+    #     depth = 0
+    # Input.trigger_key(ord('X'))
+    # _G.wait(1)
+    # action.close(0.5)
+    # action.walk_right(3.2)
+
+def start_attack_fiber():
+  while _G.FlagRunning:
+    Input.key_down(1, True)
+    for _ in range(9):
+      yield
+      sleep(0.1)
+    Input.key_up(1, True)
+    for _ in range(7):
+      yield
+      sleep(0.1)
+    # Input.trigger_key(1, True)
+    # for _ in range(5):
+    #   yield
+    #   sleep(0.1)
+    # Input.trigger_key(ord('E'), True)
+    # for _ in range(5):
+    #   yield
+    #   sleep(0.1)
+    # Input.trigger_key(ord('C'), True)
+    # for _ in range(5):
+    #   yield
+    #   sleep(0.1)
+  Input.key_up(1, True)

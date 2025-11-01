@@ -17,15 +17,15 @@ ConsumableInventory = {}
 VoteItemId = 0
 
 MAX_EX_STATUS = {
-  "HP": 1500,
-  "Strength": 150,
-  "Defence": 150,
-  "Dexterity": 150,
-  "Speed": 150,
-  "Intelligence": 150,
-  "MindDefence": 150,
-  "Mind": 150,
-  "Luck": 150
+  "HP": 4000,
+  "Strength": 400,
+  "Defence": 400,
+  "Dexterity": 400,
+  "Speed": 400,
+  "Intelligence": 400,
+  "MindDefence": 400,
+  "Mind": 400,
+  "Luck": 400
 }
 
 MIST_GEAR_ID = 85
@@ -707,3 +707,8 @@ def roll_raid_gacha(raid_id, token_amount):
       game.post_request(f"/api/Event/{raid_id}/RaidBoxGacha/Reset")
     log_info(f"Roll {res[4]} times, tokens left: {token_amount}")
     game.post_request(f"/api/Event/{raid_id}/RaidBoxGacha/Roll?rollCount={num}")
+
+rank = []
+for r in rank:
+  ch = next((c['MCharacterBase'] for c in game.CharacterDatabase.values() if c['MCharacterBase']['Id'] == r[0]), None)
+  print(f"#{r[2]} {ch['Name']} {r[1]}")

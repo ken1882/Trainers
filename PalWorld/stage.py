@@ -1,5 +1,6 @@
 from copy import copy
 from time import sleep
+from datetime import datetime
 import win32con
 
 import _G
@@ -12,7 +13,18 @@ from utils import img2str, isdigit, ocr_rect
 import re
 
 Enum = {
-  
+  'SelectExpedition': {
+    'pos': ((456, 187),(446, 143),),
+    'color': ((4, 76, 85),(57, 68, 69),)
+  },
+  'ExpeditionLoots': {
+    'pos': ((787, 190),(1199, 180),(1583, 187),),
+    'color': ((102, 124, 128),(57, 68, 69),(102, 124, 128),)
+  },
+  'ExpeditionPrepare': {
+    'pos': ((144, 247),(725, 247),(1086, 493),(1178, 728),),
+    'color': ((57, 68, 69),(57, 68, 69),(54, 65, 70),(229, 251, 255),)
+  }
 }
 
 def get_current_stage():
@@ -27,9 +39,27 @@ def get_current_stage():
 def check_pixels(pixstruct):
   return graphics.is_pixel_match(pixstruct['pos'], pixstruct['color'])
 
+
+StageDepth = 0
+LastStage = '_'
+StageArriveTime = datetime.now()
+def reset():
+  global StageDepth,LastStage,StageArriveTime
+  StageDepth = 0
+  LastStage = '_'
+  StageArriveTime = datetime.now()
+  _G.CurrentStage = None
+
 def is_stage(stg):
+  global LastStage,StageDepth,StageArriveTime
   s = get_current_stage()
-  # print(s)
+  if s != LastStage:
+    _G.log_info("Current stage:", s)
+    LastStage = s
+    StageDepth = 0
+    StageArriveTime = datetime.now()
+  else:
+    StageDepth += 1
   return s and stg in s
 
 if __name__ == '__main__':

@@ -23,6 +23,7 @@ FLAG_INTERACTIVE = False
 FLAG_CONFIRM_RP_USE = True
 FLAG_STOP_ON_FULL_XP = False
 FLAG_STOP_ON_NO_TRAINEE = True
+FLAG_EVENT_POTION_ONLY  = True
 FLAG_AUTO_LEVEL = True
 FLAG_ANALYZE = False
 
@@ -90,11 +91,11 @@ RentalCycle = None
 
 UnmasteredCharacters = []
 UnmasteredSwapIndex  = [
-  # 0,
+  0,
   1,
-  2,
-  3,
-  4
+  # 2,
+  # 3,
+  # 4
 ]
 
 STATUS_MODIFIER_INC = 1
@@ -536,6 +537,8 @@ def recover_stamina():
         candidates = [item for item in items if item['MItemId'] in range(400,9999)]
         if not candidates:
           log_warning("No event potion available!")
+          if FLAG_EVENT_POTION_ONLY:
+            return None
           continue
         potion = min(candidates, key=lambda i: i['MItemId'])
         nidx = items.index(potion)
@@ -1145,6 +1148,7 @@ def reset_final_report():
 
 def log_final_report():
   global ReportDetail,StageId
+  return
   print("Preparing report please wait...")
   player.clear_cache()
   ReportDetail['end_t'] = datetime.now()

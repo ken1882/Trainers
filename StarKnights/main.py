@@ -18,7 +18,7 @@ def print_cache():
   print(output_cache)
   for i,ss in enumerate(output_cache):
     if i & 1 == 0:
-      pos += ss 
+      pos += ss
     else:
       col += ss
   print('-'*42)
