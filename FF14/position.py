@@ -86,7 +86,7 @@ CRHQPosCol = (
 
 SystemMenu = (1855, 982)#(1853, 984)
 Logout     = (1724, 914)
-LogoutOK   = (906, 584)
+LogoutOK   = (906, 574)
 GameStart  = (957, 822)
 GeneralOK  = (904, 554)
 LoginOK    = (902, 608)

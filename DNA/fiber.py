@@ -15,10 +15,18 @@ def start_infinite_fiber():
         if stage.is_stage("StageSelect"):
             Input.click(1293, 743)
             yield from rwait(2.0)
-            Input.click(780, 613)
-            yield
-            Input.click(979, 726)
+            if _G.ARGV.letter:
+                Input.click(1063, 550)
+                yield
+                Input.click(1349, 669)
+            else:
+                Input.click(780, 613)
+                yield
+                Input.click(979, 726)
             yield from rwait(2.0)
+        elif stage.is_stage("RewardSelect"):
+            Input.click(965, 900)
+            yield from rwait(3.0)
         Input.click()
         yield from rwait(0.5)
 
@@ -70,9 +78,14 @@ def start_escorter_fiber():
             yield from rwait(2.0)
             Input.click(1388, 955)
             yield from rwait(1.0)
-            # Input.click(780, 613)
-            # yield
-            Input.click(979, 726)
+            if _G.ARGV.letter:
+                Input.click(1063, 550)
+                yield
+                Input.click(1500, 669)
+            else:
+                # Input.click(780, 613)
+                # yield
+                Input.click(979, 726)
             yield from rwait(5.0)
         elif stage.is_stage("RewardSelect"):
             Input.click(965, 900)

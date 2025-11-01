@@ -18,13 +18,13 @@ class StockMarketJob(BaseJob):
         '''
         Selling shares with over 20% profit
         '''
+        sold = False
         try:
             for n in self.page.query_selector_all('img[id]'):
                 n.click()
             yield from _G.rwait(2)
             table = self.page.query_selector('#postForm')
             companies = table.query_selector_all('tr[id]')
-            sold = False
             for com in companies:
                 for row in com.query_selector_all('tr')[1:]:
                     cells = row.query_selector_all('td')

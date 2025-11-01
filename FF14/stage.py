@@ -71,6 +71,7 @@ def get_coord(force_correct=False, depth=0, interval=3):
   ss = utils.ocr_rect(
     position.CoordRect,
     fname='coord.png',
+    zoom=1.5,
     whitelist='XYZ:.0123456789',
     binarization_colors=[(238, 225, 197),(136, 129, 113,),(222, 210, 184),(208, 197, 172),(189, 179, 157),(222, 210, 184),(190, 180, 158)]
   )
