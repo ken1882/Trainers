@@ -57,11 +57,13 @@ def start_escorter_fiber():
                 state = 'running'
             elif state == 'running':
                 if graphics.is_pixel_match(*BossStop, True):
-                    if atk_counter < 2 and datetime.now() - atk_timer >= timedelta(seconds=5):
+                    if atk_counter < 2 and datetime.now() - atk_timer >= timedelta(seconds=20):
                         log_info("Boss stop, attacking")
                         atk_counter += 1
                         yield from rwait(2)
-                        Input.click()
+                        Input.mouse_down()
+                        yield from rwait(2)
+                        Input.mouse_up()
                         yield from rwait(1)
                         atk_timer = datetime.now()
                     elif datetime.now() - timer >= timedelta(seconds=6):
@@ -95,3 +97,26 @@ def start_escorter_fiber():
         if counter > 180:
             log_warning("Mission timeout, restarting")
             action.restart()
+
+def start_fishing_fiber():
+    depth = 0
+    while _G.FlagRunning:
+        yield
+        if stage.is_stage("FishingReady"):
+            log_info("Casting/Reeling fishing line")
+            action.jump()
+            yield from rwait(1.0)
+            depth += 1
+        elif stage.is_stage("FishingMooch"):
+            log_info("Mooching fish")
+            Input.trigger_key(ord('E'))
+            yield from rwait(1.0)
+        elif stage.is_stage("FishingReward"):
+            log_info("Fishing success")
+            Input.click()
+            yield from rwait(2.0)
+        else:
+            depth = 0
+        if depth > 30:
+            log_info("Probably out of fish/bait, stopping")
+            return

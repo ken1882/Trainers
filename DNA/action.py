@@ -33,3 +33,5 @@ def restart():
     Input.trigger_key(win32con.VK_ESCAPE)
     sleep(1)
     Input.click(1769, 987)
+    sleep(0.5)
+    Input.click(1145, 596)

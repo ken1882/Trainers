@@ -54,7 +54,7 @@ def find_app_window():
     for i,hw in enumerate(AppCandidates):
       print(f"[{i}] hwnd={hw} {win32process.GetWindowThreadProcessId(hw)}")
     sn = input("please select one: ")
-    hwnd = AppCandidates[sn]
+    hwnd = AppCandidates[int(sn)]
   _G.AppHwnd = hwnd
   _G.AppTid,_G.AppPid = win32process.GetWindowThreadProcessId(hwnd)
   print(f"App found with HWND {hwnd} ({_G.AppWindowName}), pid={_G.AppPid}")
