@@ -10,18 +10,21 @@ import action
 from PIL import Image
 
 def start_infinite_fiber():
+    level = 1
     while _G.FlagRunning:
         yield
         if stage.is_stage("StageSelect"):
             Input.click(1293, 743)
             yield from rwait(2.0)
+            level += 1
             if _G.ARGV.letter:
                 Input.click(1063, 550)
                 yield
                 Input.click(1349, 669)
             else:
-                Input.click(780, 613)
-                yield
+                if level % 5 == 0:
+                    Input.click(780, 613)
+                    yield
                 Input.click(979, 726)
             yield from rwait(2.0)
         elif stage.is_stage("RewardSelect"):
@@ -54,25 +57,26 @@ def start_escorter_fiber():
                 Input.key_up(ord('W'))
                 yield from rwait(1)
                 action.interact()
+                action.move_forward(0.03)
+                yield from rwait(3)
+                Input.move_delta(550, 0)
                 state = 'running'
             elif state == 'running':
-                if graphics.is_pixel_match(*BossStop, True):
-                    if atk_counter < 2 and datetime.now() - atk_timer >= timedelta(seconds=20):
-                        log_info("Boss stop, attacking")
-                        atk_counter += 1
-                        yield from rwait(2)
-                        Input.mouse_down()
-                        yield from rwait(2)
-                        Input.mouse_up()
+                if datetime.now() - atk_timer >= timedelta(seconds=15):
+                    atk_counter += 1
+                    Input.mouse_down()
+                    yield from rwait(2)
+                    Input.mouse_up()
+                    yield from rwait(1)
+                    atk_timer = datetime.now()
+                    Input.trigger_key(ord('S'))
+                    if atk_counter >= 2:
                         yield from rwait(1)
-                        atk_timer = datetime.now()
-                    elif datetime.now() - timer >= timedelta(seconds=6):
-                        Input.trigger_key(ord('E'))
-                        timer = datetime.now()
+                        action.move_backward(0.03)
+                        atk_counter -= 0.8
+                elif graphics.is_pixel_match(*BossStop, True):
                     action.interact()
-                elif datetime.now() - timer >= timedelta(seconds=6):
-                    Input.trigger_key(ord('E'))
-                    timer = datetime.now()
+                    yield from rwait(1)
         elif stage.is_stage("MissionComplete"):
             log_info(f"Mission complete, ticked: {counter}")
             state = 'init'
@@ -94,7 +98,7 @@ def start_escorter_fiber():
             yield from rwait(3.0)
         yield from rwait(1.0)
         counter += 1
-        if counter > 180:
+        if counter > 150:
             log_warning("Mission timeout, restarting")
             action.restart()
 

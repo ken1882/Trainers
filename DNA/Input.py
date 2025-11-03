@@ -3,6 +3,8 @@ import win32api, win32con, win32gui
 import random, math
 from time import sleep
 from _G import (resume,wait,uwait,log_debug,log_error,log_info,log_warning,make_lparam)
+import ctypes
+from ctypes import wintypes
 
 ScrollTime  = 0.03
 ScrollDelta = [1,5]
@@ -77,6 +79,7 @@ def mouse_down(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppI
     y += rect[1]
   if x or y:
     win32api.SetCursorPos((x,y))
+  win32gui.SetForegroundWindow(_G.AppHwnd)
   win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,x,y,0,0)
 
 def mouse_up(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUseMsg, hwnd=None):
@@ -239,3 +242,27 @@ def moveto(x,y,speed=10,max_steps=MaxMoveTimes,app_offset=not _G.AppInputUseMsg,
 
 def rmoveto(x,y,rrange=10,**kwargs):
   moveto(x+random.randint(-rrange, rrange), y+random.randint(-rrange, rrange), **kwargs)
+
+INPUT_MOUSE = 0
+MOUSEEVENTF_MOVE = 0x0001
+
+class MOUSEINPUT(ctypes.Structure):
+  _fields_ = (
+    ("dx", wintypes.LONG),
+    ("dy", wintypes.LONG),
+    ("mouseData", wintypes.DWORD),
+    ("dwFlags", wintypes.DWORD),
+    ("time", wintypes.DWORD),
+    ("dwExtraInfo", ctypes.POINTER(wintypes.ULONG))
+  )
+
+class INPUT(ctypes.Structure):
+  _fields_ = (
+    ("type", wintypes.DWORD),
+    ("mi", MOUSEINPUT)
+  )
+
+def move_delta(dx, dy, step=0):
+  SendInput = ctypes.windll.user32.SendInput
+  inp = INPUT(type=INPUT_MOUSE, mi=MOUSEINPUT(dx=dx, dy=dy, mouseData=0, dwFlags=MOUSEEVENTF_MOVE, time=step, dwExtraInfo=None))
+  SendInput(1, ctypes.byref(inp), ctypes.sizeof(inp))
