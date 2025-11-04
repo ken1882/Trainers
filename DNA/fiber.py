@@ -30,7 +30,19 @@ def start_infinite_fiber():
         elif stage.is_stage("RewardSelect"):
             Input.click(965, 900)
             yield from rwait(3.0)
-        Input.click()
+        elif stage.is_stage("MissionComplete"):
+            log_info(f"Mission complete")
+            yield from rwait(2.0)
+            Input.click(1388, 955)
+            yield from rwait(1.0)
+            if _G.ARGV.letter:
+                Input.click(1063, 550)
+                yield
+                Input.click(1500, 669)
+            else:
+                Input.click(979, 726)
+            yield from rwait(5.0)
+        action.attack()
         yield from rwait(0.5)
 
 def start_escorter_fiber():
@@ -64,9 +76,7 @@ def start_escorter_fiber():
             elif state == 'running':
                 if datetime.now() - atk_timer >= timedelta(seconds=15):
                     atk_counter += 1
-                    Input.mouse_down()
-                    yield from rwait(2)
-                    Input.mouse_up()
+                    action.charge_attack()
                     yield from rwait(1)
                     atk_timer = datetime.now()
                     Input.trigger_key(ord('S'))
@@ -117,7 +127,7 @@ def start_fishing_fiber():
             yield from rwait(1.0)
         elif stage.is_stage("FishingReward"):
             log_info("Fishing success")
-            Input.click()
+            Input.click(1300, 50)
             yield from rwait(2.0)
         else:
             depth = 0

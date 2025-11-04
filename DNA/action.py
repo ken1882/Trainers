@@ -1,5 +1,6 @@
 import Input
 import win32con
+import _G
 from time import sleep
 
 
@@ -35,3 +36,13 @@ def restart():
     Input.click(1769, 987)
     sleep(0.5)
     Input.click(1145, 596)
+
+def attack():
+    x, y, w, h = _G.AppRect
+    Input.click(x + w // 2, y + h // 2)
+
+def charge_attack():
+    x, y, w, h = _G.AppRect
+    Input.mouse_down(x + w // 2, y + h // 2)
+    sleep(1)
+    Input.mouse_up(x + w // 2, y + h // 2)
