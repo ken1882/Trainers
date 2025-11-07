@@ -11,6 +11,7 @@ from PIL import Image
 
 def start_infinite_fiber():
     level = 1
+    timer = datetime.now()
     while _G.FlagRunning:
         yield
         if stage.is_stage("StageSelect"):
@@ -32,6 +33,7 @@ def start_infinite_fiber():
             yield from rwait(3.0)
         elif stage.is_stage("MissionComplete"):
             log_info(f"Mission complete")
+            log_info(f"Time taken: {(datetime.now() - timer).total_seconds()} seconds")
             yield from rwait(2.0)
             Input.click(1388, 955)
             yield from rwait(1.0)
@@ -42,7 +44,25 @@ def start_infinite_fiber():
             else:
                 Input.click(979, 726)
             yield from rwait(5.0)
-        action.attack()
+            while not stage.is_stage("StageMap"):
+                yield from rwait(1.0)
+            if _G.ARGV.move:
+                action.move_forward(4.0)
+                for _ in range(3):
+                    action.move_backward(0.5)
+                    action.jump()
+                    action.move_forward(0.5)
+            timer = datetime.now()
+        elif stage.is_stage("StageMap"):
+            Input.mouse_down()
+            yield from rwait(3)
+            Input.mouse_up()
+        else:
+            action.attack()
+        if _G.ARGV.timeout > 0 and datetime.now() - timer >= timedelta(seconds=_G.ARGV.timeout):
+            log_warning("Mission timeout, restarting")
+            action.restart()
+            timer = datetime.now()
         yield from rwait(0.5)
 
 def start_escorter_fiber():
