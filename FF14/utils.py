@@ -16,14 +16,15 @@ try:
 except Exception:
   log_warning("Pytesseract not available, OCRs won't be available")
 
+AppCandidates = []
+
 def EnumWindowCallback(hwnd, lparam):
+  global AppCandidates
   if win32gui.IsWindowVisible(hwnd):
     title = win32gui.GetWindowText(hwnd)
-    if title == _G.AppWindowName:
-      _G.AppHwnd = hwnd
-      _G.AppTid,_G.AppPid  = win32process.GetWindowThreadProcessId(hwnd)
+    if _G.AppWindowName in title:
+      AppCandidates.append(hwnd)
       print(f"App found with HWND {hwnd} ({_G.AppWindowName}), pid={_G.AppPid}")
-      update_app_rect()
 
 def EnumChildWindowCB(hwnd, lparam):
   clsname = win32gui.GetClassName(hwnd)
@@ -42,7 +43,22 @@ def update_app_rect():
   print(f"Rect updated: {_G.AppRect}")
 
 def find_app_window():
+  global AppCandidates
+  AppCandidates = []
   win32gui.EnumWindows(EnumWindowCallback, None)
+  if not AppCandidates:
+    return
+  hwnd = AppCandidates[0]
+  if len(AppCandidates) > 1:
+    print("Multiple app found:")
+    for i,hw in enumerate(AppCandidates):
+      print(f"[{i}] hwnd={hw} {win32process.GetWindowThreadProcessId(hw)}")
+    sn = input("please select one: ")
+    hwnd = AppCandidates[int(sn)]
+  _G.AppHwnd = hwnd
+  _G.AppTid,_G.AppPid = win32process.GetWindowThreadProcessId(hwnd)
+  print(f"App found with HWND {hwnd} ({_G.AppWindowName}), pid={_G.AppPid}")
+  update_app_rect()
 
 def find_child_window():
   log_info("Child windows:")
@@ -72,7 +88,9 @@ def safe_execute_func(func, args=[], kwargs={}):
     handle_exception(err, err_info)
   return _G.MsgPipeError
 
-def handle_exception(err, errinfo):
+def handle_exception(err, errinfo=None):
+  if not errinfo:
+    errinfo = traceback.format_exc()
   _G.log_error(f"An error occured during runtime!\n{str(err)}\n{errinfo}")
 
 def img2str(image_file, lang='jpn', config='--psm 12 --psm 13'):
@@ -85,45 +103,14 @@ def ocr_rect(rect, fname, zoom=1.0, lang='jpn', config='--psm 12 --psm 13', **kw
   if kwargs.get('num_only'):
     lang = 'eng'
     config += ' -c tessedit_char_whitelist=1234567890'
-  elif kwargs.get('whitelist'):
-    lang = 'eng'
-    config += f" -c tessedit_char_whitelist={kwargs.get('whitelist')}"
   if not os.path.exists(fname):
     fname = f"{_G.DCTmpFolder}/{fname}"
   img = graphics.take_snapshot(rect, fname)
   if zoom != 1.0:
     size = (int(img.size[0]*zoom), int(img.size[1]*zoom))
     graphics.resize_image(size, fname, fname)
-  bin_colors = kwargs.get('binarization_colors')
-  tolerance = kwargs.get('bias_tolerance', 15)
-  img.close()
-  if bin_colors:
-    img = Image.open(fname)
-    img = img.convert('RGB')
-    a = np.array(img)
-    # Convert matched colors to white (255, 255, 255), everything else to black (0, 0, 0)
-    mask = np.zeros_like(a[..., 0], dtype=bool)
-    for color in bin_colors:
-      mask |= (
-          (a[..., 0] >= color[0] - tolerance) & (a[..., 0] <= color[0] + tolerance) &
-          (a[..., 1] >= color[1] - tolerance) & (a[..., 1] <= color[1] + tolerance) &
-          (a[..., 2] >= color[2] - tolerance) & (a[..., 2] <= color[2] + tolerance)
-      )
-    a[~mask] = [0, 0, 0]  # Set unmatched pixels to black
-    a[mask]  = [255, 255, 255]  # Set matched pixels to white
-    img = Image.fromarray(a)
-    img.save(fname)
-    if kwargs.get('trim'):
-      PADDING = 2
-      a2 = np.where(mask, 255, 0).astype(np.uint8)
-      nonzero_cols = np.argwhere(a2.max(axis=0) > 0)
-      left_col = nonzero_cols.min()
-      right_col = nonzero_cols.max()
-      bbox = (left_col - PADDING, 0, right_col + 1 + PADDING, a2.shape[0])
-      cropped_img = img.crop(bbox)
-      cropped_img.save(fname)
-    img.close()
   sleep(0.3)
+  img.close()
   return img2str(fname, lang, config).translate(str.maketrans('。',' ')).strip()
 
 def diff_string(a,b):
@@ -173,14 +160,6 @@ def is_focused():
     return hwnd == _G.SelfHwnd or hwnd == _G.AppHwnd
   return True
 
-def str2float(ss):
-  try:
-    a = ''
-    for c in ss:
-      if c == '.' and a and '.' not in a:
-        a += c
-      elif c in '0123456789':
-        a += c
-    return float(a)
-  except Exception:
-    return None
+def set_focus():
+  if _G.IS_WIN32:
+    win32gui.SetForegroundWindow(_G.AppHwnd)

@@ -24,3 +24,11 @@ def start_click_fiber():
         Input.click(ox, oy, use_msg=False, app_offset=False)
         wait(interval)
         yield
+
+def start_mccp_fiber():
+    for _ in range(9):
+        yield
+        Input.mclick(0, 0, use_msg=False, app_offset=False)
+        mx, my = Input.get_cursor_pos(False)
+        Input.set_cursor_pos(mx+48, my, use_msg=False, app_offset=False)
+        Input.click(0, 0, use_msg=False, app_offset=False)

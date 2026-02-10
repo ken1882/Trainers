@@ -1542,5 +1542,93 @@
     "RecoveryEffect": 30,
     "StartDate": "2025-09-12T23:00:00",
     "EndDate": "2025-10-19T23:59:59"
+  },
+  {
+    "Id": 301,
+    "RecoveryItemTypes": 4,
+    "MItemId": 2394,
+    "RecoveryEffect": 30,
+    "StartDate": "2025-10-06T00:00:00",
+    "EndDate": "2025-10-29T23:59:59"
+  },
+  {
+    "Id": 304,
+    "RecoveryItemTypes": 4,
+    "MItemId": 2408,
+    "RecoveryEffect": 30,
+    "StartDate": "2025-10-10T14:10:00",
+    "EndDate": "2025-11-10T23:59:59"
+  },
+  {
+    "Id": 305,
+    "RecoveryItemTypes": 4,
+    "MItemId": 2421,
+    "RecoveryEffect": 30,
+    "StartDate": "2025-10-30T14:10:00",
+    "EndDate": "2025-11-23T23:59:59"
+  },
+  {
+    "Id": 306,
+    "RecoveryItemTypes": 4,
+    "MItemId": 2435,
+    "RecoveryEffect": 30,
+    "StartDate": "2025-11-07T14:10:00",
+    "EndDate": "2025-11-30T23:59:59"
+  },
+  {
+    "Id": 311,
+    "RecoveryItemTypes": 4,
+    "MItemId": 2401,
+    "RecoveryEffect": 30,
+    "StartDate": "2025-11-14T14:10:00",
+    "EndDate": "2025-12-14T23:59:59"
+  },
+  {
+    "Id": 312,
+    "RecoveryItemTypes": 4,
+    "MItemId": 2463,
+    "RecoveryEffect": 30,
+    "StartDate": "2025-11-27T14:10:00",
+    "EndDate": "2025-12-29T23:59:59"
+  },
+  {
+    "Id": 313,
+    "RecoveryItemTypes": 4,
+    "MItemId": 2473,
+    "RecoveryEffect": 30,
+    "StartDate": "2025-12-05T14:10:00",
+    "EndDate": "2025-12-29T23:59:59"
+  },
+  {
+    "Id": 314,
+    "RecoveryItemTypes": 4,
+    "MItemId": 2490,
+    "RecoveryEffect": 30,
+    "StartDate": "2025-12-19T14:10:00",
+    "EndDate": "2026-01-10T23:59:59"
+  },
+  {
+    "Id": 317,
+    "RecoveryItemTypes": 1,
+    "MItemId": 2493,
+    "RecoveryEffect": 30,
+    "StartDate": null,
+    "EndDate": null
+  },
+  {
+    "Id": 318,
+    "RecoveryItemTypes": 4,
+    "MItemId": 2511,
+    "RecoveryEffect": 30,
+    "StartDate": "2026-01-01T00:00:00",
+    "EndDate": "2026-01-25T23:59:59"
+  },
+  {
+    "Id": 319,
+    "RecoveryItemTypes": 4,
+    "MItemId": 2515,
+    "RecoveryEffect": 30,
+    "StartDate": "2026-01-09T00:00:00",
+    "EndDate": "2026-02-01T23:59:59"
   }
 ]

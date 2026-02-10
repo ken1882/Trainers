@@ -591,11 +591,46 @@ def start_minipick_fiber():
     action.interact_press(dtx)
     wait(0.3)
     action.interact_press(dty)
-    wait(5)
-    uwait(3)
-    if graphics.find_object('objs/minigame_success.png', 0.9):
+    timer = 0
+    while True:
+      succ = graphics.find_object('objs/gs_coin.png', 0.95)
+      if succ:
+        break
+      timer += 1
+      if timer > (1 / _G.FPS)*5:
+        break
+      yield
+    if timer <= 50:
       _G.log_info(f"Minigame success")
-      Input.trigger_key(win32con.VK_ESCAPE)
       uwait(1)
+      Input.trigger_key(win32con.VK_ESCAPE)
     else:
       _G.log_info(f"Minigame failed")
+    uwait(2)
+
+def start_gardening_fiber():
+  dur = 0.2
+  while _G.FlagRunning:
+    yield
+    if not Input.is_trigger(win32con.VK_RBUTTON):
+      continue
+    for _ in range(4):
+      uwait(dur)
+      action.interact()
+    uwait(1)
+    for _ in range(2):
+      Input.click(0, 0, use_msg=False)
+    uwait(dur)
+    for _ in range(2):
+      action.interact()
+      uwait(0.15)
+    uwait(0.1)
+    action.menu_down()
+    uwait(0.1)
+    action.interact()
+
+def start_press_fiber():
+  while _G.FlagWorking:
+    yield
+    Input.trigger_key(0xC0)  # ` key
+    uwait(3.5)

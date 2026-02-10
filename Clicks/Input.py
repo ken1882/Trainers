@@ -1,8 +1,10 @@
 import _G, graphics
-import win32api, win32con 
+import win32api, win32con, win32gui
 import random, math
 from time import sleep
 from _G import (resume,wait,uwait,log_debug,log_error,log_info,log_warning,make_lparam)
+import ctypes
+from ctypes import wintypes
 
 ScrollTime  = 0.03
 ScrollDelta = [1,5]
@@ -27,7 +29,7 @@ def repeat(vk):
   return keystate[vk]
 
 # app_offset: use DC pos instead of global pos
-def get_cursor_pos(app_offset=True):
+def get_cursor_pos(app_offset=False):
   mx, my = win32api.GetCursorPos()
   if app_offset:
     mx = mx - _G.AppRect[0] - _G.WinTitleBarSize[0] - _G.WinDesktopBorderOffset[0]
@@ -39,6 +41,8 @@ def key_down(*keys, use_msg=False, hwnd=None):
     if use_msg and hwnd:
       win32api.SendMessage(hwnd, win32con.WM_KEYDOWN, kid, 0)
     else:
+      if _G.AppHwnd:
+        win32gui.SetForegroundWindow(_G.AppHwnd)
       win32api.keybd_event(kid, 0, 0, 0)
 
 def key_up(*keys, use_msg=False, hwnd=None):
@@ -46,6 +50,8 @@ def key_up(*keys, use_msg=False, hwnd=None):
     if use_msg and hwnd:
       win32api.SendMessage(hwnd, win32con.WM_KEYUP, kid, 0)
     else:
+      if _G.AppHwnd:
+        win32gui.SetForegroundWindow(_G.AppHwnd)
       win32api.keybd_event(kid, 0, win32con.KEYEVENTF_KEYUP, 0)
 
 def trigger_key(*keys, **kwargs):
@@ -75,6 +81,8 @@ def mouse_down(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppI
     y += rect[1]
   if x or y:
     win32api.SetCursorPos((x,y))
+  if _G.AppHwnd:
+    win32gui.SetForegroundWindow(_G.AppHwnd)
   win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,x,y,0,0)
 
 def mouse_up(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUseMsg, hwnd=None):
@@ -115,9 +123,9 @@ def set_cursor_pos(x, y, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUs
 def click(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUseMsg, hwnd=None):
   if not hwnd:
     hwnd = _G.AppInputHwnd
-  x = int(x)
-  y = int(y)
   if not use_msg and x and y:
+    x = int(x)
+    y = int(y)
     set_cursor_pos(x, y, app_offset)
   mouse_down(x, y, app_offset, use_msg, hwnd)
   sleep(0.05)
@@ -136,6 +144,26 @@ def dclick(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInput
   click(x,y,app_offset, use_msg, hwnd)
   sleep(0.1)
   click(x,y,app_offset, use_msg, hwnd)
+
+def mclick(x=None, y=None, app_offset=not _G.AppInputUseMsg, use_msg=_G.AppInputUseMsg, hwnd=None):
+  # mouse middle click
+  if not hwnd:
+    hwnd = _G.AppInputHwnd
+  if not use_msg and x and y:
+    x = int(x)
+    y = int(y)
+    set_cursor_pos(x, y, app_offset)
+  if use_msg:
+    hwnd = hwnd if hwnd else _G.AppHwnd
+    win32api.SendMessage(hwnd, win32con.WM_MBUTTONDOWN, win32con.MK_MBUTTON, make_lparam(x,y))
+    sleep(0.05)
+    win32api.SendMessage(hwnd, win32con.WM_MBUTTONUP, win32con.MK_MBUTTON, make_lparam(x,y))
+    return
+  if _G.AppHwnd:
+    win32gui.SetForegroundWindow(_G.AppHwnd)
+  win32api.mouse_event(win32con.MOUSEEVENTF_MIDDLEDOWN, x or 0, y or 0, 0,0)
+  sleep(0.05)
+  win32api.mouse_event(win32con.MOUSEEVENTF_MIDDLEUP, x or 0, y or 0, 0,0)
 
 def scroll_up(x, y, delta = 100, app_offset=not _G.AppInputUseMsg, haste=False):
   mouse_down(x, y, app_offset)
@@ -237,3 +265,27 @@ def moveto(x,y,speed=10,max_steps=MaxMoveTimes,app_offset=not _G.AppInputUseMsg,
 
 def rmoveto(x,y,rrange=10,**kwargs):
   moveto(x+random.randint(-rrange, rrange), y+random.randint(-rrange, rrange), **kwargs)
+
+INPUT_MOUSE = 0
+MOUSEEVENTF_MOVE = 0x0001
+
+class MOUSEINPUT(ctypes.Structure):
+  _fields_ = (
+    ("dx", wintypes.LONG),
+    ("dy", wintypes.LONG),
+    ("mouseData", wintypes.DWORD),
+    ("dwFlags", wintypes.DWORD),
+    ("time", wintypes.DWORD),
+    ("dwExtraInfo", ctypes.POINTER(wintypes.ULONG))
+  )
+
+class INPUT(ctypes.Structure):
+  _fields_ = (
+    ("type", wintypes.DWORD),
+    ("mi", MOUSEINPUT)
+  )
+
+def move_delta(dx, dy, step=0):
+  SendInput = ctypes.windll.user32.SendInput
+  inp = INPUT(type=INPUT_MOUSE, mi=MOUSEINPUT(dx=dx, dy=dy, mouseData=0, dwFlags=MOUSEEVENTF_MOVE, time=step, dwExtraInfo=None))
+  SendInput(1, ctypes.byref(inp), ctypes.sizeof(inp))

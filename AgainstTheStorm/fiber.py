@@ -8,16 +8,28 @@ from datetime import datetime, timedelta
 import utils
 import itertools
 from PIL import Image
+
 def start_buying_fiber():
-    ar = (406, 456),(319, 498),(487, 491)
     while True:
         pv  = sum(graphics.get_pixel(409, 457, True))
         pv += sum(graphics.get_pixel(406, 462, True))
+        pv += sum(graphics.get_pixel(410, 465, True))
         if pv < 10:
             break
-        for pos in ar:
-            Input.click(*pos)
-            wait(0.08)
-            yield
+        Input.click(406, 456, mright=True)
         wait(0.1)
+        yield
+    for pos in ((395, 825),(459, 826),(532, 826),(602, 826),(659, 830),(735, 827),):
+        Input.click(*pos)
+        wait(0.1)
+        yield
+
+def start_upgrade_fiber():
+    while True:
+        for pos in ((1733, 471),(1779, 710),(1734, 566),(1785, 712),):
+            Input.click(*pos)
+            wait(0.1)
+            yield
+        Input.click(1745, 334)
+        wait(1)
         yield
