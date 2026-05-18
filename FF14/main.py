@@ -31,40 +31,18 @@ def detect_app_window():
   # utils.find_child_window()
   _G.AppInputHwnd = _G.AppHwnd
 
-def update_detector():
-  last_tick = 0
-  while _G.FlagRunning:
-    sleep(_G.FPS*2)
-    if _G.FrameCount == last_tick:
-      continue
-    if Input.is_trigger(win32con.VK_F5):
-      print("Received redetect signal",flush=True)
-      last_tick = _G.FrameCount
-    elif Input.is_trigger(win32con.VK_F6):
-      print("Received position signal",flush=True)
-      last_tick = _G.FrameCount
-    elif Input.is_trigger(win32con.VK_F7):
-      print("Received pause signal",flush=True)
-      last_tick = _G.FrameCount
-    elif Input.is_trigger(win32con.VK_F8):
-      print("Received worker signal",flush=True)
-      last_tick = _G.FrameCount
-    elif Input.is_trigger(win32con.VK_F9):
-      print("Received termination signal",flush=True)
-      last_tick = _G.FrameCount
-
 def update_input():
   if not utils.is_focused():
     return
   Input.update()
   if Input.is_trigger(win32con.VK_F5):
-    print("Redetecting app window")
+    log_info("Redetecting app window")
     detect_app_window()
   elif Input.is_trigger(win32con.VK_F6):
     res = graphics.get_mouse_pixel()
     if not _G.SelectedFiber:
       output_cache.extend(res)
-    print(Input.get_cursor_pos(), res)
+    log_info(Input.get_cursor_pos(), res)
   elif Input.is_trigger(win32con.VK_F7):
     log_info("Worker unpaused" if _G.FlagPaused else "Worker paused")
     _G.FlagPaused ^= True
@@ -93,8 +71,6 @@ def main_loop():
     _G.FlagWorking = False
 
 def start_main():
-  _th = Thread(target=update_detector)
-  _th.start()
   try:
     while _G.FlagRunning:
       _G.FrameCount += 1
@@ -105,6 +81,7 @@ def start_main():
 
 if __name__ == "__main__":
   utils.get_self_hwnd()
+  _G.SelfHwnd = win32gui.GetForegroundWindow()
   detect_app_window()
   # utils.resize_app_window()
   args = argv_parse.load()

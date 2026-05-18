@@ -223,9 +223,9 @@ def start_crafting_fiber():
   times = int(_G.ARGV.repeats)
   for i in range(times):
     _G.log_info(f"Start craft #{i+1}")
-    for _ in range(4):
+    for j in range(5):
       action.interact()
-      uwait(1)
+      uwait(0.1 if j < 2 else 0.8)
     cp = mcp = int(_G.ARGV.crafting_cp)
     hp, mhp = 999,-1
     pp, mpp = 999,-1
@@ -237,11 +237,22 @@ def start_crafting_fiber():
     seq = _G.ARGV.crafting_sequence
     if seq:
       seq = seq.upper()
-      for ch in seq:
-        uwait(3.5)
-        yield
-        _G.log_info("Sequential:", ch)
-        Input.trigger_key(ord(ch))
+      if '@' in seq:
+        groups = seq.split(',')
+        for group in groups:
+          key, wt = group.split('@')
+          yield
+          _G.log_info("Marco:", key, "wait:", wt)
+          Input.trigger_key(ord(key))
+          yield
+          wt = float(wt)
+          wait(wt)
+      else:
+        for ch in seq:
+          uwait(3.5)
+          yield
+          _G.log_info("Sequential:", ch)
+          Input.trigger_key(ord(ch))
       _G.log_info("Crafting complete")
       uwait(6.5)
       continue
@@ -630,7 +641,119 @@ def start_gardening_fiber():
     action.interact()
 
 def start_press_fiber():
+  n = 600
+  if _G.ARGV.repeats:
+    n = int(_G.ARGV.repeats)
+  while _G.FlagWorking:
+    # Input.trigger_key(0xC0)  # ` key
+    Input.trigger_key(win32con.VK_SCROLL)
+    yield
+    Input.trigger_key(win32con.VK_SCROLL)
+    for _ in range(n):
+      uwait(0.1)
+      yield
+
+def start_trade_fiber():
   while _G.FlagWorking:
     yield
-    Input.trigger_key(0xC0)  # ` key
-    uwait(3.5)
+    Input.trigger_key(ord('1'))
+
+def start_interact_fiber():
+  esc_cd = 0
+  while _G.FlagWorking:
+    yield
+    esc_cd -= 1
+    action.interact()
+    uwait(0.1)
+    if esc_cd <= 0 and graphics.is_pixel_match(
+      ((249, 466),(174, 763),(1665, 846),(1668, 424),),
+      ((0, 0, 0),(0, 0, 0),(0, 0, 0),(0, 0, 0),),
+      sync=True
+    ):
+      uwait(0.3)
+      Input.trigger_key(win32con.VK_ESCAPE)
+      uwait(0.1)
+      esc_cd = 15
+      yield
+
+def start_entering_fiber():
+  while _G.FlagWorking:
+    yield
+    action.interact()
+    uwait(0.3)
+    action.interact()
+    uwait(0.3)
+    action.menu_left()
+    uwait(0.1)
+    action.interact()
+    for _ in range(10):
+      uwait(0.1)
+      yield
+
+def start_retainer_fiber():
+  n = utils.str2int(_G.ARGV.repeats or '') or 0
+  n = 2 if n < 2 else n
+  st = datetime.now()
+  while _G.FlagWorking:
+    if datetime.now() < st:
+      uwait(1)
+      yield
+      if datetime.now().second % 10 == 0: # prevent afk kick
+        Input.trigger_key(win32con.VK_RIGHT)
+      continue
+    for i in range(n):
+      _G.log_info("Retainer run #", i+1)
+      for _ in range(1):
+        action.menu_down()
+        uwait(0.3)
+        yield
+      action.interact()
+      uwait(0.1)
+      action.interact()
+      uwait(2)
+      # dismiss dialog
+      action.interact()
+      uwait(0.5)
+      for _ in range(5):
+        action.menu_down()
+        uwait(0.2)
+        yield
+      # harvest and redispatch
+      for _ in range(2):
+        action.interact()
+        uwait(0.5)
+        action.menu_left()
+        uwait(0.5)
+      action.interact()
+      uwait(0.5)
+      action.interact() # dismiss
+      uwait(1)
+      for _ in range(2):
+        Input.trigger_key(win32con.VK_ESCAPE)
+        uwait(1)
+      for _ in range(10):
+        uwait(0.1)
+        yield
+    st = datetime.now() + timedelta(minutes=41)
+    _G.log_info(f"Next retainer run at {st.strftime('%H:%M:%S')}")
+
+def start_ocean_cast_fiber():
+  depth = 0
+  while _G.FlagWorking:
+    ret = utils.ocr_rect((1650, 49, 1691, 67), 'ocean_timer', num_only=True)
+    if len(ret) == 4:
+      ret = ret[:3]
+    _G.log_info(f"Ocean timer: {ret}")
+    try:
+      if int(ret) in range(650, 700):
+        Input.trigger_key(ord('2'))
+        _G.log_info("Casting rod")
+      depth = 0
+    except ValueError:
+      depth += 1
+    if depth >= 20:
+      _G.log_error("Ocean fishing likely ended, abort")
+      return
+    for _ in range(10):
+      uwait(0.1)
+      yield

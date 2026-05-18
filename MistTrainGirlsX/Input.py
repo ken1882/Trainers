@@ -55,7 +55,7 @@ def read_terminal():
         StdinStream.append(ss)
   finally:
     restore_terminal_settings()
-      
+
 def start_keybd_listener():
   termios.tcsetattr(sys.stdin, termios.TCSADRAIN, _G.BkgTerminalSettings)
   th = Thread(target=read_terminal, daemon=True)

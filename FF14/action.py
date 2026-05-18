@@ -169,3 +169,12 @@ def menu_down():
   Input.key_up(VK_S)
   Input.key_up(win32con.VK_MENU)
   Input.key_up(win32con.VK_SHIFT)
+
+def menu_left():
+  Input.key_down(win32con.VK_SHIFT)
+  Input.key_down(win32con.VK_MENU)
+  Input.key_down(VK_A)
+  sleep(0.03)
+  Input.key_up(VK_A)
+  Input.key_up(win32con.VK_MENU)
+  Input.key_up(win32con.VK_SHIFT)

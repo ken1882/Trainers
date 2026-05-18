@@ -105,6 +105,7 @@ def start_main():
 
 if __name__ == "__main__":
   utils.get_self_hwnd()
+  _G.SelfHwnd = win32gui.GetForegroundWindow()
   detect_app_window()
   utils.resize_app_window()
   args = argv_parse.load()

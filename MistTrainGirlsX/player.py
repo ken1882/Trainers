@@ -633,9 +633,11 @@ def dump_all_available_scenes(meta):
       log_info(f"Scene#{id} {game.get_scene(id)['Title']} saved")
 
 def vote_character(event_id, character_id):
+  global VoteItemId, ConsumableInventory
   if not VoteItemId or VoteItemId not in ConsumableInventory:
-    log_warning("Vote item unavailable")
-    return 0
+    res = game.get_request(f"/api/UItems/GetLimitedItems?itemCategory={_G.ICATE_VOTE_TICKET}")
+    VoteItemId = res[-1][0]
+    ConsumableInventory[VoteItemId] = res[-1][1]
   total = 0
   while ConsumableInventory[VoteItemId] > 0:
     n = min(ConsumableInventory[VoteItemId], MAX_ITEM)
@@ -697,18 +699,22 @@ def dump_profiles(st=1, filter=None):
     file.close()
 
 def roll_raid_gacha(raid_id, token_amount):
-  num = 1
-  while num > 0:
-    res = game.get_request(f"/api/Event/{raid_id}/RaidBoxGacha")['r']
+  while True:
+    res = game.get_request(f"/api/Event/{raid_id}/RaidBoxGacha")
     cost = res[2]
     num = res[3]
+    if token_amount < cost * num:
+      break
     token_amount -= cost * num
     if num == 0:
       game.post_request(f"/api/Event/{raid_id}/RaidBoxGacha/Reset")
-    log_info(f"Roll {res[4]} times, tokens left: {token_amount}")
+      continue
+    log_info(f"Roll {res[3]} times, tokens left: {token_amount}")
     game.post_request(f"/api/Event/{raid_id}/RaidBoxGacha/Roll?rollCount={num}")
 
-rank = []
-for r in rank:
-  ch = next((c['MCharacterBase'] for c in game.CharacterDatabase.values() if c['MCharacterBase']['Id'] == r[0]), None)
-  print(f"#{r[2]} {ch['Name']} {r[1]}")
+if __name__ == '__main__':
+  res = game.get_request('/api/Vote/GetVoteAggregations/17')
+  rank = sorted(res[3], key=lambda o:o[1], reverse=True)
+  for r in rank:
+    ch = next((c['MCharacterBase'] for c in game.CharacterDatabase.values() if c['MCharacterBase']['Id'] == r[0]), None)
+    print(f"#{r[2]} {ch['Name']} {r[1]}")

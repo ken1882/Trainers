@@ -1,3 +1,4 @@
+import _G, utils
 import game
 import player
 import combat
@@ -13,13 +14,20 @@ import sys
 from io import StringIO
 from time import sleep
 
+if _G.IS_WIN32:
+    import win32gui
+    hwnd = win32gui.GetForegroundWindow()
+
 game.init()
+
+if _G.IS_WIN32:
+    _G.SelfHwnd = hwnd
 
 def daily():
     ostdin = sys.stdin
-    shop.main()
-    expedition.main()
-    training.main()
+    # shop.main()
+    # expedition.main()
+    # training.main()
     try:
         sys.stdin = StringIO('n exp 1 -1'.replace(' ', '\n'))
         combat.main()
@@ -31,10 +39,11 @@ def daily():
     except Exception:
         pass
     sys.stdin = ostdin
-    sleep(1)
-    res = game.post_request('/api/SendRewards/category/1?isNextMissionComplete=true')
-    print(res)
-    res = game.post_request('/api/SendRewards/mission/35703269')
-    print(res)
-    res = game.post_request('/api/SendRewards/mission/1148716694')
-    print(res)
+    # sleep(1)
+    # res = game.post_request('/api/SendRewards/category/1?isNextMissionComplete=true')
+    # print(res)
+    # res = game.post_request('/api/SendRewards/mission/35703269')
+    # print(res)
+    # res = game.post_request('/api/SendRewards/mission/1148716694')
+    # print(res)
+

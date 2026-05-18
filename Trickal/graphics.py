@@ -31,9 +31,6 @@ def is_pixel_match(pix, col, sync=False):
 def get_pixel(x,y,sync=False):
   # use win32api to get pixel in real time, slower
   if sync:
-    rect = get_full_rect()
-    x += rect[0]
-    y += rect[1]
     rgb = win32gui.GetPixel(_G.DesktopDC, x, y)
     b = (rgb & 0xff0000) >> 16
     g = (rgb & 0x00ff00) >> 8
@@ -46,8 +43,9 @@ def get_pixel(x,y,sync=False):
 def get_mouse_pixel(mx=None, my=None):
   if not mx and not my:
     mx, my = Input.get_cursor_pos()
+    rx, ry = Input.get_cursor_pos(True)
   r,g,b = get_pixel(mx, my, True)
-  return ["({}, {}),".format(mx, my), "({}, {}, {}),".format(r,g,b)]
+  return ["({}, {}),".format(rx, ry), "({}, {}, {}),".format(r,g,b)]
 
 def get_full_rect():
   return (

@@ -33,8 +33,8 @@ SelfPid  = 0
 DCTmpFolder = ".tmp"
 DCSnapshotFile = "snapshot.png"
 
-WindowWidth  = 1060
-WindowHeight = 600
+WindowWidth  = 1920
+WindowHeight = 1080
 WinTitleBarSize = (0, 0)
 WinDesktopBorderOffset = (0,0)
 

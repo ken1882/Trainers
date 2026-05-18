@@ -614,7 +614,8 @@
       148095309,
       153105309,
       158115309,
-      168135309
+      168135309,
+      173145309
     ],
     "PossibleSlotCounts": [
       1
@@ -847,7 +848,8 @@
       151101309,
       156111309,
       161121309,
-      166131309
+      166131309,
+      171141309
     ],
     "PossibleSlotCounts": [
       1
@@ -888,7 +890,8 @@
       150099404,
       155109404,
       160119404,
-      166131404
+      166131404,
+      171141404
     ],
     "PossibleSlotCounts": [
       1
@@ -960,7 +963,8 @@
       157113309,
       162123309,
       163125309,
-      167133309
+      167133309,
+      172143309
     ],
     "PossibleSlotCounts": [
       1
@@ -1003,7 +1007,8 @@
       157113404,
       162123404,
       163125404,
-      168135404
+      168135404,
+      173145404
     ],
     "PossibleSlotCounts": [
       1
@@ -1116,7 +1121,8 @@
       151101404,
       156111404,
       161121404,
-      167133404
+      167133404,
+      172143404
     ],
     "PossibleSlotCounts": [
       1
@@ -1191,7 +1197,8 @@
       607013308,
       161121307,
       610019308,
-      166131307
+      166131307,
+      171141307
     ],
     "PossibleSlotCounts": [
       1
@@ -1241,7 +1248,8 @@
       607013309,
       609017309,
       610019309,
-      168135307
+      168135307,
+      173145307
     ],
     "PossibleSlotCounts": [
       1
@@ -1380,7 +1388,8 @@
       162123307,
       608015309,
       163125307,
-      167133307
+      167133307,
+      172143307
     ],
     "PossibleSlotCounts": [
       1
@@ -10031,6 +10040,36 @@
     ]
   },
   {
+    "Id": 348,
+    "Name": "\u8d6b\u6708\u306e\u76fe",
+    "Description": "\u9759\u304b\u306b\u8f1d\u304f\u6df1\u7d05\u306e\u76fe/n\u30b7\u30ea\u30fc\u30ba\u3067\u63c3\u3048\u3066\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u3055\u3089\u306a\u308b\u5f37\u529b\u306a\u52b9\u679c\u3092\u767a\u63ee\u3059\u308b\u3002",
+    "EquipmentRarity": 4,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 4,
+      "EvolutionLimit": 4
+    },
+    "ArmorEquipType": 4,
+    "MEquipmentSkillRateGroupId": 143,
+    "UniqueMSkillId": null,
+    "AttributeResistGroup": {
+      "Blade": 10,
+      "Impact": 10,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "MSeriesSetId": 96,
+    "DropQuestIds": [
+      171141504
+    ],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
     "Id": 349,
     "Name": "\u8d6b\u6708\u306e\u91cd\u88c5",
     "Description": "\u9759\u304b\u306b\u8f1d\u304f\u6df1\u7d05\u306e\u91cd\u88c5/n\u30b7\u30ea\u30fc\u30ba\u3067\u63c3\u3048\u3066\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u3055\u3089\u306a\u308b\u5f37\u529b\u306a\u52b9\u679c\u3092\u767a\u63ee\u3059\u308b\u3002",
@@ -10055,6 +10094,290 @@
     "MSeriesSetId": 96,
     "DropQuestIds": [
       170139504
+    ],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 350,
+    "Name": "\u9b54\u6cd5\u5263\u58eb\u306e\u30b7\u30e7\u30b3\u30e9\u306a\u30a8\u30d7\u30ed\u30f3",
+    "Description": "\u5168\u8eab\u9632\u5177\u3002\u5168\u54e1\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "EquipmentRarity": 4,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 4,
+      "EvolutionLimit": 4
+    },
+    "ArmorEquipType": 2,
+    "MEquipmentSkillRateGroupId": null,
+    "UniqueMSkillId": 408040029,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 20,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 351,
+    "Name": "\u9b54\u6cd5\u5263\u58eb\u306e\u30a8\u30d7\u30ed\u30f3",
+    "Description": "\u5168\u8eab\u9632\u5177\u3002\u5168\u54e1\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "EquipmentRarity": 3,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 3,
+      "EvolutionLimit": 3
+    },
+    "ArmorEquipType": 2,
+    "MEquipmentSkillRateGroupId": null,
+    "UniqueMSkillId": 408040030,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 5,
+      "Pierce": 10,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 352,
+    "Name": "\u6c7a\u610f\u3092\u80cc\u8ca0\u3046\u59b9\u306e\u6559\u670d",
+    "Description": "\u5168\u8eab\u9632\u5177\u3002\u5168\u54e1\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "EquipmentRarity": 4,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 4,
+      "EvolutionLimit": 4
+    },
+    "ArmorEquipType": 2,
+    "MEquipmentSkillRateGroupId": null,
+    "UniqueMSkillId": 408040015,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 10,
+      "Pierce": 10,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 353,
+    "Name": "\u3057\u3063\u304b\u308a\u8005\u306a\u59b9\u306e\u6559\u670d",
+    "Description": "\u5168\u8eab\u9632\u5177\u3002\u5168\u54e1\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "EquipmentRarity": 3,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 3,
+      "EvolutionLimit": 3
+    },
+    "ArmorEquipType": 2,
+    "MEquipmentSkillRateGroupId": null,
+    "UniqueMSkillId": 408040016,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 10,
+      "Pierce": 5,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 354,
+    "Name": "\u80cc\u4e2d\u3092\u9810\u304b\u308b\u8b77\u885b\u306e\u6559\u670d",
+    "Description": "\u5168\u8eab\u9632\u5177\u3002\u5168\u54e1\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "EquipmentRarity": 4,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 4,
+      "EvolutionLimit": 4
+    },
+    "ArmorEquipType": 1,
+    "MEquipmentSkillRateGroupId": null,
+    "UniqueMSkillId": 408040023,
+    "AttributeResistGroup": {
+      "Blade": 10,
+      "Impact": 0,
+      "Pierce": 10,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 355,
+    "Name": "\u983c\u308c\u308b\u8b77\u885b\u306e\u6559\u670d",
+    "Description": "\u5168\u8eab\u9632\u5177\u3002\u5168\u54e1\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "EquipmentRarity": 3,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 3,
+      "EvolutionLimit": 3
+    },
+    "ArmorEquipType": 1,
+    "MEquipmentSkillRateGroupId": null,
+    "UniqueMSkillId": 408040024,
+    "AttributeResistGroup": {
+      "Blade": 10,
+      "Impact": 0,
+      "Pierce": 5,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 356,
+    "Name": "\u3044\u3064\u3060\u3063\u3066\u305d\u3070\u306b\u3044\u308b\u59c9\u306e\u6559\u670d",
+    "Description": "\u5168\u8eab\u9632\u5177\u3002\u5168\u54e1\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "EquipmentRarity": 4,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 4,
+      "EvolutionLimit": 4
+    },
+    "ArmorEquipType": 3,
+    "MEquipmentSkillRateGroupId": null,
+    "UniqueMSkillId": 408040003,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 20,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 357,
+    "Name": "\u63a7\u3048\u3081\u306a\u59c9\u306e\u6559\u670d",
+    "Description": "\u5168\u8eab\u9632\u5177\u3002\u5168\u54e1\u304c\u88c5\u5099\u3067\u304d\u308b\u3002",
+    "EquipmentRarity": 3,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 3,
+      "EvolutionLimit": 3
+    },
+    "ArmorEquipType": 3,
+    "MEquipmentSkillRateGroupId": null,
+    "UniqueMSkillId": 408040004,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 15,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "MSeriesSetId": null,
+    "DropQuestIds": [],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 358,
+    "Name": "\u8d6b\u6708\u306e\u6cd5\u8863",
+    "Description": "\u9759\u304b\u306b\u8f1d\u304f\u6df1\u7d05\u306e\u6cd5\u8863/n\u30b7\u30ea\u30fc\u30ba\u3067\u63c3\u3048\u3066\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u3055\u3089\u306a\u308b\u5f37\u529b\u306a\u52b9\u679c\u3092\u767a\u63ee\u3059\u308b\u3002",
+    "EquipmentRarity": 4,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 4,
+      "EvolutionLimit": 4
+    },
+    "ArmorEquipType": 3,
+    "MEquipmentSkillRateGroupId": 143,
+    "UniqueMSkillId": null,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 20,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "MSeriesSetId": 96,
+    "DropQuestIds": [
+      173145504
+    ],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 359,
+    "Name": "\u8d6b\u6708\u306e\u8efd\u88c5",
+    "Description": "\u9759\u304b\u306b\u8f1d\u304f\u6df1\u7d05\u306e\u8efd\u88c5/n\u30b7\u30ea\u30fc\u30ba\u3067\u63c3\u3048\u3066\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u3055\u3089\u306a\u308b\u5f37\u529b\u306a\u52b9\u679c\u3092\u767a\u63ee\u3059\u308b\u3002",
+    "EquipmentRarity": 4,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 4,
+      "EvolutionLimit": 4
+    },
+    "ArmorEquipType": 2,
+    "MEquipmentSkillRateGroupId": 143,
+    "UniqueMSkillId": null,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 10,
+      "Pierce": 10,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "MSeriesSetId": 96,
+    "DropQuestIds": [
+      172143504
     ],
     "PossibleSlotCounts": [
       1

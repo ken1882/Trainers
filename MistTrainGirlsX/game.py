@@ -54,7 +54,7 @@ ServerList = (
   'https://mist-train-east3.azurewebsites.net',
 )
 
-STATIC_DATA_HOST = 'https://assets4.mist-train-girls.com/production-client-web-static'
+STATIC_DATA_HOST = 'https://assets-ak.mist-train-girls.com/production-client-web-static'
 
 ServerLocation = ''
 
@@ -169,7 +169,7 @@ def unpack(content):
   unpacker.feed(content)
   return list(unpacker)[1]
 
-def get_request(url, depth=1):
+def get_request(url, depth=0):
   global Session,ServerLocation
   while is_day_changing():
     log_warning("Server day changing, wait for 1 minute")
@@ -199,15 +199,16 @@ def get_request(url, depth=1):
       reauth_game()
       return get_request(url)
     elif errno == 500:
+      log_warning("Server error occurred")
       return None
     else:
-      # exit()
+      log_warning("Unknown error occurred")
       return None
   if not res.content:
     return None
   return unpack(res.content)
 
-def post_request(url, data=None, depth=1):
+def post_request(url, data=None, depth=0):
   global Session,TemporaryNetworkErrors,ServerLocation
   while is_day_changing():
     log_warning("Server day changing, wait for 1 minute")
@@ -247,9 +248,10 @@ def post_request(url, data=None, depth=1):
       wait(1)
       return post_request(url, data, depth=depth)
     elif errno == 500:
+      log_warning("Server error occurred")
       return None
     else:
-      # exit()
+      log_warning("Unknown error occurred")
       return None
   if not res.content:
     return None

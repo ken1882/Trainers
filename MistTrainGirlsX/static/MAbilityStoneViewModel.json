@@ -1143,14 +1143,14 @@
     "MLevelUpSkillGroupIds": [
       396,
       399,
-      400,
       398,
+      400,
       397,
       395,
-      389,
+      390,
       393,
       388,
-      390,
+      389,
       394,
       392,
       391
@@ -1356,14 +1356,14 @@
       461,
       460,
       459,
-      458,
+      457,
       456,
       455,
       454,
       453,
       452,
       451,
-      457
+      458
     ]
   },
   {
@@ -1868,6 +1868,15 @@
     "AbilityStoneEquipType": 1,
     "MLevelUpSkillGroupIds": [
       522
+    ]
+  },
+  {
+    "Id": 169,
+    "Name": "\u30a6\u30c5\u30ad\u306e\u529b",
+    "Rarity": 4,
+    "AbilityStoneEquipType": 1,
+    "MLevelUpSkillGroupIds": [
+      523
     ]
   }
 ]

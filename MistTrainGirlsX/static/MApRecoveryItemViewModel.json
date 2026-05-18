@@ -1630,5 +1630,77 @@
     "RecoveryEffect": 30,
     "StartDate": "2026-01-09T00:00:00",
     "EndDate": "2026-02-01T23:59:59"
+  },
+  {
+    "Id": 320,
+    "RecoveryItemTypes": 4,
+    "MItemId": 2548,
+    "RecoveryEffect": 30,
+    "StartDate": "2026-01-16T14:10:00",
+    "EndDate": "2026-02-08T23:59:59"
+  },
+  {
+    "Id": 321,
+    "RecoveryItemTypes": 4,
+    "MItemId": 2566,
+    "RecoveryEffect": 30,
+    "StartDate": "2026-01-30T14:10:00",
+    "EndDate": "2026-02-22T23:59:59"
+  },
+  {
+    "Id": 322,
+    "RecoveryItemTypes": 4,
+    "MItemId": 2570,
+    "RecoveryEffect": 30,
+    "StartDate": "2026-02-06T00:00:00",
+    "EndDate": "2026-03-01T23:59:59"
+  },
+  {
+    "Id": 323,
+    "RecoveryItemTypes": 4,
+    "MItemId": 2575,
+    "RecoveryEffect": 30,
+    "StartDate": "2026-02-13T14:10:00",
+    "EndDate": "2026-03-08T23:59:59"
+  },
+  {
+    "Id": 330,
+    "RecoveryItemTypes": 1,
+    "MItemId": 2595,
+    "RecoveryEffect": 30,
+    "StartDate": null,
+    "EndDate": null
+  },
+  {
+    "Id": 331,
+    "RecoveryItemTypes": 4,
+    "MItemId": 2590,
+    "RecoveryEffect": 30,
+    "StartDate": "2026-02-27T14:10:00",
+    "EndDate": "2026-03-22T23:59:59"
+  },
+  {
+    "Id": 332,
+    "RecoveryItemTypes": 4,
+    "MItemId": 2597,
+    "RecoveryEffect": 30,
+    "StartDate": "2026-03-06T14:10:00",
+    "EndDate": "2026-03-29T23:59:59"
+  },
+  {
+    "Id": 333,
+    "RecoveryItemTypes": 1,
+    "MItemId": 2792,
+    "RecoveryEffect": 30,
+    "StartDate": "2026-03-13T23:00:00",
+    "EndDate": "2026-04-05T23:59:59"
+  },
+  {
+    "Id": 341,
+    "RecoveryItemTypes": 4,
+    "MItemId": 2809,
+    "RecoveryEffect": 30,
+    "StartDate": "2026-03-27T14:10:00",
+    "EndDate": "2026-04-19T23:59:59"
   }
 ]

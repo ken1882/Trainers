@@ -28,10 +28,11 @@ FLAG_AUTO_LEVEL = True
 FLAG_ANALYZE = False
 
 SHOP_CHECK_DURATION = 500
-FLAG_VOTING = False
+AUTO_VOTE_DURATION  = 1000
+FLAG_BUY_VOTE = False
 FLAG_AUTO_VOTE = False
 
-VOTE_TARGET = (12, 180)
+VOTE_TARGET = (17, 180)
 VotedCount  = 0
 
 TurnLimit = 0
@@ -1100,7 +1101,7 @@ def start_battle_process(sid, pid, rid, raid=False):
         return SIG_COMBAT_STOP
     elif data == ERROR_LIMIT_REACHED:
       log_info("Challenge limit reached")
-      return SIG_COMBAT_STOP 
+      return SIG_COMBAT_STOP
   if type(data) == dict and 'BattleId' in data:
     BattleId = data['BattleId']
     level_party(data)
@@ -1207,7 +1208,7 @@ def log_final_report():
     except Exception as err:
       log_error(f"An error occured while writing result file: {err}")
       handle_exception(err)
-  if FLAG_VOTING and FLAG_AUTO_VOTE:
+  if FLAG_BUY_VOTE and FLAG_AUTO_VOTE:
     log_info("Voted total:", VotedCount)
 
 def update_input():
@@ -1295,7 +1296,7 @@ def main(times=0, raid=False, turn_limit=0):
       elif yn == 'n':
         surrender()
         break
-  while True: 
+  while True:
     yn = input("Manually handle combat? (Y/N): ").strip().lower()
     if yn == 'y':
       FLAG_INTERACTIVE = True
@@ -1340,7 +1341,18 @@ def main(times=0, raid=False, turn_limit=0):
     rid = RentalUid
     if rid == -1:
       rid = next(RentalCycle)
-    signal = start_battle_process(StageId, PartyId, rid, raid=raid)
+    depth = 0
+    while True:
+      try:
+        signal = start_battle_process(StageId, PartyId, rid, raid=raid)
+        break
+      except Exception as err:
+        depth += 1
+        log_error("An error occurred during battle process:", handle_exception(err))
+        if depth >= 3:
+          raise err
+        surrender()
+        log_info(f"Retry combat iteration (depth={depth})")
     log_info("Battle Ended")
     if signal == SIG_COMBAT_STOP:
       break
@@ -1358,12 +1370,15 @@ def main(times=0, raid=False, turn_limit=0):
     if times and cnt >= times:
       log_info("Loop timer reached")
       break
-    if FLAG_VOTING and cnt % SHOP_CHECK_DURATION == 0:
+    if FLAG_BUY_VOTE and cnt % SHOP_CHECK_DURATION == 0:
       log_info("Processing votes")
       shop.buy_votes()
-      if FLAG_AUTO_VOTE:
-        VotedCount += player.vote_character(*VOTE_TARGET)
-    
+    if FLAG_AUTO_VOTE and cnt % AUTO_VOTE_DURATION == 0:
+      log_info("Auto voting")
+      voted = player.vote_character(*VOTE_TARGET)
+      log_info(f"Voted {voted} tickets")
+      VotedCount += voted
+
   log_final_report()
 
 if __name__ == '__main__':

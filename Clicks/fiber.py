@@ -32,3 +32,21 @@ def start_mccp_fiber():
         mx, my = Input.get_cursor_pos(False)
         Input.set_cursor_pos(mx+48, my, use_msg=False, app_offset=False)
         Input.click(0, 0, use_msg=False, app_offset=False)
+
+def start_assign_fiber():
+    ox, oy = Input.get_cursor_pos(False)
+    while 1:
+        yield
+        my = oy
+        for _ in range(3):
+            Input.click(ox, my, use_msg=False, app_offset=False)
+            yield
+            wait(0.1)
+            my += 25
+        for _ in range(2):
+            Input.trigger_key(win32con.VK_TAB, use_msg=False)
+            yield
+            wait(0.1)
+        for _ in range(100):
+            yield
+            wait(0.1)
