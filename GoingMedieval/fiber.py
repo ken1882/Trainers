@@ -73,7 +73,6 @@ def start_loot_fiber():
           ar = ar[1:]
         if not ar:
           break
-        depth += 1
         for i, pos in enumerate(ar):
           x, y = pos
           Input.key_down(win32con.VK_LSHIFT)
@@ -81,5 +80,38 @@ def start_loot_fiber():
             Input.click(x+8, y+8)
             yield
           wait(0.03)
+        depth += 1
   finally:
     Input.key_up(win32con.VK_LSHIFT)
+
+def get_warnings():
+  ret = []
+  text = utils.ocr_rect((1450, 47,1731, 166), fname=f"notifications.png", lang='eng', config='').lower()
+  if 'curs' in text:
+    ret.append("raid")
+  return ret
+
+def dismiss_notifications():
+  for x,y in graphics.find_object('objs/dismiss.png'):
+    Input.click(x,y)
+    uwait(0.1)
+  Input.set_cursor_pos(500,500)
+
+def start_autohandle_fiber():
+  while _G.FlagWorking:
+    try:
+      if stage.is_stage('NewSettler'):
+        Input.click(753, 842)
+      else:
+        warns = get_warnings()
+        if "raid" in warns:
+          log_info("Cannot handle raid, request human takeover")
+          _G.FlagWorking = _G.FlagRunning = False
+          return
+        dismiss_notifications()
+        Input.click(1375, 20) # normal speed/unpause
+    except Exception as err:
+      utils.handle_exception(err)
+    for _ in range(100):
+      wait(0.1)
+      yield

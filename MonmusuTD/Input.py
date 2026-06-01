@@ -49,7 +49,7 @@ def trigger_key(*args):
   for kid in args:
     key_up(kid)
 
-def mouse_down(x=None, y=None, app_offset=True, use_msg=_G.AppTargetUseMsg, hwnd=None):
+def mouse_down(x=None, y=None, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None):
   if not hwnd:
     hwnd = _G.AppInputHwnd
   if use_msg:
@@ -57,26 +57,24 @@ def mouse_down(x=None, y=None, app_offset=True, use_msg=_G.AppTargetUseMsg, hwnd
     win32api.SendMessage(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, make_lparam(x,y))
     return
   rect = None
-  if app_offset:
-    rect = graphics.get_content_rect()
   if x is None:
     x = 0
-  elif app_offset:
-    x += rect[0]
   if y is None:
     y = 0
-  elif app_offset:
+  if app_offset:
+    rect = graphics.get_content_rect()
+    x += rect[0]
     y += rect[1]
   if x or y:
     win32api.SetCursorPos((x,y))
   win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,x,y,0,0)
 
-def mouse_up(x=None, y=None, app_offset=True, use_msg=_G.AppTargetUseMsg, hwnd=None):
+def mouse_up(x=None, y=None, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None):
   if not hwnd:
     hwnd = _G.AppInputHwnd
   if use_msg:
     hwnd = hwnd if hwnd else _G.AppHwnd
-    win32api.SendMessage(hwnd, win32con.WM_LBUTTONUP, 0, make_lparam(x,y))
+    win32api.SendMessage(hwnd, win32con.WM_LBUTTONUP, win32con.MK_LBUTTON, make_lparam(x,y))
     return
   rect = None
   if app_offset:
@@ -93,7 +91,7 @@ def mouse_up(x=None, y=None, app_offset=True, use_msg=_G.AppTargetUseMsg, hwnd=N
     win32api.SetCursorPos((x,y))
   win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,x,y,0,0)
 
-def set_cursor_pos(x, y, app_offset=True, use_msg=_G.AppTargetUseMsg, hwnd=None, wparam=None):
+def set_cursor_pos(x, y, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None, wparam=None):
   if not hwnd:
     hwnd = _G.AppInputHwnd
   if use_msg:
@@ -106,26 +104,51 @@ def set_cursor_pos(x, y, app_offset=True, use_msg=_G.AppTargetUseMsg, hwnd=None,
     y += rect[1]
   win32api.SetCursorPos((int(x),int(y)))
 
-def click(x=None, y=None, app_offset=False, use_msg=_G.AppTargetUseMsg, hwnd=None):
+def click(x=None, y=None, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None, dur=0.05):
   if not hwnd:
     hwnd = _G.AppInputHwnd
+  x = int(x)
+  y = int(y)
   if not use_msg and x and y:
     set_cursor_pos(x, y, app_offset)
   mouse_down(x, y, app_offset, use_msg, hwnd)
-  sleep(0.05)
+  sleep(dur)
   mouse_up(x, y, app_offset, use_msg, hwnd)
 
-def rclick(x, y, app_offset=False, use_msg=_G.AppTargetUseMsg, hwnd=None, rrange=_G.PosRandomRange):
-  mx = x + random.randint(-rrange[0], rrange[0])
-  my = y + random.randint(-rrange[1], rrange[1])
+def rclick(x, y, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None, rrange=_G.PosRandomRange):
+  mx = int(x) + random.randint(-rrange[0], rrange[0])
+  my = int(y) + random.randint(-rrange[1], rrange[1])
   click(mx, my, app_offset, use_msg, hwnd)
 
-def dclick(x=None, y=None, app_offset=False, use_msg=_G.AppTargetUseMsg, hwnd=None):
+def dclick(x=None, y=None, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None):
   if not hwnd:
     hwnd = _G.AppInputHwnd
   click(x,y,app_offset, use_msg, hwnd)
   sleep(0.1)
   click(x,y,app_offset, use_msg, hwnd)
+
+def drag_to(x, y, x2=None, y2=None, app_offset=True, use_msg=_G.AppInputUseMsg, hwnd=None, dur=0.3, steps=None, hold=0.1):
+  if not hwnd:
+    hwnd = _G.AppInputHwnd
+  if x2 is None and y2 is None:
+    x2, y2 = int(x), int(y)
+    x, y = get_cursor_pos(app_offset)
+  elif x2 is None or y2 is None:
+    raise ValueError("drag_to requires both x2 and y2 when a start position is provided")
+  x, y, x2, y2 = int(x), int(y), int(x2), int(y2)
+  if steps is None:
+    steps = max(1, int(math.hypot(x2 - x, y2 - y) // 10))
+  steps = max(1, int(steps))
+  mouse_down(x, y, app_offset, use_msg, hwnd)
+  wait(hold)
+  for i in range(1, steps + 1):
+    rate = i / steps
+    nx = int(x + (x2 - x) * rate)
+    ny = int(y + (y2 - y) * rate)
+    set_cursor_pos(nx, ny, app_offset, use_msg, hwnd, win32con.MK_LBUTTON)
+    wait(dur / steps)
+  wait(hold)
+  mouse_up(x2, y2, app_offset, use_msg, hwnd)
 
 def scroll_up(x, y, delta = 100, app_offset=True, haste=False):
   mouse_down(x, y, app_offset)
@@ -167,8 +190,8 @@ def scroll_right(x, y, delta = 100, app_offset=True, haste=False):
     wait(0.01 if haste else ScrollTime)
   mouse_up(x, y, app_offset)
 
-def scroll_to(x, y, x2, y2, app_offset=True, haste=False, hold=True, slow=False):
-  mouse_down(x, y, app_offset)
+def scroll_to(x, y, x2, y2, app_offset=True, haste=False, hold=True, slow=False, use_msg=False):
+  mouse_down(x, y, app_offset, use_msg=use_msg)
   sleep(0.01 if haste else ScrollTime)
   tdx, tdy = abs(x2 - x), abs(y2 - y)
   try:
@@ -186,11 +209,11 @@ def scroll_to(x, y, x2, y2, app_offset=True, haste=False, hold=True, slow=False)
     dy = 1 if dy == 0 and y != y2 else dy
     x = min([x2, x+dx]) if x2 > x else max([x2, x-dx])
     y = min([y2, y+dy]) if y2 > y else max([y2, y-dy])
-    set_cursor_pos(x, y, app_offset)
+    set_cursor_pos(x, y, app_offset, use_msg=use_msg)
     wait(0.01 if haste else ScrollTime)
   if hold:
     sleep(1)
-  mouse_up(x, y, app_offset)
+  mouse_up(x, y, app_offset, use_msg=use_msg)
 
 
 MaxMoveTimes = 42

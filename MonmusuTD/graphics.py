@@ -1,12 +1,8 @@
-import os
 import cv2
 import numpy as np
 import win32gui
-import pytesseract
 from desktopmagic.screengrab_win32 import getRectAsImage
 from PIL import Image
-import os
-from time import sleep
 
 import _G
 import Input
@@ -15,13 +11,15 @@ from _G import (CVLocalDistance, CVMatchHardRate, CVMatchMinCount, CVMatchStdRat
 
 _G.DesktopDC = win32gui.GetDC(0)
 
-def is_color_ok(cur, target):
+def is_color_ok(cur, target, bias=None):
+  if bias == None:
+    bias = _G.ColorBiasRange
   log_debug("=== Pixel Color Comparing ===")
   for c1,c2 in zip(cur,target):
     if _G.VerboseLevel >= 4:
       print('-'*10)
       print(c1, c2)
-    if abs(c1 - c2) > _G.ColorBiasRange:
+    if abs(c1 - c2) > bias:
       return False
   return True
 
@@ -88,7 +86,16 @@ def take_snapshot(rect=None,filename=None):
     return _G.SnapshotCache[filename]
   else:
     _G.LastFrameCount = _G.FrameCount
-  return _take_snapshot(rect, filename)
+  depth = 0
+  while True:
+    try:
+      return _take_snapshot(rect, filename)
+    except Exception as err:
+      if depth > 5:
+        raise err
+      print(err)
+      log_error("Error while taking snapshot, waiting for 5 seconds")
+      wait(5)
 
 def _take_snapshot(rect,filename):
   path = filename if filename.startswith(_G.DCTmpFolder) else f"{_G.DCTmpFolder}/{filename}"
@@ -141,7 +148,8 @@ def find_object(objimg_path, threshold=CVMatchHardRate):
   src = cv2.imread(f"{_G.DCTmpFolder}/{_G.DCSnapshotFile}")
   tmp = cv2.imread(objimg_path)
   res = cv2.matchTemplate(src, tmp, cv2.TM_CCOEFF_NORMED)
-  return filter_local_templates(res, threshold)
+  ret = filter_local_templates(res, threshold)
+  return [(int(p[0]),int(p[1])) for p in ret]
 
 def find_object_with_rates(objimg_path, threshold=CVMatchHardRate):
   take_snapshot()
@@ -152,25 +160,14 @@ def find_object_with_rates(objimg_path, threshold=CVMatchHardRate):
   rates = [res[y][x] for x,y in objects]
   return (objects, rates)
 
-def img2str(image_file, lang='jpn', config='--psm 12 --psm 13'):
-  if not os.path.exists(image_file) and not image_file.startswith(_G.DCTmpFolder):
-    image_file = f"{_G.DCTmpFolder}/{image_file}"
-  return pytesseract.image_to_string(image_file, lang=lang, config=config) or ''
-
-def ocr_rect(rect, fname, zoom=1.0, lang='jpn', config='--psm 12 --psm 13', **kwargs):
-  log_info(f"Processing OCR for {fname}")
-  if kwargs.get('num_only'):
-    lang = 'eng'
-    config += ' -c tessedit_char_whitelist=1234567890'
-  if not os.path.exists(fname):
-    fname = f"{_G.DCTmpFolder}/{fname}"
-  img = take_snapshot(rect, fname)
-  if zoom != 1.0:
-    size = (int(img.size[0]*zoom), int(img.size[1]*zoom))
-    resize_image(size, fname, fname)
-  sleep(0.3)
-  img.close()
-  return img2str(fname, lang, config).translate(str.maketrans('。',' ')).strip()
-
-def multiscale_matching(src, start=0.5, end=2.5, step=0.1):
-  pass
+def get_difficulty():
+  diffculty = [
+    [(314, 507), (42, 84, 170)],
+    [(314, 507), (215, 76, 0)],
+    [(314, 507), (137, 88, 161)],
+  ]
+  for i,o in enumerate(diffculty):
+    p,c = o
+    if is_color_ok(get_pixel(*p, True), c):
+      return i
+  return -1
