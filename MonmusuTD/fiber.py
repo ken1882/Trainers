@@ -13,7 +13,13 @@ def get_time():
   return utils.ocr_rect((418, 26,513, 54), 'time.png', num_only=1, color=(101, 244, 206))
 
 def summon():
-  Input.drag_to(92, 52, 819, 424, dur=0.1)
+  _G.log_info("Use summon")
+  Input.drag_to(92, 52, 740, 376, dur=0.1)
+
+def refill_summon():
+  Input.rclick(111, 76)
+  wait(0.8)
+  Input.rclick(905, 545)
 
 def start_dragon_fiber():
   def _deploy(poses):
@@ -54,55 +60,49 @@ def start_dragon_fiber():
         yield
         wait(0.1)
       yield from _deploy([
-        (1493, 795, 1372, 287),
-        (82, 800, 1077, 295),
-        (1349, 816, 527, 347),
-        (649, 807, 253, 407),
+        (229, 804, 570, 581),
+        (1494, 801, 426, 218),
+        (243, 811, 383, 470),
+        (646, 804, 1368, 510),
+        (517, 803, 1345, 728),
+        (84, 795, 773, 204),
       ])
       for _ in range(2):
         Input.rclick(1513, 50)
         wait(0.1)
-      for _ in range(10):
+      for _ in range(15):
         yield
         wait(0.1)
       yield from _deploy([
-        (376, 799, 1164, 578)
+        (390, 809, 1077, 292),
       ])
       for _ in range(40):
         yield
         wait(0.1)
-      yield from _deploy([
-        (259, 795, 942, 576)
-      ])
-      for _ in range(60):
+      summon()
+      for _ in range(30):
         yield
         wait(0.1)
       yield from _deploy([
-        (665, 795,1086, 382)
+        (664, 796, 251, 405),
       ])
-      for _ in range(70):
+      for _ in range(10):
         yield
         wait(0.1)
       yield from _deploy([
-        (532, 803, 368, 485)
+        (518, 807, 831, 652)
       ])
-      for _ in range(70):
-        yield
-        wait(0.1)
-      yield from _deploy([
-        (671, 800, 776, 218)
-      ])
-      flag_battle = True
-      summon_timer = datetime.now() - timedelta(seconds=10)
-      support_timer = datetime.now()
-    elif flag_battle:
-      if datetime.now() - support_timer > timedelta(seconds=8):
-        yield from _deploy([
-          (104,800,1135, 581),
-        ])
-        support_timer = datetime.now()
-        wait(0.3)
-      if datetime.now() - summon_timer > timedelta(seconds=20):
-        _G.log_info("Use summon")
-        summon()
-        summon_timer = datetime.now()
+      wait(10)
+      summon()
+      wait(14)
+      refill_summon()
+      wait(1)
+      summon()
+      wait(20)
+      summon()
+      wait(25)
+      refill_summon()
+      wait(1)
+      summon()
+      wait(14)
+      summon()
