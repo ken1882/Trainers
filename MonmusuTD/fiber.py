@@ -6,8 +6,6 @@ from glob import glob
 import logging
 import re
 from datetime import datetime,timedelta
-from obswebsocket import obsws
-from obswebsocket import requests as obsreq
 
 logging.basicConfig(level=logging.INFO)
 
@@ -20,7 +18,7 @@ def summon():
 def start_dragon_fiber():
   def _deploy(poses):
     for x1, y1, x2, y2 in poses:
-        Input.drag_to(x1, y1, x2, y2, hold=0.1, dur=0.1)
+        Input.drag_to(x1, y1, x2, y2, hold=0.2, dur=0.1)
         yield
         wait(0.1)
 
@@ -45,6 +43,8 @@ def start_dragon_fiber():
         wait(0.1)
       Input.rclick(1383, 782)
       flag_battle = False
+    elif stage.is_stage('NetworkError'):
+      Input.rclick(912, 483)
     elif not flag_battle and stage.is_stage('Battle'):
       for _ in range(5):
         yield
@@ -54,33 +54,43 @@ def start_dragon_fiber():
         yield
         wait(0.1)
       yield from _deploy([
-        (102, 796, 767, 204),
-        (1494, 815, 1378, 287),
-        (84, 806, 1068, 292),
-        (239, 820, 525, 344),
-        (495, 804, 242, 403),
-        (233, 809, 943, 568),
+        (1493, 795, 1372, 287),
+        (82, 800, 1077, 295),
+        (1349, 816, 527, 347),
+        (649, 807, 253, 407),
       ])
       for _ in range(2):
         Input.rclick(1513, 50)
         wait(0.1)
+      for _ in range(10):
+        yield
+        wait(0.1)
+      yield from _deploy([
+        (376, 799, 1164, 578)
+      ])
+      for _ in range(40):
+        yield
+        wait(0.1)
+      yield from _deploy([
+        (259, 795, 942, 576)
+      ])
       for _ in range(60):
         yield
         wait(0.1)
       yield from _deploy([
-        (942, 803, 1082, 388),
+        (665, 795,1086, 382)
       ])
-      for _ in range(80):
+      for _ in range(70):
         yield
         wait(0.1)
       yield from _deploy([
-        (512, 806, 1373, 503),
+        (532, 803, 368, 485)
       ])
-      for _ in range(80):
+      for _ in range(70):
         yield
         wait(0.1)
       yield from _deploy([
-        (639, 799, 915, 204),
+        (671, 800, 776, 218)
       ])
       flag_battle = True
       summon_timer = datetime.now() - timedelta(seconds=10)
@@ -88,7 +98,7 @@ def start_dragon_fiber():
     elif flag_battle:
       if datetime.now() - support_timer > timedelta(seconds=8):
         yield from _deploy([
-          (104,800,539,339),
+          (104,800,1135, 581),
         ])
         support_timer = datetime.now()
         wait(0.3)
