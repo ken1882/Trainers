@@ -1,5 +1,5 @@
 import _G
-from _G import wait
+from _G import wait, uwait
 import stage, utils, graphics, Input, position
 import os
 from glob import glob
@@ -94,15 +94,19 @@ def start_dragon_fiber():
       ])
       wait(10)
       summon()
-      wait(14)
+      wait(10)
+      uwait(4)
       refill_summon()
       wait(1)
+      summon()
+      wait(17)
+      uwait(3)
       summon()
       wait(20)
-      summon()
-      wait(25)
+      uwait(4)
       refill_summon()
       wait(1)
       summon()
-      wait(14)
+      wait(10)
+      uwait(4)
       summon()
