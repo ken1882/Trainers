@@ -658,7 +658,8 @@
       154107404,
       159117404,
       165129404,
-      170139404
+      170139404,
+      175149404
     ],
     "PossibleSlotCounts": [
       1
@@ -731,7 +732,8 @@
       155109309,
       160119309,
       165129309,
-      170139309
+      170139309,
+      175149309
     ],
     "PossibleSlotCounts": [
       1
@@ -773,7 +775,8 @@
       153105404,
       158115404,
       164127404,
-      169137404
+      169137404,
+      174147404
     ],
     "PossibleSlotCounts": [
       1
@@ -849,7 +852,8 @@
       156111309,
       161121309,
       166131309,
-      171141309
+      171141309,
+      176151309
     ],
     "PossibleSlotCounts": [
       1
@@ -891,7 +895,8 @@
       155109404,
       160119404,
       166131404,
-      171141404
+      171141404,
+      176151404
     ],
     "PossibleSlotCounts": [
       1
@@ -1080,7 +1085,8 @@
       154107309,
       159117309,
       164127309,
-      169137309
+      169137309,
+      174147309
     ],
     "PossibleSlotCounts": [
       1
@@ -1198,7 +1204,8 @@
       161121307,
       610019308,
       166131307,
-      171141307
+      171141307,
+      176151307
     ],
     "PossibleSlotCounts": [
       1
@@ -1293,7 +1300,8 @@
       159117307,
       608015308,
       164127307,
-      169137307
+      169137307,
+      174147307
     ],
     "PossibleSlotCounts": [
       1
@@ -1340,7 +1348,8 @@
       160119307,
       609017308,
       165129307,
-      170139307
+      170139307,
+      175149307
     ],
     "PossibleSlotCounts": [
       1
@@ -10378,6 +10387,96 @@
     "MSeriesSetId": 96,
     "DropQuestIds": [
       172143504
+    ],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 362,
+    "Name": "\u8d6b\u6708\u306e\u5e3d\u5b50",
+    "Description": "\u9759\u304b\u306b\u8f1d\u304f\u6df1\u7d05\u306e\u5e3d\u5b50/n\u30b7\u30ea\u30fc\u30ba\u3067\u63c3\u3048\u3066\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u3055\u3089\u306a\u308b\u5f37\u529b\u306a\u52b9\u679c\u3092\u767a\u63ee\u3059\u308b\u3002",
+    "EquipmentRarity": 4,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 4,
+      "EvolutionLimit": 4
+    },
+    "ArmorEquipType": 5,
+    "MEquipmentSkillRateGroupId": 143,
+    "UniqueMSkillId": null,
+    "AttributeResistGroup": {
+      "Blade": 0,
+      "Impact": 0,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 20
+    },
+    "MSeriesSetId": 96,
+    "DropQuestIds": [
+      174147504
+    ],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 363,
+    "Name": "\u843d\u82b1\u306e\u76fe",
+    "Description": "\u511a\u3055\u304c\u6f02\u3046\u91d1\u8272\u306e\u76fe/n\u30b7\u30ea\u30fc\u30ba\u3067\u63c3\u3048\u3066\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u3055\u3089\u306a\u308b\u5f37\u529b\u306a\u52b9\u679c\u3092\u767a\u63ee\u3059\u308b\u3002",
+    "EquipmentRarity": 4,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 4,
+      "EvolutionLimit": 4
+    },
+    "ArmorEquipType": 4,
+    "MEquipmentSkillRateGroupId": 143,
+    "UniqueMSkillId": null,
+    "AttributeResistGroup": {
+      "Blade": 10,
+      "Impact": 10,
+      "Pierce": 0,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "MSeriesSetId": 97,
+    "DropQuestIds": [
+      175149504
+    ],
+    "PossibleSlotCounts": [
+      1
+    ]
+  },
+  {
+    "Id": 364,
+    "Name": "\u843d\u82b1\u306e\u91cd\u88c5",
+    "Description": "\u511a\u3055\u304c\u6f02\u3046\u91d1\u8272\u306e\u91cd\u88c5/n\u30b7\u30ea\u30fc\u30ba\u3067\u63c3\u3048\u3066\u88c5\u5099\u3059\u308b\u3053\u3068\u3067\u3055\u3089\u306a\u308b\u5f37\u529b\u306a\u52b9\u679c\u3092\u767a\u63ee\u3059\u308b\u3002",
+    "EquipmentRarity": 4,
+    "MEquipmentRarity": {
+      "EquipmentRarity": 4,
+      "EvolutionLimit": 4
+    },
+    "ArmorEquipType": 1,
+    "MEquipmentSkillRateGroupId": 143,
+    "UniqueMSkillId": null,
+    "AttributeResistGroup": {
+      "Blade": 10,
+      "Impact": 0,
+      "Pierce": 10,
+      "Fire": 0,
+      "Water": 0,
+      "Wind": 0,
+      "Light": 0,
+      "Dark": 0
+    },
+    "MSeriesSetId": 97,
+    "DropQuestIds": [
+      176151504
     ],
     "PossibleSlotCounts": [
       1

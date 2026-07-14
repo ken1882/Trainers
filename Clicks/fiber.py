@@ -50,3 +50,42 @@ def start_assign_fiber():
         for _ in range(100):
             yield
             wait(0.1)
+
+def start_accept_fiber():
+    stages = [
+        (
+            ((1006, 837),(706, 822),(1626, 844),(1146, 821),),
+            ((41, 127, 167),(41, 127, 167),(41, 127, 167),(41, 127, 167),)
+        ),
+        (
+            ((824, 773),(1255, 785),(1080, 785),),
+            ((41, 127, 167),(41, 127, 167),(41, 127, 167),)
+        ),
+        (
+            ((830, 833),(1324, 844),(1562, 831),),
+            ((41, 127, 167),(41, 127, 167),(41, 127, 167),)
+        ),
+        (
+            ((1043, 821),(1442, 820),(821, 816),),
+            ((45, 134, 176),(45, 134, 176),(45, 134, 176),)
+        )
+    ]
+    while 1:
+        yield
+        for pix, col in stages:
+            if graphics.is_pixel_match(pix, col, True):
+                Input.click(pix[1][0], pix[1][1], use_msg=False, app_offset=False)
+                break
+        for _ in range(10):
+            yield
+            wait(0.1)
+
+def start_palworld_fiber():
+    while 1:
+        yield
+        if Input.is_trigger(win32con.VK_RBUTTON):
+            mpos = Input.get_cursor_pos(False)
+            wait(0.2)
+            Input.click(1102, 975, use_msg=False, app_offset=False)
+            wait(0.1)
+            Input.set_cursor_pos(mpos[0], mpos[1], use_msg=False, app_offset=False)
